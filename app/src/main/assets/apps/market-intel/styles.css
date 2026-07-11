@@ -153,82 +153,87 @@ body {
   border: 1px solid var(--border);
 }
 
-/* ─── Modern Heatmap CSS ─── */
-.heatmap-row {
+/* ─── Price Ladder Heatmap ─── */
+.ladder-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 6px 0;
-  position: relative;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
 }
-.heatmap-row.is-now {
-  background: linear-gradient(90deg, rgba(212, 175, 55, 0.08), transparent);
-  border-radius: 8px;
-  padding-left: 8px;
+.ladder-row.ladder-now {
+  background: rgba(212, 175, 55, 0.05);
 }
-.heatmap-price {
+.ladder-price-col {
+  width: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.ladder-price {
+  font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
   font-weight: 800;
   color: var(--text-dim);
-  width: 55px;
-  text-align: right;
-  flex-shrink: 0;
-  font-family: 'Courier New', Courier, monospace;
 }
-.heatmap-row.is-now .heatmap-price {
+.ladder-now .ladder-price {
   color: var(--gold);
-  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
 }
-.heatmap-glow-track {
+.ladder-now-indicator {
+  font-size: 10px;
+  color: var(--gold);
+  animation: pulse 1.5s infinite;
+}
+.ladder-blocks-col {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 3px;
-  position: relative;
-  height: 18px;
-  justify-content: center;
-  border-left: 1px solid rgba(255,255,255,0.05);
+  align-items: center;
+  border-left: 2px solid rgba(255,255,255,0.06);
   padding-left: 8px;
+  min-height: 20px;
 }
-.heat-glow {
-  height: 6px;
-  border-radius: 4px;
-  min-width: 12px;
-  transition: width 0.4s ease, opacity 0.4s ease;
+.ladder-blocks {
+  display: flex;
+  gap: 2px;
+  align-items: center;
 }
-.heat-glow.resist-glow {
-  background: linear-gradient(90deg, #ff416c, #ff4b2b);
-  box-shadow: 0 0 12px rgba(255, 65, 108, 0.6);
+.heat-block {
+  width: 6px;
+  height: 14px;
+  border-radius: 1px;
 }
-.heat-glow.support-glow {
-  background: linear-gradient(90deg, #00b09b, #96c93d);
-  box-shadow: 0 0 12px rgba(0, 176, 155, 0.6);
+.block-resist {
+  background: #ff4c4c;
+  box-shadow: 0 0 6px rgba(255, 76, 76, 0.4);
 }
-.heatmap-meta {
+.block-support {
+  background: #00d97e;
+  box-shadow: 0 0 6px rgba(0, 217, 126, 0.4);
+}
+.ladder-meta-col {
+  width: 70px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  width: 80px;
   justify-content: flex-end;
+  gap: 6px;
   flex-shrink: 0;
 }
-.heatmap-label {
-  font-size: 10px;
-  background: rgba(255,255,255,0.05);
-  padding: 2px 5px;
-  border-radius: 4px;
-  color: var(--text-dim);
+.ladder-label {
+  font-size: 9px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  color: #bbb;
+  text-transform: uppercase;
 }
-.heatmap-vol {
-  font-size: 10px;
+.ladder-vol {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
   font-weight: 800;
-  color: rgba(255,255,255,0.7);
-}
-.heatmap-now {
-  font-size: 10px;
-  color: var(--gold);
-  font-weight: 900;
-  animation: pulse 1.5s infinite;
+  color: #ddd;
 }
 
 .heatmap-legend {

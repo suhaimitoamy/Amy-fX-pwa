@@ -133,23 +133,35 @@ function renderHeatmap(zones, currentPrice) {
 
   canvas.style.display = 'flex';
   canvas.style.flexDirection = 'column';
-  canvas.style.gap = '8px';
-  canvas.style.padding = '16px 12px';
+  canvas.style.gap = '0';
+  canvas.style.padding = '8px 0';
   canvas.style.overflowY = 'auto';
+
+  function genBlocks(count, max, isResist) {
+    if(!count || count === 0) return '';
+    const maxBlocks = 20;
+    const blocks = Math.ceil((count / max) * maxBlocks);
+    const typeClass = isResist ? 'block-resist' : 'block-support';
+    return Array(blocks).fill(`<div class="heat-block ${typeClass}"></div>`).join('');
+  }
 
   canvas.innerHTML = sortedZones.map(z => {
     const isCurrent = z.isCurrent;
     return `
-      <div class="heatmap-row ${isCurrent ? 'is-now' : ''}">
-        <span class="heatmap-price">${z.price}</span>
-        <div class="heatmap-glow-track">
-          ${z.resistCount > 0 ? `<div class="heat-glow resist-glow" style="width:${Math.max(5, z.resistCount / maxActivity * 100)}%; opacity:${0.4 + (z.resistCount / maxActivity * 0.6)}"></div>` : ''}
-          ${z.supportCount > 0 ? `<div class="heat-glow support-glow" style="width:${Math.max(5, z.supportCount / maxActivity * 100)}%; opacity:${0.4 + (z.supportCount / maxActivity * 0.6)}"></div>` : ''}
+      <div class="ladder-row ${isCurrent ? 'ladder-now' : ''}">
+        <div class="ladder-price-col">
+          <span class="ladder-price">${z.price}</span>
+          ${isCurrent ? '<span class="ladder-now-indicator">◀</span>' : ''}
         </div>
-        <div class="heatmap-meta">
-          ${z.label ? `<span class="heatmap-label">${z.label}</span>` : ''}
-          <span class="heatmap-vol">${z.totalActivity}</span>
-          ${isCurrent ? '<span class="heatmap-now">◀</span>' : ''}
+        <div class="ladder-blocks-col">
+          <div class="ladder-blocks">
+            ${genBlocks(z.resistCount, maxActivity, true)}
+            ${genBlocks(z.supportCount, maxActivity, false)}
+          </div>
+        </div>
+        <div class="ladder-meta-col">
+          ${z.label ? `<span class="ladder-label">${z.label}</span>` : ''}
+          <span class="ladder-vol">${z.totalActivity}</span>
         </div>
       </div>
     `;
