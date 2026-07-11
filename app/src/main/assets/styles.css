@@ -139,8 +139,8 @@ main {
 .page-header p,
 .home-hero p {
   color: var(--text-muted);
-  font-size: .78rem;
-  margin-top: 3px;
+  font-size: .75rem;
+  margin-top: 2px;
 }
 
 .eyebrow,
@@ -187,9 +187,9 @@ main {
 .home-hero {
   position: relative;
   overflow: hidden;
-  padding: 19px 18px 17px;
+  padding: 14px 14px 12px;
   border: 1px solid rgba(212,175,55,.34);
-  border-radius: 18px;
+  border-radius: 16px;
   background: linear-gradient(135deg, rgba(41,34,18,.94), rgba(14,14,14,.95) 65%);
   box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.04);
 }
@@ -209,10 +209,10 @@ main {
 .home-hero h2 {
   position: relative;
   z-index: 1;
-  margin-top: 7px;
+  margin-top: 4px;
   color: #fff8df;
-  font-size: 1.25rem;
-  line-height: 1.25;
+  font-size: 1.12rem;
+  line-height: 1.2;
 }
 
 .home-hero p,
@@ -222,7 +222,7 @@ main {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 14px;
+  margin-top: 10px;
   color: #d8d0b9;
   font-size: .64rem;
   font-weight: 700;
