@@ -14,8 +14,30 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout
+      - name: Checkout Amy FX
         uses: actions/checkout@v4
+
+      - name: Checkout Academy Vault
+        uses: actions/checkout@v4
+        with:
+          repository: suhaimitoamy/amy-trading-academy-vault
+          path: _academy_vault
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install Academy generator dependencies
+        run: python -m pip install --disable-pip-version-check pyyaml mistune beautifulsoup4
+
+      - name: Generate privacy-filtered connected Academy
+        run: |
+          python scripts/generate_connected_academy.py \
+            --vault _academy_vault \
+            --academy app/src/main/assets/apps/academy
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
