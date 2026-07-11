@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: suhaimitoamy/amy-trading-academy-vault
+          token: ${{ secrets.ACADEMY_VAULT_TOKEN }}
           path: _academy_vault
           persist-credentials: false
 
@@ -28,7 +29,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
 
       - name: Install Academy generator dependencies
         run: python -m pip install --disable-pip-version-check pyyaml mistune beautifulsoup4
