@@ -425,7 +425,7 @@ class ScannerService : Service() {
         val safeRoute = if (route == "Dashboard") "Dashboard" else "Analyze"
         return Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            putExtra("target_url", "file:///android_asset/apps/mapping/index.html#$safeRoute")
+            putExtra("target_url", "https://appassets.androidplatform.net/assets/apps/mapping/index.html#$safeRoute")
             putExtra("amyfx_route", safeRoute)
             data = android.net.Uri.parse("amyfx://mapping?route=$safeRoute")
         }

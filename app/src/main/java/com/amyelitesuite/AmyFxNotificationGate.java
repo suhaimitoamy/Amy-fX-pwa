@@ -31,10 +31,10 @@ public class AmyFxNotificationGate {
     }
 
     public static String routeUrl(String route) {
-        if ("News".equals(route)) return "file:///android_asset/apps/market-intel/index.html#news";
-        if ("Journal".equals(route)) return "file:///android_asset/apps/journal/index.html";
-        if ("Academy".equals(route)) return "file:///android_asset/apps/academy/index.html";
-        return "file:///android_asset/apps/mapping/index.html#" + Uri.encode(route);
+        if ("News".equals(route)) return "https://appassets.androidplatform.net/assets/apps/market-intel/index.html#news";
+        if ("Journal".equals(route)) return "https://appassets.androidplatform.net/assets/apps/journal/index.html";
+        if ("Academy".equals(route)) return "https://appassets.androidplatform.net/assets/apps/academy/index.html";
+        return "https://appassets.androidplatform.net/assets/apps/mapping/index.html#" + Uri.encode(route);
     }
 
     public static boolean shouldNotify(Context context, String gateKey, long nowMs) {

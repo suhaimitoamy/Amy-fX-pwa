@@ -29,6 +29,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebChromeClient.FileChooserParams
@@ -41,14 +42,22 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.webkit.WebViewAssetLoader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import org.json.JSONArray
 import org.json.JSONObject
 
+private const val APP_ASSET_HOST = "appassets.androidplatform.net"
+private const val APP_ASSET_PREFIX = "https://appassets.androidplatform.net/assets/"
+private const val LEGACY_ASSET_PREFIX = "file:///android_asset/"
+private const val HOME_URL = "${APP_ASSET_PREFIX}index.html"
+private const val ERROR_URL = "${APP_ASSET_PREFIX}error.html"
+
 class MainActivity : Activity() {
     private lateinit var webView: WebView
+    private lateinit var assetLoader: WebViewAssetLoader
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var rootLayout: FrameLayout
     private lateinit var permissionGate: LinearLayout
@@ -94,13 +103,18 @@ class MainActivity : Activity() {
         webSettings.loadWithOverviewMode = true
         webSettings.useWideViewPort = true
         webSettings.cacheMode = WebSettings.LOAD_DEFAULT
-        webSettings.allowFileAccess = true
+        webSettings.allowFileAccess = false
         webSettings.allowContentAccess = true
         webSettings.allowFileAccessFromFileURLs = false
         webSettings.allowUniversalAccessFromFileURLs = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
         }
+
+        assetLoader = WebViewAssetLoader.Builder()
+            .setDomain(APP_ASSET_HOST)
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .build()
 
         webView.addJavascriptInterface(WebAppInterface(this), "Android")
 
@@ -137,10 +151,21 @@ class MainActivity : Activity() {
         }
 
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                val uri = request?.url ?: return super.shouldInterceptRequest(view, request)
+                return assetLoader.shouldInterceptRequest(uri)
+                    ?: super.shouldInterceptRequest(view, request)
+            }
+
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                val urlStr = request?.url?.toString() ?: return false
-                if (urlStr.startsWith("file:///android_asset/")) return false
-                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlStr))) } catch (e: Exception) {}
+                val uri = request?.url ?: return true
+                if (isTrustedLocalUri(uri)) return false
+                if (uri.scheme == "https" || uri.scheme == "http") {
+                    try { startActivity(Intent(Intent.ACTION_VIEW, uri)) } catch (_: Exception) {}
+                }
                 return true
             }
 
@@ -153,7 +178,7 @@ class MainActivity : Activity() {
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 if (request?.isForMainFrame == true) {
                     swipeRefreshLayout.isRefreshing = false
-                    view?.loadUrl("file:///android_asset/error.html")
+                    view?.loadUrl(ERROR_URL)
                 }
             }
         }
@@ -201,12 +226,8 @@ class MainActivity : Activity() {
             }
         }
 
-        val targetUrl = intent.getStringExtra("target_url")
-        if (targetUrl != null && targetUrl.startsWith("file:///android_asset/")) {
-            webView.loadUrl(targetUrl)
-        } else {
-            webView.loadUrl("file:///android_asset/index.html")
-        }
+        val targetUrl = normalizeLocalUrl(intent.getStringExtra("target_url")) ?: HOME_URL
+        webView.loadUrl(targetUrl)
 
         updatePermissionGate()
         maybeRequestNotificationPermission()
@@ -294,7 +315,6 @@ class MainActivity : Activity() {
         batteryStatusText = statusText()
         notificationStatusText = statusText()
         scannerStatusText = statusText()
-        manageFilesStatusText = statusText()
 
         val batteryButton = goldButton("Buka Battery Optimization") {
             openBatteryOptimizationRequest()
@@ -318,7 +338,6 @@ class MainActivity : Activity() {
         container.addView(batteryStatusText)
         container.addView(notificationStatusText)
         container.addView(scannerStatusText)
-        container.addView(manageFilesStatusText)
         container.addView(batteryButton)
         container.addView(notificationButton)
         // container.addView(manageFilesButton)
@@ -368,21 +387,22 @@ class MainActivity : Activity() {
 
         val batteryOk = isBatteryOptimizationDisabled()
         val notificationOk = isNotificationPermissionGranted()
-        val manageFilesOk = isManageAllFilesGranted()
-        val ready = batteryOk && notificationOk
 
-        batteryStatusText.text = if (batteryOk) "✅ Battery Optimization: Unrestricted" else "❌ Battery Optimization: belum Unrestricted"
-        notificationStatusText.text = if (notificationOk) "✅ Notifikasi: aktif" else "❌ Notifikasi: belum aktif"
+        batteryStatusText.text = if (batteryOk) "✅ Battery Optimization: Unrestricted" else "⚠️ Battery Optimization: belum Unrestricted"
+        notificationStatusText.text = if (notificationOk) "✅ Notifikasi: aktif" else "⚠️ Notifikasi: belum aktif"
         scannerStatusText.text = if (notificationOk) "✅ Scanner: bisa jalan" else "⛔ Scanner: butuh izin notifikasi"
-        if (::manageFilesStatusText.isInitialized) {
-            manageFilesStatusText.text = if (manageFilesOk) "✅ Kelola Semua File: aktif" else "⚠️ Kelola Semua File: belum aktif"
-        }
 
-        permissionGate.visibility = if (ready) View.GONE else View.VISIBLE
-        swipeRefreshLayout.isEnabled = ready
+        // Izin background tidak boleh memblokir halaman Mapping atau modul lain.
+        permissionGate.visibility = View.GONE
+        swipeRefreshLayout.isEnabled = true
 
         if (forceToast) {
-            Toast.makeText(this, if (ready) "Izin sudah lengkap." else "Izin scanner belum lengkap, tetapi aplikasi tetap bisa dipakai.", Toast.LENGTH_SHORT).show()
+            val message = if (notificationOk && batteryOk) {
+                "Notifikasi dan background scanner siap."
+            } else {
+                "Aplikasi tetap bisa dipakai. Lengkapi izin hanya untuk notifikasi dan scanner background."
+            }
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -490,6 +510,22 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun isTrustedLocalUri(uri: Uri): Boolean {
+        return uri.scheme == "https" &&
+            uri.host == APP_ASSET_HOST &&
+            uri.path?.startsWith("/assets/") == true
+    }
+
+    private fun normalizeLocalUrl(rawUrl: String?): String? {
+        if (rawUrl.isNullOrBlank()) return null
+        return when {
+            rawUrl.startsWith(APP_ASSET_PREFIX) -> rawUrl
+            rawUrl.startsWith(LEGACY_ASSET_PREFIX) ->
+                APP_ASSET_PREFIX + rawUrl.removePrefix(LEGACY_ASSET_PREFIX)
+            else -> null
+        }
+    }
+
     private fun injectHomeButtonForLocalModule(url: String?) {
         if (url == null || !url.contains("/apps/")) return
         webView.evaluateJavascript("""
@@ -510,7 +546,7 @@ class MainActivity : Activity() {
               btn.style.fontSize = '12px';
               btn.style.padding = '8px 12px';
               btn.style.boxShadow = '0 6px 18px rgba(0,0,0,.35)';
-              btn.onclick = function(){ if (window.Android && window.Android.goHome) { window.Android.goHome(); } else { location.href = 'file:///android_asset/index.html'; } };
+              btn.onclick = function(){ if (window.Android && window.Android.goHome) { window.Android.goHome(); } else { location.href = '${APP_ASSET_PREFIX}index.html'; } };
               document.body.appendChild(btn);
               document.body.style.setProperty('--amy-native-back-height','28px');
             })();
@@ -532,10 +568,8 @@ class MainActivity : Activity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
-        intent?.getStringExtra("target_url")?.let {
-            if (webView.url != it && it.startsWith("file:///android_asset/")) {
-                webView.loadUrl(it)
-            }
+        normalizeLocalUrl(intent?.getStringExtra("target_url"))?.let { targetUrl ->
+            if (webView.url != targetUrl) webView.loadUrl(targetUrl)
         }
         applyAmyFxRoute(intent?.getStringExtra("amyfx_route"))
     }
@@ -569,7 +603,7 @@ class MainActivity : Activity() {
         @JavascriptInterface
         fun goHome() {
             (mContext as Activity).runOnUiThread {
-                this@MainActivity.webView.loadUrl("file:///android_asset/index.html")
+                this@MainActivity.webView.loadUrl(HOME_URL)
             }
         }
 

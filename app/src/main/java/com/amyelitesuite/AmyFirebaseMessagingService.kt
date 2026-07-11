@@ -38,11 +38,11 @@ class AmyFirebaseMessagingService : FirebaseMessagingService() {
         val suppliedTarget = data["target_url"].orEmpty()
 
         val targetUrl = when {
-            suppliedTarget.startsWith("file:///android_asset/apps/market-intel/") -> suppliedTarget
+            suppliedTarget.startsWith("https://appassets.androidplatform.net/assets/apps/market-intel/") -> suppliedTarget
             newsId.isNotBlank() -> {
-                "file:///android_asset/apps/market-intel/index.html#news=${Uri.encode(newsId)}"
+                "https://appassets.androidplatform.net/assets/apps/market-intel/index.html#news=${Uri.encode(newsId)}"
             }
-            else -> "file:///android_asset/apps/market-intel/index.html"
+            else -> "https://appassets.androidplatform.net/assets/apps/market-intel/index.html"
         }
 
         showNewsNotification(title, body, newsId, targetUrl)
