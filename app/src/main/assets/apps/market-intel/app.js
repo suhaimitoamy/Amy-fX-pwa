@@ -110,36 +110,30 @@ function renderHeatmap(zones, currentPrice) {
   const canvas = document.getElementById('heatmap-canvas');
   if (!zones.length) return;
 
-  // Temukan rentang harga
-  const allPrices = zones.map(z => z.price);
-  if (currentPrice) allPrices.push(currentPrice);
-  const maxPrice = Math.max(...allPrices) + 2;
-  const minPrice = Math.min(...allPrices) - 2;
-  const totalRange = maxPrice - minPrice;
+  const sortedZones = [...zones].sort((a,b) => b.price - a.price);
+  const maxActivity = Math.max(...sortedZones.map(z => z.totalActivity), 1);
 
-  // Temukan max activity untuk scaling
-  const maxActivity = Math.max(...zones.map(z => z.totalActivity), 1);
+  canvas.style.display = 'flex';
+  canvas.style.flexDirection = 'column';
+  canvas.style.gap = '8px';
+  canvas.style.padding = '16px 12px';
+  canvas.style.overflowY = 'auto';
 
-  canvas.innerHTML = zones.map(z => {
-    const pct = ((z.price - minPrice) / totalRange) * 100;
+  canvas.innerHTML = sortedZones.map(z => {
     const isCurrent = z.isCurrent;
-    const resistH = z.resistCount > 0 ? (z.resistCount / maxActivity) * 60 : 0;
-    const supportH = z.supportCount > 0 ? (z.supportCount / maxActivity) * 60 : 0;
-
     return `
-      <div class="hz-row" style="top:${(100 - pct).toFixed(1)}%">
-        <span class="hz-price ${isCurrent ? 'current' : ''}">${z.price}</span>
-        <div class="hz-bars">
-          ${z.resistCount > 0 ? `<div class="hz-bar resist" style="width:${z.resistCount / maxActivity * 100}%" title="Resist: ${z.resistCount}">${z.resistCount}</div>` : ''}
-          ${z.supportCount > 0 ? `<div class="hz-bar support" style="width:${z.supportCount / maxActivity * 100}%" title="Support: ${z.supportCount}">${z.supportCount}</div>` : ''}
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="hz-price ${isCurrent ? 'current' : ''}" style="font-size:12px;">${z.price}</span>
+        <div class="hz-bars" style="flex:1; display:flex; flex-direction:column; gap:2px;">
+          ${z.resistCount > 0 ? `<div class="hz-bar resist" style="width:${Math.max(5, z.resistCount / maxActivity * 100)}%">${z.resistCount}</div>` : ''}
+          ${z.supportCount > 0 ? `<div class="hz-bar support" style="width:${Math.max(5, z.supportCount / maxActivity * 100)}%">${z.supportCount}</div>` : ''}
         </div>
-        ${z.label ? `<span class="hz-label">${z.label}</span>` : ''}
-        ${isCurrent ? '<span class="hz-now">◀ HARGA</span>' : ''}
+        ${z.label ? `<span class="hz-label" style="font-size:10px;">${z.label}</span>` : ''}
+        ${isCurrent ? '<span class="hz-now" style="font-size:10px;">◀ NOW</span>' : ''}
       </div>
     `;
   }).join('');
 
-  // Hapus loading
   hideLoading();
 }
 
@@ -201,7 +195,7 @@ function formatTime(iso) {
     const diff = now - d;
     if (diff < 60 * 1000) return 'Baru saja';
     if (diff < 60 * 60 * 1000) return `${Math.floor(diff / 60000)}m lalu`;
-    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WITA';
+    return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }) + ' WIB';
   } catch { return iso; }
 }
 

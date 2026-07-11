@@ -54,13 +54,11 @@ function wsLiveAlive(){
   try{return ws&&(ws.readyState===WebSocket.OPEN||ws.readyState===WebSocket.CONNECTING)}catch(e){return false}
 }
 function autoConnectLivePrice(){
-  if(state.bg)return;
   if(!state.key||!state.key.trim())return;
   if(wsLiveAlive())return;
   try{connect()}catch(e){log('Auto connect error: '+e.message)}
 }
 function livePriceWatchdog(){
-  if(state.bg)return;
   if(!state.key||!state.key.trim())return;
   let stale=lastWsTickAt&&Date.now()-lastWsTickAt>60000;
   if(!wsLiveAlive()||state.conn==='Offline'||stale){
