@@ -1,85 +1,42 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Breaker Blocks dan Mitigation Blocks — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 31 Ict Advanced Concepts</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Breaker Blocks dan Mitigation Blocks</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Dalam konsep SMC dasar, kita diajarkan bahwa <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> (OB) adalah benteng pertahanan yang kuat. Harga akan memantul ketika kembali ke area tersebut. Namun, bagaimana jika benteng tersebut hancur? Bagaimana jika sebuah OB yang sangat jelas justru ditembus (<em>break</em>) dengan telak oleh harga?</p></div>
-
-<p>Bagi <em>trader</em> ritel pemula, ini disebut <em>Stop Out</em> (kerugian). Namun dalam konsep ICT tingkat lanjut, <strong>sebuah <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang gagal adalah pintu masuk baru</strong>. Konsep inilah yang melahirkan <em>Breaker Blocks</em> dan <em>Mitigation Blocks</em>.</p>
-<h2>1. <a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a> (BRK)</h2>
-<p><img alt="breaker_block.svg" src="../images/breaker_block.svg" /></p>
-<p>Sebuah <em><a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a></em> adalah <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang gagal menahan harga, di mana kegagalan tersebut sekaligus menciptakan sebuah <em><a href="../bagian-09-entry-model/market-structure-shift.html">Market Structure Shift</a></em> (MSS) dengan terlebih dahulu menyapu likuiditas (<a href="../bagian-04-liquidity/liquidity-sweep.html">Liquidity Sweep</a>).</p>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Breaker Blocks dan Mitigation Blocks — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 31 ICT Advanced Concepts</a></div><div class="eyebrow">Bagian 31 ICT Advanced Concepts</div><h1>Breaker Blocks dan Mitigation Blocks</h1>
+<h1>Breaker Blocks dan Mitigation Blocks</h1>
+<div class="note">
+<p><strong>Ikhtisar</strong><br><p>Dalam konsep SMC dasar, kita diajarkan bahwa Order Block (OB) adalah benteng pertahanan yang kuat. Harga akan memantul ketika kembali ke area tersebut. Namun, bagaimana jika benteng tersebut hancur? Bagaimana jika sebuah OB yang sangat jelas justru ditembus (<em>break</em>) dengan telak oleh harga?</p></p>
+</div>
+<p>Bagi <em>trader</em> ritel pemula, ini disebut <em>Stop Out</em> (kerugian). Namun dalam konsep ICT tingkat lanjut, <strong>sebuah Order Block yang gagal adalah pintu masuk baru</strong>. Konsep inilah yang melahirkan <em>Breaker Blocks</em> dan <em>Mitigation Blocks</em>.</p>
+<h2>1. Breaker Block (BRK)</h2>
+<p>!breaker_block.svg</p>
+<p>Sebuah <em>Breaker Block</em> adalah Order Block yang gagal menahan harga, di mana kegagalan tersebut sekaligus menciptakan sebuah <em>Market Structure Shift</em> (MSS) dengan terlebih dahulu menyapu likuiditas (Liquidity Sweep).</p>
 <h3>Anatomi Bullish Breaker:</h3>
 <ol>
-<li>Harga bergerak naik membentuk sebuah puncak baru (<em>High</em>), lalu turun. Penurunan ini adalah tempat di mana <em>Bullish <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a></em> klasik terbentuk.</li>
-<li>Harga mencoba naik lagi tapi tertahan, lalu tiba-tiba turun tajam menembus lembah terendah sebelumnya (<strong>Lower Low</strong>), menyapu likuiditas (<em><a href="../bagian-04-liquidity/sell-side-liquidity.html">Sell Side Liquidity</a> Grab</em>).</li>
-<li>Setelah menyapu likuiditas di bawah, harga berbalik arah dan <strong>naik secara agresif dengan momentum yang kuat</strong>, menembus puncak tertinggi sebelumnya (menciptakan <a href="../bagian-09-entry-model/market-structure-shift.html">Market Structure Shift</a> ke arah atas).</li>
-<li>Penembusan ke atas ini secara otomatis <strong>menghancurkan Bearish <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> terakhir</strong> yang berada di puncak (yang awalnya bertanggung jawab atas penurunan tadi).</li>
-<li><strong>Bearish <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang hancur inilah yang kini berubah wujud menjadi Bullish <a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a>.</strong></li>
-<li>Ketika harga kembali turun (<em>pullback</em>) menguji balok yang hancur ini, balok tersebut kini berfungsi sebagai pijakan <em><a href="../bagian-02-membaca-chart/support.html">support</a></em> yang sangat kuat untuk <em>Buy</em>.</li>
+<li>Harga bergerak naik membentuk sebuah puncak baru (<em>High</em>), lalu turun. Penurunan ini adalah tempat di mana <em>Bullish Order Block</em> klasik terbentuk.</li>
+<li>Harga mencoba naik lagi tapi tertahan, lalu tiba-tiba turun tajam menembus lembah terendah sebelumnya (<strong>Lower Low</strong>), menyapu likuiditas (<em>Sell Side Liquidity Grab</em>).</li>
+<li>Setelah menyapu likuiditas di bawah, harga berbalik arah dan <strong>naik secara agresif dengan momentum yang kuat</strong>, menembus puncak tertinggi sebelumnya (menciptakan Market Structure Shift ke arah atas).</li>
+<li>Penembusan ke atas ini secara otomatis <strong>menghancurkan Bearish Order Block terakhir</strong> yang berada di puncak (yang awalnya bertanggung jawab atas penurunan tadi).</li>
+<li><strong>Bearish Order Block yang hancur inilah yang kini berubah wujud menjadi Bullish Breaker Block.</strong></li>
+<li>Ketika harga kembali turun (<em>pullback</em>) menguji balok yang hancur ini, balok tersebut kini berfungsi sebagai pijakan <em>support</em> yang sangat kuat untuk <em>Buy</em>.</li>
 </ol>
-<p>Kunci utama sebuah <a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a> adalah <strong>harus ada penyapuan likuiditas (Sweep) sebelum struktur pasar berubah.</strong></p>
-<h2>2. <a href="../bagian-18-order-block-masterclass/mitigation-block.html">Mitigation Block</a> (MB)</h2>
-<p><em><a href="../bagian-18-order-block-masterclass/mitigation-block.html">Mitigation Block</a></em> memiliki konsep yang hampir identik dengan <em><a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a></em>, tetapi dengan satu perbedaan fundamental yang sangat penting: <strong>Tidak ada penyapuan likuiditas (Sweep) pada puncak/lembah sebelumnya.</strong></p>
+<p>Kunci utama sebuah Breaker Block adalah <strong>harus ada penyapuan likuiditas (Sweep) sebelum struktur pasar berubah.</strong></p>
+<h2>2. Mitigation Block (MB)</h2>
+<p><em>Mitigation Block</em> memiliki konsep yang hampir identik dengan <em>Breaker Block</em>, tetapi dengan satu perbedaan fundamental yang sangat penting: <strong>Tidak ada penyapuan likuiditas (Sweep) pada puncak/lembah sebelumnya.</strong></p>
 <h3>Anatomi Bullish Mitigation:</h3>
 <ol>
 <li>Harga membentuk sebuah puncak (<em>High</em>).</li>
 <li>Harga turun membentuk lembah (<em>Low</em>).</li>
 <li>Harga mencoba naik lagi, namun gagal menembus puncak sebelumnya, sehingga hanya menciptakan <strong>Lower High</strong> (<em>Failure Swing</em>).</li>
 <li>Harga kemudian turun dan menembus lembah sebelumnya, menyebabkan Bearish MSS (perubahan struktur ke bawah).</li>
-<li>Bullish <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> terakhir di area lembah yang ditembus tadi kini menjadi <strong><a href="../bagian-18-order-block-masterclass/mitigation-block.html">Mitigation Block</a></strong>.</li>
+<li>Bullish Order Block terakhir di area lembah yang ditembus tadi kini menjadi <strong>Mitigation Block</strong>.</li>
 <li>Ketika harga kembali naik menyentuh area yang ditembus ini, <em>Smart Money</em> akan melakukan "Mitigasi" (menutup posisi <em>Buy</em> lama mereka yang terjebak dalam kondisi rugi menjadi <em>Break Even</em>), dan harga akan memantul kembali ke bawah (Peluang <em>Sell</em>).</li>
 </ol>
 <h2>Perbedaan Utama dan Hierarki Kekuatan</h2>
 <ul>
-<li><strong><a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a> (BRK)</strong> adalah hasil dari <em>Stop Hunt</em> / Manipulasi. Karena <em>Smart Money</em> baru saja menjebak banyak orang dan mengumpulkan banyak pesanan dari <em><a href="../bagian-04-liquidity/liquidity-sweep.html">Liquidity Sweep</a></em>, dorongan setelahnya akan sangat agresif. Oleh karena itu, <strong><a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a> adalah <a href="../bagian-05-smart-money-concept/pd-array.html">PD Array</a> probabilitas tinggi.</strong></li>
-<li><strong><a href="../bagian-18-order-block-masterclass/mitigation-block.html">Mitigation Block</a> (MB)</strong> terjadi saat pasar kehabisan tenaga (<em>Failure Swing</em>) dan tidak berhasil mengambil likuiditas eksternal. Karena tidak ada bahan bakar dari jebakan, level ini secara probabilitas <strong>lebih lemah dibandingkan <a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a></strong>.</li>
+<li><strong>Breaker Block (BRK)</strong> adalah hasil dari <em>Stop Hunt</em> / Manipulasi. Karena <em>Smart Money</em> baru saja menjebak banyak orang dan mengumpulkan banyak pesanan dari <em>Liquidity Sweep</em>, dorongan setelahnya akan sangat agresif. Oleh karena itu, <strong>Breaker Block adalah PD Array probabilitas tinggi.</strong></li>
+<li><strong>Mitigation Block (MB)</strong> terjadi saat pasar kehabisan tenaga (<em>Failure Swing</em>) dan tidak berhasil mengambil likuiditas eksternal. Karena tidak ada bahan bakar dari jebakan, level ini secara probabilitas <strong>lebih lemah dibandingkan Breaker Block</strong>.</li>
 </ul>
 <p><em>Pro Tip:</em>
-Sebuah <a href="../bagian-05-smart-money-concept/breaker-block.html">Breaker Block</a> akan menjadi setup level <em>A+</em> (Sangat Akurat) jika ia bertepatan lokasinya dengan area <a href="../bagian-05-smart-money-concept/fair-value-gap.html">Fair Value Gap</a> (FVG). Penyatuan antara Breaker dan FVG di zona harga yang sama sering disebut oleh ICT sebagai <strong>Unicorn Setup</strong>.</p>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
+Sebuah Breaker Block akan menjadi setup level <em>A+</em> (Sangat Akurat) jika ia bertepatan lokasinya dengan area Fair Value Gap (FVG). Penyatuan antara Breaker dan FVG di zona harga yang sama sering disebut oleh ICT sebagai <strong>Unicorn Setup</strong>.</p>
+</section></main><footer class="footer hide-until-auth">
   © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+</footer></body></html>

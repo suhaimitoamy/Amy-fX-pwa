@@ -4,44 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Jangan Layering Sembarangan — Amy FX Academy</title>
+  <title>Jangan Layering Sembarangan — Bagian 12 — Risk Management — Amy FX Academy</title>
   <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
   <script>const ROOT_PATH='../';</script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/main.js" defer></script>
 </head>
 <body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 12 Risk Management</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Jangan Layering Sembarangan</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Pernah melihat <em>screenshot</em> profit di grup-grup Telegram di mana layarnya penuh dengan rentetan posisi Buy (warna biru) dari atas sampai bawah? Terlihat keren, bukan? Sayangnya, banyak pemula yang mencoba meniru gaya tersebut tanpa mengerti konsep risikonya, yang pada akhirnya berujung pada kebangkrutan seketika.</p></div>
+  <script>requireLogin();</script>
+  <header class="topbar hide-until-auth">
+    <nav class="nav">
+      <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      <div class="navlinks" id="navlinks">
+        <a href="../index.html">Beranda</a>
+        <a href="../daftar-materi.html">Daftar Materi</a>
+        <a href="../tentang.html">Tentang</a>
+        <a href="../glosarium/index.html">Glosarium</a>
+      </div>
+    </nav>
+  </header>
+  <main class="container hide-until-auth">
+    <section class="article">
+      <div class="breadcrumb">
+        <a href="../index.html">Beranda</a> ›
+        <a href="../daftar-materi.html">Daftar Materi</a> ›
+        <a href="index.html">Bagian 12</a>
+      </div>
+      <div class="eyebrow">Bagian 12 — Risk Management</div>
+      <h1>Jangan Layering Sembarangan</h1>
 
+<div class="note"><strong>Ikhtisar</strong><br><p>Pernah melihat <em>screenshot</em> profit di grup-grup Telegram di mana layarnya penuh dengan rentetan posisi Buy (warna biru) dari atas sampai bawah? Terlihat keren, bukan? Sayangnya, banyak pemula yang mencoba meniru gaya tersebut tanpa mengerti konsep risikonya, yang pada akhirnya berujung pada kebangkrutan seketika.</p></div>
 <p>Praktik menumpuk posisi berkali-kali di arah yang sama ini disebut dengan <strong>Layering</strong> (atau Averaging). Di bab ini, kita akan membahas kenapa Layering sembarangan—terutama saat posisi sedang merugi (Averaging Down/Martingale)—adalah jalan tol menuju <em>Margin Call</em> (MC).</p>
 <h2>Kenapa Pemula Suka Melakukan Layering?</h2>
 <p>Penyebab utamanya adalah <strong>Ego (tidak mau mengakui bahwa analisanya salah)</strong>.</p>
@@ -53,7 +46,7 @@
 <li>Harga turun lagi ke 1990. Kamu panik, tapi masih tidak mau rugi. Kamu tambah lagi posisi "Buy" (Layer ke-3) dengan harapan, "Kalau harganya mantul sedikit saja ke 1993, total kerugianku langsung balik modal (BEP)."</li>
 </ol>
 <p><strong>Apa bahayanya?</strong><br />
-Benar bahwa jika harga memantul, kamu akan cepat balik modal. TAPI, bagaimana jika harga sedang dalam <em>trend bearish</em> yang kuat dan terus turun ke 1980? Akumulasi lot dari 3 layer tersebut akan membuat nilai kerugianmu membengkak sangat cepat, jauh melewati batas <em><a href="../bagian-12-risk-management/risk-per-trade.html">Risk per Trade</a></em> (1%) maupun <em><a href="../bagian-12-risk-management/daily-loss-limit.html">Daily Loss Limit</a></em> kamu. Dalam hitungan menit, broker akan menutup paksa semua posisimu karena modalmu habis (Margin Call).</p>
+Benar bahwa jika harga memantul, kamu akan cepat balik modal. TAPI, bagaimana jika harga sedang dalam <em>trend bearish</em> yang kuat dan terus turun ke 1980? Akumulasi lot dari 3 layer tersebut akan membuat nilai kerugianmu membengkak sangat cepat, jauh melewati batas <em>Risk per Trade</em> (1%) maupun <em>Daily Loss Limit</em> kamu. Dalam hitungan menit, broker akan menutup paksa semua posisimu karena modalmu habis (Margin Call).</p>
 <p><strong>Analogi Feynman:</strong> Anggap kamu sedang mendayung perahu di tengah danau, tiba-tiba perahumu menabrak batu dan bocor sedikit. Air mulai masuk (ini ibarat <em>floating minus</em>). Solusi paling logis adalah menambal lubang itu atau melompat keluar dengan pelampung (Cut Loss). Tapi dengan melakukan <em>Averaging Down</em>, kamu bukannya menambal, malah secara sengaja <strong>melubangi perahu di tempat lain</strong> dengan harapan ajaib airnya akan keluar lewat lubang baru tersebut. Pada kenyataannya? Perahumu akan tenggelam berkali-kali lipat lebih cepat!</p>
 <h2>Beda Averaging Amatir vs Scaling In Profesional</h2>
 <p><em>"Tapi Kak, trader pro di YouTube banyak yang layering juga kok?"</em></p>
@@ -62,21 +55,18 @@ Benar bahwa jika harga memantul, kamu akan cepat balik modal. TAPI, bagaimana ji
 <li><strong>Amatir (Averaging Down):</strong> Menambah posisi (Layer) <strong>ketika posisi sebelumnya sedang RUGI</strong>. Ini berarti mereka menggandakan risiko pada keputusan yang sudah terbukti salah.</li>
 <li><strong>Profesional (Scaling In):</strong> Menambah posisi (Layer) <strong>HANYA ketika posisi sebelumnya SUDAH PROFIT</strong> dan Stop Loss-nya sudah digeser ke titik aman (BEP/Break Even Point). Jadi, kalaupun harga berbalik tiba-tiba, risiko posisi pertama sudah 0%. Mereka hanya menambah muatan pada keputusan yang terbukti benar.</li>
 </ul>
-<h2>Aturan Keras di <a href="amy-fx-academy.html">Amy FX Academy</a></h2>
+<h2>Aturan Keras di Amy FX Academy</h2>
 <p>Untuk pemula, sangat disarankan untuk disiplin dengan aturan ini:</p>
 <p><strong>Satu Setup = Satu Peluru.</strong> Jangan pernah memencet entry tambahan jika posisi pertamamu sedang merah!</p>
 <p><strong>Bagaimana kalau mau pakai teknik Split Entry?</strong><br />
-Boleh. Misal, kamu melihat ada 2 area <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang berdekatan dan kamu ragu harga akan mantul di blok yang mana. Kamu boleh memasang 2 <em>Limit Order</em>. <strong>TETAPI, total risiko harus tetap dipecah!</strong><br />
+Boleh. Misal, kamu melihat ada 2 area Order Block yang berdekatan dan kamu ragu harga akan mantul di blok yang mana. Kamu boleh memasang 2 <em>Limit Order</em>. <strong>TETAPI, total risiko harus tetap dipecah!</strong><br />
 Kalau batas rugimu adalah 1% per trade, maka Limit Order pertama risikonya 0.5%, dan Limit Order kedua risikonya 0.5%. Bukan masing-masing 1%. Ini namanya manajemen lot yang cerdas, bukan layering sembarangan.</p>
 <h2>Kesimpulan</h2>
 <p>Layering saat <em>floating minus</em> adalah cara paling efisien dan cepat untuk menghanguskan hasil profitmu selama berbulan-bulan hanya dalam satu malam. Terima kerugian kecilmu. Salah analisa itu biasa. Tapi menggandakan uang pada analisa yang salah adalah kebodohan finansial.</p>
-<p>Ngomong-ngomong soal posisi merah, mengapa rasanya berat sekali menekan tombol "Close" saat posisi sedang rugi? Kita akan bahas aspek psikologisnya di bab <strong><a href="../bagian-12-risk-management/floating-minus-dan-harapan.html">Floating Minus dan Harapan</a></strong>.</p>
-    </div>
-  </section>
-</main>
+<p>Ngomong-ngomong soal posisi merah, mengapa rasanya berat sekali menekan tombol "Close" saat posisi sedang rugi? Kita akan bahas aspek psikologisnya di bab <strong>Floating Minus dan Harapan</strong>.</p>
 
-<footer class="footer hide-until-auth">
-  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
+    </section>
+  </main>
+  <footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer>
 </body>
 </html>

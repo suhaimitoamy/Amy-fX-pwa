@@ -39,48 +39,33 @@
     </div>
     
     <div class="glass-panel" style="margin-top: 20px;">
-        <h1>External Liquidity</h1>
-<p><img alt="10-external-liquidity-1782904559730-1.jpg" src="../images/10-external-liquidity-1782904559730-1.jpg" /></p>
-<div class="note"><strong>Ikhtisar</strong><br><p>Dalam metode SMC/ICT, pergerakan harga bukanlah sesuatu yang bergerak bebas tanpa tujuan. Harga selalu bergerak seperti pendulum yang berayun dari satu titik ekstrem ke titik ekstrem lainnya, dan mampir ke titik tengah untuk mengisi tenaga. Untuk membaca arah ayunan pendulum ini, kita membagi likuiditas ke dalam dua ruang lingkup spasial: <strong><a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a></strong> (likuiditas luar) dan <strong><a href="../bagian-04-liquidity/internal-liquidity.html">Internal Liquidity</a></strong> (likuiditas dalam).</p></div>
+      <h1>External Liquidity</h1>
 
+<div class="note"><strong>Ikhtisar</strong><br><p>Dalam metode SMC/ICT, pergerakan harga bukanlah sesuatu yang bergerak bebas tanpa tujuan. Harga selalu bergerak seperti pendulum yang berayun dari satu titik ekstrem ke titik ekstrem lainnya, dan mampir ke titik tengah untuk mengisi tenaga. Untuk membaca arah ayunan pendulum ini, kita membagi likuiditas ke dalam dua ruang lingkup spasial: **<a href="external-liquidity.html">External Liquidity</a>** (likuiditas luar) dan **<a href="internal-liquidity.html">Internal Liquidity</a>** (likuiditas dalam).</p></div>
 <p>Di bab ini, kita akan fokus pada bagian luarnya terlebih dahulu: <strong>External Range Liquidity (ERL)</strong>. Bayangkan ini sebagai tembok benteng terluar dari sebuah kastil. Ini adalah batas maksimal dari pergerakan harga pada suatu rentang waktu tertentu.</p>
-<h2>Apa Itu <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a>?</h2>
-<p><img alt="10-external-liquidity-1782904559730-2.jpg" src="../images/10-external-liquidity-1782904559730-2.jpg" /></p>
-<p><strong><a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a></strong> adalah <a href="../bagian-04-liquidity/liquidity-pool.html">liquidity pool</a> yang berada tepat di luar batas atas dan batas bawah dari sebuah <em>Price Range</em> (rentang harga) yang sedang aktif. Secara sederhana, ini adalah <a href="../bagian-04-liquidity/buy-side-liquidity.html">Buy Side Liquidity</a> (BSL) yang bersemayam di atas <strong>Swing High</strong> utama, dan <a href="../bagian-04-liquidity/sell-side-liquidity.html">Sell Side Liquidity</a> (SSL) yang bersemayam di bawah <strong>Swing Low</strong> utama.</p>
-<p>Mengapa disebut "Eksternal"? Karena posisinya berada di ujung ekstrem pergerakan harga. Jika harga saat ini sedang bergerak naik turun di antara level 1000 (Low) dan 1100 (High), maka likuiditas yang ada di atas 1100 dan di bawah 1000 itulah yang disebut sebagai <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a>.</p>
-<h2>Karakteristik <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a></h2>
-<p><img alt="10-external-liquidity-1782904559730-3.jpg" src="../images/10-external-liquidity-1782904559730-3.jpg" /></p>
+<h2>Apa Itu <a href="external-liquidity.html">External Liquidity</a>?</h2>
+<p><strong><a href="external-liquidity.html">External Liquidity</a></strong> adalah <a href="liquidity-pool.html">liquidity pool</a> yang berada tepat di luar batas atas dan batas bawah dari sebuah <em>Price Range</em> (rentang harga) yang sedang aktif. Secara sederhana, ini adalah <a href="buy-side-liquidity.html">Buy Side Liquidity</a> (BSL) yang bersemayam di atas <strong>Swing High</strong> utama, dan <a href="sell-side-liquidity.html">Sell Side Liquidity</a> (SSL) yang bersemayam di bawah <strong>Swing Low</strong> utama.</p>
+<p>Mengapa disebut "Eksternal"? Karena posisinya berada di ujung ekstrem pergerakan harga. Jika harga saat ini sedang bergerak naik turun di antara level 1000 (Low) dan 1100 (High), maka likuiditas yang ada di atas 1100 dan di bawah 1000 itulah yang disebut sebagai <a href="external-liquidity.html">External Liquidity</a>.</p>
+<h2>Karakteristik <a href="external-liquidity.html">External Liquidity</a></h2>
 <p>Kolam likuiditas eksternal ini biasanya sangat besar, karena ia tidak hanya mengumpulkan Stop Loss dari day trader (trader harian), tetapi juga mengumpulkan posisi dari swing trader dan investor institusional yang menahan posisi dalam jangka waktu lama.</p>
-<p>Oleh karena itu, ketika harga berhasil mencapai <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a>, dua hal penting biasanya terjadi:</p>
-<ol>
-<li><strong>Reaksi Penolakan (Reversal):</strong> Karena banyaknya pesanan yang terkumpul di sana, algoritma sering kali mengambil likuiditas tersebut (<a href="../bagian-04-liquidity/liquidity-sweep.html">Liquidity Sweep</a>) lalu berbalik arah secara dramatis.</li>
-<li><strong>Perubahan Bias (Directional Bias):</strong> Setelah harga berhasil menyapu <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a> di salah satu sisi (misalnya sisi atas), tugas algoritma di area ekstrem tersebut selesai. Harga tidak lagi punya alasan untuk terus naik, sehingga ia akan mulai mencari target di arah yang berlawanan (ke bawah).</li>
-</ol>
-<h2>Siklus Harga (<a href="../bagian-06-ict-core/price-delivery.html">Price Delivery</a> Cycle)</h2>
-<p><img alt="10-external-liquidity-1782904559730-4.jpg" src="../images/10-external-liquidity-1782904559730-4.jpg" /></p>
-<p>Ini adalah rahasia terbesar dalam membaca algoritma harga (<a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a>). Algoritma pengiriman harga bekerja dalam sebuah siklus yang berulang tanpa henti:</p>
+<p>Oleh karena itu, ketika harga berhasil mencapai <a href="external-liquidity.html">External Liquidity</a>, dua hal penting biasanya terjadi:</p>
+<p>1. <strong>Reaksi Penolakan (Reversal):</strong> Karena banyaknya pesanan yang terkumpul di sana, algoritma sering kali mengambil likuiditas tersebut (<a href="liquidity-sweep.html">Liquidity Sweep</a>) lalu berbalik arah secara dramatis.</p>
+<p>2. <strong>Perubahan Bias (Directional Bias):</strong> Setelah harga berhasil menyapu <a href="external-liquidity.html">External Liquidity</a> di salah satu sisi (misalnya sisi atas), tugas algoritma di area ekstrem tersebut selesai. Harga tidak lagi punya alasan untuk terus naik, sehingga ia akan mulai mencari target di arah yang berlawanan (ke bawah).</p>
+<h2>Siklus Harga (<a href="price-delivery.html">Price Delivery</a> Cycle)</h2>
+<p>Ini adalah rahasia terbesar dalam membaca algoritma harga (<a href="ipda.html">IPDA</a>). Algoritma pengiriman harga bekerja dalam sebuah siklus yang berulang tanpa henti:</p>
 <p><strong>Dari Eksternal menuju Internal, lalu dari Internal kembali ke Eksternal.</strong></p>
 <p>Artinya:</p>
-<ol>
-<li>
-<p>Ketika harga menembus Swing High (mengambil <strong><a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a></strong>), harga akan turun (pullback) mencari area ketidakseimbangan (seperti FVG atau <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a>) yang ada di <em>dalam</em> rentang harga tersebut (ini yang disebut <a href="../bagian-04-liquidity/internal-liquidity.html">Internal Liquidity</a>).</p>
-</li>
-<li>
-<p>Setelah harga menyentuh area Internal tersebut, ia akan mendapat energi baru, lalu memantul kembali ke luar untuk mengejar <strong><a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a></strong> berikutnya (mencetak Swing High baru atau mengejar Swing Low di seberang).</p>
-</li>
-</ol>
+<p>1. Ketika harga menembus Swing High (mengambil <strong><a href="external-liquidity.html">External Liquidity</a></strong>), harga akan turun (pullback) mencari area ketidakseimbangan (seperti FVG atau <a href="order-block.html">Order Block</a>) yang ada di <em>dalam</em> rentang harga tersebut (ini yang disebut <a href="internal-liquidity.html">Internal Liquidity</a>).</p>
+<p>2. Setelah harga menyentuh area Internal tersebut, ia akan mendapat energi baru, lalu memantul kembali ke luar untuk mengejar <strong><a href="external-liquidity.html">External Liquidity</a></strong> berikutnya (mencetak Swing High baru atau mengejar Swing Low di seberang).</p>
 <h2>Cara Menentukan External Range</h2>
 <p>Untuk bisa memanfaatkan konsep ini, kamu harus tahu cara menentukan batasan areanya (range). Berikut langkah praktisnya:</p>
-<ol>
-<li>Pilih Time Frame yang jelas (misalnya H4 atau Daily).</li>
-<li>Cari titik Swing High (titik tertinggi yang diapit oleh dua puncak yang lebih rendah) dan titik Swing Low (titik terendah yang diapit oleh dua lembah yang lebih tinggi) yang paling jelas dan belum tertembus.</li>
-<li>Garis horizontal di Swing High tersebut adalah batas atas <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a> (BSL).</li>
-<li>Garis horizontal di Swing Low tersebut adalah batas bawah <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a> (SSL).</li>
-<li>Selama harga bergerak di antara dua garis tersebut, harga sedang berada di dalam fase <em>Internal Range</em>.</li>
-</ol>
+<p>1. Pilih Time Frame yang jelas (misalnya H4 atau Daily).</p>
+<p>2. Cari titik Swing High (titik tertinggi yang diapit oleh dua puncak yang lebih rendah) dan titik Swing Low (titik terendah yang diapit oleh dua lembah yang lebih tinggi) yang paling jelas dan belum tertembus.</p>
+<p>3. Garis horizontal di Swing High tersebut adalah batas atas <a href="external-liquidity.html">External Liquidity</a> (BSL).</p>
+<p>4. Garis horizontal di Swing Low tersebut adalah batas bawah <a href="external-liquidity.html">External Liquidity</a> (SSL).</p>
+<p>5. Selama harga bergerak di antara dua garis tersebut, harga sedang berada di dalam fase <em>Internal Range</em>.</p>
 <h2>Aplikasi dalam Trading</h2>
-<p><img alt="10-external-liquidity-1782904559730-5.jpg" src="../images/10-external-liquidity-1782904559730-5.jpg" /></p>
-<p>Pemahaman tentang <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a> akan menyelamatkanmu dari kebiasaan "Membeli di pucuk". Jika kamu menyadari bahwa harga baru saja menembus Swing High H4 (berarti baru saja mengambil <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a>), kamu seharusnya <strong>berhenti mencari posisi Buy</strong>. Mengapa? Karena siklusnya mengatakan, setelah eksternal diambil, harga akan bergerak ke internal (turun/pullback).</p>
+<p>Pemahaman tentang <a href="external-liquidity.html">External Liquidity</a> akan menyelamatkanmu dari kebiasaan "Membeli di pucuk". Jika kamu menyadari bahwa harga baru saja menembus Swing High H4 (berarti baru saja mengambil <a href="external-liquidity.html">External Liquidity</a>), kamu seharusnya <strong>berhenti mencari posisi Buy</strong>. Mengapa? Karena siklusnya mengatakan, setelah eksternal diambil, harga akan bergerak ke internal (turun/pullback).</p>
 <p>Sebaliknya, pada momen itulah kamu mulai mencari konfirmasi pelemahan arah di Time Frame kecil (seperti M15 atau M5) untuk melakukan entry <strong>Sell</strong>, dengan target area Internal (FVG) yang ada di bawahnya.</p>
 <p>Memahami batasan ekstrem ini (External) adalah syarat wajib sebelum kita membedah apa yang terjadi di bagian dalam (Internal), yang akan kita bahas di bab selanjutnya.</p>
     </div>

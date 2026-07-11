@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Implied Fair Value Gap — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/glass.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+</head>
+<body>
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">A</span>
+      <span>Amy FX Academy</span>
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <section class="article">
+    <div class="breadcrumb">
+      <a href="../index.html">Beranda</a> › 
+      <a href="../daftar-materi.html">Daftar Materi</a> ›
+      <a href="index.html">Bagian 17 Fvg Masterclass</a>
+    </div>
+    
+    <div class="glass-panel" style="margin-top: 20px;">
+        <h1>Implied Fair Value Gap</h1>
+<div class="note"><strong>Ikhtisar</strong><br><p><strong>Implied <strong>Fair Value Gap</strong> (Implied FVG)</strong> adalah sebuah ketidakseimbangan ( <em>Imbalance</em> ) tingkat tinggi yang bersembunyi di dalam bayangan (<em>wick/tail</em>) <em>candle</em>. Secara visual, badan (<em>body</em>) dari <em>candle-candle</em> tersebut tampak saling bersentuhan tanpa ada jeda (<em>Gap</em>) fisik. Namun, algoritma <strong>IPDA</strong> membaca ruang antara ujung <em>wick</em> tersebut sebagai celah FVG sejati yang akan dihormati harganya.</p></div>
+
+<h2>1. Anatomi Implied FVG</h2>
+<p>Jika sebuah <strong>FVG Biasa</strong> dibentuk oleh 3 <em>candle</em> di mana terdapat ruang kosong di antara <em>wick</em> Candle ke-1 dan <em>wick</em> Candle ke-3, maka <strong>Implied FVG</strong> terlihat sedikit berbeda.</p>
+<p><strong>Contoh Implied FVG Bullish (Tren Naik):</strong>
+1.  <strong>Candle 1:</strong> Harga naik dan mencetak puncak <em>wick</em> yang tinggi.
+2.  <strong>Candle 2:</strong> Harga terus naik (candle besar / <em>Displacement</em>).
+3.  <strong>Candle 3:</strong> Harga turun sedikit untuk mencetak ekor bawah (<em>bottom wick</em>).</p>
+<p><strong>Kuncinya:</strong> Pada <em>Implied FVG</em>, <em>body</em> bawah Candle ke-3 mungkin bersentuhan langsung dengan <em>body</em> atas Candle ke-1, seolah-olah pasar sudah menyeimbangkan harga (<em>Balanced</em>). Namun, jika kita mengukur dari:
+*   Ujung <strong>Wick atas Candle ke-1</strong>, ke...
+*   Bagian <strong>Body bawah Candle ke-2 (Open/Close-nya)</strong> (atau <em>Body</em> atas Candle ke-1, tergantung formasi spesifik wick-nya).</p>
+<p>Inti dari <em>Implied FVG</em> adalah ketika kita melihat <em>wick</em> yang sangat panjang dari satu <em>candle</em>, disusul oleh <em>candle</em> berikutnya yang badannya (<em>body</em>) tidak menutupi <em>wick</em> tersebut sepenuhnya. Sisa <em>wick</em> yang belum tersentuh <em>body</em> itu menyimpan FVG tersembunyi yang biasa disebut sebagai <strong>Implied <strong>Fair Value Gap</strong></strong>.</p>
+<p><em>(Catatan ICT: Implied FVG paling sering diukur menggunakan 50% / Consequent Encroachment (CE) dari keseluruhan rentang bayangan/wick tersebut).</em></p>
+<h2>2. Kenapa Implied FVG Terbentuk?</h2>
+<p><em>Implied FVG</em> adalah produk dari algoritma yang mengeksekusi pesanan dengan kecepatan sangat tinggi di <em>timeframe</em> besar, namun secara fraktal, jika Anda turun ke <em>timeframe</em> yang lebih kecil (misalnya dari H4 ke M15), Anda akan melihat bahwa <em>wick</em> yang panjang itu sebenarnya adalah sekumpulan FVG biasa yang terbuka lebar!</p>
+<p>Algoritma menipu mata <em>trader</em> ritel yang hanya mengandalkan <em>body candle</em> untuk mencari penutupan <em>Gap</em>. Dengan meninggalkan <em>wick</em> yang tidak terisi <em>body</em>, algoritma <strong>IPDA</strong> sebenarnya meninggalkan sebuah <em>"beacon"</em> (suar) untuk kembali dikunjungi.</p>
+<h2>3. Cara Menggunakan Implied FVG</h2>
+<ol>
+<li><strong>Gunakan Sebagai Level Sensitif (Consequent Encroachment):</strong>
+    Tarik Fibonacci Retracement dari pangkal <em>wick</em> yang menjadi area <em>Implied FVG</em> ke ujungnya. Level 50% (CE) dari rentang tersebut adalah magnet yang luar biasa presisi. Algoritma <strong>IPDA</strong> sangat sering menyentuh tepat level 50% dari <em>Implied FVG</em> ini dengan <em>wick</em> baru, lalu seketika berbalik arah.</li>
+<li><strong>Konfirmasi Keberlanjutan Tren:</strong>
+    Ketika harga mundur (<em>retracement</em>) dan hanya <em>wick</em> yang masuk ke zona <em>Implied FVG</em> (sementara <em>body</em> tetap ditutup di luarnya), ini adalah tanda bahwa algoritma menghormati celah tersembunyi tersebut dan sedang menyuntikkan pesanan (<em>Sponsoring</em>) untuk melanjutkan tren.</li>
+</ol>
+<div class="warning"><strong>> Jangan terobsesi mencari *Implied FVG* di setiap *wick* panjang! *Implied FVG* yang valid **hanya** memiliki probabilitas tinggi jika terjadi di dalam area **Point of Interest (POI)** yang logis, atau tepat setelah terjadinya <strong>Market Structure Shift</strong> (MSS) dengan *Displacement*.</strong><br></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer hide-until-auth">
+  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
+</footer>
+</body>
+</html>

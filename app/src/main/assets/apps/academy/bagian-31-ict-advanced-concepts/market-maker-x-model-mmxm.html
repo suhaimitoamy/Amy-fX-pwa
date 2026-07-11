@@ -1,73 +1,31 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Market Maker X Model (MMXM) — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 31 Ict Advanced Concepts</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Market Maker X Model (MMXM)</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p><strong>MMXM</strong> terdiri dari Market Maker Buy Model (MMBM) dan Market Maker Sell Model (MMSM). Ini adalah cetak biru sejati tentang bagaimana algoritma (<a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a>) merekayasa harga. Pasar bergerak dari konsolidasi awal, manipulasi, hingga akhirnya membalikkan arah untuk kembali ke konsolidasi awal tadi (Original Consolidation).</p></div>
-
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Market Maker X Model (MMXM) — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 31 ICT Advanced Concepts</a></div><div class="eyebrow">Bagian 31 ICT Advanced Concepts</div><h1>Market Maker X Model (MMXM)</h1>
+<h1>Market Maker X Model (MMXM)</h1>
+<div class="note">
+<p><strong>Ikhtisar</strong><br><p><strong>MMXM</strong> terdiri dari Market Maker Buy Model (MMBM) dan Market Maker Sell Model (MMSM). Ini adalah cetak biru sejati tentang bagaimana algoritma (IPDA) merekayasa harga. Pasar bergerak dari konsolidasi awal, manipulasi, hingga akhirnya membalikkan arah untuk kembali ke konsolidasi awal tadi (Original Consolidation).</p></p>
+</div>
 <h2>Apa itu MMXM?</h2>
 <p>Ini adalah siklus pengiriman harga lengkap yang menggambarkan bagaimana Smart Money membangun posisi. Model ini berbentuk kurva atau parabola dan dibagi menjadi dua sisi: <strong>Buy Side of the Curve (BSoC)</strong> dan <strong>Sell Side of the Curve (SSoC)</strong>.</p>
 <p>Untuk <strong>MMSM (Sell Model)</strong>:
 1. <strong>Original Consolidation:</strong> Harga berada di kisaran (range) akumulasi awal.
 2. <strong>Buy Side of the Curve:</strong> Harga perlahan naik, menciptakan serangkaian higher highs, mengundang retail untuk membeli. Sering ditandai dengan Reaccumulation.
-3. <strong><a href="../bagian-11-advanced-ict/smart-money-reversal-smr.html">Smart Money Reversal (SMR)</a>:</strong> Harga mencapai POI HTF (Premium <a href="../bagian-05-smart-money-concept/pd-array.html">PD Array</a>) dan berbalik arah. Sering disertai <a href="../bagian-31-ict-advanced-concepts/smt-divergence.html">SMT Divergence</a>.
-4. <strong>Sell Side of the Curve:</strong> Harga mulai turun secara agresif. FVG dan <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> ditembus (menjadi Inversion).
-5. <strong><a href="../bagian-17-fvg-masterclass/draw-on-liquidity.html">Draw on Liquidity</a> (Target Utama):</strong> Harga kembali ke Original Consolidation dan mengambil likuiditas di bawahnya.</p>
+3. <strong>Smart Money Reversal (SMR):</strong> Harga mencapai POI HTF (Premium PD Array) dan berbalik arah. Sering disertai SMT Divergence.
+4. <strong>Sell Side of the Curve:</strong> Harga mulai turun secara agresif. FVG dan Order Block ditembus (menjadi Inversion).
+5. <strong>Draw on Liquidity (Target Utama):</strong> Harga kembali ke Original Consolidation dan mengambil likuiditas di bawahnya.</p>
 <h2>Mengapa MMXM Sangat Kuat?</h2>
 <p>Karena ia menceritakan narasi yang lengkap. Retail trader sering terjebak membeli di puncak SSoC, padahal Smart Money sedang membongkar posisi beli mereka (distribusi) untuk mulai menjual. Dengan memahami MMXM, kita tidak menebak arah, melainkan menyelaraskan diri di fase yang tepat.</p>
 <h2>Kapan &amp; Bagaimana Mengidentifikasinya?</h2>
 <p>Cari Original Consolidation di timeframe H1 atau M15. Saat harga bergerak menjauh dan mendekati Key Level HTF, bersiaplah mencari <strong>Smart Money Reversal</strong>.</p>
-<div class="tip"><strong>Low Risk Entry</strong><br><p>Jangan pernah mencoba menebak SMR. Tunggu hingga SMR terbentuk, lalu cari <strong>Low Risk Sell (LRS)</strong> di kaki pertama SSoC, setelah <a href="../bagian-09-entry-model/market-structure-shift.html">Market Structure Shift</a> (MSS) terjadi.</p></div>
-
+<div class="note">
+<p><strong>Low Risk Entry</strong><br><p>Jangan pernah mencoba menebak SMR. Tunggu hingga SMR terbentuk, lalu cari <strong>Low Risk Sell (LRS)</strong> di kaki pertama SSoC, setelah Market Structure Shift (MSS) terjadi.</p></p>
+</div>
 <h2>Kriteria Eksekusi (Contoh MMSM)</h2>
 <ul>
 <li><strong>Entry:</strong> Masuk pada <strong>Low Risk Sell</strong> (FVG/OB pertama yang terbentuk setelah SMR) atau pada fase Redistribusi di Sell Side of the Curve.</li>
 <li><strong>Invalidasi (SL):</strong> Di atas SMR High atau di atas struktur redistribusi terakhir.</li>
 <li><strong>Target (DOL):</strong> Secara bertahap, targetkan level likuiditas di BSoC, namun target pamungkasnya selalu berada di <strong>Original Consolidation</strong>.</li>
 </ul>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
+</section></main><footer class="footer hide-until-auth">
   © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+</footer></body></html>

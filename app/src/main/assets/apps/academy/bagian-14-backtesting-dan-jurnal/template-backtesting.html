@@ -35,92 +35,68 @@
     <div class="breadcrumb">
       <a href="../index.html">Beranda</a> › 
       <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 14 Backtesting Dan Jurnal</a>
+      <a href="index.html">Bagian 14 Backtesting dan Jurnal</a>
     </div>
     
     <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Template Backtesting</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Salah satu kendala terbesar saat memulai backtesting adalah kebingungan mengenai apa saja yang harus dicatat. Jika kamu hanya mencatat "Profit $10" atau "Loss $5", data tersebut sama sekali tidak berguna untuk dianalisis di masa depan. Sebuah <strong><a href="../bagian-14-backtesting-dan-jurnal/template-backtesting.html">Template Backtesting</a></strong> yang baik harus bisa menceritakan "apa, mengapa, dan bagaimana" suatu trade dieksekusi.</p></div>
+      <h1>Template Backtesting</h1>
 
+<div class="note"><strong>Ikhtisar</strong><br><p>Salah satu kendala terbesar saat memulai backtesting adalah kebingungan mengenai apa saja yang harus dicatat. Jika kamu hanya mencatat "Profit $10" atau "Loss $5", data tersebut sama sekali tidak berguna untuk dianalisis di masa depan. Sebuah <strong>Template Backtesting</strong> yang baik harus bisa menceritakan "apa, mengapa, dan bagaimana" suatu trade dieksekusi.</p></div>
 <p>Dalam bab ini, kita akan membahas kolom-kolom esensial yang wajib ada di dalam <em>spreadsheet</em> backtesting kamu. Kamu tidak harus menggunakan <em>software</em> berbayar; cukup gunakan Google Sheets, Microsoft Excel, atau Notion. Yang terpenting adalah kedisiplinanmu dalam mengisi data tersebut.</p>
-<h2>Struktur Dasar Jurnal Backtesting</h2>
-<p>Sebuah tabel backtesting setidaknya harus dibagi menjadi tiga fase: <strong>Informasi Umum, Eksekusi, dan Hasil Akhir</strong>. Mari kita bedah satu per satu kolom yang dibutuhkan.</p>
-<h3>1. Kolom Informasi Umum</h3>
-<p>Bagian ini mencatat konteks <em>market</em> saat peluang tersebut muncul. Ini sangat berguna untuk melihat pola: di waktu kapan strategimu paling sering bekerja.</p>
-<ul>
-<li><strong>No / ID Trade:</strong> Angka urut (1, 2, 3...) untuk memudahkan perhitungan statistik.</li>
-<li><strong>Tanggal &amp; Jam (Waktu Broker):</strong> Kapan setup ini terjadi? Waktu ini penting untuk melihat sesi mana (Asia, London, New York) yang paling cocok dengan strategimu.</li>
-<li><strong>Pair / Aset:</strong> Aset apa yang sedang kamu tes? (Misal: XAUUSD, EURUSD, BTCUSD).</li>
-<li><strong>Sesi Trading:</strong> Tuliskan dengan jelas apakah itu Sesi London, Sesi New York, atau masa transisi (Overlap).</li>
-</ul>
-<h3>2. Kolom Eksekusi (Alasan Entry)</h3>
-<p>Bagian ini memaksa kamu untuk selalu patuh pada Standard Operating Procedure (SOP). Jika kolom ini tidak bisa diisi, berarti trade tersebut tidak valid dan tidak boleh diambil!</p>
-<ul>
-<li><strong>Arah (Direction):</strong> Apakah kamu mengambil posisi Long (Buy) atau Short (Sell)?</li>
-<li><strong>Timeframe HTF Bias:</strong> Apa bias dari Timeframe Besar? (Misal: H4 Bullish).</li>
-<li><strong>Timeframe LTF Entry:</strong> Di Timeframe berapa kamu mengeksekusi entry? (Misal: M15 atau M5).</li>
-<li><strong>Kriteria Entry:</strong> Tuliskan alasan singkat namun spesifik. Contoh: <em>"Harga menyentuh <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> M15 setelah mengambil Asian High Liquidity, lalu membentuk konfirmasi CHoCH di M5."</em></li>
-</ul>
-<div class="tip"><strong>> Jika kamu mengisi kolom "Kriteria Entry" hanya dengan kata "Feeling" atau "Kayaknya mau naik", itu tanda bahaya bahwa kamu sedang berjudi.</strong><br></div>
 
+<h2>Struktur Dasar Jurnal Backtesting</h2>
+
+<p>Sebuah tabel backtesting setidaknya harus dibagi menjadi tiga fase: <strong>Informasi Umum, Eksekusi, dan Hasil Akhir</strong>. Mari kita bedah satu per satu kolom yang dibutuhkan.</p>
+
+<h3>1. Kolom Informasi Umum</h3>
+
+<p>Bagian ini mencatat konteks <em>market</em> saat peluang tersebut muncul. Ini sangat berguna untuk melihat pola: di waktu kapan strategimu paling sering bekerja.</p>
+
+<p>* <strong>No / ID Trade:</strong> Angka urut (1, 2, 3...) untuk memudahkan perhitungan statistik.</p>
+<p>* <strong>Tanggal & Jam (Waktu Broker):</strong> Kapan setup ini terjadi? Waktu ini penting untuk melihat sesi mana (Asia, London, New York) yang paling cocok dengan strategimu.</p>
+<p>* <strong>Pair / Aset:</strong> Aset apa yang sedang kamu tes? (Misal: XAUUSD, EURUSD, BTCUSD).</p>
+<p>* <strong>Sesi Trading:</strong> Tuliskan dengan jelas apakah itu Sesi London, Sesi New York, atau masa transisi (Overlap).</p>
+
+<h3>2. Kolom Eksekusi (Alasan Entry)</h3>
+
+<p>Bagian ini memaksa kamu untuk selalu patuh pada Standard Operating Procedure (SOP). Jika kolom ini tidak bisa diisi, berarti trade tersebut tidak valid dan tidak boleh diambil!</p>
+
+<p>* <strong>Arah (Direction):</strong> Apakah kamu mengambil posisi Long (Buy) atau Short (Sell)?</p>
+<p>* <strong>Timeframe HTF Bias:</strong> Apa bias dari Timeframe Besar? (Misal: H4 Bullish).</p>
+<p>* <strong>Timeframe LTF Entry:</strong> Di Timeframe berapa kamu mengeksekusi entry? (Misal: M15 atau M5).</p>
+<em> <strong>Kriteria Entry:</strong> Tuliskan alasan singkat namun spesifik. Contoh: </em>"Harga menyentuh Order Block M15 setelah mengambil Asian High Liquidity, lalu membentuk konfirmasi CHoCH di M5."*
+
+<div class="note"><strong>Tip</strong><br><p>Jika kamu mengisi kolom "Kriteria Entry" hanya dengan kata "Feeling" atau "Kayaknya mau naik", itu tanda bahaya bahwa kamu sedang berjudi.</p></div>
 <h3>3. Kolom Parameter Risiko</h3>
+
 <p>Sebelum tahu apakah trade ini menang atau kalah, kamu harus mengukur risikonya.</p>
-<ul>
-<li><strong>Entry Price:</strong> Harga di mana kamu masuk pasar.</li>
-<li><strong>Stop Loss (Pips/Poin):</strong> Jarak antara Entry dan level Stop Loss. Ini berguna untuk melihat apakah rata-rata SL-mu terlalu sempit atau terlalu lebar.</li>
-<li><strong>Take Profit (Pips/Poin):</strong> Jarak target keuntunganmu.</li>
-<li><strong>Rasio Risk:Reward (RR):</strong> Berapa target perbandingannya? (Misal: 1:3, 1:2).</li>
-</ul>
+
+<p>* <strong>Entry Price:</strong> Harga di mana kamu masuk pasar.</p>
+<p>* <strong>Stop Loss (Pips/Poin):</strong> Jarak antara Entry dan level Stop Loss. Ini berguna untuk melihat apakah rata-rata SL-mu terlalu sempit atau terlalu lebar.</p>
+<p>* <strong>Take Profit (Pips/Poin):</strong> Jarak target keuntunganmu.</p>
+<p>* <strong>Rasio Risk:Reward (RR):</strong> Berapa target perbandingannya? (Misal: 1:3, 1:2).</p>
+
 <h3>4. Kolom Hasil dan Visual</h3>
+
 <p>Inilah tempat kamu mencatat <em>outcome</em> secara jujur dan melampirkan "barang bukti".</p>
-<ul>
-<li><strong>Hasil Akhir (Result):</strong> Isi dengan <em>Win</em> (Kena TP), <em>Loss</em> (Kena SL), atau <em>BE</em> (Break-Even / Balik Modal).</li>
-<li><strong>Catatan / Review:</strong> Tulis evaluasi singkat. Contoh: <em>"Kena SL karena entry terlalu cepat sebelum candle konfirmasi tertutup (close)."</em></li>
-<li><strong>Link Screenshot (Wajib!):</strong> Gunakan fitur <em>Copy Link to Chart</em> di TradingView, atau gunakan aplikasi seperti Lightshot untuk menyimpan link gambar chart. Minimal simpan 2 gambar per trade: <strong>Sebelum Hasil Keluar</strong> dan <strong>Sesudah Hasil Keluar</strong>.</li>
-</ul>
+
+<em> <strong>Hasil Akhir (Result):</strong> Isi dengan </em>Win<em> (Kena TP), </em>Loss<em> (Kena SL), atau </em>BE* (Break-Even / Balik Modal).
+<em> <strong>Catatan / Review:</strong> Tulis evaluasi singkat. Contoh: </em>"Kena SL karena entry terlalu cepat sebelum candle konfirmasi tertutup (close)."*
+<em> <strong>Link Screenshot (Wajib!):</strong> Gunakan fitur </em>Copy Link to Chart* di TradingView, atau gunakan aplikasi seperti Lightshot untuk menyimpan link gambar chart. Minimal simpan 2 gambar per trade: <strong>Sebelum Hasil Keluar</strong> dan <strong>Sesudah Hasil Keluar</strong>.
+
 <h2>Contoh Baris (Row) dalam Spreadsheet</h2>
-<table>
-<thead>
-<tr>
-<th>No</th>
-<th>Tanggal/Jam</th>
-<th>Pair</th>
-<th>Sesi</th>
-<th>Arah</th>
-<th>Kriteria Entry</th>
-<th>RR</th>
-<th>Hasil</th>
-<th>Link Gambar</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>12 Ags, 14:30 WIB</td>
-<td>EURUSD</td>
-<td>London</td>
-<td>Short</td>
-<td>Sweep London High + M5 CHoCH</td>
-<td>1:3</td>
-<td>Win</td>
-<td><a href="#">Link TV</a></td>
-</tr>
-<tr>
-<td>2</td>
-<td>12 Ags, 20:00 WIB</td>
-<td>XAUUSD</td>
-<td>New York</td>
-<td>Long</td>
-<td>M15 FVG + <a href="../bagian-04-liquidity/liquidity-grab.html">Liquidity Grab</a></td>
-<td>1:2</td>
-<td>Loss</td>
-<td><a href="#">Link TV</a></td>
-</tr>
-</tbody>
-</table>
+
+<p>| No | Tanggal/Jam | Pair | Sesi | Arah | Kriteria Entry | RR | Hasil | Link Gambar |</p>
+<p>| --- | --- | --- | --- | --- | --- | --- | --- | --- |</p>
+<p>| 1 | 12 Ags, 14:30 WIB | EURUSD | London | Short | Sweep London High + M5 CHoCH | 1:3 | Win | [Link TV](#) |</p>
+<p>| 2 | 12 Ags, 20:00 WIB | XAUUSD | New York | Long | M15 FVG + Liquidity Grab | 1:2 | Loss | [Link TV](#) |</p>
+
 <h2>Kekuatan Sebuah Catatan Visual</h2>
+
 <p>Mencatat angka itu penting untuk menghitung persentase menang (win rate). Namun, <strong>menyimpan Link Screenshot jauh lebih penting untuk melatih mata (Pattern Recognition)</strong>.</p>
+
 <p>Bayangkan jika kamu punya 100 gambar dari setup yang Win, dan 100 gambar dari setup yang Loss. Saat akhir minggu, kamu bisa menjejerkan semua gambar yang Win. Otakmu akan secara otomatis mencari kesamaan dari gambar-gambar tersebut. <em>"Oh, ternyata semua trade Win saya terjadi saat harga sudah mengambil liquidity besar."</em> Hal semacam ini tidak akan kamu temukan hanya dengan melihat tabel berisi angka.</p>
+
     </div>
   </section>
 </main>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Liquidity Void vs Volume Imbalance vs FVG — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/glass.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+</head>
+<body>
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">A</span>
+      <span>Amy FX Academy</span>
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <section class="article">
+    <div class="breadcrumb">
+      <a href="../index.html">Beranda</a> › 
+      <a href="../daftar-materi.html">Daftar Materi</a> ›
+      <a href="index.html">Bagian 17 Fvg Masterclass</a>
+    </div>
+    
+    <div class="glass-panel" style="margin-top: 20px;">
+        <h1>Liquidity Void vs Volume Imbalance vs FVG</h1>
+<div class="note"><strong>Ikhtisar</strong><br><p>Ketiga <em><strong>PD Array</strong></em> ini mendeskripsikan kondisi ketidakseimbangan harga, namun ketiganya berbeda secara anatomi. Trader sering menyamaratakan ketiganya sebagai "Gap", padahal algoritma <strong>IPDA</strong> merespons masing-masing dengan kecepatan (Velocity) yang sangat berbeda.</p></div>
+
+<h2>1. <strong>Fair Value Gap</strong> (FVG)</h2>
+<ul>
+<li><strong>Anatomi:</strong> Terdiri dari 3 <em>candle</em>. Terjadi kekosongan <em>body</em> harga di antara ekor (<em>wick</em>) <em>candle</em> pertama dan ekor <em>candle</em> ketiga.</li>
+<li><strong>Sifat Algoritma:</strong> Ini adalah area <strong>Entry Point</strong> (Zona Diskon/Premium). Algoritma menggunakan FVG sebagai titik pijakan untuk melontarkan harga kembali ke arah tren.</li>
+<li><strong>Respons Harga:</strong> Harga biasanya akan bereaksi seketika saat menyentuh FVG, terutama jika menyentuh titik <em>Consequent Encroachment</em> (50%).</li>
+</ul>
+<h2>2. Volume Imbalance (VI)</h2>
+<ul>
+<li><strong>Anatomi:</strong> Terjadi BUKAN di antara tiga <em>candle</em>, melainkan tepat di perbatasan dua <em>candle</em> yang bersebelahan. <em>Body</em> (harga Open/Close) dari kedua <em>candle</em> tersebut <strong>tidak saling bersentuhan</strong>, meninggalkan sebuah celah kosong. NAMUN, ekor (<em>wick</em>) dari kedua <em>candle</em> tersebut saling tumpang tindih melewati celah kosong tadi.</li>
+<li><strong>Sifat Algoritma:</strong> VI menunjukkan bahwa pesanan telah dieksekusi (oleh <em>wick</em>), tetapi institusi menolak untuk menahan harga (Close) di level tersebut. Ini adalah tanda kelemahan likuiditas tingkat tinggi.</li>
+<li><strong>Respons Harga:</strong> VI adalah magnet yang JAUH lebih kuat dari FVG. Jika harga mendekati VI, ia sering kali akan "terhisap" ke tengah-tengah VI tersebut sebelum memantul, tidak sekadar menyentuh pinggirannya seperti FVG.</li>
+</ul>
+<h2>3. Liquidity Void (LV)</h2>
+<ul>
+<li><strong>Anatomi:</strong> Sehamparan pergerakan harga satu arah (satu warna <em>candle</em>, misal hijau semua) yang sangat panjang, bisa terdiri dari 4, 5, atau lebih <em>candle</em> <em>Displacement</em> berjejer tanpa ada <em>candle</em> warna berlawanan sama sekali.</li>
+<li><strong>Sifat Algoritma:</strong> Ini adalah area di mana pengiriman harga (<strong>Price Delivery</strong>) terjadi terlalu cepat (biasanya saat berita NFP/FOMC) sehingga tidak ada perdagangan dua arah yang sehat.</li>
+<li><strong>Respons Harga:</strong> Berbeda dengan FVG (sebagai pijakan masuk), LV berfungsi sebagai <strong><strong>Draw on Liquidity</strong> (Target Akhir)</strong>. <strong>IPDA</strong> akan secara bertahap merangkak lambat (Retracement) untuk mengisi kehampaan <em>Void</em> ini secara perlahan.</li>
+</ul>
+<div class="warning"><strong>Perbedaan Eksekusi</strong><br><ul>
+<li><strong>FVG:</strong> Letakkan <em>Limit Order</em> untuk ikut tren.</li>
+<li><strong>Volume Imbalance:</strong> Letakkan <em>Limit Order</em> TEPAT di tengah celah VI, bukan di pinggirannya.</li>
+<li><strong>Liquidity Void:</strong> JANGAN masuk <em>trade</em> di dalam <em>Void</em>. Gunakan <em>Void</em> HANYA sebagai target Take Profit Anda dari posisi yang dibuka sebelumnya.</li>
+</ul></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer hide-until-auth">
+  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
+</footer>
+</body>
+</html>

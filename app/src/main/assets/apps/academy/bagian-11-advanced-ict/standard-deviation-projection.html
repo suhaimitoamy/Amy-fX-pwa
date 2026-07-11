@@ -1,47 +1,4 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Standard Deviation Projection — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 11 Advanced Ict</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Standard Deviation Projection</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Pernah bingung menentukan di mana harga akan berhenti berlari setelah terjadi <em>breakout</em> atau <em>reversal</em>? Di sinilah konsep matematika algoritma masuk. Dalam ICT, kita menggunakan <strong>Standard Deviation (STDV)</strong> untuk memproyeksikan target pergerakan harga.</p></div>
-
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Standard Deviation Projection — Bagian 11 — Advanced ICT — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a><button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button><div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 11 — Advanced ICT</a></div><div class="eyebrow">Bagian 11 — Advanced ICT</div><h1>Standard Deviation Projection</h1><div class="note"><strong>Ikhtisar</strong><br><p>Pernah bingung menentukan di mana harga akan berhenti berlari setelah terjadi <em>breakout</em> atau <em>reversal</em>? Di sinilah konsep matematika algoritma masuk. Dalam ICT, kita menggunakan <strong>Standard Deviation (STDV)</strong> untuk memproyeksikan target pergerakan harga.</p></div>
 <p>Kita akan menggunakan alat ukur yang sudah sangat populer: <strong>Fibonacci Retracement</strong>. TAPI, kita tidak menggunakannya seperti trader ritel pada umumnya yang mencari pantulan di level 61.8% atau 78.6%. Kita memodifikasinya khusus untuk memproyeksikan ekstensi harga (proyeksi).</p>
 <h2>Setting Fibonacci untuk STDV ICT</h2>
 <p>Buka <em>setting</em> Fibonacci Retracement kamu di TradingView atau MT4/MT5. Hapus semua level bawaan (seperti 0.236, 0.382, dsb). Masukkan angka-angka berikut ini saja:</p>
@@ -55,18 +12,18 @@
 </ul>
 <p><em>Catatan: Kamu juga bisa menggunakan angka positif seperti 2, 2.5, 4 jika kamu menarik fibo secara terbalik. Intinya, kita butuh kelipatan -1, -1.5, -2, -2.5, dan -4 dari rentang awal yang kita ukur.</em></p>
 <h2>Cara Menarik Fibo STDV</h2>
-<p>Kunci utama dari <a href="../bagian-26-xauusd-advanced-playbook/stdv-projection.html">STDV Projection</a> adalah: <strong>Apa yang diukur?</strong> Jika kamu salah menarik kotak pengukurannya (titik 0 ke 1), maka semua proyeksimu akan salah.</p>
+<p>Kunci utama dari STDV Projection adalah: <strong>Apa yang diukur?</strong> Jika kamu salah menarik kotak pengukurannya (titik 0 ke 1), maka semua proyeksimu akan salah.</p>
 <p>Ada dua "kaki" utama yang sering digunakan ICT untuk menarik STDV:</p>
-<h3>1. Mengukur Manipulation Leg (<a href="../bagian-08-session-dan-waktu/judas-swing.html">Judas Swing</a>)</h3>
-<p>Ini adalah cara yang paling sering digunakan, terutama saat <em><a href="../bagian-11-advanced-ict/smart-money-reversal-smr.html">Smart Money Reversal (SMR)</a></em> terjadi.</p>
+<h3>1. Mengukur Manipulation Leg (Judas Swing)</h3>
+<p>Ini adalah cara yang paling sering digunakan, terutama saat <em>Smart Money Reversal (SMR)</em> terjadi.</p>
 <ul>
-<li>Tunggu sampai terjadi SMR dan harga telah melakukan MSS (<a href="../bagian-09-entry-model/market-structure-shift.html">Market Structure Shift</a>).</li>
+<li>Tunggu sampai terjadi SMR dan harga telah melakukan MSS (Market Structure Shift).</li>
 <li>Cari kaki manipulasi terakhir (ayunan terakhir yang menyapu likuiditas sebelum harga berbalik).</li>
 <li>Tarik fibo dari titik tertinggi ke titik terendah (High to Low) dari kaki manipulasi tersebut.</li>
 <li>Level -1, -2, dan -2.5 akan muncul sebagai target di arah yang baru.</li>
 </ul>
 <h3>2. Mengukur Consolidation Box (Kotak Akumulasi)</h3>
-<p>Ini sering dipakai pada strategi <em>Asian Range</em> atau <em>London <a href="../bagian-08-session-dan-waktu/killzone.html">Killzone</a></em>.</p>
+<p>Ini sering dipakai pada strategi <em>Asian Range</em> atau <em>London Killzone</em>.</p>
 <ul>
 <li>Tandai rentang tertinggi (High) dan terendah (Low) dari konsolidasi (misal: Asian Session).</li>
 <li>Tarik fibo dari High ke Low konsolidasi tersebut.</li>
@@ -74,20 +31,11 @@
 </ul>
 <h2>Konfluensi (Gabungan) adalah Segalanya</h2>
 <p>Jangan pernah menaruh posisi Sell atau Buy Limit HANYA karena harga menyentuh garis -2 STDV! Angka-angka ini adalah alat bantu matematika, bukan tembok beton.</p>
-<p><strong>Cara Terbaik Menggunakannya:</strong> Proyeksi STDV paling akurat jika level fibo tersebut "bertumpuk" (overlap) dengan HTF <a href="../bagian-05-smart-money-concept/pd-array.html">PD Array</a> lainnya.</p>
-<p>Contoh: Kamu memproyeksikan target naik dari sebuah MMBM. Garis level <strong>-2.5 STDV</strong> ternyata sejajar (berada di harga yang sama persis) dengan <strong>Daily Bearish FVG</strong> dan <strong>Previous Week High (<a href="../bagian-04-liquidity/liquidity-pool.html">Liquidity Pool</a>)</strong>. Ini adalah konfluensi tingkat dewa! Area tersebut menjadi target Take Profit yang sangat logis dan memiliki probabilitas tinggi untuk memicu pembalikan harga (reversal) berikutnya.</p>
+<p><strong>Cara Terbaik Menggunakannya:</strong> Proyeksi STDV paling akurat jika level fibo tersebut "bertumpuk" (overlap) dengan HTF PD Array lainnya.</p>
+<p>Contoh: Kamu memproyeksikan target naik dari sebuah MMBM. Garis level <strong>-2.5 STDV</strong> ternyata sejajar (berada di harga yang sama persis) dengan <strong>Daily Bearish FVG</strong> dan <strong>Previous Week High (Liquidity Pool)</strong>. Ini adalah konfluensi tingkat dewa! Area tersebut menjadi target Take Profit yang sangat logis dan memiliki probabilitas tinggi untuk memicu pembalikan harga (reversal) berikutnya.</p>
 <h2>Target Umum</h2>
 <ul>
 <li><strong>-2 hingga -2.5 STDV:</strong> Ini adalah area target paling normal di mana harga sering mengambil nafas atau membalik arah dalam satu hari (Intraday). Ambil sebagian besar profitmu di sini.</li>
 <li><strong>-4 STDV:</strong> Ini adalah target akhir. Hanya tercapai jika hari itu adalah hari <em>Trending</em> yang sangat kuat (One-sided market) atau saat ada rilis berita berdampak besar (High Impact News).</li>
 </ul>
-<p>Di dua bab selanjutnya, kita akan melihat lebih detail bagaimana Standard Deviation digunakan khusus untuk membedah fase Akumulasi, Manipulasi, dan Distribusi (AMD).</p>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
-  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+<p>Di dua bab selanjutnya, kita akan melihat lebih detail bagaimana Standard Deviation digunakan khusus untuk membedah fase Akumulasi, Manipulasi, dan Distribusi (AMD).</p></section></main><footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer></body></html>

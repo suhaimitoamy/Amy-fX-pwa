@@ -35,42 +35,62 @@
     <div class="breadcrumb">
       <a href="../index.html">Beranda</a> › 
       <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 14 Backtesting Dan Jurnal</a>
+      <a href="index.html">Bagian 14 Backtesting dan Jurnal</a>
     </div>
     
     <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Menentukan Apakah Strategi Layak</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Setelah melakukan backtesting ratusan kali, mencatat di jurnal, dan menghitung Winrate serta RR, tiba saatnya untuk mengambil keputusan final: <strong>Apakah strategi ini layak dipakai untuk mempertaruhkan uang sungguhan?</strong></p></div>
+      <h1>Menentukan Apakah Strategi Layak</h1>
 
+<div class="note"><strong>Ikhtisar</strong><br><p>Setelah melakukan backtesting ratusan kali, mencatat di jurnal, dan menghitung Winrate serta RR, tiba saatnya untuk mengambil keputusan final: <strong>Apakah strategi ini layak dipakai untuk mempertaruhkan uang sungguhan?</strong></p></div>
 <p>Banyak trader yang ragu-ragu di tahap ini. Mereka terus mencari "kesempurnaan" dan merevisi strategi setiap kali menemukan kelemahan kecil, hingga akhirnya mengalami <em>Analysis Paralysis</em> (kelumpuhan analisa). Padahal, tidak ada strategi yang 100% sempurna. Yang ada hanyalah strategi yang memiliki <em>Positive Expectancy</em> (Harapan Keuntungan Positif).</p>
+
 <h2>Apa Itu Positive Expectancy (Ekspektasi Positif)?</h2>
+
 <p>Sebuah strategi dikatakan layak <strong>BUKAN</strong> karena dia tidak pernah loss, melainkan karena secara matematis, jika diulang ratusan kali, sistem tersebut akan menghasilkan uang lebih banyak daripada uang yang hilang. Inilah yang disebut <em>Positive Expectancy</em>.</p>
+
 <p>Ada rumus sederhana untuk menghitung kelayakan sistemmu:</p>
-<p><strong>Rumus Expectancy:</strong><br />
-(Winrate x Rata-rata Profit) - (Loss Rate x Rata-rata Loss)</p>
+
+<strong>Rumus Expectancy:</strong>  
+<p>(Winrate x Rata-rata Profit) - (Loss Rate x Rata-rata Loss)</p>
+
 <p>Misalnya, dari data backtest 100 trade, kamu merisikokan rata-rata $100 per trade (SL) dan target profit rata-rata $200 (TP). Winrate kamu adalah 40%. Maka hitungannya:</p>
-<ul>
-<li>Winrate: 40% (0.4)</li>
-<li>Loss Rate: 60% (0.6)</li>
-<li>Rata-rata Profit: $200</li>
-<li>Rata-rata Loss: $100</li>
-</ul>
-<p>Expectancy = (0.4 x 200) - (0.6 x 100)<br />
-Expectancy = (80) - (60) = <strong>+$20 per trade</strong>.</p>
+
+<p>* Winrate: 40% (0.4)</p>
+<p>* Loss Rate: 60% (0.6)</p>
+<p>* Rata-rata Profit: $200</p>
+<p>* Rata-rata Loss: $100</p>
+
+<p>Expectancy = (0.4 x 200) - (0.6 x 100)  </p>
+<p>Expectancy = (80) - (60) = <strong>+$20 per trade</strong>.</p>
+
 <p>Artinya, secara matematis, <strong>setiap kali kamu klik entry, kamu "dibayar" $20</strong>, terlepas dari apakah trade spesifik itu nantinya menang atau kalah. Sistem ini memiliki <em>Positive Expectancy</em> dan <strong>sangat layak digunakan!</strong></p>
+
 <h2>Tanda-tanda Strategi Harus Dibuang (Atau Direvisi)</h2>
+
 <p>Lalu, kapan kita harus membuang sebuah strategi? Jika perhitungan <em>Expectancy</em>-mu menghasilkan angka negatif (misal -$5 per trade), maka sistem itu akan menghancurkan akunmu secara perlahan. Selain itu, perhatikan tanda-tanda "Red Flag" berikut:</p>
+
 <h3>1. Drawdown Terlalu Besar untuk Mentalmu</h3>
+
 <p>Secara matematika, sistemmu mungkin profitable. Tapi jika <em>Historical Drawdown</em> (penurunan modal terparah di masa lalu) mencapai 30% - 40%, tanyakan pada dirimu sendiri: <em>"Apakah saya sanggup melihat uang saya berkurang 40% tanpa panik dan menutup akun?"</em> Jika jawabannya "Tidak", maka strategi itu tidak layak untuk <strong>profil risikomu</strong>, meskipun strateginya bagus. Kamu harus menurunkan lot, atau mencari strategi dengan <em>winrate</em> lebih tinggi.</p>
+
 <h3>2. Frekuensi Trade Terlalu Sedikit atau Terlalu Banyak</h3>
+
 <p>Jika dari backtest selama 1 tahun penuh strategi kamu hanya muncul 5 kali, maka <em>sample size</em>-nya terlalu kecil. Menunggu berbulan-bulan untuk 1 kali entry sangat tidak realistis secara psikologis. Sebaliknya, jika dalam sehari ada 20 sinyal entry, kamu berisiko tinggi terkena <em>overtrading</em> dan kelelahan mental.</p>
+
 <h3>3. Aturan Entry Terlalu Subjektif</h3>
+
 <p>Jika saat membaca jurnal, kamu sering berkata, <em>"Di sini aku buy karena perasaanku harganya sudah terlalu murah,"</em> maka kamu tidak punya strategi. Strategi yang layak harus <strong>mekanis</strong>. Maksudnya, jika kamu memberikan catatan rulismu ke orang lain, orang itu akan mengambil entry persis di titik yang sama denganmu. Jika aturannya masih "abu-abu", perbaiki SOP-nya.</p>
+
 <h2>Jangan Terjebak dalam "Curve Fitting"</h2>
+
 <p>Satu kesalahan besar saat merevisi strategi adalah <strong>Curve Fitting</strong> (mencocok-cocokkan data). Saat kamu melihat hasil backtest-mu jelek di bulan Maret, kamu tiba-tiba menambahkan aturan: <em>"Oke, jangan trading di hari Selasa minggu ketiga."</em></p>
+
 <p>Ini adalah kebohongan statistik! Kamu mengubah aturan hanya untuk menghindari loss di masa lalu yang sudah terjadi. Padahal di masa depan, kondisi market akan selalu berbeda. Strategi yang baik harus cukup fleksibel untuk bertahan di berbagai kondisi market, bukan strategi yang diedit secara paksa agar terlihat sempurna di masa lalu.</p>
+
 <h2>Kesimpulan Akhir</h2>
+
 <p>Menentukan kelayakan strategi adalah tentang menemukan keseimbangan antara <strong>Angka (Matematika) dan Kenyamanan Diri (Psikologi)</strong>. Jika angkanya positif, drawdown-nya bisa kamu terima tanpa kehilangan tidur di malam hari, dan aturan entry-nya jelas (mekanis), maka selamat: <strong>Kamu sudah memiliki "Mesin Uang" (Edge) milikmu sendiri!</strong> Langkah selanjutnya hanyalah disiplin mengeksekusinya tanpa ragu.</p>
+
     </div>
   </section>
 </main>

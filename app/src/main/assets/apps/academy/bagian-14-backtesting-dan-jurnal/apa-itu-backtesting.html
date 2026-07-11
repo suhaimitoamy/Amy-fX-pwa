@@ -35,45 +35,63 @@
     <div class="breadcrumb">
       <a href="../index.html">Beranda</a> › 
       <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 14 Backtesting Dan Jurnal</a>
+      <a href="index.html">Bagian 14 Backtesting dan Jurnal</a>
     </div>
     
     <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Apa Itu Backtesting</h1>
+      <h1>Apa Itu Backtesting</h1>
+
 <div class="note"><strong>Ikhtisar</strong><br><p>Bayangkan kamu adalah seorang pelatih sepak bola yang sedang menyusun strategi untuk pertandingan final. Apakah kamu akan langsung menyuruh pemainmu turun ke lapangan tanpa pernah mencoba strategi tersebut saat latihan? Tentu saja tidak! Kamu pasti akan menguji strategi tersebut, melihat rekaman pertandingan lama, dan menganalisis apakah formasi yang kamu buat benar-benar efektif melawan pola serangan lawan.</p></div>
-
 <p>Dalam dunia trading, proses menguji strategi pada data masa lalu itulah yang disebut dengan <strong>Backtesting</strong>. Backtesting adalah jembatan antara sekadar belajar teori dan menjadi trader yang benar-benar berkembang serta mandiri. Tanpa melakukan backtesting, kamu seolah-olah sedang bermain tebak-tebakan di pasar finansial yang keras.</p>
+
 <h2>Memahami Konsep Dasar Backtesting</h2>
+
 <p>Secara sederhana, backtesting adalah proses pengujian sebuah sistem atau strategi trading menggunakan data historis (data harga di masa lalu) untuk melihat bagaimana performa strategi tersebut seandainya kamu menerapkannya di masa itu. Kita "memutar kembali waktu" pada chart, lalu menjalankan rule trading kita seolah-olah kita sedang trading secara langsung (live).</p>
+
 <p>Banyak trader pemula hanya mengandalkan ingatan atau sekadar "melihat sekilas" pada chart lalu menyimpulkan, <em>"Oh, kalau ada pola ini, harga pasti naik!"</em> Ini adalah kesalahan fatal. Memori trader itu sangat subjektif dan seringkali tidak jujur. Saat kita profit, kita merasa strategi kita paling hebat sedunia. Saat kita loss, kita merasa pasar sengaja memanipulasi kita (atau menyalahkan broker). Padahal, yang sebenarnya kita butuhkan adalah <strong>data objektif</strong>.</p>
-<div class="note"><strong>> Yang tidak dicatat akan sangat sulit diperbaiki. Yang tidak diukur akan mustahil untuk dikembangkan. Backtesting memberikan angka pasti, bukan sekadar perasaan.</strong><br></div>
 
+<div class="note"><strong>Note</strong><br><p>Yang tidak dicatat akan sangat sulit diperbaiki. Yang tidak diukur akan mustahil untuk dikembangkan. Backtesting memberikan angka pasti, bukan sekadar perasaan.</p></div>
 <h2>Mengapa Backtesting Adalah "Cheat Code" dalam Trading?</h2>
-<p>Jika kamu bertanya kepada trader-trader profesional apa rahasia mereka bisa konsisten, hampir semuanya akan menjawab bahwa mereka sangat mengenal strategi yang mereka gunakan luar dan dalam. Bagaimana mereka bisa sangat mengenalnya? Jawabannya adalah ribuan jam melakukan backtesting.</p>
-<h3>1. Membangun Kepercayaan Diri (Confidence)</h3>
-<p>Ketika kamu mengalami tiga kali loss beruntun (losing streak), apa yang biasanya kamu rasakan? Panik? Ingin ganti strategi? Atau malah balas dendam ke pasar (revenge trading)? Hal ini terjadi karena kamu tidak tahu statistik strategi kamu.</p>
-<p>Jika kamu sudah melakukan backtesting pada 100 setup, dan data menunjukkan bahwa probabilitas menangnya (win rate) adalah 60% dan sangat wajar terjadi 4 kali loss beruntun sebelum akhirnya profit besar menutupi semua kerugian, maka saat kamu mengalami 3 kali loss beruntun di live account, kamu akan tetap tenang. Kamu tahu bahwa itu hanyalah bagian dari statistik. Kepercayaan diri ini hanya bisa didapat dari melihat data hasil backtesting.</p>
-<h3>2. Menemukan Kelemahan Strategi Tanpa Risiko Kehilangan Uang</h3>
-<p>Backtesting adalah tempat yang aman untuk salah. Kamu bisa menguji berbagai macam ide liar, mengubah aturan Stop Loss, menyesuaikan jam trading, tanpa harus kehilangan satu sen pun uang sungguhan. Kamu bisa tahu bahwa strategi A ternyata hancur lebur jika dipakai saat sesi Asia, dan sangat profitable jika dipakai di sesi New York. Informasi mahal ini kamu dapatkan secara gratis hanya dengan meluangkan waktu.</p>
-<h3>3. Melatih Mata dan Pengenalan Pola (Pattern Recognition)</h3>
-<p>Semakin sering kamu melihat setup strategi kamu terbentuk di chart masa lalu, semakin tajam mata kamu dalam mengenali setup tersebut secara real-time. Ini seperti <em>muscle memory</em>. Saat momen itu muncul di live market, kamu tidak lagi ragu-ragu atau berpikir terlalu panjang karena otakmu sudah melihat pola yang sama ratusan kali saat backtesting.</p>
-<h2>Cara Pandang yang Benar Saat Melakukan Backtesting</h2>
-<p>Banyak orang gagal melakukan backtesting dengan benar karena mereka bias. Mereka hanya memilih-milih (cherry-picking) contoh-contoh chart di mana strategi mereka bekerja dengan sempurna, dan secara sengaja mengabaikan momen di mana strategi mereka gagal atau terkena Stop Loss.</p>
-<div class="warning"><strong>> Membohongi diri sendiri saat backtesting adalah cara tercepat untuk menghancurkan akun live kamu.</strong><br></div>
 
+<p>Jika kamu bertanya kepada trader-trader profesional apa rahasia mereka bisa konsisten, hampir semuanya akan menjawab bahwa mereka sangat mengenal strategi yang mereka gunakan luar dan dalam. Bagaimana mereka bisa sangat mengenalnya? Jawabannya adalah ribuan jam melakukan backtesting.</p>
+
+<h3>1. Membangun Kepercayaan Diri (Confidence)</h3>
+
+<p>Ketika kamu mengalami tiga kali loss beruntun (losing streak), apa yang biasanya kamu rasakan? Panik? Ingin ganti strategi? Atau malah balas dendam ke pasar (revenge trading)? Hal ini terjadi karena kamu tidak tahu statistik strategi kamu.</p>
+
+<p>Jika kamu sudah melakukan backtesting pada 100 setup, dan data menunjukkan bahwa probabilitas menangnya (win rate) adalah 60% dan sangat wajar terjadi 4 kali loss beruntun sebelum akhirnya profit besar menutupi semua kerugian, maka saat kamu mengalami 3 kali loss beruntun di live account, kamu akan tetap tenang. Kamu tahu bahwa itu hanyalah bagian dari statistik. Kepercayaan diri ini hanya bisa didapat dari melihat data hasil backtesting.</p>
+
+<h3>2. Menemukan Kelemahan Strategi Tanpa Risiko Kehilangan Uang</h3>
+
+<p>Backtesting adalah tempat yang aman untuk salah. Kamu bisa menguji berbagai macam ide liar, mengubah aturan Stop Loss, menyesuaikan jam trading, tanpa harus kehilangan satu sen pun uang sungguhan. Kamu bisa tahu bahwa strategi A ternyata hancur lebur jika dipakai saat sesi Asia, dan sangat profitable jika dipakai di sesi New York. Informasi mahal ini kamu dapatkan secara gratis hanya dengan meluangkan waktu.</p>
+
+<h3>3. Melatih Mata dan Pengenalan Pola (Pattern Recognition)</h3>
+
+<p>Semakin sering kamu melihat setup strategi kamu terbentuk di chart masa lalu, semakin tajam mata kamu dalam mengenali setup tersebut secara real-time. Ini seperti <em>muscle memory</em>. Saat momen itu muncul di live market, kamu tidak lagi ragu-ragu atau berpikir terlalu panjang karena otakmu sudah melihat pola yang sama ratusan kali saat backtesting.</p>
+
+<h2>Cara Pandang yang Benar Saat Melakukan Backtesting</h2>
+
+<p>Banyak orang gagal melakukan backtesting dengan benar karena mereka bias. Mereka hanya memilih-milih (cherry-picking) contoh-contoh chart di mana strategi mereka bekerja dengan sempurna, dan secara sengaja mengabaikan momen di mana strategi mereka gagal atau terkena Stop Loss.</p>
+
+<div class="warning"><strong>Warning</strong><br><p>Membohongi diri sendiri saat backtesting adalah cara tercepat untuk menghancurkan akun live kamu.</p></div>
 <p>Ketika kamu melakukan backtesting, kamu harus menjadi seorang ilmuwan yang objektif. Ambil data secara berurutan, dari bulan Januari sampai Desember misalnya. Jangan lompati hari-hari di mana pasar sedang jelek. Ikuti aturan (rules) strategimu dengan sangat kaku. Catat hasilnya apa adanya. Di situlah kamu baru bisa melihat apakah strategi tersebut benar-benar memiliki "edge" (keunggulan matematis) atau cuma kebetulan terlihat bagus pada tren tertentu saja.</p>
+
 <h2>Apa Saja yang Harus Dicatat Saat Backtesting?</h2>
+
 <p>Jangan hanya mencatat apakah setup itu "Win" atau "Loss". Catatan yang baik harus menceritakan keseluruhan kronologi. Berikut adalah beberapa elemen penting yang harus kamu catat:</p>
-<ul>
-<li><strong>Tanggal dan Jam:</strong> Kapan setup ini muncul? Ini berguna untuk mengetahui di sesi mana strategi ini paling efektif.</li>
-<li><strong>Timeframe dan Kondisi Market:</strong> Apakah pasar sedang trending, ranging, atau choppy? Apa bias di timeframe besar (HTF)?</li>
-<li><strong>Alasan Entry:</strong> Tuliskan dengan jelas kenapa kamu mengambil posisi tersebut. (Misal: Harga masuk ke zona <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> M15 setelah mengambil liquidity, lalu ada konfirmasi perubahan karakter/CHoCH di M1).</li>
-<li><strong>Parameter Risiko:</strong> Berapa pips Stop Loss-nya? Berapa pips Take Profit-nya? Berapa rasio Risk:Reward (RR) yang didapat?</li>
-<li><strong>Hasil (Outcome):</strong> Apakah terkena TP penuh, terkena SL, atau ditutup manual (breakeven)?</li>
-</ul>
+
+<p>* <strong>Tanggal dan Jam:</strong> Kapan setup ini muncul? Ini berguna untuk mengetahui di sesi mana strategi ini paling efektif.</p>
+<p>* <strong>Timeframe dan Kondisi Market:</strong> Apakah pasar sedang trending, ranging, atau choppy? Apa bias di timeframe besar (HTF)?</p>
+<p>* <strong>Alasan Entry:</strong> Tuliskan dengan jelas kenapa kamu mengambil posisi tersebut. (Misal: Harga masuk ke zona Order Block M15 setelah mengambil liquidity, lalu ada konfirmasi perubahan karakter/CHoCH di M1).</p>
+<p>* <strong>Parameter Risiko:</strong> Berapa pips Stop Loss-nya? Berapa pips Take Profit-nya? Berapa rasio Risk:Reward (RR) yang didapat?</p>
+<p>* <strong>Hasil (Outcome):</strong> Apakah terkena TP penuh, terkena SL, atau ditutup manual (breakeven)?</p>
+
 <h2>Kesimpulan</h2>
-<p>Tujuan utama dari mempelajari <a href="../bagian-14-backtesting-dan-jurnal/apa-itu-backtesting.html">Apa Itu Backtesting</a> bukan untuk membuat kamu sibuk dengan tugas administrasi mencatat angka-angka. Tujuannya adalah untuk mengubahmu dari seorang penjudi yang hanya menebak arah pasar, menjadi seorang pengusaha trading yang mengambil keputusan berdasarkan data statistik yang solid.</p>
+
+<p>Tujuan utama dari mempelajari Apa Itu Backtesting bukan untuk membuat kamu sibuk dengan tugas administrasi mencatat angka-angka. Tujuannya adalah untuk mengubahmu dari seorang penjudi yang hanya menebak arah pasar, menjadi seorang pengusaha trading yang mengambil keputusan berdasarkan data statistik yang solid.</p>
+
 <p>Jika data backtesting menunjukkan hasil yang bagus, kamu bisa melangkah ke tahap selanjutnya dengan yakin. Jika datanya buruk, kamu bisa memperbaiki rules tanpa harus kehilangan modal. Jadi, mulai sekarang, berhentilah berasumsi dan mulailah mengumpulkan datamu sendiri!</p>
+
     </div>
   </section>
 </main>

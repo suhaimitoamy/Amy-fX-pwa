@@ -35,41 +35,59 @@
     <div class="breadcrumb">
       <a href="../index.html">Beranda</a> › 
       <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 14 Backtesting Dan Jurnal</a>
+      <a href="index.html">Bagian 14 Backtesting dan Jurnal</a>
     </div>
     
     <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Cara Backtest Manual</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Setelah kamu mengerti mengapa backtesting itu wajib, pertanyaan selanjutnya adalah: <em>"Lalu, bagaimana cara memulainya?"</em> Bagi pemula, tidak perlu langsung membeli perangkat lunak (software) backtesting yang mahal atau belajar coding untuk membuat robot. Cara paling efektif untuk belajar di awal adalah dengan <strong>Backtest Manual</strong>.</p></div>
+      <h1>Cara Backtest Manual</h1>
 
+<div class="note"><strong>Ikhtisar</strong><br><p>Setelah kamu mengerti mengapa backtesting itu wajib, pertanyaan selanjutnya adalah: <em>"Lalu, bagaimana cara memulainya?"</em> Bagi pemula, tidak perlu langsung membeli perangkat lunak (software) backtesting yang mahal atau belajar coding untuk membuat robot. Cara paling efektif untuk belajar di awal adalah dengan <strong>Backtest Manual</strong>.</p></div>
 <p>Backtest manual berarti kamu sendiri yang menggeser chart ke masa lalu, mengamati pergerakan harga satu per satu (seolah-olah sedang <em>live</em>), mencari setup sesuai dengan strategi kamu, lalu mencatat hasilnya. Proses ini sedikit memakan waktu, tapi dampaknya terhadap "jam terbang" visualmu (screen time) sangatlah luar biasa.</p>
+
 <h2>Persiapan Sebelum Memulai</h2>
+
 <p>Sebelum kamu membuka chart, pastikan tiga hal ini sudah siap:</p>
+
 <ol>
 <li><strong>Platform Charting:</strong> Gunakan TradingView. Kamu bisa menggunakan fitur <em>Bar Replay</em> (memotong chart masa depan) jika kamu pengguna berbayar. Jika gratisan, kamu cukup menggeser chart ke kiri secara manual dan perlahan menggesernya ke kanan dengan tombol panah (Arrow Right) di keyboard.</li>
 <li><strong>SOP (Standard Operating Procedure) yang Jelas:</strong> Jangan backtest hanya berdasarkan insting (feeling). Kamu harus punya aturan tertulis: Bagaimana cara menentukan arah (bias)? Apa konfirmasi entry-nya? Di mana letak SL dan TP? Jika aturannya masih mengambang, hasil backtest-mu tidak akan valid.</li>
 <li><strong>Alat Pencatat (Jurnal):</strong> Siapkan Spreadsheet (Excel / Google Sheets) atau minimal buku catatan kosong.</li>
 </ol>
+
 <h2>Langkah-langkah Eksekusi Backtest Manual</h2>
+
 <h3>Langkah 1: Tentukan Batas Waktu Mundur</h3>
+
 <p>Pilih satu pair, misalnya EURUSD. Geser chart ke masa lalu (misal 3 bulan atau 6 bulan yang lalu). Jangan pilih-pilih bulan tertentu hanya karena grafiknya terlihat bagus. Turun di tanggal acak, lalu potong chart di area tersebut menggunakan <em>Bar Replay</em> (jika ada), atau sembunyikan sisi kanan layar dengan kertas agar matamu tidak "mencuri pandang" ke masa depan.</p>
-<div class="warning"><strong>> Jika kamu sudah tahu bahwa harga akan naik (karena tidak sengaja melihat ujung chart), backtest kamu akan bias. Kamu akan tiba-tiba mencari alasan untuk "Buy" saja. Jujurlah pada diri sendiri.</strong><br></div>
 
+<div class="warning"><strong>Warning</strong><br><p>Jika kamu sudah tahu bahwa harga akan naik (karena tidak sengaja melihat ujung chart), backtest kamu akan bias. Kamu akan tiba-tiba mencari alasan untuk "Buy" saja. Jujurlah pada diri sendiri.</p></div>
 <h3>Langkah 2: Lakukan Analisa Top-Down</h3>
-<p>Mulailah dari Timeframe Besar (misalnya Daily atau H4) untuk menentukan Bias Harian. Apakah harga sedang tren naik (bullish), turun (bearish), atau ranging? Tentukan di mana area Liquidity atau <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang mungkin dituju harga.</p>
-<h3>Langkah 3: Geser Harga Candle Demi Candle</h3>
-<p>Turun ke Timeframe eksekusi kamu (misalnya M15 atau M5). Tekan panah kanan (Right Arrow) di keyboard perlahan untuk memunculkan satu per satu candle baru. Amati bagaimana harga bergerak. Perhatikan waktu (sesi trading). Ingat, jika strategi kamu hanya beroperasi di Sesi London dan New York, abaikan pergerakan di Sesi Asia.</p>
-<h3>Langkah 4: Temukan Setup dan Ambil Keputusan</h3>
-<p>Ketika harga membentuk kriteria entry sesuai dengan SOP kamu, berhentilah menggeser chart! Gunakan <em>Long Position</em> atau <em>Short Position tool</em> di TradingView. Letakkan level Entry, Stop Loss, dan Take Profit di chart secara presisi sesuai aturanmu.</p>
-<p>Setelah terpasang, barulah lanjutkan menggeser candle ke kanan untuk melihat apakah harga mengenai Entry kamu, lalu apakah berakhir menyentuh SL atau TP.</p>
-<h3>Langkah 5: Catat dan Evaluasi (Journaling)</h3>
-<p>Apapun hasilnya, <strong>catat di jurnalmu</strong>. Jangan abaikan trade yang rugi dengan alasan, <em>"Ah, yang ini nggak kehitung, aku salah lihat."</em> Masukkan ke data!</p>
-<p>Catat tanggal, jam, RR, hasil akhir, serta ambil <em>screenshot</em> sebelum entry dan sesudah hasilnya keluar. Kamu butuh data mentah ini untuk dievaluasi nantinya.</p>
-<div class="tip"><strong>> Saat manual backtest, sangat wajar jika kamu menemukan "kebingungan" di awal. "Ini masuk setup nggak ya?" Kalau kamu bingung, berarti SOP strategimu kurang spesifik. Perjelas lagi aturannya.</strong><br></div>
 
+<p>Mulailah dari Timeframe Besar (misalnya Daily atau H4) untuk menentukan Bias Harian. Apakah harga sedang tren naik (bullish), turun (bearish), atau ranging? Tentukan di mana area Liquidity atau Order Block yang mungkin dituju harga.</p>
+
+<h3>Langkah 3: Geser Harga Candle Demi Candle</h3>
+
+<p>Turun ke Timeframe eksekusi kamu (misalnya M15 atau M5). Tekan panah kanan (Right Arrow) di keyboard perlahan untuk memunculkan satu per satu candle baru. Amati bagaimana harga bergerak. Perhatikan waktu (sesi trading). Ingat, jika strategi kamu hanya beroperasi di Sesi London dan New York, abaikan pergerakan di Sesi Asia.</p>
+
+<h3>Langkah 4: Temukan Setup dan Ambil Keputusan</h3>
+
+<p>Ketika harga membentuk kriteria entry sesuai dengan SOP kamu, berhentilah menggeser chart! Gunakan <em>Long Position</em> atau <em>Short Position tool</em> di TradingView. Letakkan level Entry, Stop Loss, dan Take Profit di chart secara presisi sesuai aturanmu.</p>
+
+<p>Setelah terpasang, barulah lanjutkan menggeser candle ke kanan untuk melihat apakah harga mengenai Entry kamu, lalu apakah berakhir menyentuh SL atau TP.</p>
+
+<h3>Langkah 5: Catat dan Evaluasi (Journaling)</h3>
+
+<p>Apapun hasilnya, <strong>catat di jurnalmu</strong>. Jangan abaikan trade yang rugi dengan alasan, <em>"Ah, yang ini nggak kehitung, aku salah lihat."</em> Masukkan ke data!</p>
+
+<p>Catat tanggal, jam, RR, hasil akhir, serta ambil <em>screenshot</em> sebelum entry dan sesudah hasilnya keluar. Kamu butuh data mentah ini untuk dievaluasi nantinya.</p>
+
+<div class="note"><strong>Tip</strong><br><p>Saat manual backtest, sangat wajar jika kamu menemukan "kebingungan" di awal. "Ini masuk setup nggak ya?" Kalau kamu bingung, berarti SOP strategimu kurang spesifik. Perjelas lagi aturannya.</p></div>
 <h2>Target dari Latihan Ini</h2>
+
 <p>Lakukan proses ini secara berulang minimal untuk 100 kali setup (bukan 100 hari, tapi 100 kali mengambil peluang trading). Saat kamu sudah mencatat 100 <em>trades</em> dengan aturan yang persis sama, kamu baru bisa menilai apakah sistem trading tersebut layak dilanjutkan (profitable) atau harus dibuang.</p>
-<p>Melalui <a href="../bagian-14-backtesting-dan-jurnal/cara-backtest-manual.html">Cara Backtest Manual</a>, matamu akan sangat terbiasa mengenali pola (pattern recognition). Nantinya, saat kamu melihat pergerakan harga di <em>live market</em>, otakmu secara otomatis akan merespons dengan cepat karena sudah melihat pola yang sama terbentuk berulang-ulang di masa lalu.</p>
+
+<p>Melalui Cara Backtest Manual, matamu akan sangat terbiasa mengenali pola (pattern recognition). Nantinya, saat kamu melihat pergerakan harga di <em>live market</em>, otakmu secara otomatis akan merespons dengan cepat karena sudah melihat pola yang sama terbentuk berulang-ulang di masa lalu.</p>
+
     </div>
   </section>
 </main>

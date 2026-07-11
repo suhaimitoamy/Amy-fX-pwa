@@ -1,46 +1,4 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Change in State of Delivery (CISD) — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 06 Ict Core</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Change in State of Delivery (CISD)</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Setelah memahami bahwa algoritma itu "mengirimkan harga" (<a href="../bagian-06-ict-core/price-delivery.html">Price Delivery</a>), pertanyaan selanjutnya adalah: <strong>Kapan pengiriman itu berubah arah?</strong> Di sinilah kita mempelajari salah satu konsep terpenting untuk mengidentifikasi awal mula pembalikan arah, yaitu <strong><a href="../bagian-06-ict-core/change-in-state-of-delivery-cisd.html">Change in State of Delivery (CISD)</a></strong>.</p></div>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Change in State of Delivery (CISD) — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a><button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button><div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 06 — ICT Core</a></div><div class="eyebrow">Bagian 06 — ICT Core</div><h1>Change in State of Delivery (CISD)</h1><div class="note"><strong>Ikhtisar</strong><br><p>Setelah memahami bahwa algoritma itu "mengirimkan harga" (Price Delivery), pertanyaan selanjutnya adalah: **Kapan pengiriman itu berubah arah?** Di sinilah kita mempelajari salah satu konsep terpenting untuk mengidentifikasi awal mula pembalikan arah, yaitu **Change in State of Delivery (CISD)**.</p></div>
 
 <h2>Apa Itu CISD?</h2>
 <p>Secara harfiah, CISD berarti "Perubahan Status Pengiriman". Ini adalah momen kritis ketika dominasi pembeli beralih ke penjual, atau sebaliknya. Dalam ICT, ini ditandai oleh bagaimana <strong>candle terakhir sebelum pembalikan</strong> dipecahkan (di-break) oleh harga yang berlawanan.</p>
@@ -50,13 +8,13 @@
 <h2>Mendeteksi CISD di Chart</h2>
 <p>Bagaimana cara melihatnya secara visual? Kuncinya ada pada melihat <em>body candle</em>, bukan sekadar sumbu (<em>wick</em>/<em>tail</em>).</p>
 <ul>
-<li><strong>Jika harga sedang turun (Down Trend):</strong> Perhatikan candle bearish (merah/hitam) terakhir. Saat ada candle bullish (hijau/putih) yang berhasil <strong>ditutup (Close) di atas harga open/high candle bearish terakhir tersebut</strong>, itulah yang disebut <a href="../bagian-06-ict-core/cisd-bullish.html">CISD Bullish</a>. Algoritma telah berhenti menjual dan mulai membeli.</li>
-<li><strong>Jika harga sedang naik (Up Trend):</strong> Perhatikan candle bullish terakhir. Saat ada candle bearish yang <strong>ditutup (Close) di bawah harga open/low candle bullish terakhir tersebut</strong>, itu adalah <a href="../bagian-06-ict-core/cisd-bearish.html">CISD Bearish</a>. Algoritma beralih ke mode jual.</li>
+<li><strong>Jika harga sedang turun (Down Trend):</strong> Perhatikan candle bearish (merah/hitam) terakhir. Saat ada candle bullish (hijau/putih) yang berhasil <strong>ditutup (Close) di atas harga open/high candle bearish terakhir tersebut</strong>, itulah yang disebut CISD Bullish. Algoritma telah berhenti menjual dan mulai membeli.</li>
+<li><strong>Jika harga sedang naik (Up Trend):</strong> Perhatikan candle bullish terakhir. Saat ada candle bearish yang <strong>ditutup (Close) di bawah harga open/low candle bullish terakhir tersebut</strong>, itu adalah CISD Bearish. Algoritma beralih ke mode jual.</li>
 </ul>
-<h2>Perbedaan CISD dan MSS (<a href="../bagian-09-entry-model/market-structure-shift.html">Market Structure Shift</a>)</h2>
-<p>Banyak trader bingung antara CISD dan <a href="../bagian-09-entry-model/market-structure-shift.html">Market Structure Shift</a> (MSS) yang akan kita pelajari nanti. Sederhananya:</p>
-<p><strong>CISD terjadi LEBIH CEPAT daripada MSS.</strong> CISD hanya melihat pecahnya satu atau dua candle spesifik (<a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a>), sedangkan MSS harus menembus Swing High atau Swing Low (Struktur Pasar). Oleh karena itu, CISD adalah tanda-tanda pertama bahwa market ingin berbalik arah, sebelum strukturnya benar-benar bergeser.</p>
-<div class="warning"><strong>> Jangan jadikan semua CISD sebagai sinyal Entry! CISD yang valid HANYA terjadi di dalam area **POI HTF (Point of Interest Higher Timeframe)** atau setelah **<a href=\"../bagian-04-liquidity/liquidity-sweep.html\">Liquidity Sweep</a> (sapuan likuiditas)**. Kalau CISD terjadi di tengah-tengah chart tanpa konteks, itu kemungkinan besar jebakan (fake out).</strong><br></div>
+<h2>Perbedaan CISD dan MSS (Market Structure Shift)</h2>
+<p>Banyak trader bingung antara CISD dan Market Structure Shift (MSS) yang akan kita pelajari nanti. Sederhananya:</p>
+<p><strong>CISD terjadi LEBIH CEPAT daripada MSS.</strong> CISD hanya melihat pecahnya satu atau dua candle spesifik (Order Block), sedangkan MSS harus menembus Swing High atau Swing Low (Struktur Pasar). Oleh karena itu, CISD adalah tanda-tanda pertama bahwa market ingin berbalik arah, sebelum strukturnya benar-benar bergeser.</p>
+<div class="warning"><strong></strong><br><p>Jangan jadikan semua CISD sebagai sinyal Entry! CISD yang valid HANYA terjadi di dalam area **POI HTF (Point of Interest Higher Timeframe)** atau setelah **Liquidity Sweep (sapuan likuiditas)**. Kalau CISD terjadi di tengah-tengah chart tanpa konteks, itu kemungkinan besar jebakan (fake out).</p></div>
 
 <h2>Cara Menggunakan CISD</h2>
 <ol>
@@ -66,15 +24,6 @@
 <li>Tunggu sampai terjadi <strong>Change in State of Delivery</strong> di Timeframe Kecil tersebut.</li>
 <li>Setelah CISD terkonfirmasi, barulah kamu mencari FVG kecil yang ditinggalkan untuk melakukan Entry yang presisi.</li>
 </ol>
-<p>Di bab selanjutnya, kita akan membedah secara spesifik bagaimana bentuk <a href="../bagian-06-ict-core/cisd-bullish.html">CISD Bullish</a> dan <a href="../bagian-06-ict-core/cisd-bearish.html">CISD Bearish</a> di chart agar kamu lebih mahir mengenalinya.</p>
+<p>Di bab selanjutnya, kita akan membedah secara spesifik bagaimana bentuk CISD Bullish dan CISD Bearish di chart agar kamu lebih mahir mengenalinya.</p>
 <p><a href="../bagian-06-ict-core/04-price-delivery.html">← Price Delivery</a>
-<a href="../bagian-06-ict-core/06-cisd-bullish.html">CISD Bullish →</a></p>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
-  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+<a href="../bagian-06-ict-core/06-cisd-bullish.html">CISD Bullish →</a></p></section></main><footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer></body></html>

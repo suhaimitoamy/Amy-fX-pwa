@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Backtest Per Model Entry — Bagian 28 — Trade Management Advanced — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+</head>
+<body>
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <section class="article">
+    <div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 28 — Trade Management Advanced</a></div>
+    <div class="eyebrow">Bagian 28 — Trade Management Advanced</div>
+    <h1>Backtest Per Model Entry</h1>
+    
+<div class="note"><strong>Ikhtisar</strong><br><p>Selamat datang di materi <strong>Backtest Per Model Entry</strong>. Jika Anda sudah sampai di tahap ini, artinya Anda sudah memahami fundamental Smart Money Concepts (SMC) dan Inner Circle Trader (ICT) serta bagaimana mengeksekusi perdagangan secara presisi. Namun, pemahaman teori tanpa pengujian historis yang mendalam adalah ibarat seorang prajurit yang berangkat ke medan perang tanpa pernah berlatih menembak. Di sinilah <strong>Backtest Advanced</strong> mengambil peran krusial, dan kita akan memulainya dengan pendekatan yang sangat spesifik: <em>Backtest Per Model Entry</em>.</p></div>
+<p>Mayoritas *retail trader* melakukan backtesting dengan cara yang sangat acak (random). Mereka membuka chart historis, lalu setiap kali melihat harga naik setelah turun, mereka berasumsi "Oh, di sini saya bisa *buy*." Ini adalah ilusi *hindsight bias* (bias kejadian masa lalu), di mana segalanya terlihat jelas setelah terjadi. Backtest semacam ini tidak memiliki nilai statistik dan hanya akan memberikan rasa percaya diri palsu (false confidence).</p>
+<h2>Mengapa Harus "Per Model"?</h2>
+<p>Dalam metodologi ICT dan SMC, kita tidak berdagang berdasarkan sekadar "pola" acak. Kita berdagang berdasarkan <strong>Model Entry</strong> yang terstruktur. Model Entry adalah seperangkat aturan yang sangat kaku dan spesifik tentang kondisi apa yang harus terpenuhi sebelum kita menekan tombol *buy* atau *sell*. Contoh model entry yang populer adalah *ICT 2022 Mentorship Model*, *Market Maker Buy/Sell Model* (MMXM), *Turtle Soup* (Liquidity Sweep), atau setup *Silver Bullet* yang berbasis pada waktu (*Time/Macro*).</p>
+<p>Melakukan backtest secara spesifik per model berarti Anda mengisolasi satu strategi tertentu dan mengujinya berulang-ulang tanpa mencampurkannya dengan model lain. Jika Anda sedang menguji *ICT 2022 Model*, maka Anda HANYA mencari setup yang dimulai dari *Liquidity Sweep*, diikuti oleh *Market Structure Shift* (MSS) dengan *Displacement* yang kuat, dan kemudian *return* ke *Fair Value Gap* (FVG). Jika salah satu syarat ini tidak ada, Anda tidak menganggapnya sebagai setup. Titik.</p>
+<h2>Langkah-Langkah Backtest Per Model</h2>
+<p>Untuk mendapatkan data yang akurat dan bisa diandalkan secara statistik, Anda perlu melakukan proses backtest yang terstruktur. Berikut adalah langkah-langkah esensial dalam mengeksekusi Backtest Per Model Entry:</p>
+<h3>1. Definisikan SOP (Standard Operating Procedure) Model Secara Tertulis</h3>
+<p>Sebelum membuka TradingView dan menggunakan fitur *Replay*, tuliskan aturan model Anda di atas kertas atau dokumen. Anda harus memiliki variabel yang jelas untuk:</p>
+<ul>
+<li><strong>Konteks (HTF Narrative):</strong> Apa syarat *Higher Timeframe*? Apakah harus searah tren *Daily* atau *4H*?</li>
+<li><strong>Waktu (Killzone):</strong> Pada jam berapa model ini valid dieksekusi? (Misalnya: London Session 02:00 - 05:00 EST).</li>
+<li><strong>Setup (Pattern):</strong> Apa yang harus terjadi secara spesifik? (Misal: *Sweep Asia High* + *MSS* ke bawah).</li>
+<li><strong>Trigger (Entry):</strong> Di mana letak *Limit Order* atau *Market Execution* Anda? (Misal: 50% dari *FVG*).</li>
+<li><strong>Invalidation (Stop Loss):</strong> Di mana setup ini dianggap gagal secara mutlak? (Misal: di atas *swing high* yang menyebabkan MSS).</li>
+<li><strong>Target (Take Profit):</strong> Di mana likuiditas atau inefisiensi yang menjadi tujuan harga?</li>
+</ul>
+<h3>2. Kumpulkan Minimal 100 Sampel (Sample Size)</h3>
+<p>Menguji 10 atau 20 trade tidak akan memberikan Anda gambaran statistik yang valid. Dalam probabilitas, ada yang namanya <em>Law of Large Numbers</em> (Hukum Bilangan Besar). Anda membutuhkan minimal 100 sampel data historis untuk melihat *Win Rate* asli dan *Drawdown* dari model tersebut.</p>
+<h3>3. Dokumentasikan dengan Visual</h3>
+<p>Jangan sekadar mencatat "Win" atau "Loss" di Excel. Ambil *screenshot* (tangkapan layar) dari setiap setup. Ambil gambar dari perspektif *Higher Timeframe* (untuk melihat konteks), *Lower Timeframe* saat entry terjadi, dan hasil akhirnya (apakah kena TP atau SL). Mengarsipkan gambar-gambar ini akan membangun *Pattern Recognition* (pengenalan pola) di otak bawah sadar Anda.</p>
+<h2>Menghadapi Fenomena Hindsight Bias</h2>
+<p>Salah satu tantangan terbesar dalam backtesting adalah Anda sudah tahu harga akan bergerak ke mana jika Anda melihat ujung kanan chart. Untuk mengatasi ini, gunakan fitur <em>Bar Replay</em> dan mundurkan harga ke beberapa bulan atau tahun yang lalu. Lakukan analisa lilin demi lilin (candle by candle) seolah-olah Anda berada di *live market*.</p>
+<div class="warning"><strong>Warning</strong><br><p>Jangan pernah memanipulasi data backtest Anda! Jika sebuah setup memenuhi semua SOP Anda tetapi berujung pada kerugian (Loss), catat itu sebagai Loss. Banyak trader pemula yang berbohong pada diri sendiri saat backtest dengan mengatakan "Ah, kalau *live* pasti saya tidak entry di sini," demi membuat *Win Rate* mereka terlihat sempurna. Ini adalah bunuh diri portofolio!</p></div>
+<h2>Membangun "The One Good Setup"</h2>
+<p>Tujuan utama dari Backtest Per Model bukanlah untuk membuktikan bahwa sebuah strategi tidak pernah kalah. Tujuannya adalah untuk membangun <strong>Keyakinan Ekstrem (Extreme Conviction)</strong> pada satu model spesifik. Ketika Anda sudah melihat sebuah model bekerja menghasilkan profit sebanyak 70 kali dari 100 percobaan historis, Anda tidak akan lagi ragu atau gemetar saat model tersebut muncul di akun *live* Anda.</p>
+<p>Bruce Lee pernah berkata, <em>"Saya tidak takut pada orang yang berlatih 10.000 tendangan masing-masing satu kali, tapi saya takut pada orang yang berlatih satu tendangan sebanyak 10.000 kali."</em> Dalam trading, inilah esensi dari penguasaan. Jadilah spesialis di satu atau dua Model Entry, kuasai kebiasaannya, ketahui kapan model tersebut cenderung gagal, dan ketahui kondisi *market* seperti apa yang memberikan probabilitas tertingginya.</p>
+<p>Materi ini disusun berdasarkan standar eksekusi lanjutan Smart Money Concepts (SMC) &amp; Inner Circle Trader (ICT).</p>
+<div class="note"><strong>Pesan Mentor</strong><br><p>Saat melakukan backtest per model, abaikan semua pergerakan harga lain yang terjadi di luar model Anda. Meskipun ada pergerakan 100 pips yang sangat cantik, jika itu tidak memenuhi kriteria model yang sedang Anda uji, anggap saja pergerakan itu tidak ada. Ini akan melatih disiplin visual Anda.</p></div>
+  </section>
+</main>
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer>
+</body>
+</html>

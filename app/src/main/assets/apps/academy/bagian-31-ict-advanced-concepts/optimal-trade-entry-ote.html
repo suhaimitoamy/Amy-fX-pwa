@@ -1,77 +1,34 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Optimal Trade Entry (OTE) — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 31 Ict Advanced Concepts</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Optimal Trade Entry (OTE)</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p><strong><a href="../bagian-09-entry-model/optimal-trade-entry.html">Optimal Trade Entry</a> (<a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a>)</strong> adalah salah satu pola <em>entry</em> tertua, paling murni, dan paling sering dibahas oleh pencipta ICT. Di saat <em>trader</em> ritel menggunakan alat Fibonacci Retracement secara acak untuk memprediksi pantulan harga, ICT menspesifikasikan zona emas tertentu yang disebut <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a>, di mana institusi <em>Smart Money</em> selalu menempatkan pesanan limit mereka secara mekanis.</p></div>
-
-<h2>Rentang <a href="../bagian-09-entry-model/fibonacci-ote.html">Fibonacci OTE</a></h2>
-<p>Dalam penggunaan <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a>, Anda harus menarik Fibonacci Retracement dari ayunan terendah (<em>Swing Low</em>) ke ayunan tertinggi (<em>Swing High</em>) untuk tren Bullish, atau sebaliknya dari <em>Swing High</em> ke <em>Swing Low</em> untuk tren Bearish.</p>
-<p>Level kunci yang digunakan dalam matriks <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> ICT adalah:
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Optimal Trade Entry (OTE) — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 31 ICT Advanced Concepts</a></div><div class="eyebrow">Bagian 31 ICT Advanced Concepts</div><h1>Optimal Trade Entry (OTE)</h1>
+<h1>Optimal Trade Entry (OTE)</h1>
+<div class="note">
+<p><strong>Ikhtisar</strong><br><p><strong>Optimal Trade Entry (OTE)</strong> adalah salah satu pola <em>entry</em> tertua, paling murni, dan paling sering dibahas oleh pencipta ICT. Di saat <em>trader</em> ritel menggunakan alat Fibonacci Retracement secara acak untuk memprediksi pantulan harga, ICT menspesifikasikan zona emas tertentu yang disebut OTE, di mana institusi <em>Smart Money</em> selalu menempatkan pesanan limit mereka secara mekanis.</p></p>
+</div>
+<h2>Rentang Fibonacci OTE</h2>
+<p>Dalam penggunaan OTE, Anda harus menarik Fibonacci Retracement dari ayunan terendah (<em>Swing Low</em>) ke ayunan tertinggi (<em>Swing High</em>) untuk tren Bullish, atau sebaliknya dari <em>Swing High</em> ke <em>Swing Low</em> untuk tren Bearish.</p>
+<p>Level kunci yang digunakan dalam matriks OTE ICT adalah:
 1. <strong>0.00</strong> (Target Akhir - <em>Take Profit</em> 1)
 2. <strong>0.50</strong> (<em>Equilibrium</em> / Titik Keseimbangan Keadilan Harga)
 3. <strong>0.62 (62%)</strong> - <em>Discount Level</em>
-4. <strong>0.705 (70.5%)</strong> - <strong>Titik Inti <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> (Sweet Spot)</strong>
+4. <strong>0.705 (70.5%)</strong> - <strong>Titik Inti OTE (Sweet Spot)</strong>
 5. <strong>0.79 (79%)</strong> - <em>Deep Discount Level</em>
 6. <strong>1.00</strong> (Level Invalidation / <em>Stop Loss</em>)</p>
-<p>Zona yang terbentang antara <strong>62% hingga 79%</strong> adalah Zona <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a>. Sedangkan angka <strong>70.5%</strong> adalah titik akurasi tertingginya.</p>
-<h2>Aturan Emas <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a></h2>
+<p>Zona yang terbentang antara <strong>62% hingga 79%</strong> adalah Zona OTE. Sedangkan angka <strong>70.5%</strong> adalah titik akurasi tertingginya.</p>
+<h2>Aturan Emas OTE</h2>
 <ul>
 <li><strong>Aturan Paruh Waktu:</strong> Anda sama sekali DILARANG melakukan <em>buy</em> jika harga belum turun melewati level <strong>0.50 (Equilibrium)</strong> ke arah bawah. Begitu juga, jangan melakukan <em>sell</em> jika harga belum naik melewati 0.50 ke arah atas.</li>
 <li><em>Smart Money</em> hanya membeli barang saat sedang diskon (<em>Discount Market</em> &lt; 0.50) dan hanya menjual saat harga terlalu mahal (<em>Premium Market</em> &gt; 0.50).</li>
 </ul>
-<h2>Konfirmasi Entry <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a></h2>
-<p>Meskipun harga memasuki zona Fibonacci 62% - 79%, Anda tidak disarankan menaruh pending order (<em>Buy Limit</em> / <em>Sell Limit</em>) secara membabi buta. <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> adalah sebuah <strong>Area of Interest (POI)</strong>.</p>
-<p>Untuk mengubahnya menjadi setup <em>A+</em> (<em>high probability</em>), sebuah zona <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> harus memiliki pertemuan (<em>confluence</em>) dengan setidaknya satu, atau lebih baik dua, <em>PD Arrays</em> di dalam zona 62%-79% tersebut:
-- Sebuah <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang belum dimitigasi.
-- Sebuah <a href="../bagian-05-smart-money-concept/fair-value-gap.html">Fair Value Gap</a> (FVG) yang masih terbuka (sering disebut <em><a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> to FVG</em>).
-- Sebuah level <a href="../bagian-31-ict-advanced-concepts/breaker-blocks-dan-mitigation-blocks.html">Breaker Blocks dan Mitigation Blocks</a> (Sangat kuat jika terbentuk sebagai Unicorn Setup).</p>
+<h2>Konfirmasi Entry OTE</h2>
+<p>Meskipun harga memasuki zona Fibonacci 62% - 79%, Anda tidak disarankan menaruh pending order (<em>Buy Limit</em> / <em>Sell Limit</em>) secara membabi buta. OTE adalah sebuah <strong>Area of Interest (POI)</strong>.</p>
+<p>Untuk mengubahnya menjadi setup <em>A+</em> (<em>high probability</em>), sebuah zona OTE harus memiliki pertemuan (<em>confluence</em>) dengan setidaknya satu, atau lebih baik dua, <em>PD Arrays</em> di dalam zona 62%-79% tersebut:
+- Sebuah Order Block yang belum dimitigasi.
+- Sebuah Fair Value Gap (FVG) yang masih terbuka (sering disebut <em>OTE to FVG</em>).
+- Sebuah level Breaker Blocks dan Mitigation Blocks (Sangat kuat jika terbentuk sebagai Unicorn Setup).</p>
 <h2>Sinkronisasi dengan Waktu</h2>
-<p>Seperti hukum mutlak ICT lainnya (lihat <a href="../bagian-31-ict-advanced-concepts/killzones-dan-true-day-open.html">Killzones dan True Day Open</a>), pola <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> paling mematikan terjadi pada waktu-waktu spesifik. Jika Anda menemukan formasi pergerakan <em>Impulse</em> dan Anda menarik fibonacci, pastikan bahwa <em>Retracement</em> (penurunan ke area 70.5%) <strong>terjadi tepat saat salah satu <a href="../bagian-08-session-dan-waktu/killzone.html">Killzone</a> terbuka</strong> (misalnya pada 08:30 AM EST atau di dalam rentang waktu London).</p>
-<p><em>(Waktu + Harga <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> + FVG = Precision Strike)</em>.</p>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
+<p>Seperti hukum mutlak ICT lainnya (lihat Killzones dan True Day Open), pola OTE paling mematikan terjadi pada waktu-waktu spesifik. Jika Anda menemukan formasi pergerakan <em>Impulse</em> dan Anda menarik fibonacci, pastikan bahwa <em>Retracement</em> (penurunan ke area 70.5%) <strong>terjadi tepat saat salah satu Killzone terbuka</strong> (misalnya pada 08:30 AM EST atau di dalam rentang waktu London).</p>
+<p><em>(Waktu + Harga OTE + FVG = Precision Strike)</em>.</p>
+</section></main><footer class="footer hide-until-auth">
   © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+</footer></body></html>

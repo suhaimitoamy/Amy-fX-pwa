@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>BPR vs CE vs Mean Threshold — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/glass.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+</head>
+<body>
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">A</span>
+      <span>Amy FX Academy</span>
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <section class="article">
+    <div class="breadcrumb">
+      <a href="../index.html">Beranda</a> › 
+      <a href="../daftar-materi.html">Daftar Materi</a> ›
+      <a href="index.html">Bagian 17 Fvg Masterclass</a>
+    </div>
+    
+    <div class="glass-panel" style="margin-top: 20px;">
+        <h1>BPR vs CE vs Mean Threshold</h1>
+<div class="note"><strong>Ikhtisar</strong><br><p>Ketiga istilah ini (<em>Balanced Price Range, Consequent Encroachment</em>, dan <em><strong>Mean Threshold</strong></em>) semuanya membahas satu angka magis dalam algoritma <strong>IPDA</strong>: <strong>Level 50%</strong>. <strong>IPDA</strong> terobsesi dengan titik keseimbangan (50%). Namun, ketiga istilah ini diterapkan pada objek <em><strong>PD Array</strong></em> yang berbeda-beda. Jangan sampai tertukar penggunaannya!</p></div>
+
+<h2>1. Consequent Encroachment (CE) - 50% dari Celah/Bayangan</h2>
+<p><strong>Objek:</strong> Digunakan pada kotak <strong><strong>Fair Value Gap</strong> (FVG)</strong> atau bayangan panjang <strong>Wick/Tail</strong>.</p>
+<ul>
+<li><strong>Definisi:</strong> CE adalah titik persis 50% dari keseluruhan rentang celah (FVG) atau rentang bayangan (<em>Wick</em>).</li>
+<li><strong>Cara Ukur:</strong> Gunakan Fibonacci, tarik dari batas atas FVG ke batas bawah FVG (atau dari pangkal <em>wick</em> ke ujung <em>wick</em>). Garis 0.5 (50%) di tengah itulah CE.</li>
+<li><strong>Perilaku Harga:</strong> Jika sebuah FVG (atau <em>wick</em> penyapu) valid dan dilindungi oleh <em>Smart Money</em>, harga paling jauh HANYA akan menusuk hingga ke level CE (50%) ini, lalu segera berbalik arah. Jika <em>body candle</em> ditutup (<em>Close</em>) melampaui level CE, FVG tersebut hampir pasti telah <strong>bocor/gagal</strong> dan akan berubah menjadi <em>Inversion FVG</em>.</li>
+</ul>
+<h2>2. <strong>Mean Threshold</strong> (MT) - 50% dari Badan Blok</h2>
+<p><strong>Objek:</strong> Digunakan pada <strong><strong>Order Block</strong> (OB)</strong> atau <strong>Breaker/<strong>Mitigation Block</strong></strong>.</p>
+<ul>
+<li><strong>Definisi:</strong> MT adalah titik persis 50% dari keseluruhan rentang <strong>BADAN (Body)</strong> <strong>Order Block</strong>. (Ingat: ICT murni sering kali mengukur <em><strong>Order Block</strong></em> HANYA pada <em>body</em>-nya, mengabaikan <em>wick</em>).</li>
+<li><strong>Cara Ukur:</strong> Tarik Fibonacci dari harga <em>Open</em> hingga harga <em>Close</em> dari <em>candle <strong>Order Block</strong></em> tersebut. Titik tengahnya (50%) adalah <strong>Mean Threshold</strong>.</li>
+<li><strong>Perilaku Harga:</strong> Logikanya persis sama dengan CE. Sebuah <em><strong>Order Block</strong></em> dinyatakan kuat dan valid memegang kendali jika harga (<em>retracement</em>) tidak pernah ditutup di bawah (melewati) level <strong>Mean Threshold</strong>-nya.</li>
+</ul>
+<h2>3. <strong>Balanced Price Range (BPR)</strong> - 50% Ganda (Tumpang Tindih)</h2>
+<p><strong>Objek:</strong> Digunakan pada dua buah <strong>FVG</strong> yang saling berhadapan.</p>
+<ul>
+<li><strong>Definisi:</strong> BPR bukanlah titik ukur, melainkan sebuah zoba unik. BPR terjadi ketika harga naik menciptakan Bullish FVG raksasa, lalu seketika harga terjun ke bawah (<em>Displacement</em> ke bawah) menciptakan Bearish FVG raksasa <strong>tepat di area harga yang sama</strong>.</li>
+<li><strong>Hasil:</strong> Anda kini memiliki kotak FVG Naik dan kotak FVG Turun yang saling tumpang tindih. Area tempat mereka berpotongan (tumpang tindih) disebut <em>Balanced Price Range</em> (Area Harga Seimbang).</li>
+<li><strong>Perilaku Harga:</strong> Karena harga sudah melesat naik dan turun ke area yang sama dengan brutal, algoritma menganggap area tersebut sudah "Lunas/Seimbang". Akibatnya, BPR bertindak seperti tembok baja. Harga sering kali memantul dari BPR dan bahkan <strong>tidak sanggup mencapai titik CE (50%)</strong> dari BPR tersebut karena saking kuatnya penolakan algoritma di zona lunas ini.</li>
+</ul>
+<div class="warning"><strong>Kesalahan Umum</strong><br><ul>
+<li>Jangan menyebut 50% dari <strong>Order Block</strong> sebagai "CE". Sebutlah "<strong>Mean Threshold</strong>".</li>
+<li>Jangan menyebut 50% dari FVG sebagai "<strong>Mean Threshold</strong>". Sebutlah "CE".
+Kesalahan istilah ini tampak remeh, namun di komunitas ICT garis keras, ini menunjukkan tingkat kedalaman literasi teori pengiriman harga Anda.</li>
+</ul></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer hide-until-auth">
+  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
+</footer>
+</body>
+</html>

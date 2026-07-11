@@ -4,9 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Internal dan External Liquidity — Amy FX Academy</title>
+  <title>[[Internal dan External Liquidity]] — Amy FX Academy</title>
   <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
   <script>const ROOT_PATH='../';</script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/main.js" defer></script>
@@ -15,34 +14,25 @@
 <script>requireLogin();</script>
 <header class="topbar hide-until-auth">
   <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="navlinks" id="navlinks">
       <a href="../index.html">Beranda</a>
       <a href="../daftar-materi.html">Daftar Materi</a>
       <a href="../tentang.html">Tentang</a>
       <a href="../glosarium/index.html">Glosarium</a>
+      
     </div>
   </nav>
 </header>
 <main class="container hide-until-auth">
   <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 19 Liquidity Masterclass</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Internal dan External Liquidity</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Selamat datang di materi <strong><a href="../bagian-19-liquidity-masterclass/internal-dan-external-liquidity.html">Internal dan External Liquidity</a></strong>. Pembahasan ini adalah bagian paling krusial dari eksekusi tingkat lanjut dalam <strong>Liquidity Masterclass</strong>. Setelah Anda memahami apa itu likuiditas, bagaimana fungsinya sebagai target dan <em>trigger</em>, serta bagaimana membedakan <em>Sweep</em> dan <em>Run</em>, sekarang saatnya kita menyatukan semua kepingan *puzzle* tersebut. Kita akan mempelajari bagaimana algoritma (<em>Smart Money</em>) memindahkan harga dari satu titik ke titik lain secara sistematis menggunakan konsep Likuiditas Internal dan Eksternal.</p></div>
+    <div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a></div>
+    <div class="eyebrow">Bagian 19 — POI Selection Masterclass</div>
+    <h1>[[Internal dan External Liquidity]]</h1>
+<div class="note"><strong>Ikhtisar</strong><br><p>Selamat datang di materi <strong><a href="internal-dan-external-liquidity.html">Internal dan External Liquidity</a></strong>. Pembahasan ini adalah bagian paling krusial dari eksekusi tingkat lanjut dalam <strong>Liquidity Masterclass</strong>. Setelah Anda memahami apa itu likuiditas, bagaimana fungsinya sebagai target dan <em>trigger</em>, serta bagaimana membedakan <em>Sweep</em> dan <em>Run</em>, sekarang saatnya kita menyatukan semua kepingan *puzzle* tersebut. Kita akan mempelajari bagaimana algoritma (<em>Smart Money</em>) memindahkan harga dari satu titik ke titik lain secara sistematis menggunakan konsep Likuiditas Internal dan Eksternal.</p></div>
 
-<p>Bayangkan pergerakan pasar layaknya ritme pernapasan manusia. Anda menarik napas (mengumpulkan energi ke dalam), lalu menghembuskan napas (mengeluarkan energi keluar). Atau bayangkan sebuah karet gelang yang direntangkan ke luar batasnya, lalu dilepaskan sehingga terpental kembali ke titik tengahnya. Seperti itulah algoritma pengiriman harga (<em>Interbank <a href="../bagian-06-ict-core/price-delivery.html">Price Delivery</a> Algorithm</em> / <a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a>) bekerja. Pasar secara abadi bergerak bolak-balik antara <em>External Range Liquidity</em> (ERL) dan <em>Internal Range Liquidity</em> (IRL).</p>
+<p>Bayangkan pergerakan pasar layaknya ritme pernapasan manusia. Anda menarik napas (mengumpulkan energi ke dalam), lalu menghembuskan napas (mengeluarkan energi keluar). Atau bayangkan sebuah karet gelang yang direntangkan ke luar batasnya, lalu dilepaskan sehingga terpental kembali ke titik tengahnya. Seperti itulah algoritma pengiriman harga (<em>Interbank <a href="price-delivery.html">Price Delivery</a> Algorithm</em> / <a href="ipda.html">IPDA</a>) bekerja. Pasar secara abadi bergerak bolak-balik antara <em>External Range Liquidity</em> (ERL) dan <em>Internal Range Liquidity</em> (IRL).</p>
 <h2>Apa itu External Range Liquidity (ERL)?</h2>
 <p><strong>External Range Liquidity</strong> adalah likuiditas yang mengendap dengan manis di <strong>luar</strong> rentang pergerakan harga saat ini. Secara spesifik, ERL terletak tepat di atas titik tertinggi (<em>Extreme Highs</em>) dan tepat di bawah titik terendah (<em>Extreme Lows</em>) dari sebuah <em>swing</em> atau *range* yang sedang kita amati.</p>
 <p>Mengapa disebut "Eksternal"? Karena batas-batas ini mendefinisikan perimeter dari pergerakan harga. Di area inilah para <em>retail trader</em> paling banyak menempatkan Stop Loss dan <em>Breakout Orders</em> mereka. Contoh paling umum dari letak ERL meliputi:</p>
@@ -52,9 +42,9 @@
 <li><em>Major Swing Highs</em> dan <em>Major Swing Lows</em> (terutama di timeframe H4 dan Daily)</li>
 <li><em>Equal Highs</em> (EQH) dan <em>Equal Lows</em> (EQL)</li>
 </ul>
-<p>Ketika harga bergerak menembus level-level eksternal ini, tujuannya biasanya adalah untuk melakukan <em><a href="../bagian-04-liquidity/liquidity-sweep.html">Liquidity Sweep</a></em> (mengambil bahan bakar Stop Loss) sebelum melakukan pembalikan arah (<em>reversal</em>).</p>
+<p>Ketika harga bergerak menembus level-level eksternal ini, tujuannya biasanya adalah untuk melakukan <em><a href="liquidity-sweep.html">Liquidity Sweep</a></em> (mengambil bahan bakar Stop Loss) sebelum melakukan pembalikan arah (<em>reversal</em>).</p>
 <h2>Apa itu Internal Range Liquidity (IRL)?</h2>
-<p>Sebaliknya, <strong>Internal Range Liquidity</strong> adalah likuiditas dan inefisiensi harga yang terletak di <strong>dalam</strong> rentang pergerakan harga (<em>inside the range</em>) yang terbentuk di antara dua titik <em><a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a></em> tadi.</p>
+<p>Sebaliknya, <strong>Internal Range Liquidity</strong> adalah likuiditas dan inefisiensi harga yang terletak di <strong>dalam</strong> rentang pergerakan harga (<em>inside the range</em>) yang terbentuk di antara dua titik <em><a href="external-liquidity.html">External Liquidity</a></em> tadi.</p>
 <p>Ketika harga bergerak kencang ke satu arah untuk membentuk sebuah <em>range</em>, pergerakan impulsif tersebut sering kali meninggalkan ketidakseimbangan (<em>imbalance</em>) di pasar. Smart Money harus kembali ke area tersebut untuk menyeimbangkan pesanan mereka atau melakukan mitigasi (<em>mitigation</em>). Area-area ini bertindak sebagai magnet internal. Contoh paling umum dari IRL meliputi:</p>
 <ul>
 <li><strong>Fair Value Gaps (FVG) / Imbalance:</strong> Ini adalah bentuk IRL yang paling kuat dan paling sering dicari oleh algoritma.</li>
@@ -62,20 +52,20 @@
 <li><em>Minor/Short-term Swing Highs</em> dan <em>Lows</em> yang berada di dalam <em>range</em> utama.</li>
 </ul>
 <h2>Siklus Abadi Pergerakan Harga (The Delivery Cycle)</h2>
-<p>Ini adalah rahasia terbesar (<em>Holy Grail</em>) dari Smart Money Concepts: <strong>Pasar HANYA bergerak dari <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a> ke <a href="../bagian-04-liquidity/internal-liquidity.html">Internal Liquidity</a>, dan dari <a href="../bagian-04-liquidity/internal-liquidity.html">Internal Liquidity</a> kembali ke <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a>.</strong> Tidak ada pengecualian.</p>
+<p>Ini adalah rahasia terbesar (<em>Holy Grail</em>) dari Smart Money Concepts: <strong>Pasar HANYA bergerak dari <a href="external-liquidity.html">External Liquidity</a> ke <a href="internal-liquidity.html">Internal Liquidity</a>, dan dari <a href="internal-liquidity.html">Internal Liquidity</a> kembali ke <a href="external-liquidity.html">External Liquidity</a>.</strong> Tidak ada pengecualian.</p>
 <p>Mari kita urai siklus algoritma ini langkah demi langkah:</p>
 <h3>Fase 1: Dari Eksternal ke Internal</h3>
-<p>Katakanlah harga baru saja naik dan menembus <em>Previous Day High</em> (mengambil <a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a>). Ingat materi <em><a href="../bagian-19-liquidity-masterclass/sweep-vs-run.html">Sweep vs Run</a></em>? Jika penembusan ini hanyalah sebuah <em>Sweep</em> (meninggalkan sumbu/<em>wick</em>), maka <em>Smart Money</em> baru saja mengakumulasi pesanan <em>Sell</em> (Short) secara masif dengan memakan <em>Buy Stop</em> ritel.</p>
-<p>Setelah pesanan <em>Sell</em> mereka terisi di harga premium (luar batas), ke mana algoritma akan mengarahkan harga selanjutnya? Tentu saja ke <strong>Internal Range Liquidity</strong> (IRL). Harga akan turun masuk kembali ke dalam <em>range</em> untuk mencari <em><a href="../bagian-05-smart-money-concept/fair-value-gap.html">Fair Value Gap</a></em> (FVG) terdekat yang ada di area diskon. FVG ini menjadi target (<em><a href="../bagian-17-fvg-masterclass/draw-on-liquidity.html">Draw on Liquidity</a></em>) sementara dari pergerakan turun tersebut.</p>
+<p>Katakanlah harga baru saja naik dan menembus <em>Previous Day High</em> (mengambil <a href="external-liquidity.html">External Liquidity</a>). Ingat materi <em><a href="sweep-vs-run.html">Sweep vs Run</a></em>? Jika penembusan ini hanyalah sebuah <em>Sweep</em> (meninggalkan sumbu/<em>wick</em>), maka <em>Smart Money</em> baru saja mengakumulasi pesanan <em>Sell</em> (Short) secara masif dengan memakan <em>Buy Stop</em> ritel.</p>
+<p>Setelah pesanan <em>Sell</em> mereka terisi di harga premium (luar batas), ke mana algoritma akan mengarahkan harga selanjutnya? Tentu saja ke <strong>Internal Range Liquidity</strong> (IRL). Harga akan turun masuk kembali ke dalam <em>range</em> untuk mencari <em><a href="fair-value-gap.html">Fair Value Gap</a></em> (FVG) terdekat yang ada di area diskon. FVG ini menjadi target (<em><a href="draw-on-liquidity.html">Draw on Liquidity</a></em>) sementara dari pergerakan turun tersebut.</p>
 <h3>Fase 2: Dari Internal ke Eksternal</h3>
-<p>Kini harga terus turun dan akhirnya menyentuh (<em>tap</em>) ke dalam H4 FVG (<a href="../bagian-04-liquidity/internal-liquidity.html">Internal Liquidity</a>) yang berada di area diskon. Area FVG ini adalah tempat <em>Smart Money</em> menyeimbangkan kembali neraca mereka dan mungkin mengakumulasi kembali pesanan Buy (Long) di harga murah.</p>
+<p>Kini harga terus turun dan akhirnya menyentuh (<em>tap</em>) ke dalam H4 FVG (<a href="internal-liquidity.html">Internal Liquidity</a>) yang berada di area diskon. Area FVG ini adalah tempat <em>Smart Money</em> menyeimbangkan kembali neraca mereka dan mungkin mengakumulasi kembali pesanan Buy (Long) di harga murah.</p>
 <p>Begitu harga menyeimbangkan IRL ini dan menunjukkan reaksi penolakan, ke mana target algoritma berikutnya? Algoritma sekarang akan mengarahkan harga keluar menuju <strong>External Range Liquidity</strong> (ERL) yang baru. Targetnya adalah menembus <em>Swing High</em> yang baru saja terbentuk, atau mengejar <em>Previous Day High</em> berikutnya untuk mengambil kumpulan Stop Loss baru.</p>
-<div class="warning"><strong>> Mengetahui di mana posisi Anda berada dalam siklus "Eksternal ke Internal" atau "Internal ke Eksternal" adalah inti dari penentuan Bias Harian (*Daily Bias*). Jika Anda tahu harga baru saja memantul dari IRL, maka Anda harus mencari posisi searah tren menuju ERL. Jangan melawan arus!</strong><br></div>
+<div class="warning"><strong></strong><br><p>Mengetahui di mana posisi Anda berada dalam siklus "Eksternal ke Internal" atau "Internal ke Eksternal" adalah inti dari penentuan Bias Harian (<em>Daily Bias</em>). Jika Anda tahu harga baru saja memantul dari IRL, maka Anda harus mencari posisi searah tren menuju ERL. Jangan melawan arus!</p></div>
 
 <h2>Bagaimana Menerapkannya dalam Trading Sehari-hari?</h2>
 <p>Pemahaman teoritis di atas akan sangat luar biasa jika diterapkan langsung ke dalam rencana eksekusi (<em>Trading Plan</em>) Anda. Berikut adalah *framework* sederhana yang bisa Anda gunakan setiap hari:</p>
 <p><strong>1. Petakan Batas Lapangan Anda (Mapping the Range):</strong><br />
-Buka *chart* Daily atau H4. Tandai titik tertinggi (High) dan terendah (Low) dari ayunan (*swing*) yang paling jelas saat ini. Ini adalah <em><a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a></em> Anda. Kemudian, cari apakah ada FVG atau <em><a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a></em> besar yang belum tersentuh di tengah-tengah *range* tersebut. Itu adalah <em><a href="../bagian-04-liquidity/internal-liquidity.html">Internal Liquidity</a></em> Anda.</p>
+Buka *chart* Daily atau H4. Tandai titik tertinggi (High) dan terendah (Low) dari ayunan (*swing*) yang paling jelas saat ini. Ini adalah <em><a href="external-liquidity.html">External Liquidity</a></em> Anda. Kemudian, cari apakah ada FVG atau <em><a href="order-block.html">Order Block</a></em> besar yang belum tersentuh di tengah-tengah *range* tersebut. Itu adalah <em><a href="internal-liquidity.html">Internal Liquidity</a></em> Anda.</p>
 <p><strong>2. Ajukan Pertanyaan Evaluasi:</strong><br />
 Tanyakan pada *chart*: "Harga baru saja mengambil apa?"</p>
 <ul>
@@ -83,15 +73,13 @@ Tanyakan pada *chart*: "Harga baru saja mengambil apa?"</p>
 <li>Jika harga baru saja turun dan mengisi <em>Internal FVG</em> di area Diskon, maka target harga berikutnya adalah terbang menembus <em>External High</em>.</li>
 </ul>
 <p><strong>3. Eksekusi Berdasarkan Konfirmasi:</strong><br />
-Misalkan harga turun dan menyentuh H4 FVG (<a href="../bagian-04-liquidity/internal-liquidity.html">Internal Liquidity</a>). Jangan langsung *Buy limit* membabi buta. Turunlah ke *timeframe* M15 atau M5. Tunggu terjadinya <em><a href="../bagian-09-entry-model/market-structure-shift.html">Market Structure Shift</a></em> (MSS) ke atas di *timeframe* kecil tersebut sebagai konfirmasi bahwa algoritma memang bereaksi terhadap IRL tersebut dan siap memulai fase ekspansi menuju ERL (Target High). Masuklah di <em>pullback</em>, dan letakkan Take Profit Anda dengan aman di atas <em>External High</em>.</p>
+Misalkan harga turun dan menyentuh H4 FVG (<a href="internal-liquidity.html">Internal Liquidity</a>). Jangan langsung *Buy limit* membabi buta. Turunlah ke *timeframe* M15 atau M5. Tunggu terjadinya <em><a href="market-structure-shift.html">Market Structure Shift</a></em> (MSS) ke atas di *timeframe* kecil tersebut sebagai konfirmasi bahwa algoritma memang bereaksi terhadap IRL tersebut dan siap memulai fase ekspansi menuju ERL (Target High). Masuklah di <em>pullback</em>, dan letakkan Take Profit Anda dengan aman di atas <em>External High</em>.</p>
 <p>Sebagai penutup, berhentilah melihat pergerakan <em>candlestick</em> sebagai *chaos* (kekacauan) yang tidak berpola. Pasar sangat terstruktur. Ia bernapas keluar (External) dan bernapas ke dalam (Internal). Dengan mengidentifikasi siklus IRL dan ERL ini secara presisi, Anda tidak hanya memprediksi arah pasar, Anda membaca lembaran kode algoritma institusi yang sebenarnya.</p>
-<div class="tip"><strong>Pesan Mentor</strong><br><p>Jika Anda masih bingung, gunakan analogi rumah. <em><a href="../bagian-04-liquidity/external-liquidity.html">External Liquidity</a></em> adalah pagar depan dan tembok belakang rumah Anda (batas luar). Sedangkan <em><a href="../bagian-04-liquidity/internal-liquidity.html">Internal Liquidity</a></em> adalah perabotan, meja, dan sofa yang ada di dalam rumah tersebut (batas dalam).</p></div>
-    </div>
-  </section>
+<div class="note"><strong>Pesan Mentor</strong><br><p>Jika Anda masih bingung, gunakan analogi rumah. <em><a href="external-liquidity.html">External Liquidity</a></em> adalah pagar depan dan tembok belakang rumah Anda (batas luar). Sedangkan <em><a href="internal-liquidity.html">Internal Liquidity</a></em> adalah perabotan, meja, dan sofa yang ada di dalam rumah tersebut (batas dalam).</p></div>
+  <div class="quiz-container" data-module="liquidity-masterclass"></div>
+<script src="../assets/js/quiz.js"></script>
+</section>
 </main>
-
-<footer class="footer hide-until-auth">
-  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer>
 </body>
 </html>

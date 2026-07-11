@@ -6,7 +6,6 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Advanced Imbalances (BPR dan VI) — Amy FX Academy</title>
   <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
   <script>const ROOT_PATH='../';</script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/main.js" defer></script>
@@ -15,13 +14,8 @@
 <script>requireLogin();</script>
 <header class="topbar hide-until-auth">
   <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="navlinks" id="navlinks">
       <a href="../index.html">Beranda</a>
       <a href="../daftar-materi.html">Daftar Materi</a>
@@ -32,17 +26,11 @@
 </header>
 <main class="container hide-until-auth">
   <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 21 Ifvg Inversion Model</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Advanced Imbalances (BPR dan VI)</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Di luar <a href="../bagian-05-smart-money-concept/fair-value-gap.html">Fair Value Gap</a> (FVG) reguler, terdapat struktur ketidakseimbangan (imbalance) yang sangat kuat karena menunjukkan urgensi tinggi dari Smart Money. Mari kita bedah dua senjata rahasia: <strong><a href="../bagian-31-ict-advanced-concepts/balanced-price-range-bpr.html">Balanced Price Range (BPR)</a></strong> dan <strong>Volume Imbalance (VI)</strong>.</p></div>
-
-<h2>1. <a href="../bagian-31-ict-advanced-concepts/balanced-price-range-bpr.html">Balanced Price Range (BPR)</a></h2>
+    <div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a></div>
+    <div class="eyebrow">Bagian 21 — Session Timing Advanced</div>
+    <h1>Advanced Imbalances (BPR dan VI)</h1>
+<div class="note"><strong>Ikhtisar</strong><br><p>Di luar <a href="fair-value-gap.html">Fair Value Gap</a> (FVG) reguler, terdapat struktur ketidakseimbangan (imbalance) yang sangat kuat karena menunjukkan urgensi tinggi dari Smart Money. Mari kita bedah dua senjata rahasia: **<a href="balanced-price-range-bpr.html">Balanced Price Range (BPR)</a>** dan **Volume Imbalance (VI)**.</p></div>
+<h2>1. <a href="balanced-price-range-bpr.html">Balanced Price Range (BPR)</a></h2>
 <p><strong>Apa itu?</strong>
 BPR terjadi ketika pasar bergerak agresif ke satu arah (menciptakan FVG), lalu segera berbalik arah secara agresif dan menembus FVG tersebut dengan FVG berlawanan arah.
 Sederhananya: <strong>FVG yang tumpang tindih (overlap) dengan FVG berlawanan</strong>.</p>
@@ -56,21 +44,15 @@ BPR menandakan perubahan pesanan institusional (Orderflow) yang instan. Harga te
 <p><strong>Apa itu?</strong>
 Volume Imbalance terjadi ketika penutupan satu candle dan pembukaan candle berikutnya tidak sejajar, tetapi sumbu (wick) dari kedua candle tersebut saling bersentuhan atau tumpang tindih. Ini meninggalkan "celah body" di antara dua candle.</p>
 <p><strong>Mengapa ini penting?</strong>
-Berbeda dengan gap biasa (di mana sama sekali tidak ada transaksi), dalam VI terdapat transaksi (melalui sumbu/wick), tetapi tidak ada volume besar (body candle) yang dikirimkan di area tersebut. Algo <a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a> melihat ini sebagai area yang perlu diseimbangkan dengan volume penuh (body) di masa depan, atau digunakan sebagai titik pantulan sensitif.</p>
-<div class="tip"><strong>Magnet Harga</strong><br><p>Volume Imbalance bertindak seperti magnet harga skala mikro dan sering kali digunakan sebagai zona Entry presisi tinggi (Sniper Entry) saat sejalan dengan Orderflow yang benar.</p></div>
-
+Berbeda dengan gap biasa (di mana sama sekali tidak ada transaksi), dalam VI terdapat transaksi (melalui sumbu/wick), tetapi tidak ada volume besar (body candle) yang dikirimkan di area tersebut. Algo <a href="ipda.html">IPDA</a> melihat ini sebagai area yang perlu diseimbangkan dengan volume penuh (body) di masa depan, atau digunakan sebagai titik pantulan sensitif.</p>
+<div class="note"><strong>Magnet Harga</strong><br><p>Volume Imbalance bertindak seperti magnet harga skala mikro dan sering kali digunakan sebagai zona Entry presisi tinggi (Sniper Entry) saat sejalan dengan Orderflow yang benar.</p></div>
 <h2>Kriteria Eksekusi (Untuk BPR)</h2>
 <ul>
 <li><strong>Entry:</strong> Masuk (Limit Order atau Market) persis ketika harga menyentuh kembali (retrace) ke batas atas BPR (jika Bullish) atau batas bawah BPR (jika Bearish). Jangan harap harga masuk terlalu dalam ke BPR.</li>
 <li><strong>Invalidasi (SL):</strong> Sedikit di bawah/atas keseluruhan area BPR. Jika BPR ditembus secara penuh (dengan body candle), maka narasi kita salah.</li>
-<li><strong>Target (DOL):</strong> Swing terdekat (<a href="../bagian-17-fvg-masterclass/draw-on-liquidity.html">Draw on Liquidity</a>) atau <a href="../bagian-05-smart-money-concept/pd-array.html">PD Array</a> waktu tinggi (HTF) berikutnya.</li>
-</ul>
-    </div>
-  </section>
+<li><strong>Target (DOL):</strong> Swing terdekat (<a href="draw-on-liquidity.html">Draw on Liquidity</a>) atau <a href="pd-array.html">PD Array</a> waktu tinggi (HTF) berikutnya.</li>
+</ul>  </section>
 </main>
-
-<footer class="footer hide-until-auth">
-  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer>
 </body>
 </html>

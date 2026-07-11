@@ -39,13 +39,12 @@
     </div>
     
     <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Leverage, Margin, Equity, dan Balance</h1>
-<p><img alt="06-leverage-margin-equity-balance-1781963571247-1.jpg" src="../images/06-leverage-margin-equity-balance-1781963571247-1.jpg" /></p>
-<div class="note"><strong>Ikhtisar</strong><br><p>Pernahkah kamu bertanya-tanya, bagaimana mungkin modal cuma Rp1.500.000 ($100) tapi bisa dipakai untuk bertransaksi emas yang nilai aslinya bernilai puluhan juta rupiah? Jawabannya ada pada empat "Mantra Sakti" yang ada di aplikasi tradingmu: <strong><a href="../bagian-01-pemula-nol/leverage-margin-equity-dan-balance.html">Leverage, Margin, Equity, dan Balance</a>.</strong></p></div>
+      <h1>Leverage, Margin, Equity, dan Balance</h1>
+
+<div class="note"><strong>Ikhtisar</strong><br><p>Pernahkah kamu bertanya-tanya, bagaimana mungkin modal cuma Rp1.500.000 ($100) tapi bisa dipakai untuk bertransaksi emas yang nilai aslinya bernilai puluhan juta rupiah? Jawabannya ada pada empat "Mantra Sakti" yang ada di aplikasi tradingmu: <strong>[[Leverage, Margin, Equity, dan Balance]].</strong></p></div>
 
 <p>Istilah-istilah ini selalu muncul di layar aplikasi MetaTrader (MT4/MT5) bagian tab "Trade". Pemula biasanya malas memperhatikan angka-angka ini selama belum berubah jadi merah atau biru. Padahal, keempat hal ini adalah nyawa dari akun tradingmu. Mari kita bongkar satu per satu dengan bahasa manusia, bukan bahasa dewa.</p>
 <h2>1. Leverage: "Dongkrak" Modal dari Broker</h2>
-<p><img alt="06-leverage-margin-equity-balance-1781963571247-2.jpg" src="../images/06-leverage-margin-equity-balance-1781963571247-2.jpg" /></p>
 <p>Bayangkan kamu ingin membeli mobil bekas seharga Rp100 juta untuk dijual lagi. Tapi uang di dompetmu cuma ada Rp1 juta. Mustahil kan? Kecuali... ada orang kaya (Broker) yang bersedia meminjamkanmu sisa Rp99 juta, asalkan kamu titipkan Rp1 jutamu itu sebagai jaminan.</p>
 <p>Sistem "meminjam uang sementara" inilah yang disebut <strong>Leverage</strong> (Daya Ungkit). Leverage ditulis dalam bentuk rasio, misalnya 1:100, 1:500, atau 1:1000.</p>
 <ul>
@@ -55,17 +54,14 @@
 <p><strong>Kenapa Leverage itu seperti pedang bermata dua?</strong><br />
 Leverage besar membuatmu bisa membuka lot yang besar meski modalmu kecil. Potensi profit jadi berlipat ganda. TAPI, kalau analisamu salah, modal aslimu yang kecil itu juga akan berlipat ganda lebih cepat habisnya! Leverage membunuh trader pemula yang serakah lebih cepat dari apapun di dunia ini.</p>
 <h2>2. Margin: Uang Jaminan yang Ditahan</h2>
-<p><img alt="06-leverage-margin-equity-balance-1781963571247-3.jpg" src="../images/06-leverage-margin-equity-balance-1781963571247-3.jpg" /></p>
 <p>Masih ingat cerita beli mobil bekas tadi? Uang Rp1 juta milikmu yang harus <strong>ditahan/dititipkan</strong> ke Broker sebagai jaminan transaksi disebut <strong>Margin</strong> (atau Used Margin).</p>
 <p>Setiap kali kamu menekan tombol Buy atau Sell, broker akan langsung menahan sebagian dari uang di akunmu. Uang ini tidak hilang, tapi "dikunci sementara". Begitu kamu menutup transaksi (Close Trade), entah itu profit atau loss, uang jaminan (Margin) itu akan dikembalikan ke saldo utamamu.</p>
 <p><strong>Free Margin (Margin Bebas):</strong> Ini adalah sisa uang di akunmu yang belum dipakai sebagai jaminan. Kalau Free Margin-mu sampai Rp0, artinya kamu sudah tidak bisa membuka posisi baru lagi. Bahkan, kalau terus memburuk, broker akan menutup paksa posisimu secara otomatis. Tragedi ini sering disebut <strong>Margin Call (MC)</strong>.</p>
 <h2>3. Balance: Uang Mati di Akunmu</h2>
-<p><img alt="06-leverage-margin-equity-balance-1781963571247-4.jpg" src="../images/06-leverage-margin-equity-balance-1781963571247-4.jpg" /></p>
 <p><strong>Balance</strong> adalah total saldo uangmu <em>saat kamu tidak punya posisi terbuka (tidak sedang floating)</em>. Atau dengan kata lain, ini adalah modal awalku ditambah profit/loss dari posisi-posisi yang <strong>sudah ditutup</strong>.</p>
 <p>Contoh: Kamu deposit $100. Maka Balance-mu adalah $100. Lalu kamu buka posisi Buy Gold dan sedang floating minus -$20 (belum di-close). Berapakah Balance-mu sekarang? <strong>Tetap $100!</strong></p>
 <p>Loh, kenapa tetap? Karena posisinya belum resmi ditutup. Balance hanya akan berubah detik ketika posisimu ditutup (Close Trade). Jadi jangan bangga dulu kalau melihat floating profit $50 tapi belum di-close, karena itu belum masuk ke Balance-mu.</p>
 <h2>4. Equity: Uang Nyata di Detik Ini (Real-Time)</h2>
-<p><img alt="06-leverage-margin-equity-balance-1781963571247-5.jpg" src="../images/06-leverage-margin-equity-balance-1781963571247-5.jpg" /></p>
 <p>Kalau Balance itu uang yang sudah resmi hak milikmu, maka <strong>Equity</strong> adalah nilai nyata akunmu detik ini juga, termasuk posisi yang sedang berjalan (floating).</p>
 <p>Rumusnya gampang banget:<br />
 <strong>Equity = Balance + Floating Profit (atau - Floating Loss)</strong></p>
@@ -80,9 +76,8 @@ Leverage besar membuatmu bisa membuka lot yang besar meski modalmu kecil. Potens
 <p><strong>Mana yang Lebih Penting: Balance atau Equity?</strong><br />
 Banyak trader pemula berbohong pada dirinya sendiri. Mereka punya Balance $1000, tapi sedang menahan Loss -$800. Mereka merasa modalnya masih $1000. <strong>Salah besar!</strong> Modal nyata mereka (Equity) saat itu cuma tinggal $200. Broker dan market hanya peduli pada Equity-mu, bukan Balance-mu. Saat Equity habis, akunmu mati.</p>
 <h2>Kesimpulan</h2>
-<p><img alt="06-leverage-margin-equity-balance-1781963571247-6.jpg" src="../images/06-leverage-margin-equity-balance-1781963571247-6.jpg" /></p>
 <p>Saat kamu sedang trading, biasakan matamu melihat ke arah <strong>Equity</strong> dan <strong>Free Margin</strong>, bukan Balance. Equity adalah cermin kejujuran dari kondisi akunmu hari ini. Jangan pernah menggunakan Leverage terlalu besar yang membuat Margin-mu terkunci maksimal, karena itu artinya kamu sedang mengemudi di jalan tol dengan rem blong.</p>
-<p><a href="../bagian-01-pemula-nol/05-lot-pip-point-spread.html">← Sebelumnya</a></p>
+
     </div>
   </section>
 </main>

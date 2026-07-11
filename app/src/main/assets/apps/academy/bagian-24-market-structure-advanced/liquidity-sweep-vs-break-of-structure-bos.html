@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Liquidity Sweep vs Break of Structure (BOS) — Bagian 24 — Opening Gap Model — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+</head>
+<body>
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+      
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <section class="article">
+    <div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 24 — Opening Gap Model</a></div>
+    <div class="eyebrow">Bagian 24 — Opening Gap Model</div>
+    <h1 class="article-title">Liquidity Sweep vs Break of Structure (BOS)</h1>
+    <div class="article-content">
+      <h1>Liquidity Sweep vs Break of Structure (BOS)</h1>
+<div class="note"><strong>Ikhtisar</strong><br><p>Mimpi buruk paling klasik bagi <em>trader</em> ritel dan SMC pemula adalah "Jebakan Breakout". Mereka melihat sebuah level <em>High</em> ditembus (BOS), mereka langsung <em>Buy</em>, namun harga seketika runtuh (<em>Fakeout</em>). Konsep IPDA membedakan dengan tegas antara <strong>BOS</strong> (Penembusan Struktur Sejati) dengan <strong>Liquidity Sweep</strong> (Penyapuan Likuiditas) melalui metode pembacaan <em>body candle</em>.</p></div>
+
+<h2>1. Liquidity Sweep (Mencari Bensin)</h2>
+<ul>
+<li><strong>Tujuan:</strong> Algoritma hanya ingin memburu <em>Stop Loss</em> (<em>Buy Stop/Sell Stop</em>) yang tersembunyi di balik puncak atau lembah (<em>Old High/Old Low</em>). Ia TIDAK berniat melanjutkan harga ke arah penembusan tersebut.</li>
+<li><strong>Karakteristik Visual (Ciri Khas):</strong><ul>
+<li><strong>Wick Penetration:</strong> Harga menembus garis struktur HANYA dengan bayangan (<em>wick</em>).</li>
+<li><strong>Failed Close:</strong> Sekalipun <em>body candle</em> sempat menembus garis struktur saat ia sedang bergerak aktif, <em>candle</em> tersebut akan ditarik balik dengan kejam dan ditutup (<strong>Close</strong>) di BAWAH atau DI DALAM rentang garis struktur awal.</li>
+<li><strong>Reaksi Cepat (Whipsaw):</strong> Segera setelah menembus (menyapu), <em>candle</em> selanjutnya akan bergerak ganas berlawanan arah.</li>
+</ul>
+</li>
+<li><strong>Makna Algoritmik:</strong> Algoritma menolak menghargai level baru. Penolakan ini disebut <em>Rejection</em>, dan <em>wick</em> panjang yang terbentuk menjadi Rejection Block.</li>
+</ul>
+<h2>2. Break of Structure / BOS (Melanjutkan Tren)</h2>
+<ul>
+<li><strong>Tujuan:</strong> Algoritma berniat mengubah <em>state of delivery</em> atau melanjutkan tren yang ada secara agresif ke tingkat harga yang baru (menuju target likuiditas eksternal / ERL yang lebih jauh).</li>
+<li><strong>Karakteristik Visual (Ciri Khas):</strong><ul>
+<li><strong>Body Close:</strong> Syarat mutlak! <em>Body candle</em> HARUS ditutup (Close) melampaui garis puncak/lembah struktur.</li>
+<li><strong>Displacement:</strong> Penembusan tidak dilakukan dengan <em>candle</em> loyo atau merayap (<em>Languid Break</em>), melainkan dengan <em>candle</em> bervolume penuh (<em>Displacement</em>).</li>
+<li><strong>Meninggalkan Jejak:</strong> BOS yang valid selalu meninggalkan Fair Value Gap (FVG) atau memecahkan Order Block berlawanan (menjadi <em>Breaker</em>).</li>
+</ul>
+</li>
+<li><strong>Makna Algoritmik:</strong> Algoritma mengizinkan pengiriman harga (<em>Delivery</em>) dan menerima valuasi harga baru di atas/bawah struktur.</li>
+</ul>
+<h2>3. Aturan Konfirmasi "The Wait" (Menunggu)</h2>
+<p>Cara teraman untuk terhindar dari <em>Liquidity Sweep</em> yang menyamar sebagai BOS adalah jangan pernah menebak apa yang sedang dilakukan <em>candle</em> yang sedang berjalan (<em>running candle</em>).</p>
+<ol>
+<li><strong>Jika harga sedang menembus level penting, angkat tangan Anda dari mouse.</strong></li>
+<li>Tunggu hingga bel waktu <em>candle</em> tersebut berbunyi (misal di M15, tunggu sampai penutupan menit ke-15).</li>
+<li>Lihat di mana ia ditutup (Close).<ul>
+<li>Ditutup dengan Wick panjang kembali ke bawah? = <strong>Sweep (Cari Reversal).</strong></li>
+<li>Ditutup solid membelah garis struktur? = <strong>BOS/MSS (Cari Pullback ke FVG untuk Continuation).</strong></li>
+</ul>
+</li>
+</ol>
+<div class="warning"><strong></strong><br><p>Kadang-kadang algoritma melakukan <em>Sweep</em> tingkat lanjut yang menipu: Candle pertama ditutup membelah struktur (<em>Body Close</em>), namun candle kedua SEGERA menelan balik <em>body</em> candle pertama (<em>Engulfing</em> ke bawah). Ini tetap dikategorikan sebagai <em>Sweep</em> besar, atau yang sering disebut sebagai pola <strong>Turtle Soup</strong>. Itulah pentingnya BOS harus selalu diiringi oleh kelanjutan (<em>Continuation</em>) <em>Displacement</em>.</p></div>
+    </div>
+  </section>
+</main>
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer>
+</body>
+</html>

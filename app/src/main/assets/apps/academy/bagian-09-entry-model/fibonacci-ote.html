@@ -1,58 +1,18 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Fibonacci OTE — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 09 Entry Model</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Fibonacci OTE</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Halo, Sobat Trader! Di bab sebelumnya, kita telah menyelami konsep dasar <strong><a href="../bagian-09-entry-model/optimal-trade-entry.html">Optimal Trade Entry</a> (<a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a>)</strong>. Kita sudah sama-sama sepakat bahwa di pasar finansial, kita harus bertindak laiknya pedagang besar yang cerdik: membeli saat harga sedang diskon (murah) dan menjual saat harga sedang melambung tinggi (premium). Namun, timbul pertanyaan penting: <em>Bagaimana cara kita mengukur seberapa besar diskon tersebut secara pasti, tanpa harus menebak-nebak di atas chart?</em></p></div>
-
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Fibonacci OTE — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 09 — Entry Model</a></div><div class="eyebrow">Bagian 09 — Entry Model</div><h1>Fibonacci OTE</h1>
+<div class="note"><strong>Ikhtisar</strong><br><p>Halo, Sobat Trader! Di bab sebelumnya, kita telah menyelami konsep dasar <strong>Optimal Trade Entry (OTE)</strong>. Kita sudah sama-sama sepakat bahwa di pasar finansial, kita harus bertindak laiknya pedagang besar yang cerdik: membeli saat harga sedang diskon (murah) dan menjual saat harga sedang melambung tinggi (premium). Namun, timbul pertanyaan penting: <em>Bagaimana cara kita mengukur seberapa besar diskon tersebut secara pasti, tanpa harus menebak-nebak di atas chart?</em></p></div>
 <p>Sering kali, mata telanjang kita bisa tertipu oleh fluktuasi harga sesaat. Kadang harga baru turun sedikit, kita sudah langsung merasa itu "diskon besar-besaran". Padahal, mungkin harga baru terkoreksi 10% atau 20% dari pergerakan utamanya, dan masih punya potensi untuk turun lebih jauh. Di sinilah kita sangat membutuhkan sebuah alat ukur yang objektif, konsisten, dan matematis. Alat ukur yang menjadi senjata andalan para trader profesional ini bernama <strong>Fibonacci Retracement</strong>.</p>
 <h2>Fibonacci: Pita Meteran Presisi Para Trader</h2>
 <p>Bayangkan kamu sedang pergi ke tukang jahit profesional untuk membuat setelan jas. Apakah tukang jahit tersebut akan langsung mengambil gunting dan memotong kain mahalmu berdasarkan perkiraan mata belaka? Tentu saja tidak! Dia pasti akan mengambil pita meteran, mengukur lingkar dada, panjang lengan, dan bahu dengan sangat teliti. Ia memastikan semuanya pas, proporsional, dan presisi sebelum melakukan pemotongan pertama.</p>
-<p>Di dalam dunia trading, <strong>Fibonacci Retracement</strong> berfungsi layaknya pita meteran tersebut. Kita tidak boleh asal menebak di mana titik diskon terbaik (<a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a>) berada. Kita mengukur ayunan harga (<em>swing</em>) dari ujung ke ujung menggunakan rasio Fibonacci untuk menemukan level matematis yang paling presisi. Di level-level inilah, institusi keuangan besar (Smart Money) biasanya mulai kembali tertarik untuk mengakumulasi posisi mereka di pasar.</p>
-<h2>Settingan Angka Fibonacci Khusus <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a></h2>
-<p>Bila kamu pertama kali membuka alat Fibonacci Retracement bawaan di platform seperti TradingView atau MetaTrader, kamu mungkin akan merasa pusing. Akan ada banyak sekali garis warna-warni dan angka-angka <em>default</em> (0.236, 0.382, dan lain-lain) yang justru mengganggu pandangan. Mari kita buat semuanya menjadi lebih sederhana. Dalam strategi <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a>, kita membuang angka-angka yang tidak relevan dan hanya mempertahankan level-level krusial berikut:</p>
+<p>Di dalam dunia trading, <strong>Fibonacci Retracement</strong> berfungsi layaknya pita meteran tersebut. Kita tidak boleh asal menebak di mana titik diskon terbaik (OTE) berada. Kita mengukur ayunan harga (<em>swing</em>) dari ujung ke ujung menggunakan rasio Fibonacci untuk menemukan level matematis yang paling presisi. Di level-level inilah, institusi keuangan besar (Smart Money) biasanya mulai kembali tertarik untuk mengakumulasi posisi mereka di pasar.</p>
+<h2>Settingan Angka Fibonacci Khusus OTE</h2>
+<p>Bila kamu pertama kali membuka alat Fibonacci Retracement bawaan di platform seperti TradingView atau MetaTrader, kamu mungkin akan merasa pusing. Akan ada banyak sekali garis warna-warni dan angka-angka <em>default</em> (0.236, 0.382, dan lain-lain) yang justru mengganggu pandangan. Mari kita buat semuanya menjadi lebih sederhana. Dalam strategi OTE, kita membuang angka-angka yang tidak relevan dan hanya mempertahankan level-level krusial berikut:</p>
 <ul>
 <li><strong>0.00 (0%):</strong> Ini adalah titik akhir dari tarikan ayunan harga (<em>Swing</em>). Nantinya, level ini sering kita jadikan sebagai target awal atau Take Profit pertama kita.</li>
 <li><strong>0.50 (50%):</strong> Ini adalah garis tengah pembatas, yang dikenal sebagai <em>Equilibrium</em> atau Titik Keseimbangan Pasar. Area di atas 0.5 disebut <em>Premium</em> (mahal), sedangkan area di bawah 0.5 disebut <em>Discount</em> (murah). Ingat, kita tidak akan pernah melakukan entry tepat di garis 0.50, ini murni sebagai penunjuk batas wilayah.</li>
 <li><strong>0.618 / 0.62 (61.8% / 62%):</strong> Ini adalah gerbang masuk pertama menuju area diskon yang dalam. Di titik ini, radar banyak trader cerdas mulai menyala, karena diskon sebesar 62% sudah dianggap cukup menggiurkan untuk bersiap mencari peluang.</li>
-<li><strong>0.705 (70.5%):</strong> Inilah yang kita panggil sang primadona, titik <em>Sweet Spot</em>, atau <strong><a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> (<a href="../bagian-09-entry-model/optimal-trade-entry.html">Optimal Trade Entry</a>) sejati</strong>. Level ini adalah rasio pertengahan antara 0.618 dan 0.79. Secara statistik dan historis, institusi sangat sering menyuntikkan pesanan (<em>re-entry</em>) di sekitar area ini karena menawarkan rasio risiko dan potensi keuntungan yang luar biasa baik.</li>
+<li><strong>0.705 (70.5%):</strong> Inilah yang kita panggil sang primadona, titik <em>Sweet Spot</em>, atau <strong>OTE (Optimal Trade Entry) sejati</strong>. Level ini adalah rasio pertengahan antara 0.618 dan 0.79. Secara statistik dan historis, institusi sangat sering menyuntikkan pesanan (<em>re-entry</em>) di sekitar area ini karena menawarkan rasio risiko dan potensi keuntungan yang luar biasa baik.</li>
 <li><strong>0.790 (79%):</strong> Ini adalah level diskon yang paling dalam (<em>Deep Discount</em>). Ibarat acara cuci gudang besar-besaran di akhir tahun. Level ini sering menjadi garis pertahanan terakhir para <em>buyer</em> sebelum harga malah bablas, berbalik arah, dan merusak struktur (Break of Structure yang berlawanan).</li>
 <li><strong>1.00 (100%):</strong> Ini adalah titik pangkal atau awal dari tarikan ayunan harga. Jika harga akhirnya menembus level ini, artinya skenario ide trading kita sudah <em>invalid</em> atau gagal. Oleh karena itu, kita selalu menempatkan Stop Loss sedikit di luar (di bawah/atas) level 1.00 ini demi keamanan modal.</li>
 </ul>
@@ -65,11 +25,11 @@
 <li><strong>Identifikasi Impulse Leg:</strong> Cari pergerakan dorongan harga naik yang solid, kuat, dan cepat, yang berhasil menembus High sebelumnya.</li>
 <li><strong>Tarikan Fibonacci:</strong> Klik alat Fibonacci dari titik terendah pergerakan tersebut (<strong>Swing Low</strong>), tahan, dan seret ke titik tertinggi yang baru terbentuk (<strong>Swing High</strong>) sebelum harga mulai berbalik arah ke bawah.</li>
 <li><strong>Tunggu Diskon Datang:</strong> Jangan terburu-buru! Biarkan harga turun (<em>pullback</em>) dengan sendirinya. Duduk santai dan tunggu sampai harga menembus level 0.50 ke bawah, dan masuk ke dalam kotak "area emas" kita, yaitu <strong>di antara 0.62 hingga 0.79</strong>.</li>
-<li><strong>Eksekusi dengan Bijak:</strong> Jika kamu melihat ada konfirmasi tambahan di area tersebut (seperti FVG atau <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a>), barulah kita bisa mengeksekusi Buy di dalam rentang 0.62 - 0.79.</li>
+<li><strong>Eksekusi dengan Bijak:</strong> Jika kamu melihat ada konfirmasi tambahan di area tersebut (seperti FVG atau Order Block), barulah kita bisa mengeksekusi Buy di dalam rentang 0.62 - 0.79.</li>
 <li><strong>Amankan Stop Loss:</strong> Selalu letakkan SL sedikit di bawah titik 1.00 (Swing Low) untuk memberi ruang bagi fluktuasi harga (<em>breathing room</em>).</li>
 </ol>
 <h3>Skenario Setup Sell (Bearish)</h3>
-<p>Sebaliknya, saat tren sedang bergerak turun tajam, dan terjadi terjunan ke bawah yang memecahkan struktur dukungan (<a href="../bagian-02-membaca-chart/support.html">Support</a>), kita akan mencari peluang Sell di harga yang mahal.</p>
+<p>Sebaliknya, saat tren sedang bergerak turun tajam, dan terjadi terjunan ke bawah yang memecahkan struktur dukungan (Support), kita akan mencari peluang Sell di harga yang mahal.</p>
 <ol>
 <li><strong>Identifikasi Impulse Leg:</strong> Temukan pergerakan terjun bebas (dorongan turun) yang agresif dan signifikan, yang dengan jelas menjebol Low sebelumnya.</li>
 <li><strong>Tarikan Fibonacci:</strong> Klik alat Fibonacci mulai dari titik tertinggi pergerakan tersebut (<strong>Swing High</strong>), tahan, dan seret ke titik terendah sementara (<strong>Swing Low</strong>) sebelum harga mulai merangkak naik untuk koreksi.</li>
@@ -79,22 +39,14 @@
 </ol>
 <h2>Aturan Emas: Fibonacci Bukanlah Tembok Gaib!</h2>
 <p>Bagian terakhir ini adalah inti sari yang sangat krusial. Jika kamu bisa meresapi konsep ini, kamu akan menyelamatkan akun tradingmu dari kerugian fatal akibat kesalahan eksekusi prematur.</p>
-<div class="warning"><strong>> Angka 0.705 pada alat Fibonacci bukanlah sebuah tembok sihir! Harga tidak akan secara ajaib memantul secara otomatis hanya karena ia kebetulan menyentuh angka 0.705. Fibonacci murni hanyalah sebuah instrumen pengukur. **Jangan pernah sekalipun meletakkan pending order (Buy Limit / Sell Limit) secara membabi buta semata-mata karena harga memasuki level <a href=\"../bagian-16-advanced-entry-logic/ote.html\">OTE</a>.**</strong><br></div>
-
-<p>Jika demikian, apa sebenarnya fungsi <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> jika bukan untuk langsung melakukan eksekusi entry?</p>
-<p>Fungsi utama <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> adalah sebagai <strong>Filter atau Lensa Pembesar</strong>. Saat harga mulai memasuki kotak area <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> (0.62 - 0.79), pada saat itulah kita mulai "membuka mata lebar-lebar". Kita menggunakan lensa pembesar kita untuk mencari "alasan logis dan jejak nyata" mengapa institusi besar mau masuk dan membalikkan harga di area tersebut.</p>
-<p>Jejak nyata itu dalam SMC dikenal sebagai <strong>PD Arrays</strong> (Premium &amp; Discount Arrays), yang wujudnya di atas chart dapat berupa <strong><a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> (OB)</strong> atau <strong><a href="../bagian-05-smart-money-concept/fair-value-gap.html">Fair Value Gap</a> (FVG)</strong>. Jika di dalam area <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> 0.705 tersebut kamu kebetulan menemukan sebuah FVG yang belum terisi, atau sebuah <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang masih <em>fresh</em>... BINGO! Itulah yang disebut dengan <em>Confluence</em> (pertemuan konfirmasi) tingkat dewa.</p>
+<div class="warning"><strong>> Angka 0.705 pada alat Fibonacci bukanlah sebuah tembok sihir! Harga tidak akan secara ajaib memantul secara otomatis hanya karena ia kebetulan menyentuh angka 0.705. Fibonacci murni hanyalah sebuah instrumen pengukur. **Jangan pernah sekalipun meletakkan pending order (Buy Limit / Sell Limit) secara membabi buta semata-mata karena harga memasuki level OTE.**</strong><br></div>
+<p>Jika demikian, apa sebenarnya fungsi OTE jika bukan untuk langsung melakukan eksekusi entry?</p>
+<p>Fungsi utama OTE adalah sebagai <strong>Filter atau Lensa Pembesar</strong>. Saat harga mulai memasuki kotak area OTE (0.62 - 0.79), pada saat itulah kita mulai "membuka mata lebar-lebar". Kita menggunakan lensa pembesar kita untuk mencari "alasan logis dan jejak nyata" mengapa institusi besar mau masuk dan membalikkan harga di area tersebut.</p>
+<p>Jejak nyata itu dalam SMC dikenal sebagai <strong>PD Arrays</strong> (Premium &amp; Discount Arrays), yang wujudnya di atas chart dapat berupa <strong>Order Block (OB)</strong> atau <strong>Fair Value Gap (FVG)</strong>. Jika di dalam area OTE 0.705 tersebut kamu kebetulan menemukan sebuah FVG yang belum terisi, atau sebuah Order Block yang masih <em>fresh</em>... BINGO! Itulah yang disebut dengan <em>Confluence</em> (pertemuan konfirmasi) tingkat dewa.</p>
 <p>Dengan menggabungkan hal tersebut, kamu menggunakan dua logika fundamental yang sangat kuat:<br />
-1. Harga sedang berada di area diskon terbaiknya secara historis (<a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a>).<br />
+1. Harga sedang berada di area diskon terbaiknya secara historis (OTE).<br />
 2. Terdapat bukti jejak pesanan besar dari institusi yang tertinggal di dalam area diskon tersebut (FVG / OB).</p>
-<p>Kombinasi mematikan inilah yang akan membuat probabilitas sukses (<em>win rate</em>) dari <em>trade</em> kamu melesat tajam. Di materi-materi selanjutnya, kita akan membedah lebih rinci tentang bagaimana cara mengawinkan <a href="../bagian-16-advanced-entry-logic/ote.html">OTE</a> ini dengan FVG dan <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> agar analisamu semakin akurat dan presisi. Sekarang, buka platform trading-mu, atur alat Fibonacci-mu sesuai panduan, dan mulailah melatih matamu untuk mengenali area 0.62 - 0.79 secara konsisten!</p>
-<div class="tip"><strong>Pesan Mentor</strong><br><p>Konsep Fibonacci sebenarnya mengambil inspirasi dari angka-angka rasio emas (<em>golden ratio</em>) yang banyak ditemukan di alam semesta, seperti pada cangkang siput atau kelopak bunga. Namun, dalam konteks Smart Money Concepts (SMC) dan ICT, kita tidak menggunakannya sebagai hal mistis atau prediksi gaib. Kita murni menggunakannya sebagai alat pembatas wilayah (<em>zone boundary</em>) antara zona harga wajar, diskon, dan premium.</p></div>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
-  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+<p>Kombinasi mematikan inilah yang akan membuat probabilitas sukses (<em>win rate</em>) dari <em>trade</em> kamu melesat tajam. Di materi-materi selanjutnya, kita akan membedah lebih rinci tentang bagaimana cara mengawinkan OTE ini dengan FVG dan Order Block agar analisamu semakin akurat dan presisi. Sekarang, buka platform trading-mu, atur alat Fibonacci-mu sesuai panduan, dan mulailah melatih matamu untuk mengenali area 0.62 - 0.79 secara konsisten!</p>
+<div class="note"><strong>Pesan Mentor</strong><br><p>Konsep Fibonacci sebenarnya mengambil inspirasi dari angka-angka rasio emas (<em>golden ratio</em>) yang banyak ditemukan di alam semesta, seperti pada cangkang siput atau kelopak bunga. Namun, dalam konteks Smart Money Concepts (SMC) dan ICT, kita tidak menggunakannya sebagai hal mistis atau prediksi gaib. Kita murni menggunakannya sebagai alat pembatas wilayah (<em>zone boundary</em>) antara zona harga wajar, diskon, dan premium.</p></div>
+<div class="page-nav"><a href="optimal-trade-entry.html" class="btn btn-outline">← Sebelumnya</a><a href="entry-di-fvg.html" class="btn btn-primary">Selanjutnya →</a></div>
+</section></main><footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer></body></html>

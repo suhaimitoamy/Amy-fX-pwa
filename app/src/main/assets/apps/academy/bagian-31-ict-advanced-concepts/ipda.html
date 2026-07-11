@@ -1,77 +1,36 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>IPDA (Interbank Price Delivery Algorithm) — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 31 Ict Advanced Concepts</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>IPDA (Interbank Price Delivery Algorithm)</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p><strong>IPDA (Interbank <a href="../bagian-06-ict-core/price-delivery.html">Price Delivery</a> Algorithm)</strong> adalah otak di balik pergerakan harga. Menurut ICT, pasar tidak bergerak karena tekanan beli dan jual (buying/selling pressure) dari ritel, melainkan dikendalikan oleh algoritma kecerdasan buatan bank sentral yang sangat canggih. IPDA bertugas mengantarkan harga secara efisien, mencari likuiditas, dan menyeimbangkan ketidakseimbangan harga (imbalance).</p></div>
-
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>IPDA — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 31 ICT Advanced Concepts</a></div><div class="eyebrow">Bagian 31 ICT Advanced Concepts</div><h1>IPDA</h1>
+<h1>IPDA (Interbank Price Delivery Algorithm)</h1>
+<div class="note">
+<p><strong>Ikhtisar</strong><br><p><strong>IPDA (Interbank Price Delivery Algorithm)</strong> adalah otak di balik pergerakan harga. Menurut ICT, pasar tidak bergerak karena tekanan beli dan jual (buying/selling pressure) dari ritel, melainkan dikendalikan oleh algoritma kecerdasan buatan bank sentral yang sangat canggih. IPDA bertugas mengantarkan harga secara efisien, mencari likuiditas, dan menyeimbangkan ketidakseimbangan harga (imbalance).</p></p>
+</div>
 <h2>1. Apa Itu IPDA?</h2>
 <p>IPDA adalah algoritma yang mengontrol <em>price action</em> di pasar finansial (khususnya Forex, Futures, dan Indeks). Algoritma ini berjalan berdasarkan <strong>Waktu (Time)</strong> dan <strong>Harga (Price)</strong>. Harga yang kita lihat di chart bukanlah hasil dari pertarungan <em>bulls vs bears</em>, melainkan harga sedang di-"deliver" (diantarkan) ke level-level tertentu oleh IPDA.</p>
 <h2>2. Mengapa Memahami IPDA Penting?</h2>
 <p>Karena jika kamu percaya harga itu acak, kamu akan selalu stres. Jika kamu paham IPDA, kamu tahu bahwa market beroperasi di bawah aturan algoritma yang sangat presisi. Tugas IPDA hanya dua:
 1. <strong>Mencari Likuiditas (Liquidity Runs):</strong> Menembus Old High/Old Low untuk mengambil stop loss.
-2. <strong>Menyeimbangkan Harga (Rebalancing):</strong> Mengisi <a href="../bagian-05-smart-money-concept/fair-value-gap.html">Fair Value Gap</a> (FVG) atau memitigasi <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang ditinggalkan sebelumnya.</p>
+2. <strong>Menyeimbangkan Harga (Rebalancing):</strong> Mengisi Fair Value Gap (FVG) atau memitigasi Order Block yang ditinggalkan sebelumnya.</p>
 <h2>3. Komponen Utama IPDA</h2>
-<p>IPDA memiliki siklus atau rentang tinjauan balik (<em>look-back periods</em>) untuk menentukan signifikansi level harga yang dikenal sebagai <strong><a href="../bagian-31-ict-advanced-concepts/ipda-data-ranges.html">IPDA Data Ranges</a></strong>:
+<p>IPDA memiliki siklus atau rentang tinjauan balik (<em>look-back periods</em>) untuk menentukan signifikansi level harga yang dikenal sebagai <strong>IPDA Data Ranges</strong>:
 - <strong>20 hari:</strong> Likuiditas jangka pendek.
 - <strong>40 hari:</strong> Likuiditas jangka menengah.
 - <strong>60 hari:</strong> Likuiditas jangka panjang.
 Algoritma selalu melihat ke belakang selama 20, 40, dan 60 hari untuk menentukan ke mana arah (DOL) harga selanjutnya.</p>
 <h2>4. Kapan Algoritma Paling Aktif (Time)?</h2>
 <p>Algoritma tidak selalu dalam mode agresif. Ada waktu-waktu khusus yang diprogram atau dijadwalkan (disebut Killzones):
-- London Open <a href="../bagian-08-session-dan-waktu/killzone.html">Killzone</a> (02:00 - 05:00 AM NY time)
-- New York Open <a href="../bagian-08-session-dan-waktu/killzone.html">Killzone</a> (07:00 - 10:00 AM NY time)
-- Waktu rilis berita ekonomi makro tinggi (lihat <em><a href="../bagian-31-ict-advanced-concepts/news-driver-model.html">News Driver Model</a></em>).</p>
+- London Open Killzone (02:00 - 05:00 AM NY time)
+- New York Open Killzone (07:00 - 10:00 AM NY time)
+- Waktu rilis berita ekonomi makro tinggi (lihat <em>News Driver Model</em>).</p>
 <h2>5. Bagaimana Identifikasi dan Implementasinya?</h2>
 <ul>
 <li><strong>Tentukan Harga:</strong> Temukan Premium &amp; Discount menggunakan rentang pergerakan saat ini. IPDA memprogram harga untuk turun ke area Discount untuk Buy, dan naik ke Premium untuk Sell.</li>
 <li><strong>Tentukan Waktu:</strong> Jangan mengambil posisi jika tidak ada jadwal "pengantaran harga" (contohnya di Dead Zone Asia atau makan siang NY).</li>
 <li>Selalu tanyakan: "Apakah IPDA sedang mencari Likuiditas atau sedang mengisi Inefisiensi (FVG)?"</li>
 </ul>
-<div class="tip"><strong>Pesan Mentor</strong><br><p><em>Time and Price</em>. IPDA tidak akan memberikan harga yang bagus jika waktunya tidak tepat. Harga di level <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang sempurna tidak ada artinya jika dicapai di luar <a href="../bagian-08-session-dan-waktu/killzone.html">Killzone</a>, karena algoritma belum dihidupkan untuk merespons level tersebut. Selalu sinkronkan POI (Price) dengan <a href="../bagian-08-session-dan-waktu/killzone.html">Killzone</a> (Time).</p></div>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
+<div class="note">
+<p><strong>Pesan Mentor</strong><br><p><em>Time and Price</em>. IPDA tidak akan memberikan harga yang bagus jika waktunya tidak tepat. Harga di level Order Block yang sempurna tidak ada artinya jika dicapai di luar Killzone, karena algoritma belum dihidupkan untuk merespons level tersebut. Selalu sinkronkan POI (Price) dengan Killzone (Time).</p></p>
+</div>
+</section></main><footer class="footer hide-until-auth">
   © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+</footer></body></html>

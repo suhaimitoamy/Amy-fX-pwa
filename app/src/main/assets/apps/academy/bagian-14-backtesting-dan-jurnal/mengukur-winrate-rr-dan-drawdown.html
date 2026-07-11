@@ -35,46 +35,65 @@
     <div class="breadcrumb">
       <a href="../index.html">Beranda</a> › 
       <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 14 Backtesting Dan Jurnal</a>
+      <a href="index.html">Bagian 14 Backtesting dan Jurnal</a>
     </div>
     
     <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Mengukur Winrate, RR, dan Drawdown</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Setelah kamu memiliki 100 data <em>trade</em> dari hasil backtesting atau <a href="../bagian-14-backtesting-dan-jurnal/forward-testing.html">Forward Testing</a>, apa yang harus dilakukan dengan data tersebut? Angka-angka mentah itu tidak akan berarti apa-apa sampai kamu menerjemahkannya menjadi tiga indikator kesehatan sistem trading: <strong>Winrate, Risk-to-Reward (RR), dan Drawdown</strong>. Ketiga elemen ini adalah "rapor" dari strategimu.</p></div>
+      <h1>Mengukur Winrate, RR, dan Drawdown</h1>
 
+<div class="note"><strong>Ikhtisar</strong><br><p>Setelah kamu memiliki 100 data <em>trade</em> dari hasil backtesting atau Forward Testing, apa yang harus dilakukan dengan data tersebut? Angka-angka mentah itu tidak akan berarti apa-apa sampai kamu menerjemahkannya menjadi tiga indikator kesehatan sistem trading: <strong>Winrate, Risk-to-Reward (RR), dan Drawdown</strong>. Ketiga elemen ini adalah "rapor" dari strategimu.</p></div>
 <p>Sebagian besar pemula biasanya hanya peduli pada "Winrate" (seberapa sering mereka menang), lalu membuang strategi tersebut jika sering loss. Ini adalah pemikiran yang salah kaprah. Mari kita bongkar satu per satu cara mengukurnya dan mengapa ketiganya saling berhubungan erat.</p>
-<h2>1. Winrate (Tingkat Kemenangan)</h2>
-<p><strong>Winrate</strong> adalah persentase jumlah trade yang profit dibandingkan total trade. Cara menghitungnya sangat mudah:</p>
-<p><em>(Jumlah Trade Profit / Total Trade) x 100%</em></p>
-<p>Misalnya, dari 100 kali trade, kamu menang 40 kali dan kalah 60 kali. Maka Winrate kamu adalah <strong>40%</strong>.</p>
-<p><strong>Mitos Terbesar:</strong> "Saya butuh winrate 80%-90% untuk bisa untung." Ini SALAH BESAR! Banyak trader institusional sangat sukses hanya dengan winrate 35% - 45%. Mengapa? Jawabannya ada pada elemen kedua, yaitu RR.</p>
-<h2>2. Risk-to-Reward Ratio (RR)</h2>
-<p><strong>Risk-to-Reward Ratio (RR)</strong> adalah perbandingan antara jumlah uang yang kamu pertaruhkan (Risk) dengan jumlah uang yang kamu targetkan untuk dimenangkan (Reward).</p>
-<p>Jika kamu merisikokan $10 (Stop Loss) untuk mendapatkan $30 (Take Profit), maka RR kamu adalah <strong>1:3</strong>. Artinya, satu kali kemenangan bisa menutupi tiga kali kekalahan berturut-turut!</p>
-<p>Di sinilah keajaiban matematika trading terjadi (<em>Edge</em>). Mari kita kombinasikan Winrate dan RR dalam sebuah contoh simulasi dari 100 trade:</p>
-<ul>
-<li><strong>Skenario A (Trader Winrate Tinggi, RR Rendah):</strong> Winrate 80%, RR 1:0.5 (Risk $10, Reward $5).<br />
-  Menang: 80 trade x $5 = $400<br />
-  Kalah: 20 trade x $10 = -$200<br />
-<strong>Hasil: Untung $200.</strong> (Meski menangnya sering, untungnya lambat).</li>
-<li><strong>Skenario B (Trader Winrate Rendah, RR Tinggi):</strong> Winrate 40%, RR 1:3 (Risk $10, Reward $30).<br />
-  Menang: 40 trade x $30 = $1,200<br />
-  Kalah: 60 trade x $10 = -$600<br />
-<strong>Hasil: Untung $600!</strong> (Menangnya sedikit, tapi sekali menang panen besar).</li>
-</ul>
-<div class="warning"><strong>> Mengetahui hubungan Winrate dan RR membebaskanmu dari tekanan emosional "harus selalu benar". Kamu bisa salah lebih sering daripada benar, namun tetap berakhir dengan profit besar.</strong><br></div>
 
+<h2>1. Winrate (Tingkat Kemenangan)</h2>
+
+<strong>Winrate</strong> adalah persentase jumlah trade yang profit dibandingkan total trade. Cara menghitungnya sangat mudah:
+
+<em>(Jumlah Trade Profit / Total Trade) x 100%</em>
+
+<p>Misalnya, dari 100 kali trade, kamu menang 40 kali dan kalah 60 kali. Maka Winrate kamu adalah <strong>40%</strong>.</p>
+
+<strong>Mitos Terbesar:</strong> "Saya butuh winrate 80%-90% untuk bisa untung." Ini SALAH BESAR! Banyak trader institusional sangat sukses hanya dengan winrate 35% - 45%. Mengapa? Jawabannya ada pada elemen kedua, yaitu RR.
+
+<h2>2. Risk-to-Reward Ratio (RR)</h2>
+
+<strong>Risk-to-Reward Ratio (RR)</strong> adalah perbandingan antara jumlah uang yang kamu pertaruhkan (Risk) dengan jumlah uang yang kamu targetkan untuk dimenangkan (Reward).
+
+<p>Jika kamu merisikokan $10 (Stop Loss) untuk mendapatkan $30 (Take Profit), maka RR kamu adalah <strong>1:3</strong>. Artinya, satu kali kemenangan bisa menutupi tiga kali kekalahan berturut-turut!</p>
+
+<p>Di sinilah keajaiban matematika trading terjadi (<em>Edge</em>). Mari kita kombinasikan Winrate dan RR dalam sebuah contoh simulasi dari 100 trade:</p>
+
+<p>* <strong>Skenario A (Trader Winrate Tinggi, RR Rendah):</strong> Winrate 80%, RR 1:0.5 (Risk $10, Reward $5).  </p>
+<p>  Menang: 80 trade x $5 = $400  </p>
+<p>  Kalah: 20 trade x $10 = -$200  </p>
+  <strong>Hasil: Untung $200.</strong> (Meski menangnya sering, untungnya lambat).
+<p>* <strong>Skenario B (Trader Winrate Rendah, RR Tinggi):</strong> Winrate 40%, RR 1:3 (Risk $10, Reward $30).  </p>
+<p>  Menang: 40 trade x $30 = $1,200  </p>
+<p>  Kalah: 60 trade x $10 = -$600  </p>
+  <strong>Hasil: Untung $600!</strong> (Menangnya sedikit, tapi sekali menang panen besar).
+
+<div class="warning"><strong>Warning</strong><br><p>Mengetahui hubungan Winrate dan RR membebaskanmu dari tekanan emosional "harus selalu benar". Kamu bisa salah lebih sering daripada benar, namun tetap berakhir dengan profit besar.</p></div>
 <h2>3. Drawdown (Penurunan Modal Maksimal)</h2>
+
 <p>Ini adalah metrik yang paling sering diabaikan pemula, padahal ini yang menentukan apakah kamu akan stres atau santai saat trading. <strong>Drawdown (DD)</strong> adalah penurunan terdalam dari titik puncak saldo (balance) tertinggimu sebelum akhirnya naik kembali. Drawdown biasanya dinyatakan dalam persentase.</p>
+
 <p>Misal, kamu mulai dengan saldo $1,000. Lalu kamu profit hingga $1,200. Tiba-tiba kamu mengalami kekalahan beruntun (<em>losing streak</em>) dan saldo turun menjadi $1,050, sebelum akhirnya profit lagi menjadi $1,300.</p>
+
 <p>Penurunan dari $1,200 ke $1,050 adalah sebesar $150.</p>
+
 <p>Drawdown = ($150 / $1,200) x 100% = <strong>12.5%</strong>.</p>
-<p><strong>Mengapa Drawdown Penting?</strong></p>
+
+<strong>Mengapa Drawdown Penting?</strong>
+
 <p>Untuk mengatur ekspektasi emosimu! Dari 100 trade hasil backtest, kamu harus melihat, <em>"Berapa kali sih sistem saya ini mengalami SL berturut-turut yang paling parah?"</em></p>
+
 <p>Jika dari data sejarah sistemmu pernah mengalami 8 kali SL berturut-turut, kamu <strong>TIDAK BOLEH</strong> merisikokan 5% per trade. Karena jika fase 8x SL itu datang (dan pasti akan datang), Drawdown kamu akan mencapai 40% (8 x 5%). Mayoritas orang akan hancur mentalnya jika melihat modalnya hilang 40% dan akhirnya menyerah atau balas dendam.</p>
+
 <p>Tetapi jika kamu merisikokan 1% per trade, fase terburuk itu hanya akan memberimu 8% Drawdown. Kamu akan tetap tenang, dan membiarkan sisi probabilitas menangmu (Edge) bekerja di trade-trade selanjutnya.</p>
+
 <h2>Kesimpulan</h2>
+
 <p>Jangan pernah menilai sebuah strategi hanya dari seberapa sering dia menebak harga dengan benar (Winrate). Nilailah dari seberapa banyak uang yang dihasilkan saat benar dibandingkan saat salah (RR), dan seberapa dalam sistem itu bisa menjatuhkan modalmu di masa-masa sulit (Drawdown). Jika ketiga pilar ini sudah kamu kuasai secara matematis, kamu secara resmi telah lulus dari fase "berjudi" dan masuk ke fase "berbisnis".</p>
+
     </div>
   </section>
 </main>

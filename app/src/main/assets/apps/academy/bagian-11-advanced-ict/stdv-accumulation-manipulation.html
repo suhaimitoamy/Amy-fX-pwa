@@ -1,48 +1,5 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>STDV: Accumulation → Manipulation — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 11 Advanced Ict</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>STDV: Accumulation → Manipulation</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Setelah kamu tahu cara <em>setting</em> Fibonacci untuk Standard Deviation (STDV), sekarang kita akan mempraktikkannya untuk membaca fase pasar. Dalam ICT, siklus harian pasar biasanya bergerak dalam tiga fase: <strong>Accumulation (Akumulasi), Manipulation (Manipulasi), dan Distribution (Distribusi)</strong> atau disingkat AMD.</p></div>
-
-<p>Di bab ini, kita akan fokus pada pertanyaan: <em>"Saat pasar melakukan Manipulasi (fakeout/<a href="../bagian-08-session-dan-waktu/judas-swing.html">Judas Swing</a>), sampai sejauh mana harga akan bergerak menjebak ritel sebelum akhirnya berbalik arah?"</em></p>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>STDV Accumulation → Manipulation — Bagian 11 — Advanced ICT — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a><button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button><div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 11 — Advanced ICT</a></div><div class="eyebrow">Bagian 11 — Advanced ICT</div><h1>STDV Accumulation → Manipulation</h1><div class="note"><strong>Ikhtisar</strong><br><p>Setelah kamu tahu cara <em>setting</em> Fibonacci untuk Standard Deviation (STDV), sekarang kita akan mempraktikkannya untuk membaca fase pasar. Dalam ICT, siklus harian pasar biasanya bergerak dalam tiga fase: <strong>Accumulation (Akumulasi), Manipulation (Manipulasi), dan Distribution (Distribusi)</strong> atau disingkat AMD.</p></div>
+<p>Di bab ini, kita akan fokus pada pertanyaan: <em>"Saat pasar melakukan Manipulasi (fakeout/Judas Swing), sampai sejauh mana harga akan bergerak menjebak ritel sebelum akhirnya berbalik arah?"</em></p>
 <h2>Mengukur Jarak Tipuan Market Maker</h2>
 <p>Manipulasi (seperti gerakan palsu saat Sesi London dibuka) tidak terjadi secara acak. Algoritma sudah mengkalkulasi seberapa jauh harga harus didorong untuk mengaktifkan <em>Stop Loss</em> mayoritas ritel trader dan menyentuh area likuiditas tanpa menghabiskan terlalu banyak "bensin".</p>
 <p>Kita bisa memprediksi area berhentinya manipulasi ini dengan menggunakan kotak Akumulasi (contohnya: Asian Range).</p>
@@ -50,23 +7,14 @@
 <ol>
 <li><strong>Tandai Fase Akumulasi:</strong> Cari area konsolidasi yang jelas, misalnya rentang pergerakan selama sesi Asia (Asian Range). Tandai titik tertinggi (High) dan terendah (Low) dari konsolidasi tersebut. Ini adalah "Kotak Akumulasi" kita.</li>
 <li><strong>Tarik Fibo STDV:</strong> Tarik Fibonacci Retracement (yang sudah disetting STDV) dari <strong>High ke Low</strong> kotak tersebut (atau sebaliknya, tergantung arah manipulasi).</li>
-<li>Jika manipulasi menembus ke ATAS kotak (menjebak <em>buyers</em>), tarik fibo dari Low ke High kotak.</li>
-<li>Jika manipulasi menembus ke BAWAH kotak (menjebak <em>sellers</em>), tarik fibo dari High ke Low kotak.</li>
+<em> Jika manipulasi menembus ke ATAS kotak (menjebak </em>buyers*), tarik fibo dari Low ke High kotak.
+<em> Jika manipulasi menembus ke BAWAH kotak (menjebak </em>sellers*), tarik fibo dari High ke Low kotak.
 <li><strong>Lihat Proyeksinya:</strong> Perhatikan level <strong>1 STDV</strong> hingga <strong>2 STDV</strong> (atau -1 hingga -2 di settinganmu) dari luar kotak tersebut.</li>
 </ol>
 <h2>Area Reversal yang Presisi</h2>
 <p>Level STDV 1 hingga 2 dari kotak Akumulasi adalah area di mana manipulasi biasanya kehabisan tenaga. Di zona inilah Smart Money mulai membalikkan posisi (Smart Money Reversal).</p>
 <p>Namun, ingat aturan emas dari bab sebelumnya: <strong>Konfluensi itu wajib!</strong></p>
-<p>Jangan langsung asal <em>Buy</em> saat harga jatuh menembus ke level -1.5 STDV. Cek sebelah kiri chart. Apakah level -1.5 STDV tersebut bertepatan dengan sebuah <strong>H4 Bullish <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a></strong>? Atau apakah ia persis berada di bawah <strong>Low Hari Sebelumnya (Previous Day Low)</strong>?</p>
-<p>Jika ya, maka probabilitas bahwa gerakan turun itu HANYALAH manipulasi (<a href="../bagian-08-session-dan-waktu/judas-swing.html">Judas Swing</a>) menjadi sangat tinggi. Kamu bisa bersiap mencari konfirmasi (<a href="../bagian-09-entry-model/market-structure-shift.html">Market Structure Shift</a>) di area tersebut untuk ikut <em>Buy</em> bersama Smart Money.</p>
-<p><strong>Manfaat Teknik Ini:</strong> Teknik ini mencegah kamu tersapu oleh gerakan palsu (fakeout). Saat ritel trader panik karena melihat harga menembus <a href="../bagian-02-membaca-chart/support.html">support</a> dengan kuat, kamu tetap tenang karena tahu harga sedang menuju target STDV Manipulasinya sebelum akhirnya berbalik.</p>
-<p>Setelah manipulasi selesai dan harga berbalik arah, fase selanjutnya adalah <strong>Distribusi</strong>. Bagaimana cara mengukur target akhir distribusi? Kita bahas di bab berikutnya.</p>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
-  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+<p>Jangan langsung asal <em>Buy</em> saat harga jatuh menembus ke level -1.5 STDV. Cek sebelah kiri chart. Apakah level -1.5 STDV tersebut bertepatan dengan sebuah <strong>H4 Bullish Order Block</strong>? Atau apakah ia persis berada di bawah <strong>Low Hari Sebelumnya (Previous Day Low)</strong>?</p>
+<p>Jika ya, maka probabilitas bahwa gerakan turun itu HANYALAH manipulasi (Judas Swing) menjadi sangat tinggi. Kamu bisa bersiap mencari konfirmasi (Market Structure Shift) di area tersebut untuk ikut <em>Buy</em> bersama Smart Money.</p>
+<p><strong>Manfaat Teknik Ini:</strong> Teknik ini mencegah kamu tersapu oleh gerakan palsu (fakeout). Saat ritel trader panik karena melihat harga menembus support dengan kuat, kamu tetap tenang karena tahu harga sedang menuju target STDV Manipulasinya sebelum akhirnya berbalik.</p>
+<p>Setelah manipulasi selesai dan harga berbalik arah, fase selanjutnya adalah <strong>Distribusi</strong>. Bagaimana cara mengukur target akhir distribusi? Kita bahas di bab berikutnya.</p></section></main><footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer></body></html>

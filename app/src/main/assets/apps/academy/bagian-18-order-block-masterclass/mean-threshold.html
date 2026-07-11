@@ -6,7 +6,6 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Mean Threshold (MT) — Amy FX Academy</title>
   <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
   <script>const ROOT_PATH='../';</script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/main.js" defer></script>
@@ -15,41 +14,33 @@
 <script>requireLogin();</script>
 <header class="topbar hide-until-auth">
   <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="navlinks" id="navlinks">
       <a href="../index.html">Beranda</a>
       <a href="../daftar-materi.html">Daftar Materi</a>
       <a href="../tentang.html">Tentang</a>
       <a href="../glosarium/index.html">Glosarium</a>
+      
     </div>
   </nav>
 </header>
 <main class="container hide-until-auth">
   <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 18 Order Block Masterclass</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>Mean Threshold (MT)</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p><strong>Mean Threshold</strong> adalah nilai tengah atau 50% (ekuilibrium) dari sebuah <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> (OB). Dalam teori ICT, level ini sangat krusial untuk mengukur kekuatan dari institusional order flow. Jika harga menembus level ini dengan body candle yang kuat, probabilitas setup kita mungkin mulai terancam.</p></div>
+
+    <div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 18 — Order Block Masterclass</a></div>
+    <div class="eyebrow">Bagian 18 — Order Block Masterclass</div>
+    <h1 class="article-title">Mean Threshold (MT)</h1>
+    <div class="note"><strong>Ikhtisar</strong><br><p><strong>Mean Threshold</strong> adalah nilai tengah atau 50% (ekuilibrium) dari sebuah Order Block (OB). Dalam teori ICT, level ini sangat krusial untuk mengukur kekuatan dari institusional order flow. Jika harga menembus level ini dengan body candle yang kuat, probabilitas setup kita mungkin mulai terancam.</p></div>
 
 <h2>Apa itu Mean Threshold?</h2>
-<p>Mean Threshold adalah level 50% dari bayangan (shadow/wick) maupun body (tergantung jenis OB) dari sebuah <strong><a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a></strong>.
-Secara umum, kita mengukur dari titik tertinggi ke titik terendah dari candle <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> tersebut dan mencari titik tengahnya.</p>
+<p>Mean Threshold adalah level 50% dari bayangan (shadow/wick) maupun body (tergantung jenis OB) dari sebuah <strong>Order Block</strong>.
+Secara umum, kita mengukur dari titik tertinggi ke titik terendah dari candle Order Block tersebut dan mencari titik tengahnya.</p>
 <h2>Mengapa Mean Threshold Penting?</h2>
-<p><a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> mencerminkan pesanan institusi. Jika OB itu benar-benar divalidasi oleh institusi (algoritma <em>smart money</em>), mereka akan melindungi pesanan mereka. Harga boleh merespons (retest) OB tersebut, namun idealnya <strong>tidak boleh</strong> menembus lebih dari 50% (Mean Threshold) dari OB tersebut dengan <em>body candle</em> yang ditutup (close) melebihi batas tersebut.</p>
+<p>Order Block mencerminkan pesanan institusi. Jika OB itu benar-benar divalidasi oleh institusi (algoritma <em>smart money</em>), mereka akan melindungi pesanan mereka. Harga boleh merespons (retest) OB tersebut, namun idealnya <strong>tidak boleh</strong> menembus lebih dari 50% (Mean Threshold) dari OB tersebut dengan <em>body candle</em> yang ditutup (close) melebihi batas tersebut.</p>
 <h2>Kapan &amp; Bagaimana Mengidentifikasinya?</h2>
 <ol>
-<li>Tarik <strong>Fibonacci Retracement</strong> dari titik High ke Low dari candle <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a>.</li>
+<li>Tarik <strong>Fibonacci Retracement</strong> dari titik High ke Low dari candle Order Block.</li>
 <li>Tandai level 0.5 (50%) sebagai Mean Threshold.</li>
 <li>Amati bagaimana harga berekasi saat kembali (mitigasi) ke dalam OB tersebut.</li>
 </ol>
@@ -57,15 +48,12 @@ Secara umum, kita mengukur dari titik tertinggi ke titik terendah dari candle <a
 <ul>
 <li><strong>Entry</strong>: Bisa dilakukan saat harga menyentuh ujung terluar (Open) dari OB atau persis di area Mean Threshold untuk presisi (meminimalkan risiko).</li>
 <li><strong>Invalidasi (SL)</strong>: <em>Body candle</em> menutup di atas (untuk Bearish OB) atau di bawah (untuk Bullish OB) Mean Threshold. SL yang lebih konservatif diletakkan sedikit di atas/bawah harga High/Low candle OB tersebut.</li>
-<li><strong>Target (DOL)</strong>: <a href="../bagian-17-fvg-masterclass/draw-on-liquidity.html">Draw on Liquidity</a> terdekat (BSL/SSL) atau ketidakseimbangan (FVG) pada timeframe yang lebih tinggi.</li>
+<li><strong>Target (DOL)</strong>: Draw on Liquidity terdekat (BSL/SSL) atau ketidakseimbangan (FVG) pada timeframe yang lebih tinggi.</li>
 </ul>
-<div class="tip"><strong>Pesan Mentor</strong><br><p>Ingat, <em>wicks do the damage, bodies tell the story</em>. Jika hanya <em>wick</em> (bayangan) yang menembus Mean Threshold, itu masih dianggap wajar (manipulasi/stop hunt). Tapi jika <em>body</em> yang tutup melewatinya, segera waspada, <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> tersebut mungkin sudah gagal!</p></div>
-    </div>
-  </section>
+<div class="note"><strong>Pesan Mentor</strong><br><p>Ingat, <em>wicks do the damage, bodies tell the story</em>. Jika hanya <em>wick</em> (bayangan) yang menembus Mean Threshold, itu masih dianggap wajar (manipulasi/stop hunt). Tapi jika <em>body</em> yang tutup melewatinya, segera waspada, Order Block tersebut mungkin sudah gagal!</p></div>
+    
+</section>
 </main>
-
-<footer class="footer hide-until-auth">
-  © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer>
 </body>
 </html>

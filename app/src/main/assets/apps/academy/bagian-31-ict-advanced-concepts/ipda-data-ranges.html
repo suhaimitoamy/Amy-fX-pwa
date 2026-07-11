@@ -1,76 +1,34 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>IPDA Data Ranges (Interbank Price Delivery Algorithm) — Amy FX Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/glass.css">
-  <script>const ROOT_PATH='../';</script>
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/main.js" defer></script>
-</head>
-<body>
-<script>requireLogin();</script>
-<header class="topbar hide-until-auth">
-  <nav class="nav">
-    <a class="brand" href="../index.html">
-      <span class="brand-mark">A</span>
-      <span>Amy FX Academy</span>
-    </a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="navlinks" id="navlinks">
-      <a href="../index.html">Beranda</a>
-      <a href="../daftar-materi.html">Daftar Materi</a>
-      <a href="../tentang.html">Tentang</a>
-      <a href="../glosarium/index.html">Glosarium</a>
-    </div>
-  </nav>
-</header>
-<main class="container hide-until-auth">
-  <section class="article">
-    <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
-      <a href="../daftar-materi.html">Daftar Materi</a> ›
-      <a href="index.html">Bagian 31 Ict Advanced Concepts</a>
-    </div>
-    
-    <div class="glass-panel" style="margin-top: 20px;">
-        <h1>IPDA Data Ranges (Interbank Price Delivery Algorithm)</h1>
-<div class="note"><strong>Ikhtisar</strong><br><p>Algoritma Interbank (<a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a>) tidak melihat grafik tanpa akhir; ia menggunakan periode waktu "look-back" (kilas balik) spesifik untuk menentukan di mana Likuiditas dan Inefisiensi berada. Konsep <strong><a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a> Data Ranges</strong> adalah bagaimana kita mensinkronkan kalender kita dengan kalender algoritma.</p></div>
-
-<h2>Apa itu <a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a> Data Range?</h2>
-<p>Data Range adalah jendela waktu spesifik ke belakang yang ditinjau oleh <a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a> dari hari ini (Current Day) untuk mencari level referensi <a href="../bagian-05-smart-money-concept/pd-array.html">PD Array</a> (<a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a>, FVG, <a href="../bagian-04-liquidity/liquidity-pool.html">Liquidity Pool</a>).
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>IPDA Data Ranges — Amy FX Academy</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script></head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+<div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › <a href="index.html">Bagian 31 ICT Advanced Concepts</a></div><div class="eyebrow">Bagian 31 ICT Advanced Concepts</div><h1>IPDA Data Ranges</h1>
+<h1>IPDA Data Ranges (Interbank Price Delivery Algorithm)</h1>
+<div class="note">
+<p><strong>Ikhtisar</strong><br><p>Algoritma Interbank (IPDA) tidak melihat grafik tanpa akhir; ia menggunakan periode waktu "look-back" (kilas balik) spesifik untuk menentukan di mana Likuiditas dan Inefisiensi berada. Konsep <strong>IPDA Data Ranges</strong> adalah bagaimana kita mensinkronkan kalender kita dengan kalender algoritma.</p></p>
+</div>
+<h2>Apa itu IPDA Data Range?</h2>
+<p>Data Range adalah jendela waktu spesifik ke belakang yang ditinjau oleh IPDA dari hari ini (Current Day) untuk mencari level referensi PD Array (Order Block, FVG, Liquidity Pool).
 ICT membaginya dalam rentang hari lookback utama:
 - <strong>20 Hari (20-Day Lookback):</strong> Digunakan untuk mencari inefisiensi harga (FVG) atau likuiditas jangka pendek.
 - <strong>40 Hari (40-Day Lookback):</strong> Titik rujukan jangka menengah.
 - <strong>60 Hari (60-Day Lookback):</strong> Referensi harga institusional jangka panjang yang sangat kuat (Makro).</p>
 <h2>Mengapa Lookback Period Ini Penting?</h2>
-<p>Pasar bergerak dari masa kini menuju target di masa depan dengan berpatokan pada masa lalu. Jika harga berada di kondisi Premium pada Data Range 20 hari, tetapi algoritma melihat adanya <a href="../bagian-04-liquidity/liquidity-pool.html">Liquidity Pool</a> yang belum tersentuh di dasar Data Range 60 hari, pergerakan jangka panjang mungkin akan menargetkan dasar 60 hari tersebut.</p>
+<p>Pasar bergerak dari masa kini menuju target di masa depan dengan berpatokan pada masa lalu. Jika harga berada di kondisi Premium pada Data Range 20 hari, tetapi algoritma melihat adanya Liquidity Pool yang belum tersentuh di dasar Data Range 60 hari, pergerakan jangka panjang mungkin akan menargetkan dasar 60 hari tersebut.</p>
 <h2>Kapan &amp; Bagaimana Mengidentifikasinya?</h2>
 <ol>
 <li>Tandai hari trading saat ini.</li>
 <li>Hitung mundur sejauh 20, 40, dan 60 hari perdagangan (trading days, bukan hari kalender).</li>
 <li>Identifikasi <strong>High dan Low absolut</strong> dalam rentang waktu tersebut.</li>
-<li>Temukan <a href="../bagian-05-smart-money-concept/pd-array.html">PD Array</a> yang belum termitigasi dalam rentang ini (contoh: FVG harian (Daily) 20 hari lalu).</li>
+<li>Temukan PD Array yang belum termitigasi dalam rentang ini (contoh: FVG harian (Daily) 20 hari lalu).</li>
 </ol>
-<div class="tip"><strong>Matriks Premium/Discount Sejati</strong><br><p>Tarik Fibonacci dari Low terendah hingga High tertinggi dalam <a href="../bagian-31-ict-advanced-concepts/ipda.html">IPDA</a> Data Range (20/40/60). Inilah area <a href="../bagian-05-smart-money-concept/premium-dan-discount.html">Premium dan Discount</a> sejati yang sedang dimanipulasi oleh algo.</p></div>
-
+<div class="note">
+<p><strong>Matriks Premium/Discount Sejati</strong><br><p>Tarik Fibonacci dari Low terendah hingga High tertinggi dalam IPDA Data Range (20/40/60). Inilah area Premium dan Discount sejati yang sedang dimanipulasi oleh algo.</p></p>
+</div>
 <h2>Kriteria Eksekusi (Aplikasi)</h2>
 <ul>
 <li><strong>Entry:</strong> Jangan langsung Entry hanya berdasarkan lookback. Gunakan level dari Data Range (misal: Discount FVG dari 40-day lookback) sebagai <em>Higher Timeframe Point of Interest (HTF POI)</em> Anda.</li>
 <li><strong>Invalidasi (SL):</strong> Bergantung pada setup lower timeframe (LTF) ketika harga merespons level Data Range tersebut.</li>
 <li><strong>Target (DOL):</strong> Jika Anda entry dari Discount 20-hari, targetkan Equilibrium (50%) atau Premium Array dari rentang 20-hari tersebut.</li>
 </ul>
-    </div>
-  </section>
-</main>
-
-<footer class="footer hide-until-auth">
+</section></main><footer class="footer hide-until-auth">
   © 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.
-</footer>
-</body>
-</html>
+</footer></body></html>
