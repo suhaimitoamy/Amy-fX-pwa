@@ -1,23 +1,23 @@
 {
-  "latest_version_code": 14,
-  "latest_version_name": "1.3.1",
-  "versionCode": 14,
-  "version": "1.3.1",
+  "latest_version_code": 15,
+  "latest_version_name": "1.3.2",
+  "versionCode": 15,
+  "version": "1.3.2",
   "releaseDate": "2026-07-12",
   "apk_url": "https://github.com/suhaimitoamy/Amy-fx/releases/download/amyfx-latest/AmyFX-latest.apk",
   "downloadUrl": "https://github.com/suhaimitoamy/Amy-fx/releases/download/amyfx-latest/AmyFX-latest.apk",
   "force_update": false,
   "mandatory": false,
   "release_notes": [
-    "Perbaiki Mapping yang freeze dan tombol Settings tidak dapat ditekan",
-    "Hapus loop pembaruan tampilan Settings yang berjalan tanpa henti",
-    "Navigasi Dashboard, Analyze, Setup, History, dan Settings kembali responsif",
-    "Pertahankan data jurnal, progres Academy, pengaturan, dan cache saat update"
+    "BSL dan SSL sekarang menampilkan harga level terbaru",
+    "Level otomatis diperbarui setelah Mapping selesai menganalisis market",
+    "Data Mapping terbaru diprioritaskan agar level lama tidak tampil",
+    "Uji pembaruan langsung dari v1.3.1 tanpa menghapus aplikasi"
   ],
   "changelog": [
-    "Perbaiki Mapping yang freeze dan tombol Settings tidak dapat ditekan",
-    "Hapus loop pembaruan tampilan Settings yang berjalan tanpa henti",
-    "Navigasi Dashboard, Analyze, Setup, History, dan Settings kembali responsif",
-    "Pertahankan data jurnal, progres Academy, pengaturan, dan cache saat update"
+    "BSL dan SSL sekarang menampilkan harga level terbaru",
+    "Level otomatis diperbarui setelah Mapping selesai menganalisis market",
+    "Data Mapping terbaru diprioritaskan agar level lama tidak tampil",
+    "Uji pembaruan langsung dari v1.3.1 tanpa menghapus aplikasi"
   ]
 }
