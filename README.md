@@ -127,6 +127,18 @@ https://amy-fx.vercel.app/api/news
 
 Sumber utama berasal dari backend Supabase, dengan Telegram `SM_News_24h` sebagai fallback.
 
+### Pembaruan Backend Push Real-Time — 12 Juli 2026
+
+- Backend `news-sync` memeriksa sumber berita sekitar setiap 2 menit.
+- Hanya berita yang lolos filter relevansi XAU/USD yang disimpan dan dikirim.
+- Berita baru dikirim langsung melalui Firebase Cloud Messaging tanpa harus membuka Market Intel.
+- Pengiriman memakai ID posting Telegram dan log per perangkat untuk mencegah notifikasi ganda.
+- Token FCM yang sudah tidak berlaku otomatis dinonaktifkan dari daftar perangkat aktif.
+- WorkManager tetap dipertahankan sebagai jalur cadangan bila push tertunda.
+- Menekan notifikasi membuka berita yang sama di halaman Market Intel.
+- Kredensial Firebase disimpan sebagai secret terenkripsi di Supabase dan tidak disimpan di repository.
+- Perbaikan backend ini tidak memerlukan pemasangan ulang APK karena penerima FCM sudah tersedia di aplikasi.
+
 ---
 
 ## Market Intel
