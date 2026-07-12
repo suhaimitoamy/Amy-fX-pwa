@@ -41,11 +41,43 @@
     return { label: 'LIVE', className: 'live' };
   }
 
+  function normalizeLevel(item, type, currentPrice) {
+    const price = Number(item?.price ?? item?.level);
+    if (!Number.isFinite(price) || price <= 0) return null;
+    const rawDistance = Number(item?.distance ?? item?.distanceFromPrice);
+    return {
+      ...item,
+      type,
+      price,
+      distance: Number.isFinite(rawDistance) ? rawDistance : price - currentPrice
+    };
+  }
+
+  function pickNearest(levels, type, currentPrice, fallbackPrice) {
+    const candidates = (Array.isArray(levels) ? levels : [])
+      .filter(item => item?.type === type && item?.status !== 'SWEPT')
+      .map(item => normalizeLevel(item, type, currentPrice))
+      .filter(Boolean)
+      .sort((a, b) => Math.abs(a.distance) - Math.abs(b.distance));
+    if (candidates[0]) return candidates[0];
+    return normalizeLevel({ price: fallbackPrice }, type, currentPrice);
+  }
+
   function nearestLevels(state) {
-    const levels = state.liquidity?.levels || [];
-    const bsl = levels.filter(x => x.type === 'BSL').sort((a, b) => Math.abs(a.distance) - Math.abs(b.distance))[0];
-    const ssl = levels.filter(x => x.type === 'SSL').sort((a, b) => Math.abs(a.distance) - Math.abs(b.distance))[0];
-    return { bsl, ssl };
+    const mapping = state.mapping || {};
+    const liquidity = state.liquidity || {};
+    const currentPrice = Number(mapping.price || liquidity.currentPrice || state.heatmap?.currentPrice || 0);
+
+    const mappingBsl = pickNearest(mapping.levels, 'BSL', currentPrice, mapping.bsl);
+    const mappingSsl = pickNearest(mapping.levels, 'SSL', currentPrice, mapping.ssl);
+    const liquidityBsl = pickNearest(liquidity.levels, 'BSL', currentPrice, null);
+    const liquiditySsl = pickNearest(liquidity.levels, 'SSL', currentPrice, null);
+    const mappingIsLatest = Number(mapping.storedAt || 0) >= Number(liquidity.storedAt || 0);
+
+    return {
+      bsl: mappingIsLatest ? (mappingBsl || liquidityBsl) : (liquidityBsl || mappingBsl),
+      ssl: mappingIsLatest ? (mappingSsl || liquiditySsl) : (liquiditySsl || mappingSsl)
+    };
   }
 
   function newsRisk(state) {
@@ -87,12 +119,12 @@
       const state = read();
       const { bsl, ssl } = nearestLevels(state);
       const fresh = freshness(state);
-      const price = Number(state.liquidity?.currentPrice || state.heatmap?.currentPrice || state.mapping?.price || 0);
+      const price = Number(state.mapping?.price || state.liquidity?.currentPrice || state.heatmap?.currentPrice || 0);
       target.innerHTML = `
         <div class="amy-command-main"><span>XAU/USD</span><strong>${price ? price.toFixed(2) : '--'}</strong></div>
         <div class="amy-command-metric"><small>SESSION</small><b>${sessionInfo().id}</b></div>
-        <div class="amy-command-metric"><small>BSL</small><b class="red">${bsl ? '+' + Math.abs(bsl.distance).toFixed(1) : '--'}</b></div>
-        <div class="amy-command-metric"><small>SSL</small><b class="green">${ssl ? '−' + Math.abs(ssl.distance).toFixed(1) : '--'}</b></div>
+        <div class="amy-command-metric"><small>BSL</small><b class="red">${bsl ? Number(bsl.price).toFixed(2) : '--'}</b></div>
+        <div class="amy-command-metric"><small>SSL</small><b class="green">${ssl ? Number(ssl.price).toFixed(2) : '--'}</b></div>
         <div class="amy-command-metric"><small>NEWS</small><b>${newsRisk(state)}</b></div>
         <div class="amy-data-state ${fresh.className}"><i></i>${fresh.label}</div>`;
     };
