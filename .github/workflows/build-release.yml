@@ -18,7 +18,7 @@ jobs:
     permissions:
       contents: read
     env:
-      AMYFX_KEYSTORE_PATH: ${{ runner.temp }}/amy-fx-signing.keystore
+      AMYFX_KEYSTORE_PATH: /tmp/amy-fx-signing.keystore
       AMYFX_KEYSTORE_PASSWORD: android
       AMYFX_KEY_ALIAS: androiddebugkey
       AMYFX_KEY_PASSWORD: android
