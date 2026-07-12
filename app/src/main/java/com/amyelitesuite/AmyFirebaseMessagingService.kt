@@ -54,6 +54,11 @@ class AmyFirebaseMessagingService : FirebaseMessagingService() {
         newsId: String,
         targetUrl: String
     ) {
+        val gateKey = "global|" + title + "|" + body
+        if (!AmyFxNotificationGate.shouldNotify(applicationContext, gateKey, System.currentTimeMillis())) {
+            return
+        }
+
         val channelId = "amy_news_v1"
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

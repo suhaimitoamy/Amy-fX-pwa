@@ -2,6 +2,15 @@ name: Build Release APK
 
 on:
   workflow_dispatch:
+    inputs:
+      versionName:
+        description: 'Version Name (e.g., 1.2.1)'
+        required: true
+        default: '1.2.1'
+      versionCode:
+        description: 'Version Code (integer)'
+        required: true
+        default: '13'
 
 jobs:
   build-release:
@@ -44,14 +53,28 @@ jobs:
       - name: Make Gradle executable
         run: chmod +x ./gradlew
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run JS Regression Tests
+        run: node --test tests/
+
+      - name: Run Android Lint
+        run: ./gradlew lintRelease --no-configuration-cache
+
+      - name: Run Android Unit Tests
+        run: ./gradlew testReleaseUnitTest --no-configuration-cache
+
       - name: Build release APK
         env:
           AMYFX_KEYSTORE_PATH: ${{ runner.temp }}/keystore/amy-fx-release.keystore
           AMYFX_KEYSTORE_PASSWORD: ${{ secrets.AMYFX_KEYSTORE_PASSWORD }}
           AMYFX_KEY_ALIAS: ${{ secrets.AMYFX_KEY_ALIAS }}
           AMYFX_KEY_PASSWORD: ${{ secrets.AMYFX_KEY_PASSWORD }}
-          AMYFX_VERSION_NAME: "1.2.0"
-          AMYFX_VERSION_CODE: "12"
+          AMYFX_VERSION_NAME: ${{ github.event.inputs.versionName }}
+          AMYFX_VERSION_CODE: ${{ github.event.inputs.versionCode }}
         run: ./gradlew assembleRelease --no-configuration-cache --stacktrace
 
       - name: Upload release APK

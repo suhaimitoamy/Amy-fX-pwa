@@ -799,7 +799,7 @@ class MainActivity : Activity() {
                     .build()
 
                 val nm = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                val gateKey = "webview|" + title + "|" + message
+                val gateKey = "global|" + title + "|" + message
                 if (AmyFxNotificationGate.shouldNotify(applicationContext, gateKey, System.currentTimeMillis())) {
                     nm.notify(AmyFxNotificationGate.stableId(gateKey, requestCode), notification)
                 } // AMYFX_NOTIFY_NATIVE_FIX

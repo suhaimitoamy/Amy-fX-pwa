@@ -60,9 +60,13 @@ object FcmDeviceRegistrar {
                     put("enabled", true)
                 }
 
+                val prefsAmy = appContext.getSharedPreferences("AmyFXPrefs", Context.MODE_PRIVATE)
+                val anonKey = prefsAmy.getString("supabase_anon_key", "eyJhbG...0p6k") ?: "eyJhbG...0p6k"
+
                 val request = Request.Builder()
                     .url(ENDPOINT)
                     .header("User-Agent", "AmyFX-Android/${BuildConfig.VERSION_NAME}")
+                    .header("Authorization", "Bearer $anonKey")
                     .post(payload.toString().toRequestBody("application/json; charset=utf-8".toMediaType()))
                     .build()
 

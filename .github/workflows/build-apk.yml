@@ -50,6 +50,20 @@ jobs:
       - name: Make Gradle executable
         run: chmod +x ./gradlew
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run JS Regression Tests
+        run: node --test tests/
+
+      - name: Run Android Lint
+        run: ./gradlew lintDebug --no-configuration-cache
+
+      - name: Run Android Unit Tests
+        run: ./gradlew testDebugUnitTest --no-configuration-cache
+
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-configuration-cache --stacktrace
 

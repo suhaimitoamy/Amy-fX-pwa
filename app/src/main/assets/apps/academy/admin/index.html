@@ -29,14 +29,29 @@
       <div id="statusBox" class="muted">Siap.</div>
     </section>
   </main>
+  <script src="../assets/js/auth.js"></script>
   <script>
+    if (typeof requireLogin === 'function') requireLogin();
     const notes=document.getElementById('adminNotes'), statusBox=document.getElementById('statusBox');
     notes.value=localStorage.getItem('amy_academy_admin_notes')||'';
     document.getElementById('saveNotes').onclick=()=>{localStorage.setItem('amy_academy_admin_notes',notes.value);statusBox.textContent='Catatan tersimpan.'};
     document.getElementById('clearNotes').onclick=()=>{notes.value='';localStorage.removeItem('amy_academy_admin_notes');statusBox.textContent='Catatan dihapus.'};
     document.getElementById('exportData').onclick=()=>{const data={exportedAt:new Date().toISOString(),storage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('amy_'))data.storage[k]=localStorage.getItem(k)}const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='amy-academy-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
     document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
-    document.getElementById('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const data=JSON.parse(await f.text());Object.entries(data.storage||{}).forEach(([k,v])=>localStorage.setItem(k,v));statusBox.textContent='Import selesai.'};
+    document.getElementById('importFile').onchange=async e=>{
+      const f=e.target.files[0];if(!f)return;
+      try{
+        const data=JSON.parse(await f.text());
+        if(!data.storage || typeof data.storage !== 'object') throw new Error('Format salah');
+        let count=0;
+        Object.entries(data.storage).forEach(([k,v])=>{
+          if(k.startsWith('amy_') && k!=='amy_academy_access_hash' && k!=='amy_academy_session' && typeof v==='string' && v.length<50000){
+            localStorage.setItem(k,v); count++;
+          }
+        });
+        statusBox.textContent=`Import selesai. ${count} item dipulihkan.`;
+      }catch(err){statusBox.textContent='Import gagal: '+err.message;}
+    };
   </script>
 </body>
 </html>

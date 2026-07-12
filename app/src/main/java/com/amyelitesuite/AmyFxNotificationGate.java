@@ -41,7 +41,11 @@ public class AmyFxNotificationGate {
         if (gateKey == null || gateKey.isEmpty()) return true;
         SharedPreferences sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE);
         long last = sp.getLong(KEY_COOLDOWNS + ":" + safeKey(gateKey), 0L);
-        return nowMs - last >= DEFAULT_COOLDOWN_MS || last == 0L;
+        boolean allowed = nowMs - last >= DEFAULT_COOLDOWN_MS || last == 0L;
+        if (allowed) {
+            markNotified(context, gateKey, nowMs);
+        }
+        return allowed;
     }
 
     public static int stableId(String gateKey, int requestCode) {

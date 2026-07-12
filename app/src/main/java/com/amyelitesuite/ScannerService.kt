@@ -45,6 +45,7 @@ class ScannerService : Service() {
     private var reconnectAttempt = 0
     @Volatile private var lastTickAt = System.currentTimeMillis()
     @Volatile private var manualClose = false
+    private var lastNotificationUpdateMs = 0L
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -74,7 +75,7 @@ class ScannerService : Service() {
             return START_NOT_STICKY
         }
 
-        startStatusNotification()
+        startStatusNotification(force = true)
         connectSocket()
         startWatchdog()
         return START_STICKY
@@ -244,7 +245,11 @@ class ScannerService : Service() {
         }
     }
 
-    private fun startStatusNotification() {
+    private fun startStatusNotification(force: Boolean = false) {
+        val now = System.currentTimeMillis()
+        if (!force && now - lastNotificationUpdateMs < 5000L) return
+        lastNotificationUpdateMs = now
+
         val intent = mappingIntent("Dashboard")
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
@@ -316,17 +321,17 @@ class ScannerService : Service() {
                 .setAutoCancel(true)
                 .build()
         }
-        val gateKey = "target|" + title + "|" + message
+        val gateKey = "global|" + title + "|" + message
         if (AmyFxNotificationGate.shouldNotify(applicationContext, gateKey, System.currentTimeMillis())) {
             notificationManager().notify(AmyFxNotificationGate.stableId(gateKey, TARGET_NOTIFICATION_BASE_ID + abs(message.hashCode() % 100000)), notification)
         } // AMYFX_NOTIFY_NATIVE_FIX
     }
 
     private fun sendInfo(title: String, message: String) {
-        val gateKey = "info|" + title + "|" + message
+        val gateKey = "global|" + title + "|" + message
         if (AmyFxNotificationGate.shouldNotify(applicationContext, gateKey, System.currentTimeMillis())) {
             try {
-                AmyFxNotificationGate.markNotified(applicationContext, "info|" + title + "|" + message, System.currentTimeMillis());
+                AmyFxNotificationGate.markNotified(applicationContext, "global|" + title + "|" + message, System.currentTimeMillis());
             } catch (_: Exception) {}
             val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Notification.Builder(this, CHANNEL_INFO)
