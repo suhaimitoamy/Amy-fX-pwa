@@ -1,0 +1,40 @@
+name: PWA Check
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate PWA files
+        run: node scripts/validate-pwa.mjs
+
+      - name: Smoke-test static routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/amyfx-pwa-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:4173/ >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/manifest.webmanifest >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/service-worker.js >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/app/src/main/assets/apps/mapping/index.html >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/app/src/main/assets/apps/market-intel/index.html >/dev/null

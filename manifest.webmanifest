@@ -1,0 +1,60 @@
+{
+  "id": "/",
+  "name": "Amy FX",
+  "short_name": "Amy FX",
+  "description": "Mapping XAU/USD, Market Intel, jurnal trading, Academy, dan indikator dalam satu PWA.",
+  "lang": "id-ID",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "categories": ["finance", "education", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/amy-fx.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/amy-fx-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mapping",
+      "short_name": "Mapping",
+      "description": "Buka Mapping XAU/USD",
+      "url": "/app/src/main/assets/apps/mapping/index.html",
+      "icons": [{"src": "/icons/amy-fx.svg", "sizes": "any", "type": "image/svg+xml"}]
+    },
+    {
+      "name": "Market Intel",
+      "short_name": "News",
+      "description": "Buka News dan Liquidity Heatmap",
+      "url": "/app/src/main/assets/apps/market-intel/index.html",
+      "icons": [{"src": "/icons/amy-fx.svg", "sizes": "any", "type": "image/svg+xml"}]
+    },
+    {
+      "name": "Jurnal Trading",
+      "short_name": "Jurnal",
+      "description": "Buka jurnal dan library trading",
+      "url": "/app/src/main/assets/apps/journal/index.html",
+      "icons": [{"src": "/icons/amy-fx.svg", "sizes": "any", "type": "image/svg+xml"}]
+    },
+    {
+      "name": "Amy FX Academy",
+      "short_name": "Academy",
+      "description": "Buka materi Amy FX Academy",
+      "url": "/app/src/main/assets/apps/academy/index.html",
+      "icons": [{"src": "/icons/amy-fx.svg", "sizes": "any", "type": "image/svg+xml"}]
+    }
+  ]
+}

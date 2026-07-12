@@ -1,0 +1,10 @@
+.gradle/
+**/build/
+.gradle-cache/
+android-sdk/
+local.properties
+*.apk
+*.aab
+*.jks
+*.keystore
+reports/

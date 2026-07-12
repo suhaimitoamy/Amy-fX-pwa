@@ -2,21 +2,27 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#050505">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="robots" content="noindex,nofollow">
   <title>Market Intel — Amy FX</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/amy-fx.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icons/amy-fx.svg">
   <link rel="stylesheet" href="../shared/market-intelligence.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="intel-container">
     <section id="market-command-strip" class="amy-command-strip" aria-label="Market command strip"></section>
-    <!-- Header -->
     <header class="intel-header">
       <h1>🔍 Market Intel</h1>
       <p class="subtitle">News & Liquidity Heatmap</p>
     </header>
 
-    <!-- Tab Navigation -->
     <nav class="intel-tabs">
       <button class="intel-tab active" data-tab="news">📰 News</button>
       <button class="intel-tab" data-tab="heatmap">🔥 Heatmap</button>
@@ -25,13 +31,11 @@
 
     <section id="intel-briefing" class="amy-briefing" aria-live="polite"></section>
 
-    <!-- News Panel -->
     <section id="panel-news" class="intel-panel active">
       <div class="status-bar" id="news-status">🔄 Memuat berita...</div>
       <div id="news-list" class="news-list"></div>
     </section>
 
-    <!-- Heatmap Panel -->
     <section id="panel-heatmap" class="intel-panel">
       <div class="status-bar" id="heatmap-status">🔄 Menghitung heatmap...</div>
       <div class="heatmap-info">
@@ -46,20 +50,20 @@
       </div>
     </section>
 
-    <!-- Liquidity Panel -->
     <section id="panel-liquidity" class="intel-panel">
       <div class="status-bar" id="liquidity-status">🔄 Melacak liquidity...</div>
       <div id="liquidity-list" class="liquidity-list"></div>
     </section>
 
-    <!-- Loading -->
     <div id="loading-overlay" class="loading-overlay">
       <div class="spinner"></div>
       <p>Memuat Market Intel...</p>
     </div>
   </div>
 
+  <script src="/platform-adapter.js"></script>
   <script src="../shared/market-intelligence.js"></script>
   <script src="app.js"></script>
+  <script src="/pwa-bootstrap.js"></script>
 </body>
 </html>
