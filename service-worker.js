@@ -1,7 +1,7 @@
 /* Amy FX PWA service worker */
 'use strict';
 
-const VERSION = '2026.07.12.1';
+const VERSION = '2026.07.12.2';
 const SHELL_CACHE = `amyfx-pwa-shell-${VERSION}`;
 const STATIC_CACHE = `amyfx-pwa-static-${VERSION}`;
 const DATA_CACHE = `amyfx-pwa-data-${VERSION}`;
@@ -16,6 +16,9 @@ const SHELL = [
   '/pwa-bootstrap.js',
   '/icons/amy-fx.svg',
   '/icons/amy-fx-maskable.svg',
+  '/icons/amy-fx-180.png',
+  '/icons/amy-fx-192.png',
+  '/icons/amy-fx-512.png',
   '/app/src/main/assets/styles.css',
   '/app/src/main/assets/app.js',
   '/app/src/main/assets/apps/mapping/index.html',
@@ -141,8 +144,8 @@ self.addEventListener('push', (event) => {
 
   event.waitUntil(self.registration.showNotification(title, {
     body,
-    icon: '/icons/amy-fx.svg',
-    badge: '/icons/amy-fx.svg',
+    icon: '/icons/amy-fx-192.png',
+    badge: '/icons/amy-fx-192.png',
     tag,
     renotify: false,
     data: { url: targetUrl },
