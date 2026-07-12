@@ -1,81 +1,220 @@
 import "./bridge/sync-fix.js";
 import "./bridge/notify-guard.js";
-import { runAnalysis, connect, ws, lastWsTickAt, updateWsVars } from './api/market-data.js';
+import {
+  runAnalysis,
+  connect,
+  isLivePriceRunning,
+  lastWsTickAt
+} from './api/market-data.js';
 import { fmtDir } from './ui/ui-render.js';
-import { render, applyAmyFxRoute, analyzeActiveSetups } from './ui/ui-render.js';
-import { saveConnect, toggleBg, testNotif, downloadLogs } from './bridge/android-bridge.js';
+import {
+  render,
+  applyAmyFxRoute,
+  analyzeActiveSetups
+} from './ui/ui-render.js';
+import {
+  saveConnect,
+  toggleBg,
+  testNotif,
+  downloadLogs
+} from './bridge/android-bridge.js';
 
-export const TF={M1:'1min',M5:'5min',M15:'15min',M30:'30min',H1:'1h',H4:'4h',D1:'1day',W1:'1week'};
-export const state={
-  tab:'Dashboard',tf:'M5',
-  key:localStorage.getItem('twelve_api_key')||'',
-  price:Number(localStorage.getItem('last_price')||0),
-  conn:'Offline',
-  logs:JSON.parse(localStorage.getItem('amy_mapping_logs')||'[]'),
-  analyses:JSON.parse(localStorage.getItem('amy_mapping_analyses')||'[]'),
-  setups:JSON.parse(localStorage.getItem('amy_mapping_setups')||'[]'),
-  candles:{},result:null,
-  bg:localStorage.getItem('bg_scanner')==='true',
-  notified:JSON.parse(localStorage.getItem('amy_mapping_notified')||'{}')
+export const TF = {
+  M1: '1min',
+  M5: '5min',
+  M15: '15min',
+  M30: '30min',
+  H1: '1h',
+  H4: '4h',
+  D1: '1day',
+  W1: '1week'
 };
 
-export const p2=v=>Number.isFinite(+v)?Number(v).toFixed(2):'-';
-export function nowTime(){return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date())}
-export function timeRange(zone,sh,sm,eh,em){let now=new Date(),fmt=new Intl.DateTimeFormat('en-CA',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now),g=t=>+fmt.find(x=>x.type===t).value;let guess=Date.UTC(g('year'),g('month')-1,g('day'),sh,sm);let txt=new Intl.DateTimeFormat('en-GB',{timeZone:zone,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(guess));let [hh,mm]=txt.split(':').map(Number);let start=guess+((sh*60+sm)-(hh*60+mm))*60000;let end=start+(((eh*60+em)-(sh*60+sm)+(eh*60+em<=sh*60+sm?1440:0))*60000);return{start,end}}
-export function sessions(){let z=[['Asian Kill Zone','Asia/Tokyo',9,0,12,0],['London Judas Swing','Europe/London',7,0,8,30],['London Open Kill Zone','Europe/London',8,0,12,0],['New York Judas Swing','America/New_York',8,0,9,30],['New York Open Kill Zone','America/New_York',8,30,11,30],['Silver Bullet','America/New_York',10,0,11,0],['Swing Session','America/New_York',13,30,16,0]];let n=Date.now();return z.map(a=>{let r=timeRange(...a.slice(1));return{name:a[0],active:n>=r.start&&n<r.end,wib:new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(r.start))+' - '+new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(r.end))}})}
-export function curSession(){return sessions().find(x=>x.active)||{name:'Off-Session',active:false,wib:'-'}}
+export const state = {
+  tab: 'Dashboard',
+  tf: 'M15',
+  key: localStorage.getItem('twelve_api_key') || '',
+  price: Number(localStorage.getItem('last_price') || 0),
+  conn: 'Offline',
+  logs: JSON.parse(localStorage.getItem('amy_mapping_logs') || '[]'),
+  analyses: JSON.parse(localStorage.getItem('amy_mapping_analyses') || '[]'),
+  setups: JSON.parse(localStorage.getItem('amy_mapping_setups') || '[]'),
+  candles: {},
+  result: null,
+  bg: true,
+  notified: JSON.parse(localStorage.getItem('amy_mapping_notified') || '{}')
+};
 
-export function log(x){state.logs=[`[${nowTime()}] ${x}`,...state.logs].slice(0,200);save();try{render()}catch(e){}}
-export function save(){
-  localStorage.setItem('amy_mapping_logs',JSON.stringify(state.logs.slice(0,200)));
-  localStorage.setItem('amy_mapping_analyses',JSON.stringify(state.analyses.slice(0,80)));
-  localStorage.setItem('amy_mapping_setups',JSON.stringify(state.setups.slice(0,50)));
-  localStorage.setItem('bg_scanner',String(state.bg));
-}
-export function setupText(s){
-  if(!s)return'';
-  const action=s.status==='WAIT'?'Tunggu konfirmasi.':s.status==='INVALID'?'Setup tidak valid.':'Pantau harga saat masuk ke area, jangan mengejar.';
-  return `${fmtDir(s.dir)} • ${s.tf}\nKualitas: ${s.score}/100\nArea rencana: ${p2(s.entryLow)} - ${p2(s.entryHigh)}\nBatas salah: ${p2(s.sl)}\nTarget aman: ${p2(s.tp1)}\nTarget lanjutan: ${p2(s.tp2)}\n${action}\n${s.reason}`
+export const p2 = value =>
+  Number.isFinite(+value) ? Number(value).toFixed(2) : '-';
+
+export function nowTime() {
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Jakarta',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).format(new Date());
 }
 
-function setTab(t){state.tab=t;localStorage.setItem('amy_mapping_tab',t);render()}
-window.setTab=setTab;
-window.runAnalysis=runAnalysis;
-window.render=render;
+export function timeRange(zone, sh, sm, eh, em) {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: zone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(now);
+  const get = type => +parts.find(item => item.type === type).value;
+  const guess = Date.UTC(get('year'), get('month') - 1, get('day'), sh, sm);
+  const text = new Intl.DateTimeFormat('en-GB', {
+    timeZone: zone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(new Date(guess));
+  const [hh, mm] = text.split(':').map(Number);
+  const start = guess + ((sh * 60 + sm) - (hh * 60 + mm)) * 60000;
+  const end = start + (
+    (eh * 60 + em) - (sh * 60 + sm) +
+    (eh * 60 + em <= sh * 60 + sm ? 1440 : 0)
+  ) * 60000;
+  return { start, end };
+}
+
+export function sessions() {
+  const zones = [
+    ['Asian Kill Zone', 'Asia/Tokyo', 9, 0, 12, 0],
+    ['London Judas Swing', 'Europe/London', 7, 0, 8, 30],
+    ['London Open Kill Zone', 'Europe/London', 8, 0, 12, 0],
+    ['New York Judas Swing', 'America/New_York', 8, 0, 9, 30],
+    ['New York Open Kill Zone', 'America/New_York', 8, 30, 11, 30],
+    ['Silver Bullet', 'America/New_York', 10, 0, 11, 0],
+    ['Swing Session', 'America/New_York', 13, 30, 16, 0]
+  ];
+  const now = Date.now();
+  return zones.map(item => {
+    const range = timeRange(...item.slice(1));
+    const format = timestamp => new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Jakarta',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).format(new Date(timestamp));
+    return {
+      name: item[0],
+      active: now >= range.start && now < range.end,
+      wib: `${format(range.start)} - ${format(range.end)}`
+    };
+  });
+}
+
+export function curSession() {
+  return sessions().find(item => item.active) ||
+    { name: 'Off-Session', active: false, wib: '-' };
+}
+
+export function log(message) {
+  state.logs = [`[${nowTime()}] ${message}`, ...state.logs].slice(0, 200);
+  save();
+  try { render(); } catch (_) {}
+}
+
+export function save() {
+  localStorage.setItem('amy_mapping_logs', JSON.stringify(state.logs.slice(0, 200)));
+  localStorage.setItem('amy_mapping_analyses', JSON.stringify(state.analyses.slice(0, 80)));
+  localStorage.setItem('amy_mapping_setups', JSON.stringify(state.setups.slice(0, 50)));
+  localStorage.setItem('bg_scanner', 'true');
+}
+
+export function setupText(setup) {
+  if (!setup) return '';
+  const action = setup.status === 'WAIT'
+    ? 'Tunggu konfirmasi.'
+    : setup.status === 'INVALID'
+      ? 'Setup tidak valid.'
+      : 'Pantau harga saat masuk ke area, jangan mengejar.';
+  return `${fmtDir(setup.dir)} • ${setup.tf}
+Kualitas: ${setup.score}/100
+Area rencana: ${p2(setup.entryLow)} - ${p2(setup.entryHigh)}
+Batas salah: ${p2(setup.sl)}
+Target aman: ${p2(setup.tp1)}
+Target lanjutan: ${p2(setup.tp2)}
+${action}
+${setup.reason}`;
+}
+
+function setTab(tab) {
+  state.tab = tab;
+  localStorage.setItem('amy_mapping_tab', tab);
+  render();
+  syncAutomaticScannerUi();
+}
+
+window.setTab = setTab;
+window.runAnalysis = runAnalysis;
+window.render = render;
 window.analyzeActiveSetups = analyzeActiveSetups;
-window.saveConnect=saveConnect;
-window.toggleBg=toggleBg;
-window.testNotif=testNotif;
-window.downloadLogs=downloadLogs;
-
+window.saveConnect = saveConnect;
+window.toggleBg = toggleBg;
+window.testNotif = testNotif;
+window.downloadLogs = downloadLogs;
 window.state = state;
 window.TF = TF;
 
-function wsLiveAlive(){
-  try{return ws&&(ws.readyState===WebSocket.OPEN||ws.readyState===WebSocket.CONNECTING)}catch(e){return false}
+function autoConnectLivePrice() {
+  if (!isLivePriceRunning()) connect();
 }
-function autoConnectLivePrice(){
-  if(!state.key||!state.key.trim())return;
-  if(wsLiveAlive())return;
-  try{connect()}catch(e){log('Auto connect error: '+e.message)}
+
+function livePriceWatchdog() {
+  const stale = !lastWsTickAt || Date.now() - lastWsTickAt > 45000;
+  if (!isLivePriceRunning() || state.conn === 'Offline' || stale) connect();
 }
-function livePriceWatchdog(){
-  if(!state.key||!state.key.trim())return;
-  let stale=lastWsTickAt&&Date.now()-lastWsTickAt>60000;
-  if(!wsLiveAlive()||state.conn==='Offline'||stale){
-    if(stale&&ws){try{ws.onclose=null;ws.close()}catch(e){} updateWsVars(null, null, null, null);}
-    autoConnectLivePrice();
+
+function syncAutomaticScannerUi() {
+  const button = document.querySelector('[data-scanner-status]');
+  if (button) {
+    button.textContent = '📡 Background Scanner Otomatis Aktif';
+    button.className = 'action';
+  }
+
+  const settings = document.querySelector('.settings');
+  if (!settings) return;
+  const help = settings.querySelector('p.muted');
+  if (help) {
+    help.textContent =
+      'Harga live dan Background Scanner memakai server Amy FX secara otomatis. API key lokal tidak wajib.';
+  }
+  const warning = settings.querySelector('.warn');
+  if (warning) {
+    warning.innerHTML =
+      '<b>Monitor Otomatis</b><br>News dan area M15 tetap dipantau setelah aplikasi ditutup.';
   }
 }
 
 function initApp() {
-  document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+  document.querySelectorAll('.nav button')
+    .forEach(button => button.addEventListener('click', () => setTab(button.dataset.tab)));
+
   window.AmyFXIntel?.mountStrip(document.getElementById('mapping-command-strip'));
+  window.AmyFXIntel?.mountBriefing(document.getElementById('intel-briefing'));
   applyAmyFxRoute();
   render();
-  setTimeout(autoConnectLivePrice,600);
-  setInterval(livePriceWatchdog,30000);
-  document.addEventListener('visibilitychange',()=>document.body.classList.toggle('webview-idle',document.hidden));
+  syncAutomaticScannerUi();
+
+  const app = document.getElementById('app');
+  if (app) {
+    new MutationObserver(syncAutomaticScannerUi)
+      .observe(app, { childList: true, subtree: true });
+  }
+
+  setTimeout(autoConnectLivePrice, 600);
+  setInterval(livePriceWatchdog, 30000);
+  document.addEventListener(
+    'visibilitychange',
+    () => document.body.classList.toggle('webview-idle', document.hidden)
+  );
 }
 
 if (document.readyState === 'loading') {
