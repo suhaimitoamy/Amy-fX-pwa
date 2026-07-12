@@ -2,6 +2,8 @@ import { state, save, setupText } from '../main.js';
 import { connect } from '../api/market-data.js';
 import { render } from '../ui/ui-render.js';
 
+let lastNativeTargetKey = null;
+
 function browserNotify(title, message, route = 'Analyze') {
   if (typeof Notification === 'undefined') return;
   Notification.requestPermission().then(permission => {
@@ -16,6 +18,12 @@ function browserNotify(title, message, route = 'Analyze') {
       window.setTab?.(route);
     };
   });
+}
+
+function stopNativeMonitorOnce() {
+  if (lastNativeTargetKey === 'NONE') return;
+  lastNativeTargetKey = 'NONE';
+  window.Android?.stopBackgroundScanner?.();
 }
 
 export function notifyImportant(result) {
@@ -42,26 +50,42 @@ export function notifyImportant(result) {
 }
 
 export function sendTargetsToNative() {
-  if (!window.Android?.startBackgroundScanner || state.tf !== 'M15') return;
+  if (!window.Android?.startBackgroundScanner) return;
 
   const setup = state.result?.bestSetup;
-  let upper = 0;
-  let lower = 0;
-
-  if (
+  const validSetup =
+    state.tf === 'M15' &&
     setup?.executionMode === 'M15_PRECISION' &&
-    Number.isFinite(setup.entryLow) &&
-    Number.isFinite(setup.entryHigh)
-  ) {
-    if (String(setup.dir).includes('SELL')) {
-      upper = Math.min(Number(setup.entryLow), Number(setup.entryHigh));
-    } else if (String(setup.dir).includes('BUY')) {
-      lower = Math.max(Number(setup.entryLow), Number(setup.entryHigh));
-    }
+    setup?.status !== 'INVALID' &&
+    setup?.status !== 'WAIT' &&
+    Number.isFinite(setup?.entryLow) &&
+    Number.isFinite(setup?.entryHigh);
+
+  if (!validSetup) {
+    stopNativeMonitorOnce();
+    return;
   }
 
+  let upper = 0;
+  let lower = 0;
+  if (String(setup.dir).includes('SELL')) {
+    upper = Math.min(Number(setup.entryLow), Number(setup.entryHigh));
+  } else if (String(setup.dir).includes('BUY')) {
+    lower = Math.max(Number(setup.entryLow), Number(setup.entryHigh));
+  }
+
+  if (upper <= 0 && lower <= 0) {
+    stopNativeMonitorOnce();
+    return;
+  }
+
+  const targetKey = `${setup.dir}|${upper.toFixed(2)}|${lower.toFixed(2)}|${setup.timestamp || 0}`;
+  if (targetKey === lastNativeTargetKey) return;
+  lastNativeTargetKey = targetKey;
+
+  // Proxy server dipakai; pengguna tidak perlu mengaktifkan scanner atau mengisi API key.
   window.Android.startBackgroundScanner(
-    state.key.trim() || 'amyfx-proxy',
+    'amyfx-proxy',
     String(upper),
     String(lower)
   );
@@ -80,9 +104,9 @@ export function saveConnect() {
 }
 
 export function toggleBg() {
+  // Scanner tidak lagi membutuhkan tombol manual. Fungsi dipertahankan agar UI lama tetap aman.
   state.bg = true;
   save();
-  connect();
   sendTargetsToNative();
   render();
 }
