@@ -1,10 +1,10 @@
 (function () {
-  const CURRENT_VERSION_CODE = 13;
-  const CURRENT_VERSION_NAME = '1.3.0';
+  const CURRENT_VERSION_CODE = 14;
+  const CURRENT_VERSION_NAME = '1.3.1';
   const UPDATE_URL = 'https://raw.githubusercontent.com/suhaimitoamy/Amy-fx/main/update.json';
   const DISMISS_KEY = 'amy_fx_update_dismissed_version';
   const LAST_CHECK_KEY = 'amy_fx_update_last_check';
-  const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
+  const CHECK_INTERVAL_MS = 15 * 60 * 1000;
 
   function css(el, styles) {
     Object.keys(styles).forEach(key => el.style[key] = styles[key]);
@@ -117,8 +117,8 @@
     localStorage.setItem(LAST_CHECK_KEY, String(now));
 
     try {
-      const cacheHour = Math.floor(now / 3600000);
-      const res = await fetch(`${UPDATE_URL}?h=${cacheHour}`, { cache: 'default' });
+      const cacheSlot = Math.floor(now / CHECK_INTERVAL_MS);
+      const res = await fetch(`${UPDATE_URL}?v=${cacheSlot}`, { cache: 'default' });
       if (!res.ok) return;
       const data = await res.json();
       const latestCode = Number(data.latest_version_code ?? data.versionCode ?? 0);
