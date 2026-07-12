@@ -1,14 +1,17 @@
 package com.amyelitesuite
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -38,7 +41,9 @@ class AmyFirebaseMessagingService : FirebaseMessagingService() {
         val suppliedTarget = data["target_url"].orEmpty()
 
         val targetUrl = when {
-            suppliedTarget.startsWith("https://appassets.androidplatform.net/assets/apps/market-intel/") -> suppliedTarget
+            suppliedTarget.startsWith(
+                "https://appassets.androidplatform.net/assets/apps/market-intel/"
+            ) -> suppliedTarget
             newsId.isNotBlank() -> {
                 "https://appassets.androidplatform.net/assets/apps/market-intel/index.html#news=${Uri.encode(newsId)}"
             }
@@ -54,7 +59,13 @@ class AmyFirebaseMessagingService : FirebaseMessagingService() {
         newsId: String,
         targetUrl: String
     ) {
-        val gateKey = "global|" + title + "|" + body
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) return
+
+        val gateKey = AmyFxNotificationGate.newsContentKey(body)
         if (!AmyFxNotificationGate.shouldNotify(applicationContext, gateKey, System.currentTimeMillis())) {
             return
         }
@@ -80,11 +91,7 @@ class AmyFirebaseMessagingService : FirebaseMessagingService() {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             putExtra("target_url", targetUrl)
         }
-        val requestCode = if (newsId.isBlank()) {
-            System.currentTimeMillis().toInt()
-        } else {
-            newsId.hashCode()
-        }
+        val requestCode = if (newsId.isBlank()) gateKey.hashCode() else newsId.hashCode()
         val pendingIntent = PendingIntent.getActivity(
             this,
             requestCode,
@@ -93,7 +100,7 @@ class AmyFirebaseMessagingService : FirebaseMessagingService() {
         )
 
         val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.ic_stat_amy_fx)
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
@@ -104,6 +111,6 @@ class AmyFirebaseMessagingService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .build()
 
-        manager.notify(requestCode, notification)
+        manager.notify(AmyFxNotificationGate.stableId(gateKey, requestCode), notification)
     }
 }
