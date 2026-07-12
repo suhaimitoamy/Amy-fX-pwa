@@ -11,6 +11,9 @@ const required = [
   'offline.html',
   'icons/amy-fx.svg',
   'icons/amy-fx-maskable.svg',
+  'icons/amy-fx-180.png',
+  'icons/amy-fx-192.png',
+  'icons/amy-fx-512.png',
   'vercel.json',
   'app/src/main/assets/styles.css',
   'app/src/main/assets/app.js',
@@ -40,6 +43,9 @@ if (manifest.start_url !== '/') fail('manifest start_url must be /');
 if (manifest.scope !== '/') fail('manifest scope must be /');
 if (manifest.display !== 'standalone') fail('manifest display must be standalone');
 if (!Array.isArray(manifest.icons) || manifest.icons.length < 2) fail('manifest needs regular and maskable icons');
+if (!(manifest.icons || []).some(icon => icon.type === 'image/png' && icon.sizes === '192x192')) fail('manifest needs a 192x192 PNG icon');
+if (!(manifest.icons || []).some(icon => icon.type === 'image/png' && icon.sizes === '512x512')) fail('manifest needs a 512x512 PNG icon');
+if (!(manifest.icons || []).some(icon => String(icon.purpose || '').includes('maskable'))) fail('manifest needs a maskable icon');
 
 for (const icon of manifest.icons || []) {
   const localPath = String(icon.src || '').replace(/^\//, '');
@@ -53,6 +59,7 @@ for (const shortcut of manifest.shortcuts || []) {
 
 const index = read('index.html');
 if (!index.includes('rel="manifest"')) fail('root index does not link the manifest');
+if (!index.includes('/icons/amy-fx-180.png')) fail('root index does not use the iPhone touch icon');
 if (!index.includes('/platform-adapter.js')) fail('root index does not load platform adapter');
 if (!index.includes('/pwa-bootstrap.js')) fail('root index does not load PWA bootstrap');
 if (index.includes('update-checker.js')) fail('Android APK updater must not run in the PWA entry point');
