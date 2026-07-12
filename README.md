@@ -1,11 +1,48 @@
 # Amy FX PWA
 
-Amy FX PWA adalah versi web installable untuk iPhone dan browser modern. Repo ini dipisahkan dari **Amy-fx Android** agar pengembangan PWA tidak mengubah APK yang sudah selesai.
+Amy FX PWA adalah versi web installable untuk iPhone, iPad, dan browser modern. Repo ini dipisahkan dari **Amy-fx Android** agar pengembangan PWA tidak mengubah APK Android yang sudah dianggap selesai.
 
 > **Platform:** Progressive Web App  
 > **Target utama:** iPhone / iPad / browser modern  
-> **Status:** Fondasi PWA aktif  
+> **Tahap saat ini:** Fondasi dan integrasi kode selesai, menunggu deployment serta pengujian perangkat  
 > **Repo Android:** `suhaimitoamy/Amy-fx` — tidak diubah oleh repo ini
+
+## Checkpoint Progres — 12 Juli 2026
+
+### Sudah selesai di repo
+
+- entry point PWA di root repository;
+- manifest installable dan ikon iPhone ukuran 180, 192, dan 512 piksel;
+- Service Worker untuk cache, offline fallback, dan pembaruan otomatis;
+- platform adapter sebagai pengganti fungsi Android bridge;
+- Dashboard, Mapping, Market Intel, Journal, Academy, dan Indicator Library terhubung ke fondasi PWA;
+- konfigurasi login member melalui Supabase telah disiapkan;
+- endpoint login mendukung login, pemeriksaan sesi, refresh token, dan logout;
+- pendaftaran akun publik tidak disediakan;
+- konfigurasi static deployment Vercel telah dibuat;
+- workflow build APK, signing, Android lint, dan release APK telah dihapus;
+- GitHub Actions sekarang difokuskan pada validasi PWA;
+- Web Push tidak dipaksakan dan tetap nonaktif.
+
+### Belum dilakukan dan sengaja ditunda
+
+- membuat atau menghubungkan project `amy-fx-pwa` di Vercel;
+- mendapatkan URL HTTPS produksi;
+- membuat akun owner pertama di Supabase Auth;
+- mengaktifkan `authRequired` setelah akun owner tersedia;
+- pengujian langsung melalui Safari dan **Add to Home Screen** di iPhone;
+- pengujian penuh setiap modul pada perangkat iPhone;
+- perbaikan bug yang baru dapat terlihat setelah deployment dan tes perangkat;
+- penghapusan folder Android lama dari repo PWA;
+- Web Push background.
+
+### Posisi progres
+
+Fondasi teknis dan integrasi kode utama telah selesai. Project sudah berada pada tahap **siap dideploy dan diuji**, tetapi belum boleh dianggap selesai produksi sebelum URL HTTPS tersedia dan seluruh fungsi diuji langsung pada iPhone.
+
+Secara praktis, pekerjaan repo berada sekitar **80% menuju versi PWA yang siap digunakan**. Sisa pekerjaan paling penting adalah deployment, pembuatan akun owner, pengaktifan login wajib, dan QA perangkat.
+
+---
 
 ## Disclaimer
 
@@ -23,21 +60,23 @@ Keputusan dan risiko trading tetap berada di tangan pengguna.
 
 ## Modul Utama
 
+Keterangan **Aktif** pada tabel berikut berarti implementasinya sudah tersedia di repo PWA. Status tersebut belum berarti seluruh fungsi telah lulus pengujian langsung pada iPhone.
+
 | Modul | Status PWA |
 |---|---|
-| Dashboard | Aktif |
-| Mapping XAU/USD | Aktif |
-| BSL/SSL dan rules engine | Aktif |
-| Market Intel | Aktif |
+| Dashboard | Aktif di kode |
+| Mapping XAU/USD | Aktif di kode |
+| BSL/SSL dan rules engine | Aktif di kode |
+| Market Intel | Aktif di kode |
 | News XAU/USD | Aktif saat online |
 | Liquidity Heatmap | Aktif saat online |
-| Journal Trading | Aktif |
-| Amy FX Academy | Aktif |
-| Indicator Library | Aktif |
+| Journal Trading | Aktif di kode |
+| Amy FX Academy | Aktif di kode |
+| Indicator Library | Aktif di kode |
 | Offline app shell | Aktif |
 | Update otomatis PWA | Aktif melalui Service Worker |
 | Background scanner Android | Tidak dipindahkan |
-| Web Push background | Belum diaktifkan dan tidak dipaksakan |
+| Web Push background | Nonaktif dan tidak dipaksakan |
 
 ---
 
@@ -61,12 +100,13 @@ Aset WebView dari APK tetap digunakan agar Mapping, Market Intel, Journal, Acade
 
 ## Instalasi di iPhone
 
-Setelah deployment HTTPS tersedia:
+Bagian ini dilakukan setelah deployment HTTPS tersedia:
 
 1. Buka URL Amy FX PWA melalui Safari.
 2. Tekan tombol **Share**.
 3. Pilih **Add to Home Screen**.
 4. Buka ikon **Amy FX** dari Home Screen.
+5. Uji Dashboard dan setiap modul utama.
 
 Ikon PNG ukuran 180, 192, dan 512 piksel sudah tersedia untuk pemasangan PWA.
 
@@ -108,7 +148,7 @@ Pengaturan berada di:
 pwa-config.json
 ```
 
-Saat ini `authRequired` masih `false` agar aplikasi tidak terkunci sebelum akun pemilik dibuat. Setelah akun Supabase Auth tersedia, nilai tersebut dapat diubah menjadi `true` tanpa mengubah modul lainnya.
+Saat ini `authRequired` masih `false` agar aplikasi tidak terkunci sebelum akun pemilik dibuat. Setelah akun Supabase Auth tersedia dan login berhasil diuji, nilai tersebut dapat diubah menjadi `true` tanpa mengubah modul lainnya.
 
 ---
 
@@ -116,11 +156,12 @@ Saat ini `authRequired` masih `false` agar aplikasi tidak terkunci sebelum akun 
 
 Service Worker memiliki penerima event Push sebagai fondasi teknis, tetapi langganan Web Push dan pengiriman backend sengaja belum diaktifkan.
 
-Alasannya:
+Keputusan saat ini:
 
-- fungsi inti PWA lebih diprioritaskan;
+- fungsi utama PWA lebih diprioritaskan;
 - scanner background Android tidak dipaksakan berjalan di iPhone;
-- notifikasi hanya akan diaktifkan setelah alur instalasi dan fungsi utama berhasil diuji pada perangkat iPhone.
+- PWA tetap dapat digunakan tanpa Web Push;
+- notifikasi hanya akan dipertimbangkan kembali setelah deployment dan pengujian fungsi utama selesai.
 
 Pengaturan saat ini:
 
@@ -140,9 +181,9 @@ Repo telah disiapkan untuk static deployment Vercel:
 - `.vercelignore` mencegah Kotlin, Gradle, APK, dan file Android ikut dideploy;
 - Service Worker mendapat scope `/`;
 - manifest dan Service Worker tidak memakai cache permanen;
-- seluruh route modul menggunakan HTTPS dari domain deployment.
+- seluruh route modul akan menggunakan HTTPS dari domain deployment.
 
-Project Vercel sebaiknya menggunakan:
+Project Vercel menggunakan:
 
 ```text
 Repository: suhaimitoamy/Amy-fX-pwa
@@ -158,7 +199,7 @@ Setelah repo dihubungkan, setiap push ke `main` akan menghasilkan deployment bar
 
 ## GitHub Actions
 
-Repo PWA hanya memakai workflow:
+Repo PWA hanya memakai workflow utama:
 
 ```text
 .github/workflows/pwa-check.yml
@@ -189,22 +230,41 @@ Folder Kotlin, Gradle, dan resource Android masih disimpan sementara sebagai ref
 
 ---
 
-## Status Saat Ini
+## Urutan Pekerjaan Saat Dilanjutkan
+
+1. Import repo `suhaimitoamy/Amy-fX-pwa` ke Vercel.
+2. Pastikan deployment berhasil dan dapat dibuka melalui HTTPS.
+3. Uji manifest, Service Worker, ikon, dan instalasi Home Screen.
+4. Buat akun owner di Supabase Auth.
+5. Uji login, refresh sesi, dan logout.
+6. Ubah `authRequired` menjadi `true`.
+7. Uji Dashboard, Mapping, Market Intel, Journal, Academy, dan Indicator Library di iPhone.
+8. Perbaiki masalah kompatibilitas Safari yang ditemukan.
+9. Bersihkan source Android lama setelah PWA dinyatakan stabil.
+10. Pertimbangkan Web Push hanya bila memang diperlukan.
+
+---
+
+## Status Ringkas
 
 | Komponen | Status |
 |---|---|
-| PWA entry point | Aktif |
-| Manifest installable | Aktif |
-| Ikon iPhone | Aktif |
-| Service Worker | Aktif |
-| Offline fallback | Aktif |
-| Platform adapter | Aktif |
-| Mapping | Aktif |
-| Market Intel | Aktif |
-| Journal | Aktif |
-| Academy | Aktif |
-| Login backend | Aktif |
-| Login wajib | Menunggu akun pemilik |
+| PWA entry point | Selesai |
+| Manifest installable | Selesai |
+| Ikon iPhone | Selesai |
+| Service Worker | Selesai |
+| Offline fallback | Selesai |
+| Platform adapter | Selesai |
+| Mapping | Terintegrasi, menunggu QA iPhone |
+| Market Intel | Terintegrasi, menunggu QA iPhone |
+| Journal | Terintegrasi, menunggu QA iPhone |
+| Academy | Terintegrasi, menunggu QA iPhone |
+| Login backend | Disiapkan dan endpoint terlindungi |
+| Akun owner | Belum dibuat |
+| Login wajib | Ditunda sampai akun owner tersedia |
 | Web Push | Nonaktif sesuai keputusan |
 | Android APK workflow | Dihapus |
-| Vercel config | Siap |
+| Konfigurasi Vercel | Siap |
+| Project Vercel | Belum dibuat atau dihubungkan |
+| URL HTTPS produksi | Belum tersedia |
+| QA iPhone | Belum dilakukan |
