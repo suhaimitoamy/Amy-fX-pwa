@@ -1,10 +1,33 @@
+# Android build system and native source are kept only as migration reference.
 .gradle/
 **/build/
 .gradle-cache/
 android-sdk/
+gradle/
+gradlew
+gradlew.bat
+settings.gradle.kts
+build.gradle.kts
+gradle.properties
 local.properties
+app/build.gradle.kts
+app/proguard-rules.pro
+app/src/main/java/
+app/src/main/res/
+app/src/main/AndroidManifest.xml
+app/src/test/
+app/src/androidTest/
 *.apk
 *.aab
 *.jks
 *.keystore
 reports/
+
+# Repository-only files
+.git/
+.github/
+.idea/
+docs/
+scripts/
+tests/
+supabase/
