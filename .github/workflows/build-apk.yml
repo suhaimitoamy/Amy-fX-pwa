@@ -1,6 +1,6 @@
 name: Build and Publish Amy FX APK
 
-# v1.3.2 publish trigger
+# v1.3.2 publish trigger — BSL/SSL live levels
 on:
   workflow_dispatch:
   push:
