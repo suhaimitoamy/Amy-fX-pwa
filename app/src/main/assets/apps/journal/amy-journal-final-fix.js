@@ -1,4 +1,32 @@
 (function(){
+  function ensureMeta(name, content){
+    if(document.head.querySelector(`meta[name="${name}"]`)) return;
+    const meta=document.createElement('meta'); meta.name=name; meta.content=content; document.head.appendChild(meta);
+  }
+  function ensureLink(rel, href, attrs){
+    if(document.head.querySelector(`link[rel="${rel}"]`)) return;
+    const link=document.createElement('link'); link.rel=rel; link.href=href;
+    Object.entries(attrs||{}).forEach(([k,v])=>link.setAttribute(k,v));
+    document.head.appendChild(link);
+  }
+  function loadScript(src){
+    if(document.querySelector(`script[src="${src}"]`)) return;
+    const script=document.createElement('script'); script.src=src; script.async=false; document.head.appendChild(script);
+  }
+  ensureMeta('theme-color','#050505');
+  ensureMeta('mobile-web-app-capable','yes');
+  ensureMeta('apple-mobile-web-app-capable','yes');
+  ensureMeta('apple-mobile-web-app-status-bar-style','black-translucent');
+  ensureMeta('robots','noindex,nofollow');
+  ensureLink('manifest','/manifest.webmanifest');
+  ensureLink('icon','/icons/amy-fx-192.png',{type:'image/png'});
+  ensureLink('apple-touch-icon','/icons/amy-fx-180.png',{sizes:'180x180'});
+  loadScript('/platform-adapter.js');
+  loadScript('/member-auth.js');
+  loadScript('/pwa-bootstrap.js');
+})();
+
+(function(){
   function $(s,r=document){return r.querySelector(s)}
   function updateLibraryControls(){
     const countText = ($('#libraryCount')?.textContent || '').trim();
@@ -34,7 +62,6 @@
   document.addEventListener('input',()=>setTimeout(tick,60),true);
   setInterval(tick,1200);
 })();
-
 
 /* AMYFX_NOTIFY_GUARD_START */
 (function(){
@@ -161,4 +188,3 @@
   window.__amyfxNotifyOpenRoute=openRoute;
 })();
 /* AMYFX_NOTIFY_GUARD_END */
-
