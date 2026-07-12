@@ -1,5 +1,6 @@
 name: Build and Publish Amy FX APK
 
+# v1.3.1 publish trigger
 on:
   workflow_dispatch:
   push:
