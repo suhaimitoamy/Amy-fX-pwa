@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       versionName:
-        description: 'Version Name (e.g., 1.2.1)'
+        description: "Version Name (e.g., 1.2.1)"
         required: true
-        default: '1.2.1'
+        default: "1.2.1"
       versionCode:
-        description: 'Version Code (integer)'
+        description: "Version Code (integer)"
         required: true
-        default: '13'
+        default: "13"
 
 jobs:
   build-release:
@@ -47,7 +47,8 @@ jobs:
           elif [ -n "$AMYFX_KEYSTORE_PATH" ]; then
             echo "$AMYFX_KEYSTORE_PATH" | base64 -d > "$RUNNER_TEMP/keystore/amy-fx-release.keystore"
           else
-            echo "No keystore secret provided, will build unsigned or with debug signing."
+            echo "Release keystore belum dikonfigurasi."
+            exit 1
           fi
 
       - name: Make Gradle executable
@@ -56,16 +57,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
-      - name: Run JS Regression Tests
-        run: node --test tests/
+      - name: Run JS regression tests
+        run: node --test tests/*.test.mjs
 
-      - name: Run Android Lint
-        run: ./gradlew lintRelease --no-configuration-cache
-
-      - name: Run Android Unit Tests
+      - name: Run Android unit tests
         run: ./gradlew testReleaseUnitTest --no-configuration-cache
+
+      - name: Run Android lint
+        run: ./gradlew lintRelease --no-configuration-cache
 
       - name: Build release APK
         env:
