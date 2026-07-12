@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       versionName:
-        description: "Version Name (e.g., 1.2.1)"
+        description: "Version Name (e.g., 1.3.1)"
         required: true
-        default: "1.2.1"
+        default: "1.3.0"
       versionCode:
-        description: "Version Code (integer)"
+        description: "Version Code (must increase)"
         required: true
         default: "13"
 
@@ -17,6 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      AMYFX_KEYSTORE_PATH: ${{ runner.temp }}/amy-fx-signing.keystore
+      AMYFX_KEYSTORE_PASSWORD: android
+      AMYFX_KEY_ALIAS: androiddebugkey
+      AMYFX_KEY_PASSWORD: android
+      AMYFX_VERSION_NAME: ${{ github.event.inputs.versionName }}
+      AMYFX_VERSION_CODE: ${{ github.event.inputs.versionCode }}
 
     steps:
       - name: Checkout
@@ -35,21 +42,22 @@ jobs:
       - name: Install Android SDK 35
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Prepare keystore
-        env:
-          AMYFX_KEYSTORE_BASE64: ${{ secrets.AMYFX_KEYSTORE_BASE64 }}
-          AMYFX_KEYSTORE_PATH: ${{ secrets.AMYFX_KEYSTORE_PATH }}
+      - name: Restore permanent Amy FX signing key
+        id: signing-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: amy-fx-debug-keystore-v1
+
+      - name: Verify permanent signing key
         run: |
-          set -e
-          mkdir -p "$RUNNER_TEMP/keystore"
-          if [ -n "$AMYFX_KEYSTORE_BASE64" ]; then
-            echo "$AMYFX_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore/amy-fx-release.keystore"
-          elif [ -n "$AMYFX_KEYSTORE_PATH" ]; then
-            echo "$AMYFX_KEYSTORE_PATH" | base64 -d > "$RUNNER_TEMP/keystore/amy-fx-release.keystore"
-          else
-            echo "Release keystore belum dikonfigurasi."
+          set -euo pipefail
+          if [ "${{ steps.signing-cache.outputs.cache-hit }}" != "true" ]; then
+            echo "Permanent Amy FX signing key tidak ditemukan. Build dihentikan agar update lama tetap kompatibel."
             exit 1
           fi
+          cp "$HOME/.android/debug.keystore" "$AMYFX_KEYSTORE_PATH"
+          keytool -list -keystore "$AMYFX_KEYSTORE_PATH" -storepass android -alias androiddebugkey >/dev/null
 
       - name: Make Gradle executable
         run: chmod +x ./gradlew
@@ -68,18 +76,11 @@ jobs:
       - name: Run Android lint
         run: ./gradlew lintRelease --no-configuration-cache
 
-      - name: Build release APK
-        env:
-          AMYFX_KEYSTORE_PATH: ${{ runner.temp }}/keystore/amy-fx-release.keystore
-          AMYFX_KEYSTORE_PASSWORD: ${{ secrets.AMYFX_KEYSTORE_PASSWORD }}
-          AMYFX_KEY_ALIAS: ${{ secrets.AMYFX_KEY_ALIAS }}
-          AMYFX_KEY_PASSWORD: ${{ secrets.AMYFX_KEY_PASSWORD }}
-          AMYFX_VERSION_NAME: ${{ github.event.inputs.versionName }}
-          AMYFX_VERSION_CODE: ${{ github.event.inputs.versionCode }}
+      - name: Build signed release APK
         run: ./gradlew assembleRelease --no-configuration-cache --stacktrace
 
-      - name: Upload release APK
+      - name: Upload signed release APK
         uses: actions/upload-artifact@v4
         with:
-          name: Amy-FX-release-apk
-          path: app/build/outputs/apk/release/*.apk
+          name: Amy-FX-v${{ github.event.inputs.versionName }}-signed-apk
+          path: app/build/outputs/apk/release/app-release.apk
