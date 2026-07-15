@@ -10,7 +10,7 @@ import {
   evaluateLiquidityReclaim,
   evaluateZoneLifecycle,
   structureDisplacementMetrics
-} from '../app/src/main/assets/apps/mapping/js/engine/concept-engine.js';
+} from '../assets/apps/mapping/js/engine/concept-engine.js';
 
 const candle = (open, high, low, close, time) => ({ open, high, low, close, time });
 

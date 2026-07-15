@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { calculateAsiaRange } from '../app/src/main/assets/apps/mapping/js/session/asia-range.js';
+import { calculateAsiaRange } from '../assets/apps/mapping/js/session/asia-range.js';
 
 const candle = (iso, high, low, close) => ({
   time: Date.parse(iso) / 1000,

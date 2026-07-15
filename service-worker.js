@@ -19,14 +19,14 @@ const SHELL = [
   '/icons/amy-fx-180.png',
   '/icons/amy-fx-192.png',
   '/icons/amy-fx-512.png',
-  '/app/src/main/assets/styles.css',
-  '/app/src/main/assets/app.js',
-  '/app/src/main/assets/apps/mapping/index.html',
-  '/app/src/main/assets/apps/market-intel/index.html',
-  '/app/src/main/assets/apps/journal/index.html',
-  '/app/src/main/assets/apps/academy/index.html',
-  '/app/src/main/assets/apps/shared/market-intelligence.css',
-  '/app/src/main/assets/apps/shared/market-intelligence.js'
+  '/assets/styles.css',
+  '/assets/app.js',
+  '/assets/apps/mapping/index.html',
+  '/assets/apps/market-intel/index.html',
+  '/assets/apps/journal/index.html',
+  '/assets/apps/academy/index.html',
+  '/assets/apps/shared/market-intelligence.css',
+  '/assets/apps/shared/market-intelligence.js'
 ];
 
 async function precacheIndividually() {
@@ -139,7 +139,7 @@ self.addEventListener('push', (event) => {
 
   const title = payload.title || payload.notification?.title || 'Amy FX';
   const body = payload.body || payload.notification?.body || payload.text || 'Informasi baru tersedia.';
-  const targetUrl = payload.target_url || payload.url || payload.data?.url || '/app/src/main/assets/apps/market-intel/index.html';
+  const targetUrl = payload.target_url || payload.url || payload.data?.url || '/assets/apps/market-intel/index.html';
   const tag = payload.news_id ? `amyfx-news-${payload.news_id}` : (payload.tag || 'amyfx-update');
 
   event.waitUntil(self.registration.showNotification(title, {

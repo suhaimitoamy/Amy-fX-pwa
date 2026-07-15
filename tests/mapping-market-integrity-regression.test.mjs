@@ -9,7 +9,7 @@ import {
   filterActionableSetups,
   sanitizeCandleValues,
   zoneLiveStatus
-} from '../app/src/main/assets/apps/mapping/js/integrity/mapping-integrity-core.js';
+} from '../assets/apps/mapping/js/integrity/mapping-integrity-core.js';
 
 function candle(datetime, open, high, low, close) {
   return {
@@ -137,9 +137,9 @@ test('status live OB dan arahan discount bearish tidak menyuruh mengejar SELL', 
 });
 
 test('runtime dan halaman Mapping memuat lapisan integrity tanpa MutationObserver', () => {
-  const runtime = fs.readFileSync(new URL('../app/src/main/assets/apps/mapping/js/mapping-integrity.js', import.meta.url), 'utf8');
-  const html = fs.readFileSync(new URL('../app/src/main/assets/apps/mapping/index.html', import.meta.url), 'utf8');
-  const css = fs.readFileSync(new URL('../app/src/main/assets/apps/mapping/css/mapping-integrity.css', import.meta.url), 'utf8');
+  const runtime = fs.readFileSync(new URL('../assets/apps/mapping/js/mapping-integrity.js', import.meta.url), 'utf8');
+  const html = fs.readFileSync(new URL('../assets/apps/mapping/index.html', import.meta.url), 'utf8');
+  const css = fs.readFileSync(new URL('../assets/apps/mapping/css/mapping-integrity.css', import.meta.url), 'utf8');
 
   assert.match(html, /mapping-integrity\.css/);
   assert.match(html, /mapping-integrity\.js/);

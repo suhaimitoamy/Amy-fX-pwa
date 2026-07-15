@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { detectStructure, detectOB, modelSweepMssFvg } from '../app/src/main/assets/apps/mapping/js/engine/ict-core.js';
-import { buildMarketOutlooks, evaluatePredictionHistory } from '../app/src/main/assets/apps/mapping/js/outlook/market-outlook-core.js';
+import { detectStructure, detectOB, modelSweepMssFvg } from '../assets/apps/mapping/js/engine/ict-core.js';
+import { buildMarketOutlooks, evaluatePredictionHistory } from '../assets/apps/mapping/js/outlook/market-outlook-core.js';
 
 function candle(open, high, low, close, time = 0) { return { open, high, low, close, time }; }
 

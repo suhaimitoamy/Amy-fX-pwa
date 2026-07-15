@@ -38,28 +38,28 @@
       "name": "Mapping",
       "short_name": "Mapping",
       "description": "Buka Mapping XAU/USD",
-      "url": "/app/src/main/assets/apps/mapping/index.html",
+      "url": "/assets/apps/mapping/index.html",
       "icons": [{"src": "/icons/amy-fx-192.png", "sizes": "192x192", "type": "image/png"}]
     },
     {
       "name": "Market Intel",
       "short_name": "News",
       "description": "Buka News dan Liquidity Heatmap",
-      "url": "/app/src/main/assets/apps/market-intel/index.html",
+      "url": "/assets/apps/market-intel/index.html",
       "icons": [{"src": "/icons/amy-fx-192.png", "sizes": "192x192", "type": "image/png"}]
     },
     {
       "name": "Jurnal Trading",
       "short_name": "Jurnal",
       "description": "Buka jurnal dan library trading",
-      "url": "/app/src/main/assets/apps/journal/index.html",
+      "url": "/assets/apps/journal/index.html",
       "icons": [{"src": "/icons/amy-fx-192.png", "sizes": "192x192", "type": "image/png"}]
     },
     {
       "name": "Amy FX Academy",
       "short_name": "Academy",
       "description": "Buka materi Amy FX Academy",
-      "url": "/app/src/main/assets/apps/academy/index.html",
+      "url": "/assets/apps/academy/index.html",
       "icons": [{"src": "/icons/amy-fx-192.png", "sizes": "192x192", "type": "image/png"}]
     }
   ]

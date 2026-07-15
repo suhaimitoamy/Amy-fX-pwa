@@ -36,5 +36,5 @@ jobs:
           curl --fail --silent --show-error http://127.0.0.1:4173/ >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:4173/manifest.webmanifest >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:4173/service-worker.js >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:4173/app/src/main/assets/apps/mapping/index.html >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:4173/app/src/main/assets/apps/market-intel/index.html >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/assets/apps/mapping/index.html >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/assets/apps/market-intel/index.html >/dev/null

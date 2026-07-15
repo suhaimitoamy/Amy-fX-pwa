@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-const enginePath = new URL('../app/src/main/assets/apps/mapping/js/engine/ict-core.js', import.meta.url);
+const enginePath = new URL('../assets/apps/mapping/js/engine/ict-core.js', import.meta.url);
 const engine = await import(enginePath.href);
 
 const candle = (open, high, low, close) => ({ open, high, low, close });

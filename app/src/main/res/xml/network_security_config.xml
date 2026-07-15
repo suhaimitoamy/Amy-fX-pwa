@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<network-security-config>
-    <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">wliecyxzlwhmtftnfnps.supabase.co</domain>
-        <domain includeSubdomains="true">api.twelvedata.com</domain>
-        <domain includeSubdomains="true">ws.twelvedata.com</domain>
-    </domain-config>
-</network-security-config>

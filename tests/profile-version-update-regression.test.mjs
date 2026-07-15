@@ -4,9 +4,9 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const versionUrl = new URL('../app/src/main/assets/app-version.js', import.meta.url);
-const checkerUrl = new URL('../app/src/main/assets/update-checker.js', import.meta.url);
-const indexUrl = new URL('../app/src/main/assets/index.html', import.meta.url);
+const versionUrl = new URL('../assets/app-version.js', import.meta.url);
+const checkerUrl = new URL('../assets/update-checker.js', import.meta.url);
+const indexUrl = new URL('../assets/index.html', import.meta.url);
 
 function source(url) {
   return readFileSync(url, 'utf8');

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(pwd)"
-MAPPING="$ROOT/app/src/main/assets/apps/mapping/index.html"
+MAPPING="$ROOT/assets/apps/mapping/index.html"
 GRADLE="$ROOT/app/build.gradle.kts"
 NOTES="$ROOT/DASHBOARD_ANALYZE_FIX_NOTES.md"
 

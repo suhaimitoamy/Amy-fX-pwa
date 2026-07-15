@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-const outlookUrl = new URL('../app/src/main/assets/apps/mapping/js/outlook/market-outlook-core.js', import.meta.url);
+const outlookUrl = new URL('../assets/apps/mapping/js/outlook/market-outlook-core.js', import.meta.url);
 const outlook = await import(outlookUrl.href);
 
 function candles(start = 4000, direction = 1, count = 80) {
