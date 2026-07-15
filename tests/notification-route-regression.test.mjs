@@ -13,6 +13,6 @@ test('native notification gate memiliki tujuan eksplisit untuk setiap modul utam
 });
 
 test('notifikasi tanpa URL memakai tujuan modul hasil routing', () => {
-  assert.match(activity, /url \?: AmyFxNotificationGate\.routeUrl\(route\)/);
+  assert.match(activity, /normalizeLocalUrl\(url\)[\s\S]*\?: AmyFxNotificationGate\.routeUrl\(route\)/);
   assert.match(activity, /putExtra\("target_url", routedUrl\)/);
 });

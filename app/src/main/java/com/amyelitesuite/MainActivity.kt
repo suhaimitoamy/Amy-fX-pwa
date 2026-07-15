@@ -655,19 +655,11 @@ class MainActivity : Activity() {
                 }
 
                 val prefs = mContext.getSharedPreferences("AmyFXPrefs", Context.MODE_PRIVATE)
-                val cleanedApiKey = apiKey?.trim()
-                val storedApiKey = prefs.getString("api_key", null)
-                if (!cleanedApiKey.isNullOrBlank() && cleanedApiKey != "undefined" && cleanedApiKey != "null") {
-                    prefs.edit().putString("api_key", cleanedApiKey).putBoolean("scanner_enabled", true).apply()
-                    SecurePrefs.putString(mContext, "api_key", cleanedApiKey)
-                } else if (storedApiKey.isNullOrBlank() && SecurePrefs.getString(mContext, "api_key", null).isNullOrBlank()) {
-                    (mContext as Activity).runOnUiThread {
-                        Toast.makeText(mContext, "API key belum tersedia. Buka Mapping > Settings lalu Save & Connect dulu.", Toast.LENGTH_LONG).show()
-                    }
-                    return
-                } else {
-                    prefs.edit().putBoolean("scanner_enabled", true).apply()
-                }
+                prefs.edit()
+                    .remove("api_key")
+                    .putBoolean("scanner_enabled", true)
+                    .apply()
+                SecurePrefs.remove(mContext, "api_key")
                 val cleanBsl = bsl?.trim()?.takeIf { it.isNotBlank() && it != "undefined" && it != "null" }
                 val cleanSsl = ssl?.trim()?.takeIf { it.isNotBlank() && it != "undefined" && it != "null" }
                 prefs.edit().apply {
@@ -764,7 +756,8 @@ class MainActivity : Activity() {
                 val route = AmyFxNotificationGate.routeFor(title, message)
                 val intent = Intent(mContext, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    val destination = url ?: AmyFxNotificationGate.routeUrl(route)
+                    val destination = this@MainActivity.normalizeLocalUrl(url)
+                        ?: AmyFxNotificationGate.routeUrl(route)
                     val routedUrl = if (destination.contains("apps/mapping/index.html") && !destination.contains("#")) "$destination#$route" else destination
                     putExtra("target_url", routedUrl)
                     putExtra("amyfx_route", route)
@@ -784,7 +777,7 @@ class MainActivity : Activity() {
                 }
 
                 val notification = builder
-                    .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                    .setSmallIcon(R.drawable.ic_stat_amy_fx)
                     .setContentTitle(title)
                     .setContentText(message)
                     .setStyle(Notification.BigTextStyle().bigText(message))

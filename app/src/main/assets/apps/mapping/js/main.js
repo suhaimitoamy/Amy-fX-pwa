@@ -33,7 +33,7 @@ export const TF = {
 export const state = {
   tab: 'Dashboard',
   tf: 'M15',
-  key: localStorage.getItem('twelve_api_key') || '',
+  key: '',
   price: Number(localStorage.getItem('last_price') || 0),
   conn: 'Offline',
   logs: JSON.parse(localStorage.getItem('amy_mapping_logs') || '[]'),
@@ -195,6 +195,8 @@ function syncAutomaticScannerUi() {
 }
 
 function initApp() {
+  try { localStorage.removeItem('twelve_api_key'); } catch (_) {}
+
   document.querySelectorAll('.nav button')
     .forEach(button => button.addEventListener('click', () => setTab(button.dataset.tab)));
 

@@ -1,4 +1,11 @@
-:root{--amy-native-back-safe:42px}
+:root{
+  --amy-native-back-safe:42px;
+  --amy-journal-gold:#d4af37;
+  --amy-journal-green:#39d98a;
+  --amy-journal-red:#ff6b75;
+  --amy-journal-surface:rgba(255,255,255,.045);
+  --amy-journal-border:rgba(212,175,55,.20)
+}
 #amy-fx-home-button{font-size:10px!important;padding:5px 8px!important;max-width:86px!important;opacity:.88!important}
 .topbar,.app-header,.header,.library-header{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!important}
 #selectModeBtn,#clearFiltersBtn{display:none!important}
@@ -6,4 +13,82 @@ body.has-library-items #selectModeBtn{display:inline-flex!important}
 body.has-active-filter #clearFiltersBtn{display:inline-flex!important}
 #assistantView{padding-bottom:150px!important}
 .amy-ai-key-panel{margin:14px 0 18px;padding:14px;border-radius:18px;border:1px solid rgba(212,175,55,.24);background:rgba(0,0,0,.22)}
-.amy-ai-key-panel h3{margin:0 0 10px;color:#d4af37}.amy-ai-key-panel label{display:block;font-weight:800;margin-top:10px}.amy-ai-key-panel input,.amy-ai-key-panel select{width:100%;box-sizing:border-box;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:11px;background:rgba(0,0,0,.24);color:inherit}.amy-ai-key-panel button{margin-top:10px;border:0;border-radius:999px;padding:10px 16px;background:#d4af37;color:#111;font-weight:900}.amy-ai-status{font-size:12px;opacity:.72;margin-top:8px}
+.amy-ai-key-panel h3{margin:0 0 10px;color:#d4af37}
+.amy-ai-key-panel label{display:block;font-weight:800;margin-top:10px}
+.amy-ai-key-panel input,.amy-ai-key-panel select{width:100%;box-sizing:border-box;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:11px;background:rgba(0,0,0,.24);color:inherit}
+.amy-ai-key-panel button{margin-top:10px;border:0;border-radius:999px;padding:10px 16px;background:#d4af37;color:#111;font-weight:900}
+.amy-ai-status{font-size:12px;opacity:.72;margin-top:8px}
+
+#journalView{padding-bottom:150px}
+#journalView>.section-head{align-items:center;gap:12px}
+#journalView #newJournalBtn{min-height:44px;box-shadow:0 8px 24px rgba(212,175,55,.16)}
+.amy-journal-dashboard{margin:14px 0 18px;padding:14px;border:1px solid var(--amy-journal-border);border-radius:22px;background:radial-gradient(circle at 90% -20%,rgba(212,175,55,.14),transparent 42%),linear-gradient(145deg,rgba(20,20,17,.96),rgba(8,9,8,.96));box-shadow:0 18px 50px rgba(0,0,0,.24)}
+.amy-journal-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.amy-journal-stat{min-width:0;padding:12px;border-radius:15px;border:1px solid rgba(255,255,255,.07);background:var(--amy-journal-surface)}
+.amy-journal-stat span{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.65}
+.amy-journal-stat strong{display:block;margin-top:5px;font-size:18px;overflow:hidden;text-overflow:ellipsis}
+.amy-journal-stat.is-positive strong{color:var(--amy-journal-green)}
+.amy-journal-stat.is-negative strong{color:var(--amy-journal-red)}
+.amy-journal-toolbar{display:grid;grid-template-columns:1fr;gap:10px;margin-top:13px}
+.amy-journal-search,.amy-journal-filter{display:grid;gap:6px}
+.amy-journal-search>span,.amy-journal-filter>span{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.62}
+.amy-journal-search input,.amy-journal-filter select{width:100%;min-height:43px;box-sizing:border-box;border:1px solid rgba(255,255,255,.10);border-radius:13px;padding:10px 12px;background:rgba(0,0,0,.28);color:inherit;outline:none}
+.amy-journal-search input:focus,.amy-journal-filter select:focus{border-color:rgba(212,175,55,.7);box-shadow:0 0 0 3px rgba(212,175,55,.08)}
+.amy-journal-filter-slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.amy-journal-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px}
+.amy-journal-tools>span{font-size:11px;opacity:.72;margin-right:auto}
+.amy-journal-tools button{border:1px solid rgba(212,175,55,.22);border-radius:999px;padding:8px 10px;background:rgba(212,175,55,.08);color:inherit;font-size:11px;font-weight:800}
+.amy-journal-tools button:active{transform:scale(.97)}
+.amy-journal-draft-status.has-draft{color:var(--amy-journal-gold);opacity:1!important}
+.amy-journal-quick-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:14px;padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:15px;background:rgba(255,255,255,.025)}
+.amy-journal-quick-actions>span{font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-right:auto}
+.amy-journal-quick-actions button{border:1px solid rgba(212,175,55,.20);border-radius:999px;padding:7px 11px;background:rgba(212,175,55,.07);color:inherit;font-size:11px;font-weight:850}
+.amy-journal-extended{margin:14px 0;padding:13px;border:1px solid rgba(212,175,55,.18);border-radius:18px;background:rgba(212,175,55,.035)}
+.amy-journal-extended-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.amy-journal-extended-head div{display:grid;gap:2px}
+.amy-journal-extended-head span{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--amy-journal-gold)}
+.amy-journal-extended-head strong{font-size:15px}
+#amyJournalRrOutput{padding:6px 10px;border-radius:999px;background:rgba(212,175,55,.12);color:var(--amy-journal-gold);font-size:12px;font-weight:900}
+.amy-journal-extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.amy-journal-extra-grid label{display:grid;gap:5px}
+.amy-journal-extra-grid label>span{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.62}
+.amy-journal-extra-grid input,.amy-journal-extra-grid select{width:100%;min-width:0;box-sizing:border-box;border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:10px;background:rgba(0,0,0,.25);color:inherit}
+.amy-journal-checklist{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.amy-journal-checklist label{display:flex;align-items:center;gap:8px;font-size:12px;padding:8px 10px;border-radius:11px;background:rgba(0,0,0,.18)}
+.amy-journal-checklist input{accent-color:var(--amy-journal-gold)}
+.amy-journal-validation{min-height:0;margin:9px 0 0;font-size:11px;line-height:1.45}
+.amy-journal-validation.has-warning{color:#ffbd66}
+#journalForm.journal-editor{padding:15px;border-radius:22px;border:1px solid rgba(212,175,55,.20);background:linear-gradient(160deg,rgba(20,20,18,.98),rgba(8,9,8,.98));box-shadow:0 22px 60px rgba(0,0,0,.30)}
+#journalForm .field input,#journalForm .field select,#journalForm .field textarea{font-size:16px}
+#journalForm .form-actions{position:sticky;bottom:calc(82px + env(safe-area-inset-bottom,0px));z-index:8;padding:10px;margin:10px -5px -5px;border-radius:16px;background:rgba(8,9,8,.92);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.06)}
+.journal-date-group{overflow:hidden;border:1px solid rgba(255,255,255,.07);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.015));margin-bottom:11px}
+.journal-date-group[hidden]{display:none!important}
+.journal-date-head{min-height:66px;padding:13px 14px}
+.journal-date-head span{min-width:0}
+.journal-date-head strong{font-size:15px}
+.journal-date-head small{display:block;margin-top:4px;opacity:.62}
+.journal-date-head em{font-style:normal;font-weight:900;color:var(--amy-journal-gold)}
+.journal-date-body{padding:0 10px 10px}
+.journal-card{border:1px solid rgba(255,255,255,.08)!important;border-radius:16px!important;background:rgba(0,0,0,.24)!important;box-shadow:none!important}
+.journal-card[hidden]{display:none!important}
+.journal-card-head{display:grid!important;grid-template-columns:minmax(0,1fr);gap:10px!important;padding:13px!important}
+.journal-card-head>div:first-child{min-width:0;cursor:pointer}
+.journal-card-head h3{font-size:15px;margin:0 0 5px}
+.journal-card-head p{margin:0;line-height:1.45;word-break:break-word}
+.journal-actions{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+.journal-actions .small-button{min-height:34px;padding:7px 11px!important}
+.journal-actions .danger{margin-left:auto}
+.journal-body{padding:0 13px 13px!important}
+.journal-text-block{border-radius:12px!important;background:rgba(255,255,255,.035)!important;padding:11px!important}
+.journal-text-block p{white-space:pre-wrap;line-height:1.55}
+.journal-attachments{padding:0 13px 13px!important}
+.journal-attachment-wrap{border-radius:13px;overflow:hidden}
+.journal-attachment-remove{width:28px!important;height:28px!important}
+.amy-journal-extra-strip{display:flex;gap:6px;flex-wrap:wrap;padding:0 13px 10px}
+.amy-journal-extra-strip span{padding:5px 8px;border-radius:999px;border:1px solid rgba(212,175,55,.18);background:rgba(212,175,55,.07);color:#ead58e;font-size:10px;font-weight:850}
+.amy-journal-plan-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:10px}
+.amy-journal-plan-detail div{display:grid;gap:3px;padding:9px;border-radius:11px;background:rgba(212,175,55,.045);border:1px solid rgba(212,175,55,.10)}
+.amy-journal-plan-detail span{font-size:9px;text-transform:uppercase;letter-spacing:.07em;opacity:.58}
+.amy-journal-plan-detail strong{font-size:12px;overflow:hidden;text-overflow:ellipsis}
+@media(min-width:720px){.amy-journal-stats{grid-template-columns:repeat(4,minmax(0,1fr))}.amy-journal-toolbar{grid-template-columns:minmax(220px,1.5fr) minmax(360px,2fr)}.amy-journal-filter-slots{grid-template-columns:repeat(4,minmax(0,1fr))}.amy-journal-extra-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.amy-journal-checklist{grid-template-columns:repeat(2,minmax(0,1fr))}.journal-card-head{grid-template-columns:minmax(0,1fr) auto!important}.amy-journal-plan-detail{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:480px){#journalView>.section-head{align-items:flex-start}#journalView #newJournalBtn{padding:10px 12px;font-size:12px}.amy-journal-dashboard{padding:11px;border-radius:18px}.amy-journal-stat{padding:10px}.amy-journal-stat strong{font-size:15px}.amy-journal-filter-slots{grid-template-columns:1fr 1fr}.amy-journal-tools button{flex:1 1 auto}.amy-journal-extra-grid{grid-template-columns:1fr 1fr}.journal-actions .small-button{flex:1}.journal-actions .danger{margin-left:0}}

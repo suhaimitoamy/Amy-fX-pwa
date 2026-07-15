@@ -1,0 +1,23 @@
+.asia-range-block{margin-top:12px;padding:11px;border:1px solid rgba(212,175,55,.2);border-radius:14px;background:linear-gradient(180deg,rgba(212,175,55,.055),rgba(0,0,0,.18))}
+.asia-range-head,.asia-strip-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.asia-range-head b,.asia-strip-head span{color:var(--gold);font-size:11px;font-weight:950;letter-spacing:.08em}
+.asia-range-head small,.asia-strip-head small{color:var(--muted);font-size:9px;text-align:right}
+.asia-range-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}
+.asia-level{background:#090909;border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:9px}
+.asia-level small{display:block;color:var(--muted);font-size:9px;font-weight:900}
+.asia-level strong{display:block;margin-top:2px;font-size:15px;color:#f5f5f5}
+.asia-level span{display:block;margin-top:4px;font-size:9px;font-weight:900;color:var(--muted)}
+.asia-level.status-sedang-diuji,.asia-level.status-berkembang,.asia-level.status-lewat-live{border-color:rgba(212,175,55,.5)}
+.asia-level.status-sedang-diuji span,.asia-level.status-berkembang span,.asia-level.status-lewat-live span{color:var(--gold)}
+.asia-level.status-tersapu-wick{border-color:rgba(251,191,36,.48);background:rgba(251,191,36,.055)}
+.asia-level.status-tersapu-wick span{color:#fbbf24}
+.asia-level.status-close-break{border-color:rgba(74,222,128,.44);background:rgba(74,222,128,.05)}
+.asia-level.status-close-break span{color:var(--green)}
+.asia-range-summary{margin-top:8px;color:#cfcfcf;font-size:10px;line-height:1.4}
+.asia-range-empty{margin-top:8px;color:var(--muted);font-size:10px}
+.asia-liquidity-strip{padding:11px 13px!important;margin-bottom:12px!important}
+.asia-strip-levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.asia-strip-levels>span{display:flex;align-items:center;justify-content:space-between;gap:5px;background:#0b0b0b;border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:8px;font-size:10px;color:var(--muted)}
+.asia-strip-levels b{color:#fff;font-size:12px}
+.asia-strip-levels em{font-style:normal;color:var(--gold);font-size:8px;font-weight:900;text-align:right}
+@media(max-width:520px){.asia-range-grid,.asia-strip-levels{grid-template-columns:repeat(2,minmax(0,1fr))}}

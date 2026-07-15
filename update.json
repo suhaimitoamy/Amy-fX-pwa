@@ -1,23 +1,25 @@
 {
-  "latest_version_code": 15,
-  "latest_version_name": "1.3.2",
-  "versionCode": 15,
-  "version": "1.3.2",
-  "releaseDate": "2026-07-12",
+  "latest_version_code": 30,
+  "latest_version_name": "1.4.7",
+  "versionCode": 30,
+  "version": "1.4.7",
+  "releaseDate": "2026-07-15",
   "apk_url": "https://github.com/suhaimitoamy/Amy-fx/releases/download/amyfx-latest/AmyFX-latest.apk",
   "downloadUrl": "https://github.com/suhaimitoamy/Amy-fx/releases/download/amyfx-latest/AmyFX-latest.apk",
   "force_update": false,
   "mandatory": false,
   "release_notes": [
-    "BSL dan SSL sekarang menampilkan harga level terbaru",
-    "Level otomatis diperbarui setelah Mapping selesai menganalisis market",
-    "Data Mapping terbaru diprioritaskan agar level lama tidak tampil",
-    "Uji pembaruan langsung dari v1.3.1 tanpa menghapus aplikasi"
+    "Mengaktifkan Amy Concept Engine V2 hasil validasi backtest 2022–2026 pada Mapping",
+    "Memperketat BOS dan CHOCH dengan close, displacement, dan penetration berbasis ATR",
+    "Menambahkan lifecycle FVG ke IFVG serta Order Block ke Breaker",
+    "Memperbaiki BSL, SSL, liquidity sweep, dan draw target agar tidak dianggap sebagai sinyal arah",
+    "Mempertahankan jurnal, progres Academy, pengaturan, dan data lokal saat update tanpa uninstall"
   ],
   "changelog": [
-    "BSL dan SSL sekarang menampilkan harga level terbaru",
-    "Level otomatis diperbarui setelah Mapping selesai menganalisis market",
-    "Data Mapping terbaru diprioritaskan agar level lama tidak tampil",
-    "Uji pembaruan langsung dari v1.3.1 tanpa menghapus aplikasi"
+    "Mengaktifkan Amy Concept Engine V2 hasil validasi backtest 2022–2026 pada Mapping",
+    "Memperketat BOS dan CHOCH dengan close, displacement, dan penetration berbasis ATR",
+    "Menambahkan lifecycle FVG ke IFVG serta Order Block ke Breaker",
+    "Memperbaiki BSL, SSL, liquidity sweep, dan draw target agar tidak dianggap sebagai sinyal arah",
+    "Mempertahankan jurnal, progres Academy, pengaturan, dan data lokal saat update tanpa uninstall"
   ]
 }

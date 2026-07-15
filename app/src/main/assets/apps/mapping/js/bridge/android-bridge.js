@@ -92,9 +92,10 @@ export function sendTargetsToNative() {
 }
 
 export function saveConnect() {
+  state.key = '';
+  try { localStorage.removeItem('twelve_api_key'); } catch (_) {}
   const input = document.getElementById('apiKey');
-  state.key = input?.value?.trim() || state.key || '';
-  if (state.key) localStorage.setItem('twelve_api_key', state.key);
+  if (input) input.value = '';
 
   state.bg = true;
   save();

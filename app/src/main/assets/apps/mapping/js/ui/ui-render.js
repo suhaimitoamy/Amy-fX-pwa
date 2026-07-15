@@ -146,7 +146,33 @@ export function amyDecisionCard(){
   </div><div class="decision-reason"><b>Penjelasan:</b><br>${d.reason}</div></section>`
 }
 
-export function validBreakInfo(){let r=state.result,tf=r?.tf,cs=state.candles?.[tf]||[],last=cs.at(-1),br=r?.st?.last,price=analyzeLivePrice();if(!r||!last||!br)return`<section class="card"><div class="kicker">VALID BREAK INFO</div><h2>Belum Ada Valid Break</h2><div class="break-reason">Belum ada BOS/CHOCH yang cukup jelas. Tunggu candle close yang valid.</div></section>`;let isSweep=br.breakType==='SWEEP_ONLY'||br.sweepOnly,isFailed=br.breakType==='BREAK_FAILED'||br.failed,isValid=br.breakType==='VALID_BREAK'||br.valid,title=isFailed?'BREAK FAILED':isSweep?'SWEEP ONLY':isValid?'VALID BREAK':'WAIT',dispNote=br.hasDisplacement?' dan didukung displacement':'',conclusion=isFailed?`Break sebelumnya gagal dipertahankan karena harga kembali close melewati level break.`:(isSweep?`Harga hanya menyapu level dengan wick, tetapi close belum valid melewati struktur.`:(isValid?`Candle close sudah valid melewati level struktur${dispNote}.`:`Belum ada BOS/CHOCH valid. Tunggu candle close yang jelas.`));return`<section class="card"><div class="kicker">VALID BREAK INFO</div><h2>${title}</h2><div class="break-grid"><div class="break-box"><small>Break Level</small><strong>${p2(br.price)}</strong></div><div class="break-box"><small>High / Low</small><strong>${p2(br.candleHigh)} / ${p2(br.candleLow)}</strong></div><div class="break-box"><small>Candle Close</small><strong>${p2(br.candleClose)}</strong></div><div class="break-box"><small>Structure</small><strong>${br.kind} ${br.dir}</strong></div><div class="break-box"><small>Harga Live</small><strong>${p2(price)}</strong></div><div class="break-box"><small>Displacement</small><strong>${br.hasDisplacement?'YA':'TIDAK'} (${p2(br.bodyRatio)})</strong></div></div><div class="break-reason"><b>Kesimpulan:</b><br>${conclusion}</div></section>`}
+export function validBreakInfo(){
+  const r=state.result,tf=r?.tf,cs=state.candles?.[tf]||[],last=cs.at(-1),br=r?.st?.lastEvent||r?.st?.last,price=analyzeLivePrice();
+  if(!r||!last||!br)return`<section class="card"><div class="kicker">VALID BREAK INFO</div><h2>Belum Ada Valid Break</h2><div class="break-reason">Belum ada BOS/CHOCH yang cukup jelas. Tunggu candle close yang valid.</div></section>`;
+  const isSweep=br.breakType==='SWEEP_ONLY'||br.sweepOnly;
+  const isFailed=br.breakType==='BREAK_FAILED'||br.failed;
+  const isValid=br.breakType==='VALID_BREAK'||br.valid;
+  const scope=br.structureScope||'MAJOR';
+  const isTransition=br.confirmationStage==='TRANSITION'||br.trendConfirmed===false;
+  const crossedBack=isValid&&(br.dir==='BULLISH'?price<br.price:price>br.price);
+  const atRisk=!isFailed&&!isSweep&&(br.atRisk||br.liveStatus==='AT_RISK'||crossedBack);
+  const confirmedTrend=r.st?.confirmedTrend||r.st?.trend||'NEUTRAL';
+  const nextLevel=Number(r.st?.transitionConfirmationLevel);
+  const nextText=Number.isFinite(nextLevel)?p2(nextLevel):'-';
+  let title='WAIT';
+  if(isFailed)title='BREAK FAILED';
+  else if(isSweep)title='SWEEP ONLY';
+  else if(atRisk)title=`${scope==='INTERNAL'?'INTERNAL CHOCH':'VALID BREAK'} AT RISK`;
+  else if(isValid&&isTransition)title=`INTERNAL ${br.kind} ${br.dir}`;
+  else if(isValid)title=`VALID ${br.kind} ${br.dir}`;
+  let conclusion='Belum ada BOS/CHOCH valid. Tunggu candle close yang jelas.';
+  if(isFailed)conclusion='Break gagal dipertahankan karena candle sudah kembali close melewati level break.';
+  else if(isSweep)conclusion='Harga hanya menyapu level dengan wick; belum ada candle close yang mengonfirmasi perubahan struktur.';
+  else if(atRisk)conclusion=`Break internal sudah close valid, tetapi harga live kembali ${br.dir==='BULLISH'?'di bawah':'di atas'} ${p2(br.price)}. Status AT RISK; tunggu penutupan candle ${tf} untuk menentukan hold atau failed break.`;
+  else if(isValid&&isTransition)conclusion=`Break internal valid dan didukung displacement, tetapi tren utama masih ${confirmedTrend}. Reversal belum terkonfirmasi${Number.isFinite(nextLevel)?`; tunggu break protected swing sekitar ${p2(nextLevel)}`:''}.`;
+  else if(isValid)conclusion=`Break mayor valid dan tren ${br.dir} sudah terkonfirmasi oleh candle close serta displacement.`;
+  return`<section class="card"><div class="kicker">VALID BREAK INFO</div><h2>${title}</h2><div class="break-grid"><div class="break-box"><small>Level yang diuji</small><strong>${p2(br.price)}</strong></div><div class="break-box"><small>High / Low candle</small><strong>${p2(br.candleHigh)} / ${p2(br.candleLow)}</strong></div><div class="break-box"><small>Candle close</small><strong>${p2(br.candleClose)}</strong></div><div class="break-box"><small>Harga live</small><strong>${p2(price)}</strong></div><div class="break-box"><small>Percobaan struktur</small><strong>${scope==='INTERNAL'?'INTERNAL ':''}${br.kind} ${br.dir}</strong></div><div class="break-box"><small>Struktur terkonfirmasi</small><strong>${confirmedTrend}</strong></div><div class="break-box"><small>Status break</small><strong>${atRisk?'AT RISK':isTransition?'TRANSITION':isFailed?'FAILED':isSweep?'SWEEP':'CONFIRMED'}</strong></div><div class="break-box"><small>Konfirmasi berikutnya</small><strong>${nextText}</strong></div><div class="break-box" style="grid-column:span 2"><small>Displacement</small><strong>${br.hasDisplacement?'KUAT + TERKONFIRMASI':'TIDAK TERKONFIRMASI'} · body ratio ${p2(br.bodyRatio)}</strong></div></div><div class="break-reason"><b>Kesimpulan:</b><br>${conclusion}</div></section>`;
+}
 
 export function m1h4MappingTable(){
   const rows=m1h4List().map(({tf,a})=>{
@@ -177,11 +203,15 @@ export function plainMappingExplanation(){
   const htf=r.htfNarrative;
   const draw=r.liquidityHierarchy?.drawTarget;
   const structure=r.st?.last;
-  const structureText=structure?.breakType==='VALID_BREAK'
-    ? `Candle sudah menutup melewati struktur ${p2(structure.price)} dengan dorongan yang cukup. Arah break: ${readableBias(structure.dir)}.`
-    : structure?.breakType==='SWEEP_ONLY'
-      ? `Harga baru menyapu level ${p2(structure.price)} dengan wick. Belum ada penutupan candle yang mengonfirmasi perubahan arah.`
-      : 'Belum ada break struktur yang cukup kuat untuk dijadikan pemicu entry.';
+  const structureText=structure?.breakType==='VALID_BREAK'&&structure?.atRisk
+    ? `Break ${p2(structure.price)} sedang AT RISK karena harga live kembali ke sisi sebelumnya. Tunggu candle close sebelum menganggap perubahan struktur bertahan.`
+    : structure?.breakType==='VALID_BREAK'&&(structure?.confirmationStage==='TRANSITION'||structure?.trendConfirmed===false)
+      ? `Candle menutup melewati struktur internal ${p2(structure.price)} dengan dorongan yang cukup, tetapi tren utama masih ${readableBias(r.st?.confirmedTrend)}. Reversal belum terkonfirmasi${Number.isFinite(Number(r.st?.transitionConfirmationLevel))?`; level berikutnya ${p2(r.st.transitionConfirmationLevel)}`:''}.`
+      : structure?.breakType==='VALID_BREAK'
+        ? `Candle sudah menutup melewati struktur mayor ${p2(structure.price)} dengan dorongan yang cukup. Tren terkonfirmasi: ${readableBias(r.st?.confirmedTrend||structure.dir)}.`
+        : structure?.breakType==='SWEEP_ONLY'
+          ? `Harga baru menyapu level ${p2(structure.price)} dengan wick. Belum ada penutupan candle yang mengonfirmasi perubahan arah.`
+          : 'Belum ada break struktur yang cukup kuat untuk dijadikan pemicu entry.';
   const targetText=draw
     ? `${draw.type==='BSL'?'Likuiditas di atas harga':'Likuiditas di bawah harga'} pada ${p2(draw.level)} menjadi target market yang paling masuk akal saat ini.`
     : 'Belum ada target likuiditas yang cukup jelas. Kondisi ini lebih aman untuk ditunggu.';

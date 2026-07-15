@@ -1,6 +1,19 @@
 const SUPABASE_NEWS_FEED =
   'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/news-feed';
 const TELEGRAM_SOURCE = 'SM_News_24h';
+const TELEGRAM_WEB_BASES = [
+  'https://telegram.me/s',
+  'https://telegram.dog/s'
+];
+
+let newsRelevancePromise;
+
+function loadNewsRelevance() {
+  if (!newsRelevancePromise) {
+    newsRelevancePromise = import('../lib/news-relevance.mjs');
+  }
+  return newsRelevancePromise;
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,35 +24,40 @@ export default async function handler(req, res) {
 
   const requestedLimit = Number.parseInt(String(req.query.limit || '20'), 10);
   const limit = Math.max(1, Math.min(Number.isFinite(requestedLimit) ? requestedLimit : 20, 50));
+  const telegramOnly = String(req.query.source || '').toLowerCase() === 'telegram';
 
-  try {
-    const central = await fetchJsonWithTimeout(
-      `${SUPABASE_NEWS_FEED}?limit=${limit}`,
-      { headers: { Accept: 'application/json' } },
-      9000
-    );
+  if (!telegramOnly) {
+    try {
+      const central = await fetchJsonWithTimeout(
+        `${SUPABASE_NEWS_FEED}?limit=${limit}`,
+        { headers: { Accept: 'application/json' } },
+        9000
+      );
 
-    if (Array.isArray(central?.news) && central.news.length > 0) {
-      res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
-      return res.status(200).json({
-        ...central,
-        count: central.news.length,
-        backend: 'supabase'
-      });
+      if (Array.isArray(central?.news) && central.news.length > 0) {
+        res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
+        return res.status(200).json({
+          ...central,
+          count: central.news.length,
+          backend: 'supabase'
+        });
+      }
+    } catch (error) {
+      console.warn('Supabase news feed unavailable, using Telegram fallback:', error?.message || error);
     }
-  } catch (error) {
-    console.warn('Supabase news feed unavailable, using Telegram fallback:', error?.message || error);
   }
 
   try {
-    const fallback = await scrapeTelegram(limit);
-    res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
+    const fallback = await scrapeTelegram(limit, !telegramOnly);
+    res.setHeader('Cache-Control', telegramOnly
+      ? 'no-store'
+      : 's-maxage=30, stale-while-revalidate=60');
     return res.status(200).json({
       source: TELEGRAM_SOURCE,
       updated: new Date().toISOString(),
       count: fallback.length,
       news: fallback,
-      backend: 'telegram_fallback'
+      backend: telegramOnly ? 'telegram_direct' : 'telegram_fallback'
     });
   } catch (error) {
     console.error('News API failed:', error);
@@ -69,21 +87,33 @@ async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 10000) {
   return response.json();
 }
 
-async function fetchTextWithRetry(url, options, retries = 2) {
+async function fetchTelegramHtml(retries = 2) {
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt += 1) {
-    try {
-      const response = await fetchWithTimeout(url, options, 12000);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return await response.text();
-    } catch (error) {
-      lastError = error;
-      if (attempt < retries) {
-        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+    for (const base of TELEGRAM_WEB_BASES) {
+      const url = `${base}/${TELEGRAM_SOURCE}?_=${Date.now()}`;
+      try {
+        const response = await fetchWithTimeout(url, {
+          headers: {
+            Accept: 'text/html,application/xhtml+xml',
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 AmyFX/1.0'
+          }
+        }, 15000);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const html = await response.text();
+        if (!html.includes(`data-post="${TELEGRAM_SOURCE}/`)) {
+          throw new Error('Telegram response contained no posts');
+        }
+        return html;
+      } catch (error) {
+        lastError = error;
       }
     }
+    if (attempt < retries) {
+      await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+    }
   }
-  throw lastError;
+  throw lastError || new Error('Telegram fetch failed');
 }
 
 async function translateToId(text) {
@@ -99,17 +129,17 @@ async function translateToId(text) {
   }
 }
 
-async function scrapeTelegram(limit) {
-  const html = await fetchTextWithRetry(
-    `https://t.me/s/${TELEGRAM_SOURCE}?_=${Date.now()}`,
-    { headers: { 'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 AmyFX/1.0' } }
-  );
+async function scrapeTelegram(limit, shouldTranslate = true) {
+  const { getNewsImpact, isRelevantNews } = await loadNewsRelevance();
+  const html = await fetchTelegramHtml();
+  const latest = sortNewestFirst(extractPosts(html)).slice(0, limit);
 
-  const latest = sortNewestFirst(filterGold(extractPosts(html))).slice(0, limit);
   return Promise.all(latest.map(async item => ({
     ...item,
+    impact: getNewsImpact(item.text),
+    relevant: isRelevantNews(item.text),
     textOriginal: item.text,
-    text: await translateToId(item.text)
+    text: shouldTranslate ? await translateToId(item.text) : item.text
   })));
 }
 
@@ -119,7 +149,7 @@ function extractPosts(html) {
 
   let match;
   while ((match = msgRegex.exec(html)) !== null) {
-    let text = match[2]
+    const text = match[2]
       .replace(/<br\s*\/?>/gi, '\n')
       .replace(/<[^>]+>/g, '')
       .replace(/&amp;/g, '&')
@@ -135,7 +165,7 @@ function extractPosts(html) {
     posts.push({
       id: match[1],
       text,
-      link: `https://t.me/${TELEGRAM_SOURCE}/${match[1]}`,
+      link: `https://telegram.me/${TELEGRAM_SOURCE}/${match[1]}`,
       time: extractTime(html, match.index, msgRegex.lastIndex)
     });
   }
@@ -150,23 +180,8 @@ function extractTime(html, start, end) {
   return before.match(/datetime="([^"]+)"/)?.[1] || '';
 }
 
-const GOLD_KEYWORDS = [
-  'gold', 'bullion', 'xau', 'xauusd', 'fed', 'fomc', 'powell', 'cpi',
-  'inflation', 'inflasi', 'ppi', 'pce', 'nfp', 'nonfarm', 'payroll',
-  'employment', 'unemployment', 'jobless', 'gdp', 'recession', 'resesi',
-  'interest rate', 'suku bunga', 'rate cut', 'rate hike', 'dovish', 'hawkish',
-  'yield', 'treasury', 'bond', 'dollar', 'usd', 'dxy', 'geopolitical',
-  'war', 'perang', 'attack', 'missile', 'iran', 'israel', 'russia',
-  'ukraine', 'china', 'tariff', 'sanctions', 'sanksi', 'oil', 'crude',
-  'central bank', 'ecb', 'boe', 'boj', 'pboc', 'safe haven', 'brics',
-  'dedollarization', 'pmi', 'ism', 'retail sales'
-];
-
-function filterGold(posts) {
-  return posts.filter(post => {
-    const text = post.text.toLowerCase();
-    return GOLD_KEYWORDS.some(keyword => text.includes(keyword));
-  });
+function filterGold(posts, isRelevantNews) {
+  return posts.filter(post => isRelevantNews(post.text));
 }
 
 function sortNewestFirst(posts) {

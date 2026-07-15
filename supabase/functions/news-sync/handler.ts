@@ -1,29 +1,15 @@
 import { cert, getApps, initializeApp } from 'npm:firebase-admin@13.0.1/app';
 import { getMessaging } from 'npm:firebase-admin@13.0.1/messaging';
+import { getNewsImpact, isRelevantNews } from '../../../lib/news-relevance.mjs';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const SOURCE = 'SM_News_24h';
-const TELEGRAM_URL = `https://t.me/s/${SOURCE}`;
+const TELEGRAM_WEB_BASES = [
+  'https://telegram.me/s',
+  'https://telegram.dog/s'
+];
 const RETRY_WINDOW_MS = 15 * 60 * 1000;
-
-const GOLD_KEYWORDS = [
-  'gold', 'bullion', 'xau', 'xauusd', 'fed', 'fomc', 'powell', 'jerome',
-  'cpi', 'inflation', 'inflasi', 'ppi', 'pce', 'nfp', 'nonfarm', 'payroll',
-  'employment', 'unemployment', 'jobless', 'gdp', 'recession', 'resesi',
-  'interest rate', 'suku bunga', 'rate cut', 'rate hike', 'dovish', 'hawkish',
-  'yield', 'treasury', 'bond', 'dollar', 'usd', 'dxy', 'geopolitical', 'war',
-  'perang', 'attack', 'missile', 'iran', 'israel', 'russia', 'ukraine', 'china',
-  'tariff', 'sanctions', 'sanksi', 'oil', 'crude', 'central bank', 'ecb', 'boe',
-  'boj', 'pboc', 'safe haven', 'brics', 'dedollarization', 'pmi', 'ism',
-  'retail sales'
-];
-
-const HIGH_IMPACT_KEYWORDS = [
-  'fomc', 'powell', 'cpi', 'nfp', 'nonfarm', 'payroll', 'pce', 'ppi',
-  'interest rate', 'rate cut', 'rate hike', 'war', 'attack', 'missile',
-  'sanctions', 'tariff', 'recession', 'gdp'
-];
 
 const dbHeaders = {
   apikey: SERVICE_ROLE_KEY,
@@ -109,21 +95,39 @@ function extractPosts(html: string) {
       id: match[1],
       text,
       time: extractTime(html, match.index, regex.lastIndex),
-      link: `https://t.me/${SOURCE}/${match[1]}`
+      link: `https://telegram.me/${SOURCE}/${match[1]}`
     });
   }
 
   return posts.sort((a, b) => Number(b.id) - Number(a.id));
 }
 
-function relevant(text: string) {
-  const lower = text.toLowerCase();
-  return GOLD_KEYWORDS.some(keyword => lower.includes(keyword));
-}
+async function fetchSourcePosts() {
+  let lastError: unknown;
 
-function impact(text: string) {
-  const lower = text.toLowerCase();
-  return HIGH_IMPACT_KEYWORDS.some(keyword => lower.includes(keyword)) ? 'high' : 'medium';
+  for (const base of TELEGRAM_WEB_BASES) {
+    try {
+      const response = await fetchTimed(`${base}/${SOURCE}?_=${Date.now()}`, {
+        headers: {
+          Accept: 'text/html,application/xhtml+xml',
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AmyFX-NewsSync/1.0'
+        }
+      }, 20000);
+      const html = await response.text();
+      if (!response.ok) {
+        throw new Error(`Telegram ${response.status}: ${html.slice(0, 300)}`);
+      }
+
+      const posts = extractPosts(html).slice(0, 50);
+      if (!posts.length) throw new Error('Telegram response contained no posts');
+      return posts;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  const message = lastError instanceof Error ? lastError.message : String(lastError || 'unknown');
+  throw new Error(`All Telegram web endpoints failed: ${message}`);
 }
 
 async function translate(text: string) {
@@ -222,12 +226,14 @@ async function disableDevice(id: string) {
 async function pushNews(inserted: any[]) {
   const since = new Date(Date.now() - RETRY_WINDOW_MS).toISOString();
   const recent = await rest(
-    `news?select=id,telegram_post_id,text_original,text_indonesian,impact,source,created_at&created_at=gte.${encodeURIComponent(since)}&order=created_at.asc,id.asc&limit=20`
+    `news?select=id,telegram_post_id,text_original,text_indonesian,impact,source,created_at&created_at=gte.${encodeURIComponent(since)}&order=created_at.asc,id.asc&limit=50`
   ) || [];
 
   const newsMap = new Map<number, any>();
   for (const row of [...recent, ...inserted]) newsMap.set(Number(row.id), row);
-  const newsRows = [...newsMap.values()];
+  const newsRows = [...newsMap.values()].filter(
+    row => isRelevantNews(row.text_original || row.text_indonesian || '')
+  );
   const devices = await rest(
     'device_tokens?select=id,fcm_token&enabled=eq.true&order=last_seen_at.desc&limit=500'
   ) || [];
@@ -338,15 +344,8 @@ export async function handler(req: Request) {
     if (!(await authorized(req))) return json({ error: 'unauthorized' }, 401);
     runId = await startRun();
 
-    const telegram = await fetchTimed(`${TELEGRAM_URL}?_=${Date.now()}`, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AmyFX/1.0' }
-    });
-    if (!telegram.ok) throw new Error(`Telegram HTTP ${telegram.status}`);
-
-    const candidates = extractPosts(await telegram.text())
-      .filter(post => relevant(post.text))
-      .slice(0, 30);
-    const existing = await rest('news?select=telegram_post_id&order=id.desc&limit=300') || [];
+    const candidates = await fetchSourcePosts();
+    const existing = await rest('news?select=telegram_post_id&order=id.desc&limit=500') || [];
     const existingIds = new Set(existing.map((row: any) => String(row.telegram_post_id)));
     const missing = candidates.filter(post => !existingIds.has(post.id));
 
@@ -360,7 +359,7 @@ export async function handler(req: Request) {
         published_at: post.time && !Number.isNaN(Date.parse(post.time))
           ? new Date(post.time).toISOString()
           : null,
-        impact: impact(post.text),
+        impact: getNewsImpact(post.text),
         source: SOURCE,
         source_url: post.link,
         content_hash: await hash(post.text)

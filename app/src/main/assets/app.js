@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const projects = [
     { id: 'indikator', title: 'Indikator TradingView', badge: 'Library', icon: 'chart', desc: 'Library indikator & file Pine Script', target: 'internal' },
     { id: 'jurnal', title: 'Jurnal Trading', badge: 'Jurnal', icon: 'journal', desc: 'Catat jurnal, evaluasi performa, dan riwayat trading', target: 'apps/journal/index.html' },
-    { id: 'academy', title: 'Amy Trading Academy', badge: 'Learning', icon: 'academy', desc: 'Materi belajar trading dalam aplikasi', target: 'apps/academy/index.html' },
+    { id: 'academy', title: 'Tutorial Trading', badge: 'Learning', icon: 'academy', desc: 'Materi belajar trading dalam aplikasi', target: 'apps/academy/index.html' },
     { id: 'mapping', title: 'Mapping', badge: 'Mapping', icon: 'mapping', desc: 'Mapping market & chart untuk analisis peluang', target: 'apps/mapping/index.html' },
-    { id: 'intel', title: 'Market Intel', badge: 'News', icon: 'chart', desc: 'Breaking News & Liquidity Heatmap XAU/USD', target: 'apps/market-intel/index.html' }
+    { id: 'intel', title: 'Berita', badge: 'News', icon: 'chart', desc: 'Breaking News & Liquidity Heatmap XAU/USD', target: 'apps/market-intel/index.html' }
   ];
 
   function showLoadingOverlay() {

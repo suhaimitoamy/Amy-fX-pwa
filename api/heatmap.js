@@ -1,8 +1,9 @@
 /**
- * Amy FX — Liquidity Heatmap API (Vercel Serverless)
- * Sumber: TwelveData candle data → komputasi zona likuiditas
- * Metode: Swing clustering + bucket scoring
- * Cache: 30 detik
+ * Amy FX — Dynamic Liquidity Heatmap API
+ *
+ * Sumber: TwelveData M15 candle data.
+ * Mesin: swing clustering adaptif, recency weighting, sweep/reclaim,
+ * close-break lifecycle, polarity flip, dan active-zone selection.
  */
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,121 +12,128 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    const { symbol = 'XAU/USD', interval = '15min', outputsize = '200' } = req.query;
+    const { symbol = 'XAU/USD', interval = '15min', outputsize = '240' } = req.query;
     const apiKey = process.env.TWELVEDATA_API_KEY || req.query.apikey;
 
+    if (symbol !== 'XAU/USD') {
+      return res.status(403).json({ zones: [], error: 'symbol_not_allowed' });
+    }
     if (!apiKey) {
-      return res.status(400).json({ error: 'API key required (set TWELVEDATA_API_KEY env)' });
+      return res.status(400).json({ zones: [], error: 'api_key_required' });
     }
 
-    // Fetch candle data
-    const candles = await fetchCandles(symbol, interval, outputsize, apiKey);
+    const safeSize = Math.min(Math.max(parseInt(outputsize, 10) || 240, 80), 500);
+    const candles = await fetchCandles(symbol, interval, safeSize, apiKey);
     if (!candles.length) {
-      return res.status(200).json({ zones: [], error: 'no_data' });
+      return res.status(200).json({
+        symbol,
+        interval,
+        currentPrice: null,
+        updated: new Date().toISOString(),
+        sourceCandleTime: null,
+        zones: [],
+        summary: emptySummary(),
+        meta: { candleCount: 0, accuracyProfile: 'BACKTEST_2022_2026' },
+        error: 'no_data'
+      });
     }
 
-    // Hitung heatmap zones
-    const zones = computeHeatmap(candles);
-    const currentPrice = candles[candles.length - 1].close;
+    const { computeDynamicHeatmap } = await import('../lib/heatmap-core.mjs');
+    const result = computeDynamicHeatmap(candles, {
+      swingWindow: 2,
+      maxZonesPerSide: 6
+    });
+    const summary = precisionSummary(result);
 
-    res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
+    res.setHeader('Cache-Control', 's-maxage=15, stale-while-revalidate=20');
     return res.status(200).json({
       symbol,
       interval,
-      currentPrice,
+      currentPrice: result.currentPrice,
       updated: new Date().toISOString(),
-      zones
+      sourceCandleTime: result.meta?.sourceCandleTime || candles.at(-1)?.time || null,
+      zones: result.zones,
+      summary,
+      meta: {
+        ...result.meta,
+        accuracyProfile: 'BACKTEST_2022_2026',
+        nearestDrawRole: 'LIQUIDITY_TARGET_ONLY',
+        primaryDistanceAtr: 1.5,
+        secondaryDistanceAtr: 3
+      }
     });
-
-  } catch (e) {
-    return res.status(502).json({ zones: [], error: 'provider_failed' });
+  } catch (error) {
+    console.error('heatmap provider failed', error);
+    return res.status(502).json({
+      currentPrice: null,
+      updated: new Date().toISOString(),
+      zones: [],
+      summary: emptySummary(),
+      error: 'provider_failed'
+    });
   }
 }
 
-async function fetchCandles(symbol, interval, size, apikey) {
-  const url = `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(symbol)}&interval=${interval}&outputsize=${size}&apikey=${apikey}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`TwelveData HTTP ${res.status}`);
-  const data = await res.json();
+function emptySummary() {
+  return {
+    pressure: 'WAITING DATA',
+    liquidityConcentration: 'WAITING DATA',
+    directionalSignal: 'NEUTRAL',
+    directionalUse: false,
+    nearestDraw: null,
+    activeZones: 0,
+    transitionZones: 0,
+    interpretation: 'Heatmap belum memiliki data yang cukup.'
+  };
+}
+
+function classifyDraw(draw, currentPrice, atr) {
+  if (!draw || !Number.isFinite(Number(draw.price))) return null;
+  const absoluteDistance = Math.abs(Number(draw.price) - Number(currentPrice));
+  const distanceAtr = atr > 0 ? absoluteDistance / atr : null;
+  const targetClass = distanceAtr === null
+    ? 'CONTEXT_ONLY'
+    : distanceAtr <= 1.5 ? 'PRIMARY' : distanceAtr <= 3 ? 'SECONDARY' : 'CONTEXT_ONLY';
+  return {
+    ...draw,
+    absoluteDistance,
+    distanceAtr,
+    targetClass,
+    actionableAsDirection: false,
+    useAsLiquidityTarget: targetClass !== 'CONTEXT_ONLY'
+  };
+}
+
+function precisionSummary(result) {
+  const base = result?.summary || {};
+  const currentPrice = Number(result?.currentPrice || 0);
+  const atr = Number(result?.meta?.atr || 0);
+  const concentration = base.pressure || 'BALANCED';
+  return {
+    ...base,
+    pressure: concentration,
+    liquidityConcentration: concentration,
+    directionalSignal: 'NEUTRAL',
+    directionalUse: false,
+    nearestDraw: classifyDraw(base.nearestDraw, currentPrice, atr),
+    nearestBsl: classifyDraw(base.nearestBsl, currentPrice, atr),
+    nearestSsl: classifyDraw(base.nearestSsl, currentPrice, atr),
+    interpretation: 'Pressure menunjukkan konsentrasi likuiditas, bukan prediksi arah market.'
+  };
+}
+
+async function fetchCandles(symbol, interval, size, apiKey) {
+  const url = `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(symbol)}&interval=${encodeURIComponent(interval)}&outputsize=${size}&apikey=${encodeURIComponent(apiKey)}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`TwelveData HTTP ${response.status}`);
+  const data = await response.json();
   if (data?.status === 'error') throw new Error(data.message || 'TwelveData error');
-  const values = data.values || [];
-  // TwelveData returns newest first → reverse to chronological
-  return values.reverse().map(c => ({
-    time: c.datetime,
-    open: parseFloat(c.open),
-    high: parseFloat(c.high),
-    low: parseFloat(c.low),
-    close: parseFloat(c.close),
+
+  return (data.values || []).reverse().map(candle => ({
+    time: candle.datetime,
+    open: Number(candle.open),
+    high: Number(candle.high),
+    low: Number(candle.low),
+    close: Number(candle.close)
   }));
-}
-
-/**
- * Compute liquidity heatmap zones
- * 1. Deteksi swing highs & lows (5-bar fractal)
- * 2. Cluster swing ke bucket harga $2
- * 3. Score setiap bucket berdasarkan kepadatan swing
- */
-function computeHeatmap(candles) {
-  const SWING_WINDOW = 2;
-  const BUCKET_SIZE = 2.0;
-  const MIN_PRICE = 2000;
-  const swings = { highs: [], lows: [] };
-
-  // 1. Deteksi swing fractal
-  for (let i = SWING_WINDOW; i < candles.length - SWING_WINDOW; i++) {
-    const c = candles[i];
-    let isHigh = true, isLow = true;
-
-    for (let j = 1; j <= SWING_WINDOW; j++) {
-      if (c.high <= candles[i - j].high || c.high <= candles[i + j].high) isHigh = false;
-      if (c.low >= candles[i - j].low || c.low >= candles[i + j].low) isLow = false;
-    }
-
-    if (isHigh) swings.highs.push({ price: c.high, index: i });
-    if (isLow) swings.lows.push({ price: c.low, index: i });
-  }
-
-  // 2. Cluster ke bucket
-  const highBuckets = {};
-  const lowBuckets = {};
-
-  for (const h of swings.highs) {
-    const b = Math.round(h.price / BUCKET_SIZE) * BUCKET_SIZE;
-    highBuckets[b] = (highBuckets[b] || 0) + 1;
-  }
-  for (const l of swings.lows) {
-    const b = Math.round(l.price / BUCKET_SIZE) * BUCKET_SIZE;
-    lowBuckets[b] = (lowBuckets[b] || 0) + 1;
-  }
-
-  // 3. Gabungkan & urutkan
-  const allPrices = new Set([...Object.keys(highBuckets), ...Object.keys(lowBuckets)]);
-  const sorted = [...allPrices].map(Number).sort((a, b) => b - a);
-
-  // 4. Format output
-  const currentPrice = candles[candles.length - 1].close;
-  const currentBucket = Math.round(currentPrice / BUCKET_SIZE) * BUCKET_SIZE;
-
-  const zones = [];
-  for (const price of sorted) {
-    const highCount = highBuckets[price] || 0;
-    const lowCount = lowBuckets[price] || 0;
-    if (highCount === 0 && lowCount === 0) continue;
-
-    let label = '';
-    if (highCount >= 2) label = 'EQH - Resistance Buatan';
-    if (lowCount >= 2) label = 'EQL - Support Buatan';
-
-    zones.push({
-      price: Math.round(price * 100) / 100,
-      isCurrent: price === currentBucket,
-      resistCount: highCount,
-      supportCount: lowCount,
-      totalActivity: highCount + lowCount,
-      label,
-      intensity: Math.min((highCount + lowCount) / 5, 1) // 0..1
-    });
-  }
-
-  return zones;
 }
