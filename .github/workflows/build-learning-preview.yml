@@ -1,0 +1,153 @@
+name: Build Amy FX Learning Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionName:
+        description: "Preview version name"
+        required: true
+        default: "1.0.4-preview"
+      versionCode:
+        description: "Preview version code"
+        required: true
+        default: "1005"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - app/build.gradle.kts
+      - app/google-services.json
+      - app/src/main/AndroidManifest.xml
+      - app/src/main/assets/**
+      - app/src/main/java/**
+      - api/**
+      - lib/**
+      - tests/learning-live-engine.test.mjs
+      - tests/market-learning-live-examples.test.mjs
+      - learning-preview-update.json
+      - .github/workflows/build-learning-preview.yml
+  push:
+    branches:
+      - feature/learning-context-stage1
+    paths:
+      - app/build.gradle.kts
+      - app/google-services.json
+      - app/src/main/AndroidManifest.xml
+      - app/src/main/assets/**
+      - app/src/main/java/**
+      - api/**
+      - lib/**
+      - tests/learning-live-engine.test.mjs
+      - tests/market-learning-live-examples.test.mjs
+      - learning-preview-update.json
+      - .github/workflows/build-learning-preview.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      AMYFX_KEYSTORE_PATH: /tmp/amy-fx-signing.keystore
+      AMYFX_KEYSTORE_PASSWORD: android
+      AMYFX_KEY_ALIAS: androiddebugkey
+      AMYFX_KEY_PASSWORD: android
+      AMYFX_APPLICATION_ID: com.amyelitesuite.learningpreview
+      AMYFX_APP_LABEL: Amy FX Learning
+      AMYFX_URI_SCHEME: amyfx-learning
+      AMYFX_UPDATE_MANIFEST_URL: https://raw.githubusercontent.com/suhaimitoamy/Amy-fx/refs/heads/feature/learning-context-stage1/learning-preview-update.json
+      AMYFX_VERSION_NAME: ${{ github.event.inputs.versionName || '1.0.4-preview' }}
+      AMYFX_VERSION_CODE: ${{ github.event.inputs.versionCode || '1005' }}
+      AMYFX_SIGNING_CERT_SHA256: "47:C2:32:BC:44:FA:63:C9:2F:FE:41:1F:71:40:40:4C:09:AA:2A:9C:BF:82:B1:85:9A:86:0B:85:56:7B:AD:C7"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK 35
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Restore permanent Amy FX signing key
+        id: signing-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: amy-fx-debug-keystore-v1
+
+      - name: Verify permanent signing key
+        run: |
+          set -euo pipefail
+          test "${{ steps.signing-cache.outputs.cache-hit }}" = "true"
+          cp "$HOME/.android/debug.keystore" "$AMYFX_KEYSTORE_PATH"
+          actual="$(keytool -list -v -keystore "$AMYFX_KEYSTORE_PATH" -storepass "$AMYFX_KEYSTORE_PASSWORD" -alias "$AMYFX_KEY_ALIAS" | sed -n 's/^[[:space:]]*SHA256: //p' | head -n1)"
+          test "$actual" = "$AMYFX_SIGNING_CERT_SHA256"
+
+      - name: Stamp preview web version and update channel
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          version_name = os.environ['AMYFX_VERSION_NAME']
+          version_code = os.environ['AMYFX_VERSION_CODE']
+          update_url = os.environ['AMYFX_UPDATE_MANIFEST_URL']
+
+          version_path = Path('app/src/main/assets/app-version.js')
+          version_text = version_path.read_text(encoding='utf-8')
+          version_text = version_text.replace(
+              "const VERSION = Object.freeze({ name: '1.4.12', code: 35 });",
+              f"const VERSION = Object.freeze({{ name: '{version_name}', code: {version_code} }});"
+          )
+          version_path.write_text(version_text, encoding='utf-8')
+
+          checker_path = Path('app/src/main/assets/update-checker.js')
+          checker_text = checker_path.read_text(encoding='utf-8')
+          checker_text = checker_text.replace(
+              "const UPDATE_URL = 'https://raw.githubusercontent.com/suhaimitoamy/Amy-fx/main/update.json';",
+              f"const UPDATE_URL = '{update_url}';"
+          )
+          checker_path.write_text(checker_text, encoding='utf-8')
+          PY
+
+      - name: Run focused tests
+        run: |
+          chmod +x gradlew
+          node --check app/src/main/assets/update-checker.js
+          node --check app/src/main/assets/app-version.js
+          node --check app/src/main/assets/apps/academy/assets/js/market-learning-bridge.js
+          node --check api/learning-live-example.js
+          node --check lib/learning-topic-router.js
+          node --check lib/learning-live-engine.js
+          node --test --test-reporter=spec tests/learning-live-engine.test.mjs tests/market-learning-live-examples.test.mjs tests/native-updater.test.mjs
+          ./gradlew testReleaseUnitTest --no-configuration-cache
+
+      - name: Build signed Learning Preview APK
+        run: ./gradlew assembleRelease --no-configuration-cache --stacktrace
+
+      - name: Verify preview package, version, and signer
+        run: |
+          set -euo pipefail
+          apk="app/build/outputs/apk/release/app-release.apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" | grep -F "package: name='com.amyelitesuite.learningpreview' versionCode='${AMYFX_VERSION_CODE}' versionName='${AMYFX_VERSION_NAME}'"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$apk" | tee /tmp/apksigner.txt
+          expected="$(echo "$AMYFX_SIGNING_CERT_SHA256" | tr -d ':' | tr '[:upper:]' '[:lower:]')"
+          actual="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' /tmp/apksigner.txt | head -n1 | tr -d ':' | tr '[:upper:]' '[:lower:]')"
+          test -n "$actual"
+          test "$actual" = "$expected"
+
+      - name: Upload signed Learning Preview APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Amy-FX-Learning-Preview-v${{ env.AMYFX_VERSION_NAME }}-signed
+          path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 14

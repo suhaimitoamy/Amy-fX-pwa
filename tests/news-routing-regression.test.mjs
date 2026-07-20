@@ -24,7 +24,7 @@ test('Vercel memuat modul filter ESM secara dinamis', () => {
 });
 
 test('market intel membawa ID berita pada deep-link notifikasi', () => {
-  const appSource = fs.readFileSync(new URL('../assets/apps/market-intel/app.js', import.meta.url), 'utf8');
+  const appSource = fs.readFileSync(new URL('../app/src/main/assets/apps/market-intel/app.js', import.meta.url), 'utf8');
   assert.match(appSource, /#news=\$\{encodeURIComponent\(id\)\}/);
   assert.match(appSource, /data-news-id/);
   assert.match(appSource, /focusNewsItem\(pendingNewsId\)/);

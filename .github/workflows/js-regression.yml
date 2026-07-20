@@ -1,0 +1,24 @@
+name: JavaScript Regression
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Fetch pull request commit
+        run: |
+          git init --quiet .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 --quiet origin "${GITHUB_SHA}"
+          git checkout --quiet FETCH_HEAD
+
+      - name: Run Mapping regression tests
+        run: |
+          node --version
+          node --test --test-reporter=spec tests/*.test.mjs

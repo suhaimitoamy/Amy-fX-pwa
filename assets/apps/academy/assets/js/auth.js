@@ -26,19 +26,7 @@ async function validateCode(code){
 }
 
 async function requireLogin(){
-    if(sessionStorage.getItem(ACADEMY_SESSION_KEY)==='true'){
-        document.documentElement.classList.add('is-authed');
-        return true;
-    }
-    const firstUse=!localStorage.getItem(ACADEMY_ACCESS_KEY);
-    const promptText=firstUse?'Buat kode akses Amy FX Academy (minimal 4 karakter):':'Masukkan kode akses Amy FX Academy:';
-    const result=await validateCode(window.prompt(promptText)||'');
-    if(!result.ok){
-        document.documentElement.classList.remove('is-authed');
-        window.alert(result.label);
-        location.href=typeof ROOT_PATH !== 'undefined' ? ROOT_PATH+'index.html' : 'index.html';
-        return false;
-    }
+    // Fitur kode akses dihilangkan sesuai permintaan
     sessionStorage.setItem(ACADEMY_SESSION_KEY,'true');
     document.documentElement.classList.add('is-authed');
     return true;

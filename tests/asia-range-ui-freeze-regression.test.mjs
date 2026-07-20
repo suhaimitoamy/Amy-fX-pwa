@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const uiUrl = new URL('../assets/apps/mapping/js/session/asia-range-ui.js', import.meta.url);
+const uiUrl = new URL('../app/src/main/assets/apps/mapping/js/session/asia-range-ui.js', import.meta.url);
 
 function source() {
   return readFileSync(uiUrl, 'utf8');

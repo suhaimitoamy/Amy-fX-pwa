@@ -4,10 +4,10 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const uiUrl = new URL('../assets/apps/mapping/js/market-outlook.js', import.meta.url);
-const coreUrl = new URL('../assets/apps/mapping/js/outlook/market-outlook-core.js', import.meta.url);
-const baseUrl = new URL('../assets/apps/mapping/js/outlook/v2/base.js', import.meta.url);
-const indexUrl = new URL('../assets/apps/mapping/index.html', import.meta.url);
+const uiUrl = new URL('../app/src/main/assets/apps/mapping/js/market-outlook.js', import.meta.url);
+const coreUrl = new URL('../app/src/main/assets/apps/mapping/js/outlook/market-outlook-core.js', import.meta.url);
+const baseUrl = new URL('../app/src/main/assets/apps/mapping/js/outlook/v2/base.js', import.meta.url);
+const indexUrl = new URL('../app/src/main/assets/apps/mapping/index.html', import.meta.url);
 
 function assertSyntax(url) {
   const result = spawnSync(process.execPath, ['--check', fileURLToPath(url)], { encoding: 'utf8' });

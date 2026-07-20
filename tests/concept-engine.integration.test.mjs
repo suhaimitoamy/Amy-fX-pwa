@@ -10,16 +10,26 @@ import {
   evaluateLiquidityReclaim,
   evaluateZoneLifecycle,
   structureDisplacementMetrics
-} from '../assets/apps/mapping/js/engine/concept-engine.js';
+} from '../app/src/main/assets/apps/mapping/js/engine/concept-engine.js';
 
 const candle = (open, high, low, close, time) => ({ open, high, low, close, time });
 
-test('production thresholds use the fixed holdout profile', () => {
+test('production thresholds use the validated Mapping reference profile', () => {
   assert.deepEqual({
-    fvg: CONCEPT_THRESHOLDS.fvgMinWidthAtr,
+    fvgMinWidthAtr: CONCEPT_THRESHOLDS.fvgMinWidthAtr,
+    fvgBodyLength: CONCEPT_THRESHOLDS.fvgBodyLength,
+    fvgBodyRatio: CONCEPT_THRESHOLDS.fvgBodyRatio,
+    fvgWickBodyRatio: CONCEPT_THRESHOLDS.fvgWickBodyRatio,
     reclaim: CONCEPT_THRESHOLDS.liquidityReclaimAtr,
     penetration: CONCEPT_THRESHOLDS.structurePenetrationAtr
-  }, { fvg: 0.7, reclaim: 0.4, penetration: 0.2 });
+  }, {
+    fvgMinWidthAtr: 0,
+    fvgBodyLength: 4,
+    fvgBodyRatio: 0.45,
+    fvgWickBodyRatio: 0.36,
+    reclaim: 0.4,
+    penetration: 0.2
+  });
 });
 
 test('FVG converts to IFVG and confirms only the inverse rejection', () => {

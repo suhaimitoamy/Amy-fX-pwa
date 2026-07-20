@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { detectStructure } from '../assets/apps/mapping/js/engine/core/math-structure.js';
-import { detectSetupConflicts } from '../assets/apps/mapping/js/engine/core/setups.js';
+import { detectStructure } from '../app/src/main/assets/apps/mapping/js/engine/core/math-structure.js';
+import { detectSetupConflicts } from '../app/src/main/assets/apps/mapping/js/engine/core/setups.js';
 
 const candle = (open, high, low, close, time = 0) => ({ open, high, low, close, time });
 
@@ -114,7 +114,7 @@ test('live price returning through break level blocks every setup as AT RISK', (
 
 test('mapping UI exposes internal trend, confirmed trend, next level, and AT RISK status', () => {
   const source = readFileSync(
-    new URL('../assets/apps/mapping/js/ui/ui-render.js', import.meta.url),
+    new URL('../app/src/main/assets/apps/mapping/js/ui/ui-render.js', import.meta.url),
     'utf8'
   );
   assert.match(source, /INTERNAL CHOCH/);

@@ -4,9 +4,9 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const uiUrl = new URL('../assets/apps/market-intel/heatmap-v2.js', import.meta.url);
-const indexUrl = new URL('../assets/apps/market-intel/index.html', import.meta.url);
-const sharedUrl = new URL('../assets/apps/shared/market-intelligence.js', import.meta.url);
+const uiUrl = new URL('../app/src/main/assets/apps/market-intel/heatmap-v2.js', import.meta.url);
+const indexUrl = new URL('../app/src/main/assets/apps/market-intel/index.html', import.meta.url);
+const sharedUrl = new URL('../app/src/main/assets/apps/shared/market-intelligence.js', import.meta.url);
 const apiUrl = new URL('../api/heatmap.js', import.meta.url);
 
 function assertSyntax(url) {

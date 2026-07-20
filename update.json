@@ -1,25 +1,25 @@
 {
-  "latest_version_code": 30,
-  "latest_version_name": "1.4.7",
-  "versionCode": 30,
-  "version": "1.4.7",
-  "releaseDate": "2026-07-15",
+  "latest_version_code": 36,
+  "latest_version_name": "1.4.13",
+  "versionCode": 36,
+  "version": "1.4.13",
+  "releaseDate": "2026-07-18",
   "apk_url": "https://github.com/suhaimitoamy/Amy-fx/releases/download/amyfx-latest/AmyFX-latest.apk",
   "downloadUrl": "https://github.com/suhaimitoamy/Amy-fx/releases/download/amyfx-latest/AmyFX-latest.apk",
   "force_update": false,
   "mandatory": false,
   "release_notes": [
-    "Mengaktifkan Amy Concept Engine V2 hasil validasi backtest 2022–2026 pada Mapping",
-    "Memperketat BOS dan CHOCH dengan close, displacement, dan penetration berbasis ATR",
-    "Menambahkan lifecycle FVG ke IFVG serta Order Block ke Breaker",
-    "Memperbaiki BSL, SSL, liquidity sweep, dan draw target agar tidak dianggap sebagai sinyal arah",
-    "Mempertahankan jurnal, progres Academy, pengaturan, dan data lokal saat update tanpa uninstall"
+    "Menambahkan contoh edukasi langsung di dalam 645 halaman Amy FX Academy tanpa memindahkan pengguna ke Mapping",
+    "Setiap halaman memakai topic spesifik agar contoh yang ditampilkan sesuai dengan materi yang sedang dibaca",
+    "Menambahkan backend rule-based untuk konteks XAUUSD seperti risk, liquidity, FVG, Order Block, sesi, volatilitas, dan struktur",
+    "Jika layanan data live belum tersedia, Academy menampilkan contoh latihan lokal yang relevan tanpa pesan error dan tanpa mengaku sebagai data real-time",
+    "Fitur ini bersifat edukasi, bukan AI chatbot dan bukan sinyal Buy/Sell"
   ],
   "changelog": [
-    "Mengaktifkan Amy Concept Engine V2 hasil validasi backtest 2022–2026 pada Mapping",
-    "Memperketat BOS dan CHOCH dengan close, displacement, dan penetration berbasis ATR",
-    "Menambahkan lifecycle FVG ke IFVG serta Order Block ke Breaker",
-    "Memperbaiki BSL, SSL, liquidity sweep, dan draw target agar tidak dianggap sebagai sinyal arah",
-    "Mempertahankan jurnal, progres Academy, pengaturan, dan data lokal saat update tanpa uninstall"
+    "Menambahkan contoh edukasi langsung di dalam 645 halaman Amy FX Academy tanpa memindahkan pengguna ke Mapping",
+    "Setiap halaman memakai topic spesifik agar contoh yang ditampilkan sesuai dengan materi yang sedang dibaca",
+    "Menambahkan backend rule-based untuk konteks XAUUSD seperti risk, liquidity, FVG, Order Block, sesi, volatilitas, dan struktur",
+    "Jika layanan data live belum tersedia, Academy menampilkan contoh latihan lokal yang relevan tanpa pesan error dan tanpa mengaku sebagai data real-time",
+    "Fitur ini bersifat edukasi, bukan AI chatbot dan bukan sinyal Buy/Sell"
   ]
 }

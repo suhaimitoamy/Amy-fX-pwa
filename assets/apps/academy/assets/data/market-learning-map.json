@@ -1,0 +1,3233 @@
+{
+  "schemaVersion": 2,
+  "defaults": {
+    "showLiveExamples": true
+  },
+  "lessons": {
+    "bagian-01-pemula-nol/index.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "index"
+    },
+    "bagian-01-pemula-nol/market-forex-gold-indeks-dan-crypto.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "market-forex-gold-indeks-dan-crypto"
+    },
+    "bagian-01-pemula-nol/cara-belajar-trading-yang-benar.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "cara-belajar-trading-yang-benar"
+    },
+    "bagian-01-pemula-nol/realita-trading-untuk-pemula.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "realita-trading-untuk-pemula"
+    },
+    "bagian-01-pemula-nol/lot-pip-point-dan-spread.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "lot-pip-point-dan-spread"
+    },
+    "bagian-01-pemula-nol/apa-itu-trading.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "apa-itu-trading"
+    },
+    "bagian-01-pemula-nol/leverage-margin-equity-dan-balance.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "leverage-margin-equity-dan-balance"
+    },
+    "bagian-01-pemula-nol/buy-sell-profit-dan-loss.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "buy-sell-profit-dan-loss"
+    },
+    "bagian-01-pemula-nol/stop-loss-dan-take-profit.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "stop-loss-dan-take-profit"
+    },
+    "bagian-01-pemula-nol/risk-sebelum-entry.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "risk-sebelum-entry"
+    },
+    "bagian-31-ict-advanced-concepts/balanced-price-range-bpr.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "balanced-price-range-bpr"
+    },
+    "bagian-31-ict-advanced-concepts/breaker-blocks-dan-mitigation-blocks.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "breaker-blocks-dan-mitigation-blocks"
+    },
+    "bagian-31-ict-advanced-concepts/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-31-ict-advanced-concepts/ipda.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ipda"
+    },
+    "bagian-31-ict-advanced-concepts/nwog-dan-ndog.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "nwog-dan-ndog"
+    },
+    "bagian-31-ict-advanced-concepts/ipda-data-ranges.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ipda-data-ranges"
+    },
+    "bagian-31-ict-advanced-concepts/monthly-cycle-ict.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "monthly-cycle-ict"
+    },
+    "bagian-31-ict-advanced-concepts/fvg-presisi-vs-fvg-luas.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "fvg-presisi-vs-fvg-luas"
+    },
+    "bagian-31-ict-advanced-concepts/smt-divergence-smart-money-tool.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smt-divergence-smart-money-tool"
+    },
+    "bagian-31-ict-advanced-concepts/amdx-weekly-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "amdx-weekly-model"
+    },
+    "bagian-31-ict-advanced-concepts/weekly-cycle-ict.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "weekly-cycle-ict"
+    },
+    "bagian-31-ict-advanced-concepts/killzones-dan-true-day-open.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "killzones-dan-true-day-open"
+    },
+    "bagian-31-ict-advanced-concepts/market-maker-x-model-mmxm.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "market-maker-x-model-mmxm"
+    },
+    "bagian-31-ict-advanced-concepts/standard-deviation-projections.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "standard-deviation-projections"
+    },
+    "bagian-31-ict-advanced-concepts/news-driver-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "news-driver-model"
+    },
+    "bagian-31-ict-advanced-concepts/power-of-three-weekly.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "power-of-three-weekly"
+    },
+    "bagian-31-ict-advanced-concepts/smt-divergence.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smt-divergence"
+    },
+    "bagian-31-ict-advanced-concepts/macro-times-dan-algorithmic-time.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "macro-times-dan-algorithmic-time"
+    },
+    "bagian-31-ict-advanced-concepts/optimal-trade-entry-ote.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "optimal-trade-entry-ote"
+    },
+    "bagian-31-ict-advanced-concepts/quarterly-theory-ict.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "quarterly-theory-ict"
+    },
+    "bagian-31-ict-advanced-concepts/ipda-data-ranges-dan-daily-profiles.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ipda-data-ranges-dan-daily-profiles"
+    },
+    "bagian-34-prop-firm-mastery/apa-itu-prop-firm-dan-cara-kerjanya.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "apa-itu-prop-firm-dan-cara-kerjanya"
+    },
+    "bagian-34-prop-firm-mastery/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-34-prop-firm-mastery/manajemen-risiko-khusus-prop-firm.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "manajemen-risiko-khusus-prop-firm"
+    },
+    "bagian-34-prop-firm-mastery/aturan-drawdown-dan-cara-menghitungnya.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "aturan-drawdown-dan-cara-menghitungnya"
+    },
+    "bagian-26-xauusd-advanced-playbook/checklist-ote-stdv.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-ote-stdv"
+    },
+    "bagian-26-xauusd-advanced-playbook/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-26-xauusd-advanced-playbook/ote-dalam-bearish-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ote-dalam-bearish-model"
+    },
+    "bagian-26-xauusd-advanced-playbook/xauusd-daily-bias-template.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-daily-bias-template"
+    },
+    "bagian-26-xauusd-advanced-playbook/seasonal-tendency-dan-cot-report-gold.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "seasonal-tendency-dan-cot-report-gold"
+    },
+    "bagian-26-xauusd-advanced-playbook/xauusd-session-playbook.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-session-playbook"
+    },
+    "bagian-26-xauusd-advanced-playbook/target-1-2-3-stdv.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "target-1-2-3-stdv"
+    },
+    "bagian-26-xauusd-advanced-playbook/fibonacci-ict.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "fibonacci-ict"
+    },
+    "bagian-26-xauusd-advanced-playbook/target-dan-partial-take-profit-mengelola-hasil-secara-objektif.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "target-dan-partial-take-profit-mengelola-hasil-secara-objektif"
+    },
+    "bagian-26-xauusd-advanced-playbook/ote-sebagai-area-bukan-sinyal.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ote-sebagai-area-bukan-sinyal"
+    },
+    "bagian-26-xauusd-advanced-playbook/consequent-encroachment-ce-presisi-di-jantung-imbalance.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "consequent-encroachment-ce-presisi-di-jantung-imbalance"
+    },
+    "bagian-26-xauusd-advanced-playbook/ote-optimal-trade-entry-menemukan-titik-masuk-paling-efisien.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ote-optimal-trade-entry-menemukan-titik-masuk-paling-efisien"
+    },
+    "bagian-26-xauusd-advanced-playbook/xauusd-liquidity-map-memetakan-bahan-bakar-market.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-liquidity-map-memetakan-bahan-bakar-market"
+    },
+    "bagian-26-xauusd-advanced-playbook/stdv-projection.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "stdv-projection"
+    },
+    "bagian-26-xauusd-advanced-playbook/dealing-range-premium-dan-discount.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "dealing-range-premium-dan-discount"
+    },
+    "bagian-26-xauusd-advanced-playbook/ote-dalam-bullish-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ote-dalam-bullish-model"
+    },
+    "bagian-26-xauusd-advanced-playbook/checklist-xauusd-sebelum-entry.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-xauusd-sebelum-entry"
+    },
+    "bagian-26-xauusd-advanced-playbook/kapan-ote-tidak-dipakai.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-ote-tidak-dipakai"
+    },
+    "bagian-26-xauusd-advanced-playbook/karakter-gold-per-session.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "karakter-gold-per-session"
+    },
+    "bagian-26-xauusd-advanced-playbook/xauusd-no-trade-playbook.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-no-trade-playbook"
+    },
+    "bagian-26-xauusd-advanced-playbook/stop-loss-dalam-ote.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "stop-loss-dalam-ote"
+    },
+    "bagian-26-xauusd-advanced-playbook/proyeksi-target-dengan-standard-deviation-fibonacci.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "proyeksi-target-dengan-standard-deviation-fibonacci"
+    },
+    "bagian-26-xauusd-advanced-playbook/ote-dan-xauusd.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ote-dan-xauusd"
+    },
+    "bagian-26-xauusd-advanced-playbook/gold-saat-news-besar-high-impact-news.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "gold-saat-news-besar-high-impact-news"
+    },
+    "bagian-10-xauusd-playbook/xauusd-london-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-london-model"
+    },
+    "bagian-10-xauusd-playbook/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-10-xauusd-playbook/xauusd-daily-bias.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-daily-bias"
+    },
+    "bagian-10-xauusd-playbook/xauusd-new-york-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-new-york-model"
+    },
+    "bagian-10-xauusd-playbook/contoh-playbook-harian.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "contoh-playbook-harian"
+    },
+    "bagian-10-xauusd-playbook/kenapa-gold-bergerak-cepat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kenapa-gold-bergerak-cepat"
+    },
+    "bagian-10-xauusd-playbook/xauusd-sweep-mss-fvg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-sweep-mss-fvg"
+    },
+    "bagian-10-xauusd-playbook/cara-menentukan-sltp-gold.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "cara-menentukan-sltp-gold"
+    },
+    "bagian-10-xauusd-playbook/karakter-xauusd.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "karakter-xauusd"
+    },
+    "bagian-10-xauusd-playbook/xauusd-scalping-m15-m5-m1.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-scalping-m15-m5-m1"
+    },
+    "bagian-10-xauusd-playbook/xauusd-liquidity-map.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "xauusd-liquidity-map"
+    },
+    "bagian-10-xauusd-playbook/waktu-terbaik-trading-gold.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "waktu-terbaik-trading-gold"
+    },
+    "bagian-16-advanced-entry-logic/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-16-advanced-entry-logic/entry-refinement-m1-dan-m5-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-refinement-m1-dan-m5-model"
+    },
+    "bagian-16-advanced-entry-logic/valid-vs-invalid-mss-menyaring-sinyal-palsu-di-tengah-kebisingan-pasar.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "valid-vs-invalid-mss-menyaring-sinyal-palsu-di-tengah-kebisingan-pasar"
+    },
+    "bagian-16-advanced-entry-logic/irl-erl-advance.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "irl-erl-advance"
+    },
+    "bagian-16-advanced-entry-logic/continuation-leg-dan-continuation-failure-menilai-kesehatan-tren.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "continuation-leg-dan-continuation-failure-menilai-kesehatan-tren"
+    },
+    "bagian-16-advanced-entry-logic/advanced-entry-logic-masterclass.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "advanced-entry-logic-masterclass"
+    },
+    "bagian-16-advanced-entry-logic/choch-vs-mss-dalam-konteks.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "choch-vs-mss-dalam-konteks"
+    },
+    "bagian-16-advanced-entry-logic/ote.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ote"
+    },
+    "bagian-16-advanced-entry-logic/inducement-vs-break-of-structure-bos.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "inducement-vs-break-of-structure-bos"
+    },
+    "bagian-16-advanced-entry-logic/checklist-validasi-sebelum-entry.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-validasi-sebelum-entry"
+    },
+    "bagian-16-advanced-entry-logic/entry-agresif-vs-konservatif.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-agresif-vs-konservatif"
+    },
+    "bagian-16-advanced-entry-logic/complex-pullback.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "complex-pullback"
+    },
+    "bagian-16-advanced-entry-logic/swing-yang-layak-dipakai.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "swing-yang-layak-dipakai"
+    },
+    "bagian-16-advanced-entry-logic/checklist-advanced-structure.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-advanced-structure"
+    },
+    "bagian-16-advanced-entry-logic/high-resistance-vs-low-resistance-liquidity-run-hrlr-vs-lrlr.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "high-resistance-vs-low-resistance-liquidity-run-hrlr-vs-lrlr"
+    },
+    "bagian-16-advanced-entry-logic/struktur-minor-vs-struktur-mayor-navigasi-berlapis-dalam-pergerakan-harga.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "struktur-minor-vs-struktur-mayor-navigasi-berlapis-dalam-pergerakan-harga"
+    },
+    "bagian-16-advanced-entry-logic/valid-mss-vs-false-mss.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "valid-mss-vs-false-mss"
+    },
+    "bagian-16-advanced-entry-logic/internal-vs-external-structure.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "internal-vs-external-structure"
+    },
+    "bagian-16-advanced-entry-logic/false-displacement-dan-cara-membedakannya-menghindari-jebakan-momentum.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "false-displacement-dan-cara-membedakannya-menghindari-jebakan-momentum"
+    },
+    "bagian-16-advanced-entry-logic/complex-structure-dan-sub-structure-memahami-lapisan-pasar-yang-berlapis.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "complex-structure-dan-sub-structure-memahami-lapisan-pasar-yang-berlapis"
+    },
+    "bagian-16-advanced-entry-logic/structure-dalam-range.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "structure-dalam-range"
+    },
+    "bagian-16-advanced-entry-logic/minor-vs-major-structure.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "minor-vs-major-structure"
+    },
+    "bagian-16-advanced-entry-logic/no-trade-karena-structure-rusak.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "no-trade-karena-structure-rusak"
+    },
+    "bagian-16-advanced-entry-logic/displacement-yang-memecah-structure.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "displacement-yang-memecah-structure"
+    },
+    "bagian-22-block-advanced/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-22-block-advanced/ict-weekly-profiles.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ict-weekly-profiles"
+    },
+    "bagian-22-block-advanced/pdh-dan-pdl-level-kunci-liquidity-harian.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "pdh-dan-pdl-level-kunci-liquidity-harian"
+    },
+    "bagian-22-block-advanced/ohlc-dan-olhc.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ohlc-dan-olhc"
+    },
+    "bagian-22-block-advanced/weekly-profile-lanjutan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "weekly-profile-lanjutan"
+    },
+    "bagian-22-block-advanced/daily-draw-on-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "daily-draw-on-liquidity"
+    },
+    "bagian-22-block-advanced/mitigation-dan-rejection-block.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "mitigation-dan-rejection-block"
+    },
+    "bagian-22-block-advanced/tgif-advanced.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "tgif-advanced"
+    },
+    "bagian-22-block-advanced/monday-range.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "monday-range"
+    },
+    "bagian-22-block-advanced/pdh-dan-pdl-sebagai-draw.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "pdh-dan-pdl-sebagai-draw"
+    },
+    "bagian-22-block-advanced/amd-dalam-struktur-harian-dan-mingguan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "amd-dalam-struktur-harian-dan-mingguan"
+    },
+    "bagian-22-block-advanced/bias-yang-batal.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "bias-yang-batal"
+    },
+    "bagian-22-block-advanced/block-stacking.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "block-stacking"
+    },
+    "bagian-22-block-advanced/daily-bias-dan-timeframe-alignment.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "daily-bias-dan-timeframe-alignment"
+    },
+    "bagian-22-block-advanced/tuesday-lowhigh-of-week.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "tuesday-lowhigh-of-week"
+    },
+    "bagian-22-block-advanced/power-of-3-po3-logika-tersembunyi-di-balik-candle-harian.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "power-of-3-po3-logika-tersembunyi-di-balik-candle-harian"
+    },
+    "bagian-22-block-advanced/checklist-daily-weekly-bias.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-daily-weekly-bias"
+    },
+    "bagian-22-block-advanced/breaker-block-valid.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "breaker-block-valid"
+    },
+    "bagian-22-block-advanced/ohlc-dan-olhc-membaca-urutan-pembentukan-candle-harian.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ohlc-dan-olhc-membaca-urutan-pembentukan-candle-harian"
+    },
+    "bagian-22-block-advanced/ict-weekly-profiles-memahami-siklus-mingguan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ict-weekly-profiles-memahami-siklus-mingguan"
+    },
+    "bagian-22-block-advanced/wednesday-lowhigh-of-week.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "wednesday-lowhigh-of-week"
+    },
+    "bagian-08-session-dan-waktu/cara-membaca-news.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "cara-membaca-news"
+    },
+    "bagian-08-session-dan-waktu/weekly-profile.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "weekly-profile"
+    },
+    "bagian-08-session-dan-waktu/wednesday-lowhigh-of-week.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "wednesday-lowhigh-of-week"
+    },
+    "bagian-08-session-dan-waktu/index.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "index"
+    },
+    "bagian-08-session-dan-waktu/silver-bullet-session.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "silver-bullet-session"
+    },
+    "bagian-08-session-dan-waktu/killzone.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "killzone"
+    },
+    "bagian-08-session-dan-waktu/tgif.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "tgif"
+    },
+    "bagian-08-session-dan-waktu/fomc-statement.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "fomc-statement"
+    },
+    "bagian-08-session-dan-waktu/mengapa-waktu-penting.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "mengapa-waktu-penting"
+    },
+    "bagian-08-session-dan-waktu/tuesday-lowhigh-of-week.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "tuesday-lowhigh-of-week"
+    },
+    "bagian-08-session-dan-waktu/cbdr.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "cbdr"
+    },
+    "bagian-08-session-dan-waktu/asia-session.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "asia-session"
+    },
+    "bagian-08-session-dan-waktu/ict-macros.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "ict-macros"
+    },
+    "bagian-08-session-dan-waktu/nymo-bukan-level-entry.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "nymo-bukan-level-entry"
+    },
+    "bagian-08-session-dan-waktu/new-york-session.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "new-york-session"
+    },
+    "bagian-08-session-dan-waktu/non-farm-payroll-nfp.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "non-farm-payroll-nfp"
+    },
+    "bagian-08-session-dan-waktu/consumer-price-index-cpi.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "consumer-price-index-cpi"
+    },
+    "bagian-08-session-dan-waktu/judas-swing.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "judas-swing"
+    },
+    "bagian-08-session-dan-waktu/ny-midnight-open.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "ny-midnight-open"
+    },
+    "bagian-08-session-dan-waktu/london-session.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "london-session"
+    },
+    "bagian-08-session-dan-waktu/opening-range-gap.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "opening-range-gap"
+    },
+    "bagian-14-backtesting-dan-jurnal/cara-backtest-manual.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "cara-backtest-manual"
+    },
+    "bagian-14-backtesting-dan-jurnal/index.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "index"
+    },
+    "bagian-14-backtesting-dan-jurnal/forward-testing.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "forward-testing"
+    },
+    "bagian-14-backtesting-dan-jurnal/demo-sebelum-live.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "demo-sebelum-live"
+    },
+    "bagian-14-backtesting-dan-jurnal/jurnal-trading.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "jurnal-trading"
+    },
+    "bagian-14-backtesting-dan-jurnal/menentukan-apakah-strategi-layak.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "menentukan-apakah-strategi-layak"
+    },
+    "bagian-14-backtesting-dan-jurnal/template-backtesting.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "template-backtesting"
+    },
+    "bagian-14-backtesting-dan-jurnal/cara-memasukkan-screenshot-di-jurnal.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "cara-memasukkan-screenshot-di-jurnal"
+    },
+    "bagian-14-backtesting-dan-jurnal/kenapa-backtesting-wajib.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "kenapa-backtesting-wajib"
+    },
+    "bagian-14-backtesting-dan-jurnal/apa-itu-backtesting.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "apa-itu-backtesting"
+    },
+    "bagian-14-backtesting-dan-jurnal/mengukur-winrate-rr-dan-drawdown.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "mengukur-winrate-rr-dan-drawdown"
+    },
+    "bagian-14-backtesting-dan-jurnal/review-mingguan.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "review-mingguan"
+    },
+    "bagian-24-market-structure-advanced/gap-yang-tidak-penting.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "gap-yang-tidak-penting"
+    },
+    "bagian-24-market-structure-advanced/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-24-market-structure-advanced/gap-fill-vs-gap-respect.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "gap-fill-vs-gap-respect"
+    },
+    "bagian-24-market-structure-advanced/gap-sebagai-draw.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "gap-sebagai-draw"
+    },
+    "bagian-24-market-structure-advanced/ndog.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ndog"
+    },
+    "bagian-24-market-structure-advanced/choch-mss-dan-cisd.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "choch-mss-dan-cisd"
+    },
+    "bagian-24-market-structure-advanced/opening-gap-dan-session-transitions.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "opening-gap-dan-session-transitions"
+    },
+    "bagian-24-market-structure-advanced/gap-di-xauusd.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "gap-di-xauusd"
+    },
+    "bagian-24-market-structure-advanced/institutional-order-flow.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "institutional-order-flow"
+    },
+    "bagian-24-market-structure-advanced/ndog-dan-nwog-membaca-gap-pembukaan-sebagai-petunjuk-arah.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ndog-dan-nwog-membaca-gap-pembukaan-sebagai-petunjuk-arah"
+    },
+    "bagian-24-market-structure-advanced/nwog.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "nwog"
+    },
+    "bagian-24-market-structure-advanced/bos-valid-vs-bos-palsu.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "bos-valid-vs-bos-palsu"
+    },
+    "bagian-24-market-structure-advanced/gap-sebagai-poi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "gap-sebagai-poi"
+    },
+    "bagian-24-market-structure-advanced/kapan-tidak-trade-seni-menunggu-peluang-berkualitas.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-tidak-trade-seni-menunggu-peluang-berkualitas"
+    },
+    "bagian-24-market-structure-advanced/internal-vs-external-structure.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "internal-vs-external-structure"
+    },
+    "bagian-24-market-structure-advanced/checklist-opening-gap.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-opening-gap"
+    },
+    "bagian-24-market-structure-advanced/order-flow-narrative.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "order-flow-narrative"
+    },
+    "bagian-24-market-structure-advanced/opening-gap-dan-session.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "opening-gap-dan-session"
+    },
+    "bagian-24-market-structure-advanced/apa-itu-opening-gap.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "apa-itu-opening-gap"
+    },
+    "bagian-24-market-structure-advanced/volume-imbalance-dan-gap-analysis.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "volume-imbalance-dan-gap-analysis"
+    },
+    "bagian-24-market-structure-advanced/liquidity-sweep-vs-break-of-structure-bos.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-sweep-vs-break-of-structure-bos"
+    },
+    "bagian-07-bias-dan-top-down/index.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "index"
+    },
+    "bagian-07-bias-dan-top-down/m15-orderflow.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "m15-orderflow"
+    },
+    "bagian-07-bias-dan-top-down/bias-bukan-ramalan.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "bias-bukan-ramalan"
+    },
+    "bagian-07-bias-dan-top-down/top-down-analysis.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "top-down-analysis"
+    },
+    "bagian-07-bias-dan-top-down/apa-itu-daily-bias.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "apa-itu-daily-bias"
+    },
+    "bagian-07-bias-dan-top-down/skenario-bullish-bearish-dan-netral.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "skenario-bullish-bearish-dan-netral"
+    },
+    "bagian-07-bias-dan-top-down/daily-candle-ohlc-dan-olhc.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "daily-candle-ohlc-dan-olhc"
+    },
+    "bagian-07-bias-dan-top-down/previous-day-high-dan-low.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "previous-day-high-dan-low"
+    },
+    "bagian-07-bias-dan-top-down/menentukan-draw-on-liquidity.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "menentukan-draw-on-liquidity"
+    },
+    "bagian-07-bias-dan-top-down/bias-untuk-scalper-day-trader-dan-swing-trader.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "bias-untuk-scalper-day-trader-dan-swing-trader"
+    },
+    "bagian-07-bias-dan-top-down/daily-open-dan-weekly-open-bias.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "daily-open-dan-weekly-open-bias"
+    },
+    "bagian-07-bias-dan-top-down/irl-dan-erl-untuk-bias.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "irl-dan-erl-untuk-bias"
+    },
+    "bagian-03-fondasi-market/jangan-entry-saat-consolidation.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "jangan-entry-saat-consolidation"
+    },
+    "bagian-03-fondasi-market/expansion-retracement-reversal-consolidation.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "expansion-retracement-reversal-consolidation"
+    },
+    "bagian-03-fondasi-market/index.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "index"
+    },
+    "bagian-03-fondasi-market/displacement-dan-momentum.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "displacement-dan-momentum"
+    },
+    "bagian-03-fondasi-market/power-of-three.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "power-of-three"
+    },
+    "bagian-03-fondasi-market/bos-choch-dan-mss.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "bos-choch-dan-mss"
+    },
+    "bagian-03-fondasi-market/supply-dan-demand-dasar.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "supply-dan-demand-dasar"
+    },
+    "bagian-03-fondasi-market/accumulation-manipulation-distribution-amd.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "accumulation-manipulation-distribution-amd"
+    },
+    "bagian-03-fondasi-market/harga-bergerak-karena-apa.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "harga-bergerak-karena-apa"
+    },
+    "bagian-03-fondasi-market/market-cycle-siklus-market.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "market-cycle-siklus-market"
+    },
+    "bagian-03-fondasi-market/power-of-three-po3.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "power-of-three-po3"
+    },
+    "bagian-30-setup-library/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-30-setup-library/a-fvg-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-fvg-setup"
+    },
+    "bagian-30-setup-library/a-ifvg-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-ifvg-setup"
+    },
+    "bagian-30-setup-library/a-liquidity-dan-idm-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-liquidity-dan-idm-setup"
+    },
+    "bagian-30-setup-library/a-liquidity-sweep-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-liquidity-sweep-setup"
+    },
+    "bagian-30-setup-library/a-no-trade-example.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-no-trade-example"
+    },
+    "bagian-30-setup-library/a-ob-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-ob-setup"
+    },
+    "bagian-30-setup-library/a-session-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-session-model"
+    },
+    "bagian-30-setup-library/a-silver-bullet-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-silver-bullet-setup"
+    },
+    "bagian-30-setup-library/a-turtle-soup-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-turtle-soup-setup"
+    },
+    "bagian-30-setup-library/checklist-sebelum-entry-filter-terakhir-sebelum-eksekusi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-sebelum-entry-filter-terakhir-sebelum-eksekusi"
+    },
+    "bagian-30-setup-library/full-ict-checklist.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "full-ict-checklist"
+    },
+    "bagian-30-setup-library/inversion-entry-model-memanfaatkan-kegagalan-menjadi-peluang.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "inversion-entry-model-memanfaatkan-kegagalan-menjadi-peluang"
+    },
+    "bagian-30-setup-library/kapan-fvg-lebih-kuat-daripada-ob-memilih-senjata-yang-tepat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-fvg-lebih-kuat-daripada-ob-memilih-senjata-yang-tepat"
+    },
+    "bagian-30-setup-library/kapan-ob-lebih-kuat-daripada-fvg-memilih-fondasi-yang-kokoh.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-ob-lebih-kuat-daripada-fvg-memilih-fondasi-yang-kokoh"
+    },
+    "bagian-30-setup-library/market-maker-models-mmxm-peta-besar-pengiriman-harga.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "market-maker-models-mmxm-peta-besar-pengiriman-harga"
+    },
+    "bagian-30-setup-library/no-trade-example.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "no-trade-example"
+    },
+    "bagian-30-setup-library/order-block-yang-high-probability.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "order-block-yang-high-probability"
+    },
+    "bagian-30-setup-library/roadmap-practice-advanced.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "roadmap-practice-advanced"
+    },
+    "bagian-30-setup-library/silver-bullet-session-ict-mencari-setup-presisi-di-waktu-emas.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "silver-bullet-session-ict-mencari-setup-presisi-di-waktu-emas"
+    },
+    "bagian-30-setup-library/turtle-soup-model-a-dan-model-b-memanfaatkan-jebakan-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "turtle-soup-model-a-dan-model-b-memanfaatkan-jebakan-liquidity"
+    },
+    "bagian-17-fvg-masterclass/liquidity-map-sebelum-market-buka.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-map-sebelum-market-buka"
+    },
+    "bagian-17-fvg-masterclass/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-17-fvg-masterclass/liquidity-pool-yang-layak.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-pool-yang-layak"
+    },
+    "bagian-17-fvg-masterclass/draw-on-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "draw-on-liquidity"
+    },
+    "bagian-17-fvg-masterclass/draw-on-liquidity-prioritas.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "draw-on-liquidity-prioritas"
+    },
+    "bagian-17-fvg-masterclass/irl-erl-advance.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "irl-erl-advance"
+    },
+    "bagian-17-fvg-masterclass/equal-highs-dan-equal-lows.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "equal-highs-dan-equal-lows"
+    },
+    "bagian-17-fvg-masterclass/internal-vs-external-liquidity-advanced.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "internal-vs-external-liquidity-advanced"
+    },
+    "bagian-17-fvg-masterclass/ce-fvg-full-fill-dan-entry-cepat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ce-fvg-full-fill-dan-entry-cepat"
+    },
+    "bagian-17-fvg-masterclass/kapan-fvg-lebih-kuat-dari-ob.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-fvg-lebih-kuat-dari-ob"
+    },
+    "bagian-17-fvg-masterclass/irl-dan-erl-lanjutan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "irl-dan-erl-lanjutan"
+    },
+    "bagian-17-fvg-masterclass/buy-side-liquidity-dan-sell-side-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "buy-side-liquidity-dan-sell-side-liquidity"
+    },
+    "bagian-17-fvg-masterclass/liquidity-run-palsu.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-run-palsu"
+    },
+    "bagian-17-fvg-masterclass/liquidity-run-yang-valid.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-run-yang-valid"
+    },
+    "bagian-17-fvg-masterclass/liquidity-yang-harus-diabaikan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-yang-harus-diabaikan"
+    },
+    "bagian-17-fvg-masterclass/liquidity-void-dan-cara-mengisinya-memahami-imbalance-harga-yang-impulsif.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-void-dan-cara-mengisinya-memahami-imbalance-harga-yang-impulsif"
+    },
+    "bagian-17-fvg-masterclass/high-resistance-vs-low-resistance-liquidity-run-hrlr-vs-lrlr.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "high-resistance-vs-low-resistance-liquidity-run-hrlr-vs-lrlr"
+    },
+    "bagian-17-fvg-masterclass/fvg-kuat-vs-fvg-lemah.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "fvg-kuat-vs-fvg-lemah"
+    },
+    "bagian-17-fvg-masterclass/weak-high-dan-weak-low.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "weak-high-dan-weak-low"
+    },
+    "bagian-17-fvg-masterclass/checklist-liquidity-map.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-liquidity-map"
+    },
+    "bagian-17-fvg-masterclass/trendline-liquidity-dan-retail-patterns-membongkar-jebakan-pola-ritel.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "trendline-liquidity-dan-retail-patterns-membongkar-jebakan-pola-ritel"
+    },
+    "bagian-17-fvg-masterclass/internal-dan-external-liquidity-memetakan-target-kecil-vs-target-besar.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "internal-dan-external-liquidity-memetakan-target-kecil-vs-target-besar"
+    },
+    "bagian-17-fvg-masterclass/4-jenis-gap-ict-breakaway-measuring-exhaustion-common.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "4-jenis-gap-ict-breakaway-measuring-exhaustion-common"
+    },
+    "bagian-17-fvg-masterclass/implied-fair-value-gap.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "implied-fair-value-gap"
+    },
+    "bagian-17-fvg-masterclass/inversion-fvg-ifvg-vs-breaker-block.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "inversion-fvg-ifvg-vs-breaker-block"
+    },
+    "bagian-17-fvg-masterclass/ce-consequent-encroachment.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ce-consequent-encroachment"
+    },
+    "bagian-17-fvg-masterclass/bpr-vs-ce-vs-mean-threshold.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "bpr-vs-ce-vs-mean-threshold"
+    },
+    "bagian-17-fvg-masterclass/liquidity-void-vs-volume-imbalance-vs-fvg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-void-vs-volume-imbalance-vs-fvg"
+    },
+    "bagian-17-fvg-masterclass/bisi-buyside-imbalance-dan-sibi-sellside-inefficiency.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "bisi-buyside-imbalance-dan-sibi-sellside-inefficiency"
+    },
+    "bagian-17-fvg-masterclass/reclaimed-fair-value-gap.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "reclaimed-fair-value-gap"
+    },
+    "bagian-17-fvg-masterclass/checklist-decision-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-decision-model"
+    },
+    "bagian-17-fvg-masterclass/fair-value-gap-fvg-celah-imbalance.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "fair-value-gap-fvg-celah-imbalance"
+    },
+    "bagian-17-fvg-masterclass/full-fill-vs-ce.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "full-fill-vs-ce"
+    },
+    "bagian-17-fvg-masterclass/ifvg-sebagai-model-lanjutan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ifvg-sebagai-model-lanjutan"
+    },
+    "bagian-17-fvg-masterclass/kapan-ce-lebih-berguna-daripada-full-fill-fvg-membaca-kedalaman-mitigasi-pasar.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-ce-lebih-berguna-daripada-full-fill-fvg-membaca-kedalaman-mitigasi-pasar"
+    },
+    "bagian-17-fvg-masterclass/kapan-fvg-lebih-kuat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-fvg-lebih-kuat"
+    },
+    "bagian-12-risk-management/index.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "index"
+    },
+    "bagian-12-risk-management/jangan-layering-sembarangan.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "jangan-layering-sembarangan"
+    },
+    "bagian-12-risk-management/trading-tanpa-risk-itu-bahaya.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "trading-tanpa-risk-itu-bahaya"
+    },
+    "bagian-12-risk-management/risk-reward-ratio.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "risk-reward-ratio"
+    },
+    "bagian-12-risk-management/membuat-rules-risk-pribadi.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "membuat-rules-risk-pribadi"
+    },
+    "bagian-12-risk-management/cut-loss-bukan-kalah.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "cut-loss-bukan-kalah"
+    },
+    "bagian-12-risk-management/floating-minus-dan-harapan.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "floating-minus-dan-harapan"
+    },
+    "bagian-12-risk-management/risk-per-trade.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "risk-per-trade"
+    },
+    "bagian-12-risk-management/maksimal-entry-per-hari.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "maksimal-entry-per-hari"
+    },
+    "bagian-12-risk-management/daily-loss-limit.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "daily-loss-limit"
+    },
+    "bagian-12-risk-management/cara-hitung-lot.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "cara-hitung-lot"
+    },
+    "bagian-12-risk-management/position-sizing-saat-volatilitas-tinggi-nfp-fomc.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "position-sizing-saat-volatilitas-tinggi-nfp-fomc"
+    },
+    "bagian-30-a-plus-setup-library/kapan-fvg-lebih-kuat-daripada-ob-memilih-senjata-yang-tepat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-fvg-lebih-kuat-daripada-ob-memilih-senjata-yang-tepat"
+    },
+    "bagian-30-a-plus-setup-library/full-ict-checklist.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "full-ict-checklist"
+    },
+    "bagian-30-a-plus-setup-library/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-30-a-plus-setup-library/a-silver-bullet-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-silver-bullet-setup"
+    },
+    "bagian-30-a-plus-setup-library/checklist-sebelum-entry-filter-terakhir-sebelum-eksekusi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-sebelum-entry-filter-terakhir-sebelum-eksekusi"
+    },
+    "bagian-30-a-plus-setup-library/turtle-soup-model-a-dan-model-b-memanfaatkan-jebakan-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "turtle-soup-model-a-dan-model-b-memanfaatkan-jebakan-liquidity"
+    },
+    "bagian-30-a-plus-setup-library/a-fvg-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-fvg-setup"
+    },
+    "bagian-30-a-plus-setup-library/silver-bullet-session-ict-mencari-setup-presisi-di-waktu-emas.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "silver-bullet-session-ict-mencari-setup-presisi-di-waktu-emas"
+    },
+    "bagian-30-a-plus-setup-library/a-liquidity-sweep-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-liquidity-sweep-setup"
+    },
+    "bagian-30-a-plus-setup-library/a-ifvg-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-ifvg-setup"
+    },
+    "bagian-30-a-plus-setup-library/no-trade-example.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "no-trade-example"
+    },
+    "bagian-30-a-plus-setup-library/a-ob-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-ob-setup"
+    },
+    "bagian-30-a-plus-setup-library/a-no-trade-example.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-no-trade-example"
+    },
+    "bagian-30-a-plus-setup-library/kapan-ob-lebih-kuat-daripada-fvg-memilih-fondasi-yang-kokoh.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-ob-lebih-kuat-daripada-fvg-memilih-fondasi-yang-kokoh"
+    },
+    "bagian-30-a-plus-setup-library/market-maker-models-mmxm-peta-besar-pengiriman-harga.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "market-maker-models-mmxm-peta-besar-pengiriman-harga"
+    },
+    "bagian-30-a-plus-setup-library/inversion-entry-model-memanfaatkan-kegagalan-menjadi-peluang.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "inversion-entry-model-memanfaatkan-kegagalan-menjadi-peluang"
+    },
+    "bagian-30-a-plus-setup-library/order-block-yang-high-probability.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "order-block-yang-high-probability"
+    },
+    "bagian-30-a-plus-setup-library/a-turtle-soup-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-turtle-soup-setup"
+    },
+    "bagian-30-a-plus-setup-library/roadmap-practice-advanced.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "roadmap-practice-advanced"
+    },
+    "bagian-30-a-plus-setup-library/a-session-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-session-model"
+    },
+    "bagian-30-a-plus-setup-library/a-liquidity-dan-idm-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "a-liquidity-dan-idm-setup"
+    },
+    "bagian-32-trading-tools-setup/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-32-trading-tools-setup/rekomendasi-indikator-ict-killzones.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "rekomendasi-indikator-ict-killzones"
+    },
+    "bagian-32-trading-tools-setup/cara-setting-tradingview-untuk-smc.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "cara-setting-tradingview-untuk-smc"
+    },
+    "bagian-35-trading-plan-template/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-35-trading-plan-template/sop-trading-1-halaman-printable.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "sop-trading-1-halaman-printable"
+    },
+    "bagian-27-no-trade-advanced/smt-bukan-trigger.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smt-bukan-trigger"
+    },
+    "bagian-27-no-trade-advanced/kapan-intermarket-diabaikan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-intermarket-diabaikan"
+    },
+    "bagian-27-no-trade-advanced/timeframe-untuk-smt.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "timeframe-untuk-smt"
+    },
+    "bagian-27-no-trade-advanced/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-27-no-trade-advanced/framework-xauusd-konteks-bias-korelasi-dan-eksekusi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "framework-xauusd-konteks-bias-korelasi-dan-eksekusi"
+    },
+    "bagian-27-no-trade-advanced/apa-fungsi-intermarket.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "apa-fungsi-intermarket"
+    },
+    "bagian-27-no-trade-advanced/intermarket-analysis-dxy-correlation-kompas-utama-aset-global.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "intermarket-analysis-dxy-correlation-kompas-utama-aset-global"
+    },
+    "bagian-27-no-trade-advanced/entry-terlambat-dan-rr-rusak.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-terlambat-dan-rr-rusak"
+    },
+    "bagian-27-no-trade-advanced/checklist-smt-intermarket.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-smt-intermarket"
+    },
+    "bagian-27-no-trade-advanced/kapan-tidak-trade-seni-menunggu-peluang-berkualitas.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-tidak-trade-seni-menunggu-peluang-berkualitas"
+    },
+    "bagian-27-no-trade-advanced/smt-divergence-lanjutan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smt-divergence-lanjutan"
+    },
+    "bagian-27-no-trade-advanced/dxy-dan-gold.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "dxy-dan-gold"
+    },
+    "bagian-27-no-trade-advanced/smt-divergence-konfirmasi-institusi-dan-jejak-rahasia.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smt-divergence-konfirmasi-institusi-dan-jejak-rahasia"
+    },
+    "bagian-27-no-trade-advanced/smt-sebagai-filter.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smt-sebagai-filter"
+    },
+    "bagian-27-no-trade-advanced/poi-bagus-tapi-tidak-entry.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-bagus-tapi-tidak-entry"
+    },
+    "bagian-27-no-trade-advanced/setup-hampir-valid.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "setup-hampir-valid"
+    },
+    "bagian-27-no-trade-advanced/correlated-pair-confirmation.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "correlated-pair-confirmation"
+    },
+    "bagian-27-no-trade-advanced/smt-valid-vs-invalid.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smt-valid-vs-invalid"
+    },
+    "bagian-13-psikologi-trading/revenge-trading-balas-dendam-ke-market.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "revenge-trading-balas-dendam-ke-market"
+    },
+    "bagian-13-psikologi-trading/index.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "index"
+    },
+    "bagian-13-psikologi-trading/fomo-fear-of-missing-out.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "fomo-fear-of-missing-out"
+    },
+    "bagian-13-psikologi-trading/takut-cut-loss-membiarkan-rugi-membengkak.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "takut-cut-loss-membiarkan-rugi-membengkak"
+    },
+    "bagian-13-psikologi-trading/overtrade-transaksi-berlebihan.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "overtrade-transaksi-berlebihan"
+    },
+    "bagian-13-psikologi-trading/sabar-menunggu-setup.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "sabar-menunggu-setup"
+    },
+    "bagian-13-psikologi-trading/penyakit-ego-ingin-selalu-benar.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "penyakit-ego-ingin-selalu-benar"
+    },
+    "bagian-13-psikologi-trading/membangun-mental-trader-menjadi-profesional-sejati.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "membangun-mental-trader-menjadi-profesional-sejati"
+    },
+    "bagian-13-psikologi-trading/kenapa-trader-gagal.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "kenapa-trader-gagal"
+    },
+    "bagian-13-psikologi-trading/disiplin-eksekusi-mengeksekusi-plan-tanpa-ragu.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "disiplin-eksekusi-mengeksekusi-plan-tanpa-ragu"
+    },
+    "bagian-13-psikologi-trading/menerima-loss-seni-kalah-secara-terhormat.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "menerima-loss-seni-kalah-secara-terhormat"
+    },
+    "bagian-13-psikologi-trading/jurnal-harian-moc-trauma-recovery-2026-06-08.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "jurnal-harian-moc-trauma-recovery-2026-06-08"
+    },
+    "bagian-06-ict-core/price-delivery.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "price-delivery"
+    },
+    "bagian-06-ict-core/index.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "index"
+    },
+    "bagian-06-ict-core/apa-itu-ict.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "apa-itu-ict"
+    },
+    "bagian-06-ict-core/fvg-sebagai-entry-area.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "fvg-sebagai-entry-area"
+    },
+    "bagian-06-ict-core/mss-yang-valid.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "mss-yang-valid"
+    },
+    "bagian-06-ict-core/context-is-king.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "context-is-king"
+    },
+    "bagian-06-ict-core/sweep-lalu-mss.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "sweep-lalu-mss"
+    },
+    "bagian-06-ict-core/htf-dan-ltf.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "htf-dan-ltf"
+    },
+    "bagian-06-ict-core/change-in-state-of-delivery-cisd.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "change-in-state-of-delivery-cisd"
+    },
+    "bagian-06-ict-core/cisd-bullish.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "cisd-bullish"
+    },
+    "bagian-06-ict-core/ob-fvg-combination-kombinasi-maut.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "ob-fvg-combination-kombinasi-maut"
+    },
+    "bagian-06-ict-core/cisd-bearish.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "cisd-bearish"
+    },
+    "bagian-15-menjadi-trader-mandiri/membuat-playbook-pribadi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "membuat-playbook-pribadi"
+    },
+    "bagian-15-menjadi-trader-mandiri/cara-mengembangkan-sistem.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "cara-mengembangkan-sistem"
+    },
+    "bagian-15-menjadi-trader-mandiri/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-15-menjadi-trader-mandiri/membuat-trading-plan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "membuat-trading-plan"
+    },
+    "bagian-15-menjadi-trader-mandiri/jangan-bergantung-sinyal.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "jangan-bergantung-sinyal"
+    },
+    "bagian-15-menjadi-trader-mandiri/kapan-harus-istirahat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-harus-istirahat"
+    },
+    "bagian-15-menjadi-trader-mandiri/dari-belajar-ke-eksekusi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "dari-belajar-ke-eksekusi"
+    },
+    "bagian-15-menjadi-trader-mandiri/rutinitas-sebelum-trading.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "rutinitas-sebelum-trading"
+    },
+    "bagian-15-menjadi-trader-mandiri/roadmap-live-trading.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "roadmap-live-trading"
+    },
+    "bagian-15-menjadi-trader-mandiri/rutinitas-setelah-trading.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "rutinitas-setelah-trading"
+    },
+    "bagian-19-liquidity-masterclass/poi-utama-vs-poi-sekunder-hierarki-peluang-di-chart-kamu.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-utama-vs-poi-sekunder-hierarki-peluang-di-chart-kamu"
+    },
+    "bagian-19-liquidity-masterclass/rejection-block-dan-vacuum-block.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "rejection-block-dan-vacuum-block"
+    },
+    "bagian-19-liquidity-masterclass/draw-on-liquidity-hierarchy.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "draw-on-liquidity-hierarchy"
+    },
+    "bagian-19-liquidity-masterclass/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-19-liquidity-masterclass/htf-poi-dan-ltf-poi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "htf-poi-dan-ltf-poi"
+    },
+    "bagian-19-liquidity-masterclass/poi-tumpang-tindih.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-tumpang-tindih"
+    },
+    "bagian-19-liquidity-masterclass/sweep-vs-run.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "sweep-vs-run"
+    },
+    "bagian-19-liquidity-masterclass/memilih-poi-yang-benar-seni-menyaring-peluang.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "memilih-poi-yang-benar-seni-menyaring-peluang"
+    },
+    "bagian-19-liquidity-masterclass/internal-dan-external-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "internal-dan-external-liquidity"
+    },
+    "bagian-19-liquidity-masterclass/poi-dalam-trend.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-dalam-trend"
+    },
+    "bagian-19-liquidity-masterclass/liquidity-sebagai-target-dan-trigger.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-sebagai-target-dan-trigger"
+    },
+    "bagian-19-liquidity-masterclass/poi-dalam-trend-vs-poi-dalam-range.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-dalam-trend-vs-poi-dalam-range"
+    },
+    "bagian-19-liquidity-masterclass/checklist-kekuatan-poi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-kekuatan-poi"
+    },
+    "bagian-19-liquidity-masterclass/poi-yang-invalid.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-yang-invalid"
+    },
+    "bagian-19-liquidity-masterclass/poi-utama-vs-poi-sekunder.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-utama-vs-poi-sekunder"
+    },
+    "bagian-19-liquidity-masterclass/checklist-menilai-kekuatan-poi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-menilai-kekuatan-poi"
+    },
+    "bagian-19-liquidity-masterclass/kapan-poi-diabaikan-seni-memilih-yang-terbaik.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-poi-diabaikan-seni-memilih-yang-terbaik"
+    },
+    "bagian-19-liquidity-masterclass/poi-yang-sudah-mitigated.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-yang-sudah-mitigated"
+    },
+    "bagian-19-liquidity-masterclass/poi-terlalu-tinggi-atau-rendah.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-terlalu-tinggi-atau-rendah"
+    },
+    "bagian-19-liquidity-masterclass/kapan-poi-diabaikan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-poi-diabaikan"
+    },
+    "bagian-19-liquidity-masterclass/kapan-poi-tumpang-tindih-menjadi-kekuatan-dan-kapan-menjadi-bias.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-poi-tumpang-tindih-menjadi-kekuatan-dan-kapan-menjadi-bias"
+    },
+    "bagian-19-liquidity-masterclass/liquidity-raid-vs-liquidity-purge.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-raid-vs-liquidity-purge"
+    },
+    "bagian-19-liquidity-masterclass/volume-imbalance-dan-gap-analysis.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "volume-imbalance-dan-gap-analysis"
+    },
+    "bagian-19-liquidity-masterclass/poi-dalam-range.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "poi-dalam-range"
+    },
+    "bagian-19-liquidity-masterclass/internal-sweep-sebelum-external-run.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "internal-sweep-sebelum-external-run"
+    },
+    "bagian-19-liquidity-masterclass/old-high-dan-old-low-sebagai-referensi-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "old-high-dan-old-low-sebagai-referensi-liquidity"
+    },
+    "bagian-19-liquidity-masterclass/relative-equal-highs-vs-engineered-highs.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "relative-equal-highs-vs-engineered-highs"
+    },
+    "bagian-19-liquidity-masterclass/kapan-semua-poi-ditolak.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-semua-poi-ditolak"
+    },
+    "bagian-19-liquidity-masterclass/volume-imbalance-dan-gap.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "volume-imbalance-dan-gap"
+    },
+    "bagian-28-trade-management-advanced/index.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "index"
+    },
+    "bagian-28-trade-management-advanced/checklist-sebelum-entry-filter-terakhir-sebelum-eksekusi.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "checklist-sebelum-entry-filter-terakhir-sebelum-eksekusi"
+    },
+    "bagian-28-trade-management-advanced/review-setelah-entry.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "review-setelah-entry"
+    },
+    "bagian-28-trade-management-advanced/checklist-entry-workflow.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "checklist-entry-workflow"
+    },
+    "bagian-28-trade-management-advanced/dari-validasi-ke-trigger.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "dari-validasi-ke-trigger"
+    },
+    "bagian-28-trade-management-advanced/disiplin-eksekusi-menjalankan-rencana-tanpa-kompromi.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "disiplin-eksekusi-menjalankan-rencana-tanpa-kompromi"
+    },
+    "bagian-28-trade-management-advanced/invalidation-dan-stop-loss-melindungi-logika-trading-bukan-ego.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "invalidation-dan-stop-loss-melindungi-logika-trading-bukan-ego"
+    },
+    "bagian-28-trade-management-advanced/liquidity-grab-ke-mss-ke-entry-flow-chart-praktis.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "liquidity-grab-ke-mss-ke-entry-flow-chart-praktis"
+    },
+    "bagian-28-trade-management-advanced/scaling-in-dan-scaling-out.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "scaling-in-dan-scaling-out"
+    },
+    "bagian-28-trade-management-advanced/limit-vs-market-entry.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "limit-vs-market-entry"
+    },
+    "bagian-28-trade-management-advanced/trigger-entry.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "trigger-entry"
+    },
+    "bagian-28-trade-management-advanced/target-yang-objektif.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "target-yang-objektif"
+    },
+    "bagian-28-trade-management-advanced/do-not-chase.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "do-not-chase"
+    },
+    "bagian-28-trade-management-advanced/partial-tp-dan-break-even.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "partial-tp-dan-break-even"
+    },
+    "bagian-28-trade-management-advanced/validasi-setup.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "validasi-setup"
+    },
+    "bagian-28-trade-management-advanced/kapan-hold-dan-close-manual.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "kapan-hold-dan-close-manual"
+    },
+    "bagian-28-trade-management-advanced/flowchart-entry.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "flowchart-entry"
+    },
+    "bagian-28-trade-management-advanced/kapan-tidak-trade-seni-menunggu-peluang-berkualitas.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "kapan-tidak-trade-seni-menunggu-peluang-berkualitas"
+    },
+    "bagian-28-trade-management-advanced/menyusun-trading-rules-dan-alur-baca-dari-konsep-ke-keputusan.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "menyusun-trading-rules-dan-alur-baca-dari-konsep-ke-keputusan"
+    },
+    "bagian-28-trade-management-advanced/context-sebelum-trigger.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "context-sebelum-trigger"
+    },
+    "bagian-28-trade-management-advanced/invalidation-yang-jelas.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "invalidation-yang-jelas"
+    },
+    "bagian-28-trade-management-advanced/do-not-chase-disiplin-menunggu-lokasi-yang-sehat.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "do-not-chase-disiplin-menunggu-lokasi-yang-sehat"
+    },
+    "bagian-28-trade-management-advanced/setelah-entry-jangan-panik.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "setelah-entry-jangan-panik"
+    },
+    "bagian-28-trade-management-advanced/checklist-setelah-entry-mengelola-posisi-dengan-kepala-dingin.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "checklist-setelah-entry-mengelola-posisi-dengan-kepala-dingin"
+    },
+    "bagian-28-trade-management-advanced/partial-take-profit.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "partial-take-profit"
+    },
+    "bagian-28-trade-management-advanced/valid-win-dan-invalid-win.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "valid-win-dan-invalid-win"
+    },
+    "bagian-28-trade-management-advanced/cara-mengelola-trade-yang-sudah-masuk-profit.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "cara-mengelola-trade-yang-sudah-masuk-profit"
+    },
+    "bagian-28-trade-management-advanced/hold-full-position.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "hold-full-position"
+    },
+    "bagian-28-trade-management-advanced/review-mingguan-dan-expectancy.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "review-mingguan-dan-expectancy"
+    },
+    "bagian-28-trade-management-advanced/kapan-memindahkan-stop-loss-dan-kapan-tidak-seni-proteksi-modal.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "kapan-memindahkan-stop-loss-dan-kapan-tidak-seni-proteksi-modal"
+    },
+    "bagian-28-trade-management-advanced/backtest-per-model-entry.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "backtest-per-model-entry"
+    },
+    "bagian-28-trade-management-advanced/move-sl-to-be.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "move-sl-to-be"
+    },
+    "bagian-28-trade-management-advanced/be-trap.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "be-trap"
+    },
+    "bagian-28-trade-management-advanced/kapan-scale-out-dan-kapan-hold-full.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "kapan-scale-out-dan-kapan-hold-full"
+    },
+    "bagian-28-trade-management-advanced/bedanya-exit-objektif-vs-exit-emosional.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "bedanya-exit-objektif-vs-exit-emosional"
+    },
+    "bagian-28-trade-management-advanced/scale-out.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "scale-out"
+    },
+    "bagian-28-trade-management-advanced/pyramiding-dan-scaling-in-position-strategi-agresif-yang-terukur.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "pyramiding-dan-scaling-in-position-strategi-agresif-yang-terukur"
+    },
+    "bagian-28-trade-management-advanced/re-entry-setelah-profit.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "re-entry-setelah-profit"
+    },
+    "bagian-28-trade-management-advanced/cara-membaca-trade-yang-gagal.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "cara-membaca-trade-yang-gagal"
+    },
+    "bagian-28-trade-management-advanced/exit-objektif-vs-emosional.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "exit-objektif-vs-emosional"
+    },
+    "bagian-28-trade-management-advanced/membaca-trade-yang-gagal.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "membaca-trade-yang-gagal"
+    },
+    "bagian-28-trade-management-advanced/checklist-trade-management.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "checklist-trade-management"
+    },
+    "bagian-29-backtest-advanced/move-sl-to-be.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "move-sl-to-be"
+    },
+    "bagian-29-backtest-advanced/valid-win-dan-invalid-win.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "valid-win-dan-invalid-win"
+    },
+    "bagian-29-backtest-advanced/index.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "index"
+    },
+    "bagian-29-backtest-advanced/membaca-trade-yang-gagal.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "membaca-trade-yang-gagal"
+    },
+    "bagian-29-backtest-advanced/target-dan-partial-take-profit-mengelola-hasil-secara-objektif.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "target-dan-partial-take-profit-mengelola-hasil-secara-objektif"
+    },
+    "bagian-29-backtest-advanced/exit-objektif-vs-emosional.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "exit-objektif-vs-emosional"
+    },
+    "bagian-29-backtest-advanced/setelah-entry-jangan-panik.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "setelah-entry-jangan-panik"
+    },
+    "bagian-29-backtest-advanced/checklist-trade-management.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "checklist-trade-management"
+    },
+    "bagian-29-backtest-advanced/kapan-scale-out-dan-kapan-hold-full.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "kapan-scale-out-dan-kapan-hold-full"
+    },
+    "bagian-29-backtest-advanced/bedanya-exit-objektif-vs-exit-emosional.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "bedanya-exit-objektif-vs-exit-emosional"
+    },
+    "bagian-29-backtest-advanced/checklist-setelah-entry-mengelola-posisi-dengan-kepala-dingin.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "checklist-setelah-entry-mengelola-posisi-dengan-kepala-dingin"
+    },
+    "bagian-29-backtest-advanced/cara-membaca-trade-yang-gagal.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "cara-membaca-trade-yang-gagal"
+    },
+    "bagian-29-backtest-advanced/be-trap.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "be-trap"
+    },
+    "bagian-29-backtest-advanced/hold-full-position.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "hold-full-position"
+    },
+    "bagian-29-backtest-advanced/pyramiding-dan-scaling-in-position-strategi-agresif-yang-terukur.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "pyramiding-dan-scaling-in-position-strategi-agresif-yang-terukur"
+    },
+    "bagian-29-backtest-advanced/review-mingguan-dan-expectancy.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "review-mingguan-dan-expectancy"
+    },
+    "bagian-29-backtest-advanced/cara-mengelola-trade-yang-sudah-masuk-profit.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "cara-mengelola-trade-yang-sudah-masuk-profit"
+    },
+    "bagian-29-backtest-advanced/scale-out.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "scale-out"
+    },
+    "bagian-29-backtest-advanced/backtest-per-model-entry.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "backtest-per-model-entry"
+    },
+    "bagian-29-backtest-advanced/kapan-memindahkan-stop-loss-dan-kapan-tidak-seni-proteksi-modal.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "kapan-memindahkan-stop-loss-dan-kapan-tidak-seni-proteksi-modal"
+    },
+    "bagian-29-backtest-advanced/partial-take-profit.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "partial-take-profit"
+    },
+    "bagian-29-backtest-advanced/re-entry-setelah-profit.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "re-entry-setelah-profit"
+    },
+    "bagian-21-ifvg-inversion-model/news-days-dan-abnormal-volatility.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "news-days-dan-abnormal-volatility"
+    },
+    "bagian-21-ifvg-inversion-model/session-transition.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "session-transition"
+    },
+    "bagian-21-ifvg-inversion-model/fvg-gagal-menjadi-ifvg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "fvg-gagal-menjadi-ifvg"
+    },
+    "bagian-21-ifvg-inversion-model/rebalance-berhasil-dan-gagal.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "rebalance-berhasil-dan-gagal"
+    },
+    "bagian-21-ifvg-inversion-model/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-21-ifvg-inversion-model/news-day-dan-abnormal-volatility.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "news-day-dan-abnormal-volatility"
+    },
+    "bagian-21-ifvg-inversion-model/killzone-yang-layak.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "killzone-yang-layak"
+    },
+    "bagian-21-ifvg-inversion-model/opening-gap-dan-session-transitions.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "opening-gap-dan-session-transitions"
+    },
+    "bagian-21-ifvg-inversion-model/london-reversal-vs-continuation.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "london-reversal-vs-continuation"
+    },
+    "bagian-21-ifvg-inversion-model/checklist-session-advanced.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-session-advanced"
+    },
+    "bagian-21-ifvg-inversion-model/kapan-new-york-memberi-reversal-dan-kapan-memberi-continuation.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-new-york-memberi-reversal-dan-kapan-memberi-continuation"
+    },
+    "bagian-21-ifvg-inversion-model/kapan-asia-membuat-jebakan-untuk-london.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-asia-membuat-jebakan-untuk-london"
+    },
+    "bagian-21-ifvg-inversion-model/judas-swing-london-vs-new-york.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "judas-swing-london-vs-new-york"
+    },
+    "bagian-21-ifvg-inversion-model/kapan-new-york-mengonfirmasi-london-dan-kapan-membatalkannya.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-new-york-mengonfirmasi-london-dan-kapan-membatalkannya"
+    },
+    "bagian-21-ifvg-inversion-model/kapan-session-tidak-valid.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-session-tidak-valid"
+    },
+    "bagian-21-ifvg-inversion-model/lv-vs-fvg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "lv-vs-fvg"
+    },
+    "bagian-21-ifvg-inversion-model/new-york-confirm-vs-cancel.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "new-york-confirm-vs-cancel"
+    },
+    "bagian-21-ifvg-inversion-model/asia-trap-untuk-london.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "asia-trap-untuk-london"
+    },
+    "bagian-21-ifvg-inversion-model/kapan-london-memberi-reversal-dan-kapan-memberi-continuation.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-london-memberi-reversal-dan-kapan-memberi-continuation"
+    },
+    "bagian-21-ifvg-inversion-model/asia-build-vs-asia-direction.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "asia-build-vs-asia-direction"
+    },
+    "bagian-21-ifvg-inversion-model/fvg-luas.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "fvg-luas"
+    },
+    "bagian-21-ifvg-inversion-model/ifvg-breaker.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ifvg-breaker"
+    },
+    "bagian-21-ifvg-inversion-model/advanced-imbalances-bpr-dan-vi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "advanced-imbalances-bpr-dan-vi"
+    },
+    "bagian-21-ifvg-inversion-model/entry-di-ifvg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-di-ifvg"
+    },
+    "bagian-21-ifvg-inversion-model/london-kill-zone-dan-new-york-kill-zone.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "london-kill-zone-dan-new-york-kill-zone"
+    },
+    "bagian-21-ifvg-inversion-model/kapan-asia-hanya-build-dan-kapan-memberi-arah.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-asia-hanya-build-dan-kapan-memberi-arah"
+    },
+    "bagian-21-ifvg-inversion-model/bedanya-judas-swing-london-vs-new-york.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "bedanya-judas-swing-london-vs-new-york"
+    },
+    "bagian-25-session-entry-model/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-25-session-entry-model/failed-breakout-reversal.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "failed-breakout-reversal"
+    },
+    "bagian-25-session-entry-model/smr-smart-money-reversal-model-seni-menangkap-puncak-dan-lembah.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smr-smart-money-reversal-model-seni-menangkap-puncak-dan-lembah"
+    },
+    "bagian-25-session-entry-model/turtle-soup-model-a-dan-model-b-memanfaatkan-jebakan-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "turtle-soup-model-a-dan-model-b-memanfaatkan-jebakan-liquidity"
+    },
+    "bagian-25-session-entry-model/london-manipulation.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "london-manipulation"
+    },
+    "bagian-25-session-entry-model/tgif-setup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "tgif-setup"
+    },
+    "bagian-25-session-entry-model/entry-setelah-failed-run.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-setelah-failed-run"
+    },
+    "bagian-25-session-entry-model/turtle-soup-model-b.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "turtle-soup-model-b"
+    },
+    "bagian-25-session-entry-model/new-york-distribution.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "new-york-distribution"
+    },
+    "bagian-25-session-entry-model/smr-smart-money-reversal.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smr-smart-money-reversal"
+    },
+    "bagian-25-session-entry-model/change-in-state-of-delivery-cisd-memahami-perubahan-algoritma-pasar.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "change-in-state-of-delivery-cisd-memahami-perubahan-algoritma-pasar"
+    },
+    "bagian-25-session-entry-model/turtle-soup-lanjutan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "turtle-soup-lanjutan"
+    },
+    "bagian-25-session-entry-model/continuation-failure-dan-tanda-awal-pembalikan-seni-menjaga-keuntungan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "continuation-failure-dan-tanda-awal-pembalikan-seni-menjaga-keuntungan"
+    },
+    "bagian-25-session-entry-model/invalidation-turtle-soup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "invalidation-turtle-soup"
+    },
+    "bagian-25-session-entry-model/tuesday-high-low-raid.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "tuesday-high-low-raid"
+    },
+    "bagian-25-session-entry-model/target-turtle-soup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "target-turtle-soup"
+    },
+    "bagian-25-session-entry-model/checklist-turtle-soup-smr.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-turtle-soup-smr"
+    },
+    "bagian-25-session-entry-model/asia-range-dan-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "asia-range-dan-liquidity"
+    },
+    "bagian-25-session-entry-model/friday-profit-taking-profile.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "friday-profit-taking-profile"
+    },
+    "bagian-25-session-entry-model/false-displacement-dan-cara-membedakannya-menghindari-jebakan-momentum.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "false-displacement-dan-cara-membedakannya-menghindari-jebakan-momentum"
+    },
+    "bagian-25-session-entry-model/thursday-continuation-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "thursday-continuation-model"
+    },
+    "bagian-25-session-entry-model/kapan-turtle-soup-dihindari.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-turtle-soup-dihindari"
+    },
+    "bagian-25-session-entry-model/wednesday-reversal-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "wednesday-reversal-model"
+    },
+    "bagian-25-session-entry-model/turtle-soup-model-a.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "turtle-soup-model-a"
+    },
+    "bagian-04-liquidity/external-liquidity.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "external-liquidity"
+    },
+    "bagian-04-liquidity/index.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "index"
+    },
+    "bagian-04-liquidity/konsep-dasar-liquidity.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "konsep-dasar-liquidity"
+    },
+    "bagian-04-liquidity/latihan-sweep.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "latihan-sweep"
+    },
+    "bagian-04-liquidity/sweep-vs-run.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "sweep-vs-run"
+    },
+    "bagian-04-liquidity/liquidity-grab.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "liquidity-grab"
+    },
+    "bagian-04-liquidity/sell-side-liquidity.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "sell-side-liquidity"
+    },
+    "bagian-04-liquidity/liquidity-pool.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "liquidity-pool"
+    },
+    "bagian-04-liquidity/liquidity-run.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "liquidity-run"
+    },
+    "bagian-04-liquidity/latihan-konsep-dasar-liquidity.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "latihan-konsep-dasar-liquidity"
+    },
+    "bagian-04-liquidity/apa-itu-liquidity.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "apa-itu-liquidity"
+    },
+    "bagian-04-liquidity/latihan-bsl-dan-ssl.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "latihan-bsl-dan-ssl"
+    },
+    "bagian-04-liquidity/bsl-dan-ssl.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "bsl-dan-ssl"
+    },
+    "bagian-04-liquidity/liquidity-sweep.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "liquidity-sweep"
+    },
+    "bagian-04-liquidity/internal-liquidity.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "internal-liquidity"
+    },
+    "bagian-04-liquidity/equal-high-dan-equal-low.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "equal-high-dan-equal-low"
+    },
+    "bagian-04-liquidity/buy-side-liquidity.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "buy-side-liquidity"
+    },
+    "bagian-04-liquidity/latihan-reaksi-cepat.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "latihan-reaksi-cepat"
+    },
+    "bagian-18-order-block-masterclass/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-18-order-block-masterclass/sweep-yang-layak-diikuti.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "sweep-yang-layak-diikuti"
+    },
+    "bagian-18-order-block-masterclass/reversal-setelah-failed-run.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "reversal-setelah-failed-run"
+    },
+    "bagian-18-order-block-masterclass/mengapa-breakout-sering-menipu-membongkar-logika-manipulasi-level.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "mengapa-breakout-sering-menipu-membongkar-logika-manipulasi-level"
+    },
+    "bagian-18-order-block-masterclass/false-displacement.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "false-displacement"
+    },
+    "bagian-18-order-block-masterclass/cisd-lanjutan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "cisd-lanjutan"
+    },
+    "bagian-18-order-block-masterclass/body-ob-vs-wick-ob.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "body-ob-vs-wick-ob"
+    },
+    "bagian-18-order-block-masterclass/kapan-ob-lebih-kuat-dari-fvg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-ob-lebih-kuat-dari-fvg"
+    },
+    "bagian-18-order-block-masterclass/apa-itu-liquidity-grab-reaksi-awal-setelah-sapuan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "apa-itu-liquidity-grab-reaksi-awal-setelah-sapuan"
+    },
+    "bagian-18-order-block-masterclass/change-in-state-of-delivery-cisd-memahami-perubahan-algoritma-pasar.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "change-in-state-of-delivery-cisd-memahami-perubahan-algoritma-pasar"
+    },
+    "bagian-18-order-block-masterclass/continuation-leg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "continuation-leg"
+    },
+    "bagian-18-order-block-masterclass/displacement-setelah-sweep.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "displacement-setelah-sweep"
+    },
+    "bagian-18-order-block-masterclass/mean-threshold.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "mean-threshold"
+    },
+    "bagian-18-order-block-masterclass/apa-itu-liquidity-sweep-seni-membaca-liquidity-sweep.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "apa-itu-liquidity-sweep-seni-membaca-liquidity-sweep"
+    },
+    "bagian-18-order-block-masterclass/apa-itu-liquidity-run-momen-harga-mulai-berlari.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "apa-itu-liquidity-run-momen-harga-mulai-berlari"
+    },
+    "bagian-18-order-block-masterclass/liquidity-run-yang-valid-vs-yang-palsu-membedakan-momentum-dan-manipulasi.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-run-yang-valid-vs-yang-palsu-membedakan-momentum-dan-manipulasi"
+    },
+    "bagian-18-order-block-masterclass/delivery-sequence-memahami-alur-pergerakan-harga.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "delivery-sequence-memahami-alur-pergerakan-harga"
+    },
+    "bagian-18-order-block-masterclass/delivery-sequence.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "delivery-sequence"
+    },
+    "bagian-18-order-block-masterclass/displacement-tanda-kehadiran-smart-money.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "displacement-tanda-kehadiran-smart-money"
+    },
+    "bagian-18-order-block-masterclass/mitigation-block.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "mitigation-block"
+    },
+    "bagian-18-order-block-masterclass/false-displacement-dan-cara-membedakannya-menghindari-jebakan-momentum.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "false-displacement-dan-cara-membedakannya-menghindari-jebakan-momentum"
+    },
+    "bagian-18-order-block-masterclass/continuation-failure.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "continuation-failure"
+    },
+    "bagian-18-order-block-masterclass/checklist-sweep-delivery.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-sweep-delivery"
+    },
+    "bagian-18-order-block-masterclass/sweep-vs-grab-vs-run.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "sweep-vs-grab-vs-run"
+    },
+    "bagian-18-order-block-masterclass/ob-valid-vs-ob-palsu.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ob-valid-vs-ob-palsu"
+    },
+    "bagian-09-entry-model/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-09-entry-model/liquidity-grab-mss-fvg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "liquidity-grab-mss-fvg"
+    },
+    "bagian-09-entry-model/jangan-cari-entry-dulu.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "jangan-cari-entry-dulu"
+    },
+    "bagian-09-entry-model/entry-setelah-retest.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-setelah-retest"
+    },
+    "bagian-09-entry-model/urutan-entry-yang-benar.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "urutan-entry-yang-benar"
+    },
+    "bagian-09-entry-model/entry-di-fvg.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-di-fvg"
+    },
+    "bagian-09-entry-model/entry-setelah-cisd.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-setelah-cisd"
+    },
+    "bagian-09-entry-model/optimal-trade-entry.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "optimal-trade-entry"
+    },
+    "bagian-09-entry-model/take-profit-ke-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "take-profit-ke-liquidity"
+    },
+    "bagian-09-entry-model/entry-di-order-block.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-di-order-block"
+    },
+    "bagian-09-entry-model/ict-2022-entry-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ict-2022-entry-model"
+    },
+    "bagian-09-entry-model/fibonacci-ote.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "fibonacci-ote"
+    },
+    "bagian-09-entry-model/turtle-soup.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "turtle-soup"
+    },
+    "bagian-09-entry-model/kapan-tidak-entry.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-tidak-entry"
+    },
+    "bagian-09-entry-model/stop-loss-berdasarkan-struktur.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "stop-loss-berdasarkan-struktur"
+    },
+    "bagian-09-entry-model/market-structure-shift.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "market-structure-shift"
+    },
+    "bagian-20-idm-inducement-masterclass/kapan-fvg-lebih-kuat-daripada-ob-memilih-senjata-yang-tepat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-fvg-lebih-kuat-daripada-ob-memilih-senjata-yang-tepat"
+    },
+    "bagian-20-idm-inducement-masterclass/order-block-ob-jejak-kaki-sang-gajah.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "order-block-ob-jejak-kaki-sang-gajah"
+    },
+    "bagian-20-idm-inducement-masterclass/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-20-idm-inducement-masterclass/kapan-fvg-lebih-kuat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-fvg-lebih-kuat"
+    },
+    "bagian-20-idm-inducement-masterclass/volume-imbalance-dan-gap.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "volume-imbalance-dan-gap"
+    },
+    "bagian-20-idm-inducement-masterclass/consequent-encroachment-ce-presisi-di-jantung-imbalance.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "consequent-encroachment-ce-presisi-di-jantung-imbalance"
+    },
+    "bagian-20-idm-inducement-masterclass/idm-sebelum-bos.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "idm-sebelum-bos"
+    },
+    "bagian-20-idm-inducement-masterclass/ifvg-sebagai-model-lanjutan.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ifvg-sebagai-model-lanjutan"
+    },
+    "bagian-20-idm-inducement-masterclass/inducement-idm.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "inducement-idm"
+    },
+    "bagian-20-idm-inducement-masterclass/kapan-ce-lebih-berguna-daripada-full-fill-fvg-membaca-kedalaman-mitigasi-pasar.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-ce-lebih-berguna-daripada-full-fill-fvg-membaca-kedalaman-mitigasi-pasar"
+    },
+    "bagian-20-idm-inducement-masterclass/breaker-fvg-combination.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "breaker-fvg-combination"
+    },
+    "bagian-20-idm-inducement-masterclass/ob-fvg-overlap.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ob-fvg-overlap"
+    },
+    "bagian-20-idm-inducement-masterclass/kapan-ob-lebih-kuat.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-ob-lebih-kuat"
+    },
+    "bagian-20-idm-inducement-masterclass/fair-value-gap-fvg-celah-imbalance.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "fair-value-gap-fvg-celah-imbalance"
+    },
+    "bagian-20-idm-inducement-masterclass/idm-yang-invalid.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "idm-yang-invalid"
+    },
+    "bagian-20-idm-inducement-masterclass/full-fill-vs-ce.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "full-fill-vs-ce"
+    },
+    "bagian-20-idm-inducement-masterclass/kapan-ob-lebih-kuat-daripada-fvg-memilih-fondasi-yang-kokoh.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-ob-lebih-kuat-daripada-fvg-memilih-fondasi-yang-kokoh"
+    },
+    "bagian-20-idm-inducement-masterclass/ce-consequent-encroachment.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ce-consequent-encroachment"
+    },
+    "bagian-20-idm-inducement-masterclass/inversion-entry-model-memanfaatkan-kegagalan-menjadi-peluang.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "inversion-entry-model-memanfaatkan-kegagalan-menjadi-peluang"
+    },
+    "bagian-20-idm-inducement-masterclass/entry-setelah-idm-tersapu.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-setelah-idm-tersapu"
+    },
+    "bagian-20-idm-inducement-masterclass/checklist-decision-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-decision-model"
+    },
+    "bagian-20-idm-inducement-masterclass/kapan-semua-poi-ditolak.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-semua-poi-ditolak"
+    },
+    "bagian-20-idm-inducement-masterclass/inversion-fair-value-gap-ifvg-saat-support-menjadi-resistance.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "inversion-fair-value-gap-ifvg-saat-support-menjadi-resistance"
+    },
+    "bagian-23-premium-discount-advanced/macro-dan-draw-on-liquidity.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "macro-dan-draw-on-liquidity"
+    },
+    "bagian-23-premium-discount-advanced/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-23-premium-discount-advanced/silver-bullet-bearish.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "silver-bullet-bearish"
+    },
+    "bagian-23-premium-discount-advanced/macro-ict-time-windows-detail-timing-di-balik-pergerakan-harga.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "macro-ict-time-windows-detail-timing-di-balik-pergerakan-harga"
+    },
+    "bagian-23-premium-discount-advanced/silver-bullet-session-ict-mencari-setup-presisi-di-waktu-emas.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "silver-bullet-session-ict-mencari-setup-presisi-di-waktu-emas"
+    },
+    "bagian-23-premium-discount-advanced/premium-discount-array.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "premium-discount-array"
+    },
+    "bagian-23-premium-discount-advanced/kapan-silver-bullet-gagal.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-silver-bullet-gagal"
+    },
+    "bagian-23-premium-discount-advanced/apa-yang-dimaksud-macro.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "apa-yang-dimaksud-macro"
+    },
+    "bagian-23-premium-discount-advanced/macro-time-window.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "macro-time-window"
+    },
+    "bagian-23-premium-discount-advanced/silver-bullet-bullish.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "silver-bullet-bullish"
+    },
+    "bagian-23-premium-discount-advanced/dealing-range-expansion-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "dealing-range-expansion-model"
+    },
+    "bagian-23-premium-discount-advanced/silver-bullet-context.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "silver-bullet-context"
+    },
+    "bagian-23-premium-discount-advanced/entry-terlambat-di-macro.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "entry-terlambat-di-macro"
+    },
+    "bagian-23-premium-discount-advanced/htf-dan-ltf-premium-discount.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "htf-dan-ltf-premium-discount"
+    },
+    "bagian-23-premium-discount-advanced/waktu-vs-harga-mana-yang-lebih-penting.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "waktu-vs-harga-mana-yang-lebih-penting"
+    },
+    "bagian-23-premium-discount-advanced/dealing-range-yang-benar.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "dealing-range-yang-benar"
+    },
+    "bagian-23-premium-discount-advanced/ote-vs-fvg-vs-ob.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ote-vs-fvg-vs-ob"
+    },
+    "bagian-23-premium-discount-advanced/macro-tanpa-entry.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "macro-tanpa-entry"
+    },
+    "bagian-23-premium-discount-advanced/checklist-macro-silver-bullet.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "checklist-macro-silver-bullet"
+    },
+    "bagian-23-premium-discount-advanced/true-day-open-midnight-open-dan-kill-zones.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "true-day-open-midnight-open-dan-kill-zones"
+    },
+    "bagian-23-premium-discount-advanced/london-kill-zone-dan-new-york-kill-zone.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "london-kill-zone-dan-new-york-kill-zone"
+    },
+    "bagian-33-live-case-studies/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-33-live-case-studies/studi-kasus-1-xauusd-london-killzone.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "studi-kasus-1-xauusd-london-killzone"
+    },
+    "bagian-33-live-case-studies/bedah-kegagalan-setup-a-plus.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "bedah-kegagalan-setup-a-plus"
+    },
+    "bagian-11-advanced-ict/buy-model-dan-sell-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "buy-model-dan-sell-model"
+    },
+    "bagian-11-advanced-ict/index.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "index"
+    },
+    "bagian-11-advanced-ict/ict-2022-mentorship-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ict-2022-mentorship-model"
+    },
+    "bagian-11-advanced-ict/standard-deviation-projection.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "standard-deviation-projection"
+    },
+    "bagian-11-advanced-ict/stdv-accumulation-manipulation.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "stdv-accumulation-manipulation"
+    },
+    "bagian-11-advanced-ict/stdv-manipulation-distribution.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "stdv-manipulation-distribution"
+    },
+    "bagian-11-advanced-ict/unicorn-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "unicorn-model"
+    },
+    "bagian-11-advanced-ict/symmetrical-return-pengiriman-harga-simetris.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "symmetrical-return-pengiriman-harga-simetris"
+    },
+    "bagian-11-advanced-ict/breaker-fvg-combination.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "breaker-fvg-combination"
+    },
+    "bagian-11-advanced-ict/mmxm-market-maker-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "mmxm-market-maker-model"
+    },
+    "bagian-11-advanced-ict/stair-step-pattern.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "stair-step-pattern"
+    },
+    "bagian-11-advanced-ict/kapan-advanced-model-dipakai.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "kapan-advanced-model-dipakai"
+    },
+    "bagian-11-advanced-ict/smt-divergence.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smt-divergence"
+    },
+    "bagian-11-advanced-ict/smart-money-reversal-smr.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "smart-money-reversal-smr"
+    },
+    "bagian-11-advanced-ict/ict-2023-mentorship-model.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "ict-2023-mentorship-model"
+    },
+    "bagian-11-advanced-ict/template.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "template"
+    },
+    "bagian-11-advanced-ict/breaker-plus-fvg-combination.html": {
+      "enabled": true,
+      "category": "structural",
+      "topic": "breaker-plus-fvg-combination"
+    },
+    "bagian-02-membaca-chart/index.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "index"
+    },
+    "bagian-02-membaca-chart/wick-body-dan-momentum.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "wick-body-dan-momentum"
+    },
+    "bagian-02-membaca-chart/resistance.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "resistance"
+    },
+    "bagian-02-membaca-chart/bullish-candle-dan-bearish-candle.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "bullish-candle-dan-bearish-candle"
+    },
+    "bagian-02-membaca-chart/apa-itu-chart.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "apa-itu-chart"
+    },
+    "bagian-02-membaca-chart/support.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "support"
+    },
+    "bagian-02-membaca-chart/swing-high-dan-swing-low.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "swing-high-dan-swing-low"
+    },
+    "bagian-02-membaca-chart/timeframe-dan-fractal.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "timeframe-dan-fractal"
+    },
+    "bagian-02-membaca-chart/market-structure-dasar.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "market-structure-dasar"
+    },
+    "bagian-02-membaca-chart/trend-uptrend-downtrend-sideways.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "trend-uptrend-downtrend-sideways"
+    },
+    "bagian-02-membaca-chart/support-dan-resistance.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "support-dan-resistance"
+    },
+    "bagian-02-membaca-chart/candlestick-open-high-low-close.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "candlestick-open-high-low-close"
+    },
+    "bagian-05-smart-money-concept/index.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "index"
+    },
+    "bagian-05-smart-money-concept/propulsion-block.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "propulsion-block"
+    },
+    "bagian-05-smart-money-concept/rejection-block.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "rejection-block"
+    },
+    "bagian-05-smart-money-concept/order-block.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "order-block"
+    },
+    "bagian-05-smart-money-concept/smart-money-vs-retail.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "smart-money-vs-retail"
+    },
+    "bagian-05-smart-money-concept/pd-array.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "pd-array"
+    },
+    "bagian-05-smart-money-concept/fair-value-gap.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "fair-value-gap"
+    },
+    "bagian-05-smart-money-concept/inducement.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "inducement"
+    },
+    "bagian-05-smart-money-concept/breaker-block.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "breaker-block"
+    },
+    "bagian-05-smart-money-concept/stop-hunt-dan-false-breakout.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "stop-hunt-dan-false-breakout"
+    },
+    "bagian-05-smart-money-concept/high-probability-order-block.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "high-probability-order-block"
+    },
+    "bagian-05-smart-money-concept/mitigation-block.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "mitigation-block"
+    },
+    "bagian-05-smart-money-concept/dealing-range.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "dealing-range"
+    },
+    "bagian-05-smart-money-concept/premium-dan-discount.html": {
+      "enabled": true,
+      "category": "basics",
+      "topic": "premium-dan-discount"
+    },
+    "bagian-36-psikologi-smc-lanjutan/index.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "index"
+    },
+    "bagian-36-psikologi-smc-lanjutan/overexplaining-market.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "overexplaining-market"
+    },
+    "bagian-36-psikologi-smc-lanjutan/analysis-freeze.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "analysis-freeze"
+    },
+    "bagian-36-psikologi-smc-lanjutan/pindah-metode.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "pindah-metode"
+    },
+    "bagian-36-psikologi-smc-lanjutan/narrative-bias.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "narrative-bias"
+    },
+    "bagian-36-psikologi-smc-lanjutan/backtest-bias.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "backtest-bias"
+    },
+    "bagian-36-psikologi-ict-lanjutan/analysis-freeze.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "analysis-freeze"
+    },
+    "bagian-36-psikologi-ict-lanjutan/backtest-bias.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "backtest-bias"
+    },
+    "bagian-36-psikologi-ict-lanjutan/index.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "index"
+    },
+    "bagian-36-psikologi-ict-lanjutan/narrative-bias.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "narrative-bias"
+    },
+    "bagian-36-psikologi-ict-lanjutan/overexplaining-market.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "overexplaining-market"
+    },
+    "bagian-36-psikologi-ict-lanjutan/pindah-metode.html": {
+      "enabled": true,
+      "category": "management",
+      "topic": "pindah-metode"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 mkdir -p app/src/main/assets/apps/mapping
-cp amyfx_indicator_logic_patch/assets/apps/mapping/index.html app/src/main/assets/apps/mapping/index.html
+cp amyfx_indicator_logic_patch/app/src/main/assets/apps/mapping/index.html app/src/main/assets/apps/mapping/index.html
 cp amyfx_indicator_logic_patch/INDICATOR_LOGIC_PORT_NOTES.md ./INDICATOR_LOGIC_PORT_NOTES.md
 if [ -f app/build.gradle.kts ]; then
   python3 - <<'PY'

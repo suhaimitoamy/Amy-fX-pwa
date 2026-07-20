@@ -1,4 +1,4 @@
-name: Validate Amy FX 1.4.7 Release Candidate
+name: Validate Amy FX 1.4.13 Release Candidate
 
 on:
   workflow_dispatch:
@@ -21,8 +21,8 @@ env:
   AMYFX_KEYSTORE_PASSWORD: android
   AMYFX_KEY_ALIAS: androiddebugkey
   AMYFX_KEY_PASSWORD: android
-  AMYFX_VERSION_NAME: "1.4.7"
-  AMYFX_VERSION_CODE: "30"
+  AMYFX_VERSION_NAME: "1.4.13"
+  AMYFX_VERSION_CODE: "36"
   AMYFX_SIGNING_CERT_SHA256: "47:C2:32:BC:44:FA:63:C9:2F:FE:41:1F:71:40:40:4C:09:AA:2A:9C:BF:82:B1:85:9A:86:0B:85:56:7B:AD:C7"
 
 jobs:
@@ -92,7 +92,7 @@ jobs:
       - name: Run Android release lint
         run: ./gradlew lintRelease --no-configuration-cache
 
-      - name: Build signed Amy FX 1.4.7 APK
+      - name: Build signed Amy FX 1.4.13 APK
         run: ./gradlew assembleRelease --no-configuration-cache --stacktrace
 
       - name: Verify APK identity, version and signer
@@ -109,5 +109,5 @@ jobs:
       - name: Upload validated APK
         uses: actions/upload-artifact@v4
         with:
-          name: Amy-FX-v1.4.7-stage5-signed-apk
+          name: Amy-FX-v1.4.13-stage5-signed-apk
           path: app/build/outputs/apk/release/app-release.apk

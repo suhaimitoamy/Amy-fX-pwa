@@ -4,11 +4,11 @@ import test from 'node:test';
 import vm from 'node:vm';
 
 const source = fs.readFileSync(
-  new URL('../assets/apps/journal/amy-journal-final-fix.js', import.meta.url),
+  new URL('../app/src/main/assets/apps/journal/amy-journal-final-fix.js', import.meta.url),
   'utf8'
 );
 const css = fs.readFileSync(
-  new URL('../assets/apps/journal/amy-journal-final-fix.css', import.meta.url),
+  new URL('../app/src/main/assets/apps/journal/amy-journal-final-fix.css', import.meta.url),
   'utf8'
 );
 

@@ -4,7 +4,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 
 const source = fs.readFileSync(
-  new URL('../assets/apps/shared/market-intelligence.js', import.meta.url),
+  new URL('../app/src/main/assets/apps/shared/market-intelligence.js', import.meta.url),
   'utf8'
 );
 
