@@ -1,7 +1,7 @@
 /* Amy FX PWA service worker */
 'use strict';
 
-const VERSION = '2026.07.20.2';
+const VERSION = '2026.07.20.3';
 const SHELL_CACHE = `amyfx-pwa-shell-${VERSION}`;
 const STATIC_CACHE = `amyfx-pwa-static-${VERSION}`;
 const DATA_CACHE = `amyfx-pwa-data-${VERSION}`;
@@ -19,6 +19,7 @@ const SHELL = [
   appUrl('platform-adapter.js'),
   appUrl('member-auth.js'),
   appUrl('pwa-bootstrap.js'),
+  appUrl('pwa-navigation.js'),
   appUrl('icons/amy-fx.svg'),
   appUrl('icons/amy-fx-maskable.svg'),
   appUrl('icons/amy-fx-180.png'),
@@ -104,15 +105,53 @@ async function staleWhileRevalidate(request, cacheName) {
   return cached || update || fetch(request);
 }
 
-async function handleNavigation(request) {
+function isRootNavigation(url) {
+  const path = url.pathname.replace(/index\.html$/, '');
+  return path === BASE_PATH || path === BASE_PATH.replace(/\/$/, '');
+}
+
+async function withDashboardNavigation(response, request) {
+  if (!response || !response.ok) return response;
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('text/html')) return response;
+
+  const url = new URL(request.url);
+  if (isRootNavigation(url)) return response;
+
   try {
-    return await networkFirst(request, SHELL_CACHE, 6500);
+    const html = await response.clone().text();
+    if (html.includes('pwa-navigation.js')) return response;
+
+    const script = `<script src="${appUrl('pwa-navigation.js')}"></script>`;
+    const body = html.includes('</body>')
+      ? html.replace('</body>', `${script}</body>`)
+      : `${html}${script}`;
+    const headers = new Headers(response.headers);
+    headers.delete('content-length');
+    headers.delete('content-encoding');
+    headers.delete('etag');
+
+    return new Response(body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers
+    });
+  } catch (_) {
+    return response;
+  }
+}
+
+async function handleNavigation(request) {
+  let response;
+  try {
+    response = await networkFirst(request, SHELL_CACHE, 6500);
   } catch (_) {
     const cache = await caches.open(SHELL_CACHE);
-    return (await cache.match(request)) ||
+    response = (await cache.match(request)) ||
       (await cache.match(appUrl('index.html'))) ||
       (await cache.match(appUrl('offline.html')));
   }
+  return withDashboardNavigation(response, request);
 }
 
 self.addEventListener('fetch', event => {
