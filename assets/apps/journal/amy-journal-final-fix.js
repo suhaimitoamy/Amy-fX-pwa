@@ -9,6 +9,7 @@
   const journalRootUrl = new URL('./', entryScriptUrl);
   const appRootUrl = new URL('../../../', entryScriptUrl);
   let enhancementLoaded = false;
+  let authListenerInstalled = false;
 
   function loadScript(url) {
     const source = url instanceof URL ? url.href : String(url);
@@ -33,10 +34,34 @@
     });
   }
 
+  function waitForDocumentScripts() {
+    if (document.readyState !== 'loading') return Promise.resolve();
+    return new Promise(resolve => {
+      document.addEventListener('DOMContentLoaded', resolve, { once: true });
+    });
+  }
+
+  function waitForJournalCore() {
+    if (typeof window.renderItems === 'function' || typeof window.renderJournals === 'function') {
+      return Promise.resolve();
+    }
+    return new Promise(resolve => {
+      window.addEventListener('amyfx:journal-core-ready', resolve, { once: true });
+    });
+  }
+
   async function loadEnhancement() {
     if (enhancementLoaded) return;
     enhancementLoaded = true;
     await loadScript(new URL('amy-journal-core.js', journalRootUrl));
+  }
+
+  function waitForLogin() {
+    if (authListenerInstalled) return;
+    authListenerInstalled = true;
+    window.addEventListener('amyfx:auth-change', event => {
+      if (event.detail?.authenticated) boot().catch(console.error);
+    });
   }
 
   async function boot() {
@@ -45,23 +70,18 @@
       if (!window.AmyFXAuth) await loadScript(new URL('member-auth.js', appRootUrl));
       if (!window.AmyPWA) await loadScript(new URL('pwa-bootstrap.js', appRootUrl));
       await window.AmyFXAuth.ready;
+
       const authenticated = await window.AmyFXAuth.requireAuth();
       if (!authenticated) {
-        window.addEventListener('amyfx:auth-change', event => {
-          if (event.detail?.authenticated) boot().catch(console.error);
-        }, { once: true });
+        waitForLogin();
         return;
       }
 
-      if (window.__amyJournalBaseLoaderStarted && typeof window.renderItems !== 'function') {
-        window.addEventListener('amyfx:journal-core-ready', () => {
-          loadEnhancement().catch(console.error);
-        }, { once: true });
-        return;
-      }
-
+      await waitForDocumentScripts();
+      if (window.__amyJournalBaseLoaderStarted) await waitForJournalCore();
       await loadEnhancement();
     } catch (error) {
+      enhancementLoaded = false;
       console.error('Journal enhancement bootstrap failed:', error);
       window.showToast?.('Penyempurnaan jurnal gagal dimuat.');
     }
