@@ -22,6 +22,8 @@ const required = [
   'assets/apps/mapping/index.html',
   'assets/apps/market-intel/index.html',
   'assets/apps/journal/index.html',
+  'assets/apps/journal/app.js',
+  'assets/apps/journal/app-core.js',
   'assets/apps/journal/amy-journal-final-fix.js',
   'assets/apps/journal/amy-journal-core.js',
   'assets/apps/academy/index.html',
@@ -95,9 +97,13 @@ for (const modulePage of [
   if (!html.includes('../../../pwa-bootstrap.js')) fail(`${modulePage} does not load PWA bootstrap`);
 }
 
-const journalEntry = read('assets/apps/journal/amy-journal-final-fix.js');
-if (!journalEntry.includes('AmyFXAuth.requireAuth')) fail('Journal does not enforce member authentication');
-if (!journalEntry.includes('amy-journal-core.js')) fail('Journal wrapper does not load the preserved core');
+const journalBaseEntry = read('assets/apps/journal/app.js');
+if (!journalBaseEntry.includes('AmyFXAuth.requireAuth')) fail('Journal base app does not enforce member authentication');
+if (!journalBaseEntry.includes('app-core.js')) fail('Journal base wrapper does not load the preserved app core');
+
+const journalEnhancementEntry = read('assets/apps/journal/amy-journal-final-fix.js');
+if (!journalEnhancementEntry.includes('AmyFXAuth.requireAuth')) fail('Journal enhancement does not enforce member authentication');
+if (!journalEnhancementEntry.includes('amy-journal-core.js')) fail('Journal enhancement wrapper does not load the preserved enhancement core');
 
 const academyAuth = read('assets/apps/academy/assets/js/auth.js');
 if (!academyAuth.includes('AmyFXAuth.requireAuth')) fail('Academy does not enforce member authentication');
@@ -117,6 +123,7 @@ for (const file of [
   'platform-adapter.js',
   'member-auth.js',
   'pwa-bootstrap.js',
+  'assets/apps/journal/app.js',
   'assets/apps/journal/amy-journal-final-fix.js',
   'assets/apps/academy/assets/js/auth.js'
 ]) {
