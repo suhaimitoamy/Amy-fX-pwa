@@ -1,7 +1,7 @@
 /* Amy FX PWA service worker */
 'use strict';
 
-const VERSION = '2026.07.20.1';
+const VERSION = '2026.07.20.2';
 const SHELL_CACHE = `amyfx-pwa-shell-${VERSION}`;
 const STATIC_CACHE = `amyfx-pwa-static-${VERSION}`;
 const DATA_CACHE = `amyfx-pwa-data-${VERSION}`;
@@ -15,6 +15,7 @@ const SHELL = [
   appUrl('index.html'),
   appUrl('offline.html'),
   appUrl('manifest.webmanifest'),
+  appUrl('pwa-config.json'),
   appUrl('platform-adapter.js'),
   appUrl('member-auth.js'),
   appUrl('pwa-bootstrap.js'),
@@ -149,7 +150,9 @@ self.addEventListener('push', event => {
     payload.target_url || payload.url || payload.data?.url || 'assets/apps/market-intel/index.html',
     BASE_URL
   ).href;
-  const tag = payload.news_id ? `amyfx-news-${payload.news_id}` : (payload.tag || 'amyfx-update');
+  const newsId = String(payload.news_id || payload.id || '');
+  const tag = newsId ? `amyfx-news-${newsId}` : (payload.tag || 'amyfx-update');
+  const highImpact = String(payload.impact || '').toLowerCase() === 'high';
 
   event.waitUntil(self.registration.showNotification(title, {
     body,
@@ -157,7 +160,13 @@ self.addEventListener('push', event => {
     badge: appUrl('icons/amy-fx-192.png'),
     tag,
     renotify: false,
-    data: { url: targetUrl },
+    requireInteraction: highImpact,
+    timestamp: Date.now(),
+    data: {
+      url: targetUrl,
+      newsId,
+      source: payload.source || ''
+    },
     actions: [{ action: 'open', title: 'Buka Amy FX' }]
   }));
 });

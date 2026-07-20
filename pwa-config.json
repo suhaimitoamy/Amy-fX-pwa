@@ -2,6 +2,8 @@
   "authRequired": true,
   "authEndpoint": "https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-auth",
   "apiBaseUrl": "https://amy-fx.vercel.app",
-  "webPushEnabled": false,
+  "webPushEnabled": true,
+  "webPushRegisterEndpoint": "https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/web-push-register",
+  "webPushVapidPublicKey": "BLNtJFT0v0c3AcIJObdn_nOQdCJc0C4KoUoYYkIPDSHLeOMaXeL-OZJOwQYhxL5OevPpjqkmesu3LsEWjZIsy_k",
   "newsEndpoint": "https://amy-fx.vercel.app/api/news"
 }
