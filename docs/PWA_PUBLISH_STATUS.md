@@ -22,4 +22,8 @@ Authentication:
 https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-auth
 ```
 
+The `pwa-auth` Edge Function is active, accepts browser CORS requests, and handles login, session refresh, validation, and logout.
+
+Production validation covers the GitHub Pages project path, manifest, service worker, member gates, Journal loading order, module routes, and removal of Android build workflows.
+
 Web Push remains disabled until a subscription backend and VAPID configuration are deployed.
