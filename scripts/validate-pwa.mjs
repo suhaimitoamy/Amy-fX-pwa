@@ -65,7 +65,9 @@ if ((manifest.icons || []).some(icon => String(icon.src || '').startsWith('/')))
 if (config.authRequired !== true) fail('member authentication must be enabled for production');
 if (!String(config.authEndpoint || '').startsWith('https://')) fail('authEndpoint must use HTTPS');
 if (!String(config.apiBaseUrl || '').startsWith('https://')) fail('apiBaseUrl must use HTTPS');
-if (typeof config.webPushEnabled !== 'boolean') fail('webPushEnabled must be explicit');
+if (config.webPushEnabled !== true) fail('Web Push must be enabled for production');
+if (!String(config.webPushRegisterEndpoint || '').startsWith('https://')) fail('webPushRegisterEndpoint must use HTTPS');
+if (!/^[A-Za-z0-9_-]{80,100}$/.test(String(config.webPushVapidPublicKey || ''))) fail('webPushVapidPublicKey is invalid');
 
 for (const icon of manifest.icons || []) {
   const localPath = String(icon.src || '').replace(/^\.\//, '');
@@ -110,6 +112,19 @@ if (!academyAuth.includes('AmyFXAuth.requireAuth')) fail('Academy does not enfor
 if (academyAuth.includes('window.prompt(')) fail('Academy still uses device-local prompt authentication');
 if (academyAuth.includes('amy_academy_access_hash')) fail('Academy still stores a local access code');
 
+const bootstrap = read('pwa-bootstrap.js');
+for (const marker of [
+  'Notification.requestPermission',
+  'pushManager.subscribe',
+  'webPushRegisterEndpoint',
+  'webPushVapidPublicKey',
+  'Authorization: `Bearer ${session.access_token}`',
+  'enableNotifications',
+  'disableNotifications'
+]) {
+  if (!bootstrap.includes(marker)) fail(`PWA bootstrap missing Web Push marker: ${marker}`);
+}
+
 const worker = read('service-worker.js');
 for (const eventName of ['install', 'activate', 'fetch', 'push', 'notificationclick']) {
   if (!worker.includes(`addEventListener('${eventName}'`) && !worker.includes(`addEventListener("${eventName}"`)) {
@@ -117,6 +132,9 @@ for (const eventName of ['install', 'activate', 'fetch', 'push', 'notificationcl
   }
 }
 if (!worker.includes("new URL('./', self.location.href)")) fail('service worker must derive its deployment base');
+if (!worker.includes('showNotification')) fail('service worker does not display Web Push notifications');
+if (!worker.includes('amyfx-news-')) fail('service worker does not deduplicate news notifications');
+if (!worker.includes('assets/apps/market-intel/index.html')) fail('service worker notification target is missing Market Intel');
 
 for (const file of [
   'service-worker.js',
@@ -156,5 +174,5 @@ for (const obsolete of [
 JSON.parse(read('vercel.json'));
 
 if (!process.exitCode) {
-  console.log(`PWA validation passed: ${required.length} required files, ${manifest.shortcuts?.length || 0} shortcuts, member auth enabled.`);
+  console.log(`PWA validation passed: ${required.length} required files, ${manifest.shortcuts?.length || 0} shortcuts, member auth and Web Push enabled.`);
 }
