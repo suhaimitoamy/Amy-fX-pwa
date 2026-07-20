@@ -1,4 +1,4 @@
-/* Amy FX Journal PWA entry wrapper. */
+/* Amy FX Journal authenticated enhancement loader. */
 (function () {
   'use strict';
 
@@ -8,7 +8,7 @@
   const entryScriptUrl = new URL(document.currentScript?.src || 'amy-journal-final-fix.js', location.href);
   const journalRootUrl = new URL('./', entryScriptUrl);
   const appRootUrl = new URL('../../../', entryScriptUrl);
-  let coreLoaded = false;
+  let enhancementLoaded = false;
 
   function loadScript(url) {
     const source = url instanceof URL ? url.href : String(url);
@@ -33,9 +33,9 @@
     });
   }
 
-  async function loadCore() {
-    if (coreLoaded) return;
-    coreLoaded = true;
+  async function loadEnhancement() {
+    if (enhancementLoaded) return;
+    enhancementLoaded = true;
     await loadScript(new URL('amy-journal-core.js', journalRootUrl));
   }
 
@@ -46,16 +46,24 @@
       if (!window.AmyPWA) await loadScript(new URL('pwa-bootstrap.js', appRootUrl));
       await window.AmyFXAuth.ready;
       const authenticated = await window.AmyFXAuth.requireAuth();
-      if (authenticated) {
-        await loadCore();
+      if (!authenticated) {
+        window.addEventListener('amyfx:auth-change', event => {
+          if (event.detail?.authenticated) boot().catch(console.error);
+        }, { once: true });
         return;
       }
-      window.addEventListener('amyfx:auth-change', event => {
-        if (event.detail?.authenticated) loadCore().catch(console.error);
-      });
+
+      if (window.__amyJournalBaseLoaderStarted && typeof window.renderItems !== 'function') {
+        window.addEventListener('amyfx:journal-core-ready', () => {
+          loadEnhancement().catch(console.error);
+        }, { once: true });
+        return;
+      }
+
+      await loadEnhancement();
     } catch (error) {
-      console.error('Journal PWA bootstrap failed:', error);
-      window.showToast?.('Jurnal gagal dimuat. Muat ulang halaman.');
+      console.error('Journal enhancement bootstrap failed:', error);
+      window.showToast?.('Penyempurnaan jurnal gagal dimuat.');
     }
   }
 
