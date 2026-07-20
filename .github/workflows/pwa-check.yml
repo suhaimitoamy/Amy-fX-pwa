@@ -28,7 +28,19 @@ jobs:
           node-version: 22
 
       - name: Validate production PWA
-        run: npm test
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee pwa-validation.log
+
+      - name: Upload validation diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amy-fx-pwa-validation
+          path: pwa-validation.log
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Smoke-test root and GitHub Pages project path
         shell: bash
