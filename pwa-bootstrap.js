@@ -4,6 +4,11 @@
   if (window.__amyfxPwaBootstrapped) return;
   window.__amyfxPwaBootstrapped = true;
 
+  const scriptUrl = new URL(document.currentScript?.src || 'pwa-bootstrap.js', location.href);
+  const appRootUrl = new URL('./', scriptUrl);
+  const appRootPath = appRootUrl.pathname.endsWith('/') ? appRootUrl.pathname : `${appRootUrl.pathname}/`;
+  const serviceWorkerUrl = new URL('service-worker.js', appRootUrl);
+
   const state = {
     deferredPrompt: null,
     registration: null,
@@ -13,7 +18,8 @@
   const ua = navigator.userAgent || '';
   const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-  const isRoot = location.pathname === '/' || location.pathname.endsWith('/index.html');
+  const currentPath = location.pathname.replace(/index\.html$/, '');
+  const isRoot = currentPath === appRootPath || currentPath === appRootPath.replace(/\/$/, '');
 
   function toast(message, kind) {
     if (window.AmyPlatform && window.AmyPlatform.toast) {
@@ -130,7 +136,10 @@
   async function registerServiceWorker() {
     if (!('serviceWorker' in navigator) || !window.isSecureContext) return null;
     try {
-      const registration = await navigator.serviceWorker.register('/service-worker.js', { scope: '/', updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register(serviceWorkerUrl.href, {
+        scope: appRootPath,
+        updateViaCache: 'none'
+      });
       watchRegistration(registration);
       window.setTimeout(function () { registration.update().catch(function () {}); }, 1500);
       return registration;
@@ -167,8 +176,10 @@
   window.AmyPWA = Object.freeze({
     install: installApp,
     registration: function () { return state.registration; },
-    isStandalone: isStandalone,
-    isIOS: isIOS
+    appRootUrl: appRootUrl.href,
+    appRootPath,
+    isStandalone,
+    isIOS
   });
 
   registerServiceWorker();

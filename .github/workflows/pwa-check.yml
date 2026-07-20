@@ -1,18 +1,23 @@
-name: PWA Check
+name: PWA Production Check
 
 on:
   push:
-    branches: [main, "feat/**"]
+    branches: [main, "fix/**", "feat/**"]
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: amyfx-pwa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,19 +27,43 @@ jobs:
         with:
           node-version: 22
 
-      - name: Validate PWA files
-        run: node scripts/validate-pwa.mjs
+      - name: Validate production PWA
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee pwa-validation.log
 
-      - name: Smoke-test static routes
+      - name: Upload validation diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amy-fx-pwa-validation
+          path: pwa-validation.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Smoke-test root and GitHub Pages project path
         shell: bash
         run: |
           set -euo pipefail
+          pages_root="$(mktemp -d)"
+          mkdir -p "$pages_root/Amy-fX-pwa"
+          cp -a . "$pages_root/Amy-fX-pwa/"
+          rm -rf "$pages_root/Amy-fX-pwa/.git"
+
+          cd "$pages_root"
           python3 -m http.server 4173 >/tmp/amyfx-pwa-http.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           sleep 2
-          curl --fail --silent --show-error http://127.0.0.1:4173/ >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:4173/manifest.webmanifest >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:4173/service-worker.js >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:4173/assets/apps/mapping/index.html >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:4173/assets/apps/market-intel/index.html >/dev/null
+
+          base="http://127.0.0.1:4173/Amy-fX-pwa"
+          curl --fail --silent --show-error "$base/" >/dev/null
+          curl --fail --silent --show-error "$base/manifest.webmanifest" >/dev/null
+          curl --fail --silent --show-error "$base/service-worker.js" >/dev/null
+          curl --fail --silent --show-error "$base/platform-adapter.js" >/dev/null
+          curl --fail --silent --show-error "$base/member-auth.js" >/dev/null
+          curl --fail --silent --show-error "$base/assets/apps/mapping/index.html" >/dev/null
+          curl --fail --silent --show-error "$base/assets/apps/market-intel/index.html" >/dev/null
+          curl --fail --silent --show-error "$base/assets/apps/journal/index.html" >/dev/null
+          curl --fail --silent --show-error "$base/assets/apps/academy/index.html" >/dev/null

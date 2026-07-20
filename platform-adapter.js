@@ -1,11 +1,47 @@
+/* Amy FX web/PWA platform adapter */
 (function () {
   'use strict';
 
   if (window.AmyPlatform) return;
 
+  const scriptUrl = new URL(document.currentScript?.src || 'platform-adapter.js', location.href);
+  const appRootUrl = new URL('./', scriptUrl);
+  const appRootPath = appRootUrl.pathname.endsWith('/') ? appRootUrl.pathname : `${appRootUrl.pathname}/`;
+  const DEFAULT_API_BASE = 'https://amy-fx.vercel.app';
   const ua = navigator.userAgent || '';
   const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const nativeFetch = window.fetch.bind(window);
+
+  function apiUrl(path) {
+    const value = String(path || '').trim();
+    if (!value) return DEFAULT_API_BASE;
+    const endpoint = value.startsWith('/') ? value : `/${value}`;
+    return new URL(endpoint, DEFAULT_API_BASE).href;
+  }
+
+  function rewriteApiUrl(value) {
+    try {
+      const target = new URL(String(value), location.href);
+      if (target.origin !== location.origin) return target.href;
+      const marker = '/api/';
+      const markerIndex = target.pathname.indexOf(marker);
+      if (markerIndex < 0) return target.href;
+      const endpoint = `${target.pathname.slice(markerIndex)}${target.search}${target.hash}`;
+      return apiUrl(endpoint);
+    } catch (_) {
+      return value;
+    }
+  }
+
+  window.fetch = function amyFxFetch(input, init) {
+    if (input instanceof Request) {
+      const rewritten = rewriteApiUrl(input.url);
+      if (rewritten !== input.url) return nativeFetch(new Request(rewritten, input), init);
+      return nativeFetch(input, init);
+    }
+    return nativeFetch(rewriteApiUrl(input), init);
+  };
 
   function injectStyles() {
     if (document.getElementById('amy-platform-styles')) return;
@@ -31,20 +67,17 @@
       root.setAttribute('aria-live', 'polite');
       document.body.appendChild(root);
     }
-
     const node = document.createElement('div');
     node.className = 'amy-platform-toast';
     node.dataset.kind = opts.kind || 'info';
     node.textContent = String(message || 'Amy FX');
     root.appendChild(node);
     requestAnimationFrame(function () { node.classList.add('is-visible'); });
-
     const duration = Math.max(1200, Number(opts.duration || 2800));
     window.setTimeout(function () {
       node.classList.remove('is-visible');
       window.setTimeout(function () { node.remove(); }, 220);
     }, duration);
-
     return node;
   }
 
@@ -62,7 +95,6 @@
         return true;
       }
     } catch (_) {}
-
     try {
       const area = document.createElement('textarea');
       area.value = value;
@@ -89,7 +121,6 @@
     } catch (error) {
       if (error && error.name === 'AbortError') return false;
     }
-
     const fallback = data.url || data.text || data.title || '';
     if (fallback && await copyText(fallback)) {
       toast('Teks disalin.');
@@ -147,16 +178,16 @@
     let permission = Notification.permission;
     if (permission === 'default' && opts.requestPermission === true) permission = await requestNotificationPermission();
     if (permission !== 'granted') return false;
-
+    const icon = new URL('icons/amy-fx-192.png', appRootUrl).href;
+    const targetUrl = new URL(opts.url || './', appRootUrl).href;
     const notificationOptions = {
       body: String(body || ''),
-      icon: '/icons/amy-fx.svg',
-      badge: '/icons/amy-fx.svg',
+      icon,
+      badge: icon,
       tag: opts.tag || undefined,
-      data: { url: opts.url || '/', ...(opts.data || {}) },
+      data: { url: targetUrl, ...(opts.data || {}) },
       renotify: Boolean(opts.renotify)
     };
-
     try {
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.ready;
@@ -174,7 +205,11 @@
     if (!('caches' in window)) return false;
     try {
       const names = await caches.keys();
-      await Promise.all(names.filter(function (name) { return name.indexOf('amyfx-pwa-') === 0; }).map(function (name) { return caches.delete(name); }));
+      await Promise.all(names.filter(function (name) {
+        return name.indexOf('amyfx-pwa-') === 0;
+      }).map(function (name) {
+        return caches.delete(name);
+      }));
       return true;
     } catch (_) {
       return false;
@@ -182,74 +217,74 @@
   }
 
   const storage = {
-    get: function (key, fallback) {
+    get(key, fallback) {
       try {
         const value = localStorage.getItem(key);
         return value == null ? fallback : value;
-      } catch (_) {
-        return fallback;
-      }
+      } catch (_) { return fallback; }
     },
-    set: function (key, value) {
+    set(key, value) {
       try { localStorage.setItem(key, String(value)); return true; } catch (_) { return false; }
     },
-    remove: function (key) {
+    remove(key) {
       try { localStorage.removeItem(key); return true; } catch (_) { return false; }
     },
-    getJSON: function (key, fallback) {
+    getJSON(key, fallback) {
       try {
         const value = localStorage.getItem(key);
         return value == null ? fallback : JSON.parse(value);
-      } catch (_) {
-        return fallback;
-      }
+      } catch (_) { return fallback; }
     },
-    setJSON: function (key, value) {
+    setJSON(key, value) {
       try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch (_) { return false; }
     }
   };
 
   const platform = {
     name: 'web',
-    version: '1.0.0',
-    isIOS: isIOS,
+    version: '1.1.0',
+    isIOS,
     isStandalone: standalone,
     isPWA: true,
-    toast: toast,
-    notify: notify,
-    requestNotificationPermission: requestNotificationPermission,
-    triggerHaptic: triggerHaptic,
-    copyText: copyText,
-    share: share,
-    saveFile: saveFile,
-    openExternal: openExternal,
-    clearRuntimeCache: clearRuntimeCache,
-    storage: storage
+    appRootUrl: appRootUrl.href,
+    appRootPath,
+    apiBaseUrl: DEFAULT_API_BASE,
+    apiUrl,
+    toast,
+    notify,
+    requestNotificationPermission,
+    triggerHaptic,
+    copyText,
+    share,
+    saveFile,
+    openExternal,
+    clearRuntimeCache,
+    storage
   };
 
   const androidCompat = {
-    showAppToast: function (message) { toast(message); },
-    showToast: function (message) { toast(message); },
-    triggerHaptic: triggerHaptic,
+    showAppToast: message => toast(message),
+    showToast: message => toast(message),
+    triggerHaptic,
     openUrl: openExternal,
     openExternalUrl: openExternal,
-    openExternal: openExternal,
-    copyText: copyText,
-    shareText: function (text) { return share({ text: String(text || '') }); },
-    share: share,
-    saveFile: saveFile,
-    downloadTextFile: function (name, text) { return saveFile(name, text, 'text/plain;charset=utf-8'); },
-    showNotification: function (title, body) { return notify(title, body, { requestPermission: false }); },
-    notify: function (title, body) { return notify(title, body, { requestPermission: false }); },
+    openExternal,
+    copyText,
+    shareText: text => share({ text: String(text || '') }),
+    share,
+    saveFile,
+    downloadTextFile: (name, text) => saveFile(name, text, 'text/plain;charset=utf-8'),
+    showNotification: (title, body) => notify(title, body, { requestPermission: false }),
+    notify: (title, body) => notify(title, body, { requestPermission: false }),
     clearCache: clearRuntimeCache,
-    getAppVersion: function () { return 'PWA 1.0.0'; },
-    getPlatform: function () { return 'pwa'; },
-    isPwa: function () { return true; }
+    getAppVersion: () => 'PWA 1.1.0',
+    getPlatform: () => 'pwa',
+    isPwa: () => true
   };
 
   if (!window.Android) {
     window.Android = new Proxy(androidCompat, {
-      get: function (target, property) {
+      get(target, property) {
         if (property in target) return target[property];
         return function () { return null; };
       }

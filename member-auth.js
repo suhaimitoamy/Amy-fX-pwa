@@ -4,11 +4,14 @@
 
   if (window.AmyFXAuth) return;
 
-  const CONFIG_URL = '/pwa-config.json';
+  const scriptUrl = new URL(document.currentScript?.src || 'member-auth.js', location.href);
+  const appRootUrl = new URL('./', scriptUrl);
+  const CONFIG_URL = new URL('pwa-config.json', appRootUrl).href;
   const SESSION_KEY = 'amyfx.pwa.auth.session.v1';
   const CONFIG_FALLBACK = {
-    authRequired: false,
+    authRequired: true,
     authEndpoint: 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-auth',
+    apiBaseUrl: 'https://amy-fx.vercel.app',
     webPushEnabled: false
   };
 
@@ -190,6 +193,7 @@
     login,
     signOut,
     openLogin,
+    appRootUrl: appRootUrl.href,
     getConfig: () => ({ ...config }),
     getSession: () => session,
     getUser: () => currentUser,
