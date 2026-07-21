@@ -1,7 +1,7 @@
 /* Amy FX PWA service worker */
 'use strict';
 
-const VERSION = '2026.07.21.1';
+const VERSION = '2026.07.21.2';
 const SHELL_CACHE = `amyfx-pwa-shell-${VERSION}`;
 const STATIC_CACHE = `amyfx-pwa-static-${VERSION}`;
 const DATA_CACHE = `amyfx-pwa-data-${VERSION}`;
@@ -46,7 +46,10 @@ async function precacheIndividually() {
 }
 
 self.addEventListener('install', event => {
-  event.waitUntil(precacheIndividually());
+  event.waitUntil((async () => {
+    await precacheIndividually();
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', event => {
@@ -111,36 +114,37 @@ function isRootNavigation(url) {
   return path === BASE_PATH || path === BASE_PATH.replace(/\/$/, '');
 }
 
-async function withPwaEnhancements(response, request) {
+async function withPwaScripts(response, request) {
   if (!response || !response.ok) return response;
   const contentType = response.headers.get('content-type') || '';
   if (!contentType.includes('text/html')) return response;
 
   try {
     const url = new URL(request.url);
-    const rootNavigation = isRootNavigation(url);
-    let html = await response.clone().text();
+    const html = await response.clone().text();
     const scripts = [];
 
+    if (!isRootNavigation(url) && !html.includes('pwa-navigation.js')) {
+      scripts.push(`<script src="${appUrl('pwa-navigation.js')}"></script>`);
+    }
     if (!html.includes('pwa-push-test.js')) {
       scripts.push(`<script src="${appUrl('pwa-push-test.js')}"></script>`);
-    }
-    if (!rootNavigation && !html.includes('pwa-navigation.js')) {
-      scripts.push(`<script src="${appUrl('pwa-navigation.js')}"></script>`);
     }
     if (!scripts.length) return response;
 
     const injection = scripts.join('');
-    html = html.includes('</body>') ? html.replace('</body>', `${injection}</body>`) : `${html}${injection}`;
-    const responseHeaders = new Headers(response.headers);
-    responseHeaders.delete('content-length');
-    responseHeaders.delete('content-encoding');
-    responseHeaders.delete('etag');
+    const body = html.includes('</body>')
+      ? html.replace('</body>', `${injection}</body>`)
+      : `${html}${injection}`;
+    const headers = new Headers(response.headers);
+    headers.delete('content-length');
+    headers.delete('content-encoding');
+    headers.delete('etag');
 
-    return new Response(html, {
+    return new Response(body, {
       status: response.status,
       statusText: response.statusText,
-      headers: responseHeaders
+      headers
     });
   } catch (_) {
     return response;
@@ -157,7 +161,7 @@ async function handleNavigation(request) {
       (await cache.match(appUrl('index.html'))) ||
       (await cache.match(appUrl('offline.html')));
   }
-  return withPwaEnhancements(response, request);
+  return withPwaScripts(response, request);
 }
 
 self.addEventListener('fetch', event => {
@@ -190,6 +194,32 @@ function readPushPayload(event) {
   }
 }
 
+async function notifyOpenClients(detail) {
+  const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+  await Promise.all(windows.map(client => client.postMessage({
+    type: 'AMYFX_PUSH_RECEIVED',
+    detail
+  })));
+}
+
+async function setUnreadBadge() {
+  try {
+    if (self.navigator && typeof self.navigator.setAppBadge === 'function') {
+      await self.navigator.setAppBadge();
+    }
+  } catch (error) {
+    console.warn('Amy FX badge gagal diperbarui', error);
+  }
+}
+
+async function clearUnreadBadge() {
+  try {
+    if (self.navigator && typeof self.navigator.clearAppBadge === 'function') {
+      await self.navigator.clearAppBadge();
+    }
+  } catch (_) {}
+}
+
 async function displayPushNotification(payload) {
   const title = payload.title || payload.notification?.title || 'Amy FX';
   const body = payload.body || payload.notification?.body || payload.text || 'Informasi baru tersedia.';
@@ -209,18 +239,35 @@ async function displayPushNotification(payload) {
   const options = {
     body,
     icon: appUrl('icons/amy-fx-192.png'),
+    badge: appUrl('icons/amy-fx-192.png'),
     tag,
     renotify: true,
     silent: false,
+    timestamp: Date.now(),
     data
   };
 
+  let fallback = false;
   try {
     await self.registration.showNotification(title, options);
   } catch (error) {
+    fallback = true;
     console.error('Amy FX notification options fallback', error);
     await self.registration.showNotification(title, { body, tag, data });
   }
+
+  await Promise.allSettled([
+    setUnreadBadge(),
+    notifyOpenClients({
+      received: true,
+      displayed: true,
+      fallback,
+      type: data.type,
+      newsId,
+      tag,
+      receivedAt: Date.now()
+    })
+  ]);
 }
 
 self.addEventListener('push', event => {
@@ -240,6 +287,7 @@ self.addEventListener('notificationclick', event => {
   const target = new URL(event.notification.data?.url || './', BASE_URL).href;
 
   event.waitUntil((async () => {
+    await clearUnreadBadge();
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     for (const client of windows) {
       if ('focus' in client) {
