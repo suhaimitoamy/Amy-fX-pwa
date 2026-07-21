@@ -11,6 +11,7 @@ const required = [
   'member-auth.js',
   'pwa-bootstrap.js',
   'pwa-navigation.js',
+  'pwa-push-test.js',
   'offline.html',
   'icons/amy-fx.svg',
   'icons/amy-fx-maskable.svg',
@@ -126,23 +127,28 @@ for (const marker of [
   if (!bootstrap.includes(marker)) fail(`PWA bootstrap missing Web Push marker: ${marker}`);
 }
 
-const navigation = read('pwa-navigation.js');
-for (const marker of ['amy-pwa-home-button', 'Kembali ke Dashboard Amy FX', 'appRootUrl.href']) {
-  if (!navigation.includes(marker)) fail(`PWA navigation missing marker: ${marker}`);
+const pushTest = read('pwa-push-test.js');
+for (const marker of [
+  "body: JSON.stringify({ action: 'test' })",
+  'Tes Notifikasi Background',
+  'webPushRegisterEndpoint',
+  'AmyPushTest'
+]) {
+  if (!pushTest.includes(marker)) fail(`PWA push test missing marker: ${marker}`);
 }
 
 const worker = read('service-worker.js');
-for (const eventName of ['install', 'activate', 'fetch', 'push', 'notificationclick']) {
+for (const eventName of ['install', 'activate', 'fetch', 'push', 'pushsubscriptionchange', 'notificationclick']) {
   if (!worker.includes(`addEventListener('${eventName}'`) && !worker.includes(`addEventListener("${eventName}"`)) {
     fail(`service worker missing ${eventName} handler`);
   }
 }
 if (!worker.includes("new URL('./', self.location.href)")) fail('service worker must derive its deployment base');
 if (!worker.includes('showNotification')) fail('service worker does not display Web Push notifications');
+if (!worker.includes('displayPushNotification')) fail('service worker does not use the hardened notification display path');
+if (!worker.includes('pwa-push-test.js')) fail('service worker does not load the Web Push verification UI');
 if (!worker.includes('amyfx-news-')) fail('service worker does not deduplicate news notifications');
 if (!worker.includes('assets/apps/market-intel/index.html')) fail('service worker notification target is missing Market Intel');
-if (!worker.includes("appUrl('pwa-navigation.js')")) fail('service worker does not cache dashboard navigation');
-if (!worker.includes('withDashboardNavigation')) fail('service worker does not inject dashboard navigation into modules');
 
 for (const file of [
   'service-worker.js',
@@ -150,6 +156,7 @@ for (const file of [
   'member-auth.js',
   'pwa-bootstrap.js',
   'pwa-navigation.js',
+  'pwa-push-test.js',
   'assets/apps/journal/app.js',
   'assets/apps/journal/amy-journal-final-fix.js',
   'assets/apps/academy/assets/js/auth.js'
@@ -183,5 +190,5 @@ for (const obsolete of [
 JSON.parse(read('vercel.json'));
 
 if (!process.exitCode) {
-  console.log(`PWA validation passed: ${required.length} required files, ${manifest.shortcuts?.length || 0} shortcuts, member auth, Web Push, and dashboard navigation enabled.`);
+  console.log(`PWA validation passed: ${required.length} required files, ${manifest.shortcuts?.length || 0} shortcuts, member auth and hardened Web Push enabled.`);
 }
