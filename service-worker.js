@@ -1,7 +1,7 @@
 /* Amy FX PWA service worker */
 'use strict';
 
-const VERSION = '2026.07.20.3';
+const VERSION = '2026.07.21.1';
 const SHELL_CACHE = `amyfx-pwa-shell-${VERSION}`;
 const STATIC_CACHE = `amyfx-pwa-static-${VERSION}`;
 const DATA_CACHE = `amyfx-pwa-data-${VERSION}`;
@@ -20,6 +20,7 @@ const SHELL = [
   appUrl('member-auth.js'),
   appUrl('pwa-bootstrap.js'),
   appUrl('pwa-navigation.js'),
+  appUrl('pwa-push-test.js'),
   appUrl('icons/amy-fx.svg'),
   appUrl('icons/amy-fx-maskable.svg'),
   appUrl('icons/amy-fx-180.png'),
@@ -110,31 +111,36 @@ function isRootNavigation(url) {
   return path === BASE_PATH || path === BASE_PATH.replace(/\/$/, '');
 }
 
-async function withDashboardNavigation(response, request) {
+async function withPwaEnhancements(response, request) {
   if (!response || !response.ok) return response;
   const contentType = response.headers.get('content-type') || '';
   if (!contentType.includes('text/html')) return response;
 
-  const url = new URL(request.url);
-  if (isRootNavigation(url)) return response;
-
   try {
-    const html = await response.clone().text();
-    if (html.includes('pwa-navigation.js')) return response;
+    const url = new URL(request.url);
+    const rootNavigation = isRootNavigation(url);
+    let html = await response.clone().text();
+    const scripts = [];
 
-    const script = `<script src="${appUrl('pwa-navigation.js')}"></script>`;
-    const body = html.includes('</body>')
-      ? html.replace('</body>', `${script}</body>`)
-      : `${html}${script}`;
-    const headers = new Headers(response.headers);
-    headers.delete('content-length');
-    headers.delete('content-encoding');
-    headers.delete('etag');
+    if (!html.includes('pwa-push-test.js')) {
+      scripts.push(`<script src="${appUrl('pwa-push-test.js')}"></script>`);
+    }
+    if (!rootNavigation && !html.includes('pwa-navigation.js')) {
+      scripts.push(`<script src="${appUrl('pwa-navigation.js')}"></script>`);
+    }
+    if (!scripts.length) return response;
 
-    return new Response(body, {
+    const injection = scripts.join('');
+    html = html.includes('</body>') ? html.replace('</body>', `${injection}</body>`) : `${html}${injection}`;
+    const responseHeaders = new Headers(response.headers);
+    responseHeaders.delete('content-length');
+    responseHeaders.delete('content-encoding');
+    responseHeaders.delete('etag');
+
+    return new Response(html, {
       status: response.status,
       statusText: response.statusText,
-      headers
+      headers: responseHeaders
     });
   } catch (_) {
     return response;
@@ -151,7 +157,7 @@ async function handleNavigation(request) {
       (await cache.match(appUrl('index.html'))) ||
       (await cache.match(appUrl('offline.html')));
   }
-  return withDashboardNavigation(response, request);
+  return withPwaEnhancements(response, request);
 }
 
 self.addEventListener('fetch', event => {
@@ -175,14 +181,16 @@ self.addEventListener('fetch', event => {
   }
 });
 
-self.addEventListener('push', event => {
-  let payload = {};
+function readPushPayload(event) {
+  if (!event.data) return {};
   try {
-    payload = event.data ? event.data.json() : {};
+    return event.data.json();
   } catch (_) {
-    payload = { body: event.data ? event.data.text() : '' };
+    try { return { body: event.data.text() }; } catch (_) { return {}; }
   }
+}
 
+async function displayPushNotification(payload) {
   const title = payload.title || payload.notification?.title || 'Amy FX';
   const body = payload.body || payload.notification?.body || payload.text || 'Informasi baru tersedia.';
   const targetUrl = new URL(
@@ -190,24 +198,41 @@ self.addEventListener('push', event => {
     BASE_URL
   ).href;
   const newsId = String(payload.news_id || payload.id || '');
-  const tag = newsId ? `amyfx-news-${newsId}` : (payload.tag || 'amyfx-update');
-  const highImpact = String(payload.impact || '').toLowerCase() === 'high';
+  const tag = payload.tag || (newsId ? `amyfx-news-${newsId}` : `amyfx-update-${Date.now()}`);
+  const data = {
+    url: targetUrl,
+    newsId,
+    source: payload.source || '',
+    type: payload.type || 'news'
+  };
 
-  event.waitUntil(self.registration.showNotification(title, {
+  const options = {
     body,
     icon: appUrl('icons/amy-fx-192.png'),
-    badge: appUrl('icons/amy-fx-192.png'),
     tag,
-    renotify: false,
-    requireInteraction: highImpact,
-    timestamp: Date.now(),
-    data: {
-      url: targetUrl,
-      newsId,
-      source: payload.source || ''
-    },
-    actions: [{ action: 'open', title: 'Buka Amy FX' }]
-  }));
+    renotify: true,
+    silent: false,
+    data
+  };
+
+  try {
+    await self.registration.showNotification(title, options);
+  } catch (error) {
+    console.error('Amy FX notification options fallback', error);
+    await self.registration.showNotification(title, { body, tag, data });
+  }
+}
+
+self.addEventListener('push', event => {
+  const payload = readPushPayload(event);
+  event.waitUntil(displayPushNotification(payload));
+});
+
+self.addEventListener('pushsubscriptionchange', event => {
+  event.waitUntil((async () => {
+    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    await Promise.all(windows.map(client => client.postMessage({ type: 'AMYFX_PUSH_SUBSCRIPTION_CHANGED' })));
+  })());
 });
 
 self.addEventListener('notificationclick', event => {
