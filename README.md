@@ -40,6 +40,8 @@ Metadata commit Amy FX yang sedang dipakai tersimpan pada:
 assets/amyfx-source.json
 ```
 
+Sinkronisasi bersifat deterministik: bila commit sumber tidak berubah, pipeline tidak membuat commit baru hanya karena waktu pemeriksaan berbeda.
+
 ## Modul
 
 - Mapping XAU/USD dan Mapping V2
