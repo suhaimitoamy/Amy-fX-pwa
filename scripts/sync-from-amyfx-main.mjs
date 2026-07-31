@@ -130,11 +130,10 @@ for (const file of walk(targetAppsRoot)) {
   fs.writeFileSync(file, content);
 }
 
+const sourceSha = String(process.env.AMYFX_SOURCE_SHA || 'unknown');
 const serviceWorkerPath = path.join(targetRoot, 'service-worker.js');
 if (exists(serviceWorkerPath)) {
-  const sourceSha = String(process.env.AMYFX_SOURCE_SHA || 'manual').slice(0, 12);
-  const date = new Date().toISOString().slice(0, 10).replaceAll('-', '.');
-  const version = `${date}.amyfx-${sourceSha}`;
+  const version = `amyfx-${sourceSha.slice(0, 12) || 'manual'}`;
   const worker = read(serviceWorkerPath).replace(
     /const VERSION = ['"][^'"]+['"];?/,
     `const VERSION = '${version}';`
@@ -142,12 +141,10 @@ if (exists(serviceWorkerPath)) {
   write(serviceWorkerPath, worker);
 }
 
-const sourceSha = String(process.env.AMYFX_SOURCE_SHA || 'unknown');
 write(path.join(targetAssetsRoot, 'amyfx-source.json'), `${JSON.stringify({
   repository: 'suhaimitoamy/Amy-fx',
   branch: 'main',
   commit: sourceSha,
-  syncedAt: new Date().toISOString(),
   strategy: 'production-assets-with-pwa-runtime-overlay'
 }, null, 2)}\n`);
 
