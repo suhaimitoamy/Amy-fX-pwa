@@ -45,6 +45,20 @@ function shouldRefresh(panel, maxAge = 30000) {
   return !panelLoadedAt[panel] || Date.now() - panelLoadedAt[panel] > maxAge;
 }
 
+function clearHeatmapState() {
+  const canvas = document.getElementById('heatmap-canvas');
+  if (canvas) canvas.replaceChildren();
+  const price = document.getElementById('heatmap-price');
+  if (price) price.textContent = '--';
+  hideLoading();
+}
+
+function payloadIsFresh(updated, maxAgeMs = 10 * 60 * 1000) {
+  if (!updated) return true;
+  const timestamp = new Date(updated).getTime();
+  return !Number.isFinite(timestamp) || Date.now() - timestamp <= maxAgeMs;
+}
+
 // ─── Init ────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   pendingNewsId = readNewsRoute();
@@ -157,7 +171,7 @@ async function loadNews(silent = false) {
     if (latestNews) {
       const currentNewsId = newsId(latestNews);
       const lastNewsId = localStorage.getItem('amy_last_news_id');
-      
+
       if (lastNewsId && lastNewsId !== currentNewsId) {
         const title = '📰 Breaking News XAU/USD';
         const msg = latestNews.text || 'Berita baru telah tiba.';
@@ -179,7 +193,7 @@ async function loadNews(silent = false) {
 
     status.textContent = `📰 ${data.news.length} berita relevan • ${formatTime(data.updated)}`;
     panelLoadedAt.news = Date.now();
-    window.AmyFXIntel?.write('news', { updated: data.updated, items: sortedNews.slice(0, 10) });
+    window.AmyFXIntel?.write('news', { updated: data.updated, capturedAt: data.updated, source: 'VERCEL_NEWS', items: sortedNews.slice(0, 10) });
     renderNews(sortedNews);
     if (pendingNewsId) {
       activateTab('news');
@@ -225,17 +239,20 @@ async function loadHeatmap(silent = false) {
 
     if (!data.zones || data.zones.length === 0) {
       status.textContent = '⚠️ Data belum cukup untuk heatmap';
+      clearHeatmapState();
       return;
     }
+    if (!payloadIsFresh(data.updated)) throw new Error('Heatmap yang diterima sudah usang');
 
     document.getElementById('heatmap-price').textContent =
       `💰 XAU/USD ${data.currentPrice?.toFixed(2) || '--'}`;
     status.textContent = `🔥 ${data.zones.length} zona likuiditas • ${formatTime(data.updated)}`;
     panelLoadedAt.heatmap = Date.now();
-    window.AmyFXIntel?.write('heatmap', { updated: data.updated, currentPrice: data.currentPrice, zones: data.zones });
+    window.AmyFXIntel?.write('heatmap', { updated: data.updated, capturedAt: data.updated, source: 'SUPABASE_EDGE', currentPrice: data.currentPrice, zones: data.zones });
     renderHeatmap(data.zones, data.currentPrice);
   } catch (e) {
     if (e.name === 'AbortError') return;
+    clearHeatmapState();
     status.textContent = '⚠️ Gagal memuat heatmap';
   }
 }
@@ -307,7 +324,8 @@ async function loadLiquidity(silent = false) {
     const priceStr = data.currentPrice ? data.currentPrice.toFixed(2) : '--';
     status.textContent = `💧 ${data.levels.length} level aktif • XAU/USD ${priceStr} • ${formatTime(data.updated)}`;
     panelLoadedAt.liquidity = Date.now();
-    window.AmyFXIntel?.write('liquidity', { updated: data.updated, currentPrice: data.currentPrice, levels: data.levels });
+    if (!payloadIsFresh(data.updated)) throw new Error('Liquidity yang diterima sudah usang');
+    window.AmyFXIntel?.write('liquidity', { updated: data.updated, capturedAt: data.updated, source: 'SUPABASE_EDGE', currentPrice: data.currentPrice, levels: data.levels });
     renderLiquidity(data.levels, data.currentPrice);
   } catch (e) {
     if (e.name === 'AbortError') return;
@@ -333,7 +351,7 @@ function renderLiquidity(levels, currentPrice) {
       const freshness = 1 - Math.min(Number(lv.candlesAgo || 0) / 200, 1);
       const strength = Math.max(0.16, proximity * 0.72 + freshness * 0.28);
       const isNearest = nearest && nearest.type === lv.type && Number(nearest.price) === Number(lv.price);
-      
+
       return `
         <div class="liq-node-wrapper" style="--distance:${Math.abs(Number(lv.distance) || 0)};--strength:${strength.toFixed(2)};--node-scale:${(0.94 + strength * 0.06).toFixed(3)};animation-delay:${i * 0.05}s">
           <div class="node-card ${typeClass} ${isNearest ? 'nearest-draw' : ''}">
@@ -368,7 +386,7 @@ function renderLiquidity(levels, currentPrice) {
         ${renderNodes(sslLevels, false)}
       </div>
     </div>
-    
+
     <div class="liq-legend">
       <div class="leg-item"><span class="leg-dot bsl-dot"></span> BSL (Buy Stop)</div>
       <div class="leg-item"><span class="leg-dot ssl-dot"></span> SSL (Sell Stop)</div>
@@ -388,7 +406,7 @@ function formatTime(iso) {
     const diff = now - d;
     if (diff < 60 * 1000) return 'Baru saja';
     if (diff < 60 * 60 * 1000) return `${Math.floor(diff / 60000)}m lalu`;
-    return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }) + ' WIB';
+    return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Makassar' }) + ' WITA';
   } catch { return iso; }
 }
 
@@ -397,7 +415,7 @@ function truncate(text, max) {
 }
 
 function escapeHtml(str) {
-  return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 }
 
 function openLink(url) {

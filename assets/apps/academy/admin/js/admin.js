@@ -419,7 +419,7 @@ function bindEvents() {
       // Update active class
       filterChips.forEach(c => c.classList.remove('active'));
       e.target.classList.add('active');
-      
+
       currentFilter = e.target.dataset.filter;
       renderGrid();
     });
@@ -433,27 +433,27 @@ function bindEvents() {
 
 function renderGrid() {
   bagianGrid.innerHTML = '';
-  
+
   MATERI_INDEX.forEach(bagian => {
     // Filter by category
     if (currentFilter !== 'all' && bagian.category !== currentFilter) {
       return;
     }
-    
+
     // Filter by search query
     let matchingChapters = bagian.chapters;
     let matchesTitle = bagian.title.toLowerCase().includes(searchQuery);
-    
+
     if (searchQuery) {
       matchingChapters = bagian.chapters.filter(ch => ch.title.toLowerCase().includes(searchQuery));
       if (!matchesTitle && matchingChapters.length === 0) {
         return;
       }
     }
-    
+
     const card = document.createElement('div');
     card.className = `bagian-card ${bagian.category === 'advanced' ? 'advanced' : ''}`;
-    
+
     let chaptersHtml = '';
     matchingChapters.forEach(ch => {
       chaptersHtml += `
@@ -463,7 +463,7 @@ function renderGrid() {
         </div>
       `;
     });
-    
+
     card.innerHTML = `
       <div class="bagian-header" onclick="this.parentElement.classList.toggle('expanded')">
         <div class="bagian-num">${String(bagian.num).padStart(2, '0')}</div>
@@ -478,7 +478,7 @@ function renderGrid() {
         ${chaptersHtml}
       </div>
     `;
-    
+
     bagianGrid.appendChild(card);
   });
 }
@@ -612,4 +612,3 @@ document.addEventListener('DOMContentLoaded', init);
   window.__amyfxNotifyOpenRoute=openRoute;
 })();
 /* AMYFX_NOTIFY_GUARD_END */
-

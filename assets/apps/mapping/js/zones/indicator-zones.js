@@ -180,149 +180,27 @@ export function detectIndicatorFvgs(candles, {
     .sort((a, b) => b.endIndex - a.endIndex);
 }
 
-function createOb(candles, startIndex, endIndex, type, useBody) {
-  if (endIndex <= startIndex + 1) return null;
-  let selectedIndex = -1;
-  let selectedExtreme = type === 'BULLISH' ? Infinity : -Infinity;
-
-  for (let index = startIndex + 1; index < endIndex; index += 1) {
-    const candle = candles[index];
-    const low = bodyLow(candle, useBody);
-    const high = bodyHigh(candle, useBody);
-    if (type === 'BULLISH' && low < selectedExtreme) {
-      selectedExtreme = low;
-      selectedIndex = index;
-    }
-    if (type === 'BEARISH' && high > selectedExtreme) {
-      selectedExtreme = high;
-      selectedIndex = index;
-    }
-  }
-
-  if (selectedIndex < 0) return null;
-  const origin = candles[selectedIndex];
-  const bottom = bodyLow(origin, useBody);
-  const top = bodyHigh(origin, useBody);
-  if (!(top > bottom)) return null;
-
-  return {
-    kind: 'ORDER_BLOCK',
-    type,
-    bottom,
-    top,
-    mid: (bottom + top) / 2,
-    originIndex: selectedIndex,
-    endIndex,
-    createdAt: origin.time,
-    breakIndex: endIndex,
-    active: true,
-    breaker: false,
-    status: 'ACTIVE',
-    useBody,
-    source: 'PINE_AMYGMGO',
-    reason: `Ekstrem ${useBody ? 'body' : 'wick'} di antara swing dan candle close pemecah struktur.`
-  };
-}
-
-function updateObLifecycle(list, candle, index, useBody) {
-  for (const zone of list) {
-    if (!zone.active) continue;
-    const low = bodyLow(candle, useBody);
-    const high = bodyHigh(candle, useBody);
-
-    if (zone.type === 'BULLISH') {
-      if (!zone.breaker && low < zone.bottom) {
-        zone.breaker = true;
-        zone.status = 'BREAKER';
-        zone.breakerIndex = index;
-      } else if (zone.breaker && candle.close > zone.top) {
-        zone.active = false;
-        zone.status = 'REMOVED';
-        zone.removedIndex = index;
-      }
-    } else if (!zone.breaker && high > zone.top) {
-      zone.breaker = true;
-      zone.status = 'BREAKER';
-      zone.breakerIndex = index;
-    } else if (zone.breaker && candle.close < zone.bottom) {
-      zone.active = false;
-      zone.status = 'REMOVED';
-      zone.removedIndex = index;
-    }
-  }
-}
+function createOb() { return null; }
 
 /**
- * Meniru OB Pine milik pengguna:
- * - swing lookback default 10;
- * - break berdasarkan candle close;
- * - batas zona memakai candle body ketika useBody=true;
- * - satu OB bullish dan satu bearish terbaru tetap ditampilkan;
- * - zona yang berubah polaritas ditandai BREAKER, bukan langsung disembunyikan.
+ * Adapter tampilan validated Order Block:
+ * Hanya menerima validatedOrderBlocks yang sudah dihasilkan oleh marketConcepts.orderBlocks.
+ * Jika validatedOrderBlocks tidak tersedia, kembalikan array kosong. Jangan menghitung ulang OB.
  */
-export function detectIndicatorOrderBlocks(candles, {
-  swingLength = 10,
-  useBody = true,
-  visiblePerDirection = DEFAULT_OB_VISIBLE_PER_DIRECTION,
-  lookback = 1000
+export function detectIndicatorOrderBlocks(_candles, {
+  validatedOrderBlocks = null,
+  visiblePerDirection = DEFAULT_OB_VISIBLE_PER_DIRECTION
 } = {}) {
-  const all = cleanCandles(candles);
-  const offset = Math.max(0, all.length - Math.max(lookback, swingLength * 3));
-  const values = all.slice(offset).map((candle, index) => ({ ...candle, index }));
-  if (values.length <= swingLength + 2) return [];
-
-  let oscillator = 0;
-  let topSwing = null;
-  let bottomSwing = null;
-  const zones = [];
-
-  for (let current = swingLength; current < values.length; current += 1) {
-    const candidateIndex = current - swingLength;
-    const candidate = values[candidateIndex];
-    const subsequent = values.slice(candidateIndex + 1, current + 1);
-    const highestAfter = Math.max(...subsequent.map(item => item.high));
-    const lowestAfter = Math.min(...subsequent.map(item => item.low));
-    let nextOscillator = oscillator;
-
-    if (candidate.high > highestAfter) nextOscillator = 0;
-    else if (candidate.low < lowestAfter) nextOscillator = 1;
-
-    if (nextOscillator === 0 && oscillator !== 0) {
-      topSwing = { y: candidate.high, x: candidateIndex, crossed: false };
-    }
-    if (nextOscillator === 1 && oscillator !== 1) {
-      bottomSwing = { y: candidate.low, x: candidateIndex, crossed: false };
-    }
-    oscillator = nextOscillator;
-
-    const candle = values[current];
-    if (topSwing && !topSwing.crossed && candle.close > topSwing.y) {
-      topSwing.crossed = true;
-      const zone = createOb(values, topSwing.x, current, 'BULLISH', useBody);
-      if (zone) zones.unshift(zone);
-    }
-    if (bottomSwing && !bottomSwing.crossed && candle.close < bottomSwing.y) {
-      bottomSwing.crossed = true;
-      const zone = createOb(values, bottomSwing.x, current, 'BEARISH', useBody);
-      if (zone) zones.unshift(zone);
-    }
-
-    updateObLifecycle(zones, candle, current, useBody);
+  if (!Array.isArray(validatedOrderBlocks) || !validatedOrderBlocks.length) {
+    return [];
   }
 
-  const latest = type => zones
-    .filter(zone => zone.type === type && zone.active)
-    .sort((a, b) => b.breakIndex - a.breakIndex)
-    .slice(0, visiblePerDirection)
-    .map(zone => ({
-      ...zone,
-      originIndex: zone.originIndex + offset,
-      breakIndex: zone.breakIndex + offset,
-      endIndex: zone.endIndex + offset
-    }));
+  const latest = type => validatedOrderBlocks
+    .filter(zone => (zone.direction === type || zone.type === type) && zone.active !== false && zone.status !== 'INVALID')
+    .sort((a, b) => Number(b.availableIndex || b.structureBreakIndex || 0) - Number(a.availableIndex || a.structureBreakIndex || 0))
+    .slice(0, visiblePerDirection);
 
-  return [...latest('BULLISH'), ...latest('BEARISH')]
-    .sort((a, b) => b.breakIndex - a.breakIndex);
+  return [...latest('BULLISH'), ...latest('BEARISH')];
 }
 
 export function zoneDistance(zone, price) {
@@ -336,17 +214,16 @@ export function zoneDistance(zone, price) {
 export function zoneLiveStatus(zone, price) {
   if (!zone) return 'TIDAK ADA';
   const value = number(price);
-  if (zone.status === 'BROKEN' || zone.status === 'REMOVED') return 'INVALID';
-  if (zone.status === 'BREAKER') return 'BREAKER / POLARITY CHANGE';
-  if (!Number.isFinite(value)) return zone.status || 'AKTIF';
+  if (zone.status === 'INVALID') return 'INVALID';
+  if (!Number.isFinite(value)) return zone.status || 'DETECTED';
   if (value >= zone.bottom && value <= zone.top) return 'SEDANG DIUJI';
-  if (zone.type === 'BEARISH' && value < zone.bottom) {
-    return zone.status === 'MITIGATED' ? 'TERMITIGASI · DI ATAS HARGA' : 'BELUM RETEST · DI ATAS HARGA';
+  if (zone.type === 'BEARISH' || zone.direction === 'BEARISH') {
+    return value < zone.bottom ? 'BELUM RETEST · DI ATAS HARGA' : 'TERMITIGASI';
   }
-  if (zone.type === 'BULLISH' && value > zone.top) {
-    return zone.status === 'MITIGATED' ? 'TERMITIGASI · DI BAWAH HARGA' : 'BELUM RETEST · DI BAWAH HARGA';
+  if (zone.type === 'BULLISH' || zone.direction === 'BULLISH') {
+    return value > zone.top ? 'BELUM RETEST · DI BAWAH HARGA' : 'TERMITIGASI';
   }
-  return 'DILEWATI LIVE · TUNGGU CANDLE CLOSE';
+  return zone.status || 'DETECTED';
 }
 
 export function nearestZones(zones, price, limit = 2) {
@@ -358,7 +235,11 @@ export function nearestZones(zones, price, limit = 2) {
 }
 
 export function detectIndicatorZones(candles, price, options = {}) {
-  const orderBlocks = detectIndicatorOrderBlocks(candles, options.orderBlocks);
+  const validatedOrderBlocks = options.validatedOrderBlocks || options.marketConcepts?.orderBlocks || options.orderBlocks?.validatedOrderBlocks || null;
+  const orderBlocks = detectIndicatorOrderBlocks(candles, {
+    ...options.orderBlocks,
+    validatedOrderBlocks
+  });
   const fairValueGaps = detectIndicatorFvgs(candles, options.fairValueGaps);
   return {
     orderBlocks,
@@ -367,8 +248,7 @@ export function detectIndicatorZones(candles, price, options = {}) {
     nearestFairValueGaps: nearestZones(fairValueGaps, price, 2),
     metadata: {
       source: 'ICT Concepts [amygmgo]',
-      obUseBody: options.orderBlocks?.useBody ?? true,
-      obSwingLength: options.orderBlocks?.swingLength ?? 10,
+      obUseBody: false,
       fvgBodyLength: options.fairValueGaps?.bodyLength ?? 5,
       fvgWickBodyRatio: options.fairValueGaps?.wickBodyRatio ?? 0.36
     }

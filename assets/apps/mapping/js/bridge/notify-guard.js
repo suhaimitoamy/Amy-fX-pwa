@@ -1,5 +1,5 @@
 (function(){
-  if(window.__amyfxNotifyGuardLoaded)return;
+  if(typeof window === 'undefined' || window.__amyfxNotifyGuardLoaded)return;
   window.__amyfxNotifyGuardLoaded=true;
 
   const STORE='amyfx.notify.last.sent';

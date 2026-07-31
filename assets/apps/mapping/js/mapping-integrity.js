@@ -1,8 +1,7 @@
 import { state, TF, p2 } from './main.js';
 import { analyze } from './engine/ict-core.js';
-import { sendTargetsToNative } from './bridge/android-bridge.js';
+import { SUPPORTED_MAPPING_TIMEFRAMES } from './engine/mapping-timeframes.js';
 import {
-  applyLiveLiquidity,
   candleFreshness,
   classifyBreak,
   deriveBiasView,
@@ -17,8 +16,6 @@ const TWELVE_DATA_PATH = '/api/twelvedata';
 const qualityByInterval = {};
 const originalFetch = window.fetch.bind(window);
 let trackedResult = null;
-let liveHigh = 0;
-let liveLow = 0;
 let lastIntegritySignature = '';
 let lastUiSignature = '';
 let patchTimer = 0;
@@ -82,76 +79,23 @@ function resultSignature(result) {
   ].join('~');
 }
 
-function setupHistorySource(result) {
-  if (!Array.isArray(result.allSetups)) {
-    result.allSetups = Array.isArray(result.setups) ? [...result.setups] : [];
-  }
-  return result.allSetups;
-}
-
 function reconcileResult(force = false) {
   if (reconcileBusy || !state.result) return;
   reconcileBusy = true;
   try {
     const result = state.result;
-    const price = Number(state.price || result.price || 0);
     const isNewResult = trackedResult !== result;
-    if (isNewResult) {
-      trackedResult = result;
-      liveHigh = price;
-      liveLow = price;
-    } else if (price > 0) {
-      liveHigh = Math.max(liveHigh || price, price);
-      liveLow = Math.min(liveLow || price, price);
-    }
-
-    applyLiveLiquidity(result, { price, high: liveHigh, low: liveLow });
-    const allSetups = setupHistorySource(result);
-    const actionable = filterActionableSetups(allSetups, Date.now(), price);
-    result.setups = actionable;
-    result.bestSetup = actionable.find(item => item === result.bestSetup)
-      || actionable.sort((a, b) => Number(b.score || 0) - Number(a.score || 0))[0]
-      || null;
-    result.signal = result.bestSetup?.dir || 'WAIT';
-    result.mappingIntegrity = {
-      version: '1.3.7',
-      localStructure: result.st?.trend || 'NEUTRAL',
-      htfBias: result.htfNarrative?.htfBias || 'NEUTRAL',
-      actionableCount: actionable.length,
-      checkedAt: Date.now()
-    };
+    if (isNewResult) trackedResult = result;
 
     const signature = resultSignature(result);
     const changed = signature !== lastIntegritySignature;
     lastIntegritySignature = signature;
 
-    if (isNewResult || changed || force) {
-      if (typeof window.render === 'function') window.render();
-      publishCorrectedSnapshot(result);
-      try { sendTargetsToNative(); } catch (_) {}
-    }
+    if ((isNewResult || changed || force) && typeof window.render === 'function') window.render();
     scheduleUiPatch();
   } finally {
     reconcileBusy = false;
   }
-}
-
-function publishCorrectedSnapshot(result) {
-  const intel = window.AmyFXIntel;
-  if (!intel?.write) return;
-  intel.write('mapping', {
-    price: Number(state.price || result.price || 0),
-    bsl: Number(result.bsl || 0),
-    ssl: Number(result.ssl || 0),
-    levels: result.activeLiquidityTargets || [],
-    timeframe: result.tf || state.tf,
-    bias: result.final || 'WAIT',
-    localStructure: result.st?.trend || 'NEUTRAL',
-    htfBias: result.htfNarrative?.htfBias || 'NEUTRAL',
-    direction: result.bestSetup?.dir || 'WAIT',
-    status: result.bestSetup?.status || 'WAIT',
-    analyzedAt: Date.now()
-  });
 }
 
 function findDisclosure(label) {
@@ -209,14 +153,15 @@ function miniAnalysis(tf) {
   if (candles.length < 30) return null;
   try {
     const result = analyze(candles, tf, {}, Number(state.price || 0), {
+      M1: state.candles?.M1,
+      M5: state.candles?.M5,
+      M15: state.candles?.M15,
+      M30: state.candles?.M30,
+      H1: state.candles?.H1,
       H4: state.candles?.H4,
       D1: state.candles?.D1,
       W1: state.candles?.W1
     });
-    applyLiveLiquidity(result, { price: state.price, high: liveHigh, low: liveLow });
-    result.allSetups = result.setups || [];
-    result.setups = filterActionableSetups(result.allSetups, Date.now(), state.price);
-    result.bestSetup = result.setups[0] || null;
     return result;
   } catch (_) {
     return null;
@@ -226,9 +171,13 @@ function miniAnalysis(tf) {
 function roleAction(tf, result) {
   const role = timeframeRole(tf);
   if (!result) return { role, action: 'DATA BELUM CUKUP' };
-  if (tf !== 'M15') return { role, action: 'KONTEKS SAJA' };
   const setup = result.bestSetup;
-  return { role, action: setup ? `${setup.type} · ${setup.status}` : 'TUNGGU KONFIRMASI M15' };
+  return {
+    role,
+    action: setup
+      ? `${setup.type} · ${setup.status}`
+      : result.entryMap?.scenario?.status || `TUNGGU KONFIRMASI ${tf}`
+  };
 }
 
 function zoneMarkup(zone, price) {
@@ -237,7 +186,7 @@ function zoneMarkup(zone, price) {
 }
 
 function mappingMarkup() {
-  const timeframes = ['M1', 'M5', 'M15', 'M30', 'H1', 'H4'];
+  const timeframes = SUPPORTED_MAPPING_TIMEFRAMES;
   const rows = timeframes.map(tf => {
     const result = miniAnalysis(tf);
     if (!result) {
@@ -248,7 +197,7 @@ function mappingMarkup() {
     const ob = parseZone(concept(result, 'OB'), 'OB');
     const fvg = parseZone(concept(result, 'FVG'), 'FVG');
     const freshness = candleFreshness(qualityByInterval[TF[tf]] || state.candleMeta?.[TF[tf]], tf);
-    return `<article class="integrity-map-row ${tf === 'M15' ? 'execution' : ''}">
+    return `<article class="integrity-map-row ${tf === state.tf ? 'execution' : ''}">
       <div class="integrity-row-head"><strong class="tf">${tf}</strong><span class="role">${action.role}</span><span class="fresh ${freshness.state.toLowerCase()}">${freshness.label}</span></div>
       <div class="integrity-bias-grid">
         <div><small>Struktur lokal</small><strong class="${bias.local.toLowerCase()}">${bias.local}</strong></div>
@@ -261,26 +210,26 @@ function mappingMarkup() {
     </article>`;
   }).join('');
 
-  const m15Quality = qualityByInterval[TF.M15] || state.candleMeta?.[TF.M15];
-  const qualityNote = m15Quality
-    ? `M15: ${m15Quality.cleanCount}/${m15Quality.rawCount} candle dipakai${m15Quality.frozenRemoved ? ` · ${m15Quality.frozenRemoved} candle beku dibuang` : ''}${m15Quality.duplicates ? ` · ${m15Quality.duplicates} duplikat dibuang` : ''}.`
+  const activeQuality = qualityByInterval[TF[state.tf]] || state.candleMeta?.[TF[state.tf]];
+  const qualityNote = activeQuality
+    ? `${state.tf}: ${activeQuality.cleanCount}/${activeQuality.rawCount} candle dipakai${activeQuality.frozenRemoved ? ` · ${activeQuality.frozenRemoved} candle beku dibuang` : ''}${activeQuality.duplicates ? ` · ${activeQuality.duplicates} duplikat dibuang` : ''}.`
     : 'Metadata kualitas candle belum tersedia; mapping memakai cache saat ini.';
 
-  return `<section class="card integrity-mapping"><div class="kicker">M1–H4 MAPPING</div><h2>Struktur Lokal · Bias HTF · Status Live</h2><p class="integrity-quality-note">${safeText(qualityNote)}</p><div class="integrity-map-list">${rows}</div></section>`;
+  return `<section class="card integrity-mapping"><div class="kicker">ALL-TIMEFRAME MAPPING</div><h2>Struktur Lokal · Bias HTF · Status Closed Candle</h2><p class="integrity-quality-note">${safeText(qualityNote)}</p><div class="integrity-map-list">${rows}</div></section>`;
 }
 
 function explanationMarkup(result) {
   const bias = deriveBiasView(result);
   const breakState = classifyBreak(result?.st?.last, bias.local);
-  const active = filterActionableSetups(result?.allSetups || result?.setups || [], Date.now(), state.price);
+  const active = filterActionableSetups(result?.setups || [], Date.now(), state.price);
   const guidance = executionGuidance(bias.htf, result?.premiumDiscountZone || result?.zone, active.length > 0);
   const target = result?.liquidityHierarchy?.drawTarget;
   const ob = parseZone(concept(result, 'OB'), 'OB');
   const fvg = parseZone(concept(result, 'FVG'), 'FVG');
   const location = result?.premiumDiscountZone || result?.zone || 'EQUILIBRIUM';
   const setupText = active.length
-    ? `Ada ${active.length} setup M15 actionable. Setup utama: ${active[0].type}, area ${p2(active[0].entryLow)}–${p2(active[0].entryHigh)}, invalidasi ${p2(active[0].sl)}.`
-    : 'Tidak ada setup M15 actionable. Setup WAIT, INVALID, context-only, atau RR di bawah 1:2 tidak dihitung aktif.';
+    ? `Ada ${active.length} setup ${result.tf} actionable. Setup utama: ${active[0].type}, area ${p2(active[0].entryLow)}–${p2(active[0].entryHigh)}, invalidasi ${p2(active[0].sl)}.`
+    : `Tidak ada setup ${result.tf} actionable. Sequence yang belum lengkap, INVALID, atau RR di bawah 1:2 tidak dihitung aktif.`;
   const targetText = target
     ? `${target.type} ${p2(target.level)} masih aktif dan berada pada sisi harga yang benar.`
     : 'Tidak ada target BSL/SSL aktif yang masih valid pada sisi harga sekarang.';
@@ -291,25 +240,35 @@ function explanationMarkup(result) {
     <p><b>3. Konfirmasi struktur</b><br><b>${safeText(breakState.title)}</b>. ${safeText(breakState.explanation)}</p>
     <p><b>4. Likuiditas dan zona</b><br>${safeText(targetText)}<br>OB: ${ob ? `${ob.type} ${p2(ob.bottom)}–${p2(ob.top)} · ${zoneLiveStatus(ob, state.price)}` : 'tidak ada zona aktif di harga sekarang'}.<br>FVG: ${fvg ? `${fvg.type} ${p2(fvg.bottom)}–${p2(fvg.top)} · ${zoneLiveStatus(fvg, state.price)}` : 'tidak ada zona aktif di harga sekarang'}.</p>
     <p><b>5. Tindakan sekarang</b><br>${safeText(setupText)}</p>
-    <p class="integrity-conclusion"><b>Kesimpulan</b><br>${active.length ? '<b>PANTAU SETUP M15</b> — tunggu harga masuk area dan hormati invalidasi.' : '<b>TUNGGU</b> — belum ada alasan yang cukup aman untuk entry.'}</p>
+    <p class="integrity-conclusion"><b>Kesimpulan</b><br>${active.length ? `<b>PANTAU SETUP ${safeText(result.tf)}</b> — tunggu harga masuk area dan hormati invalidasi.` : '<b>TUNGGU</b> — belum ada alasan yang cukup aman untuk entry.'}</p>
   </div></section>`;
 }
 
 function patchDisclosure(details, markup) {
   if (!details) return;
   const summary = details.querySelector(':scope > summary');
+  if (!summary) return;
+  const template = document.createElement('template');
+  template.innerHTML = String(markup || '').trim();
+  const next = template.content.firstElementChild;
+  if (!next) return;
   const existing = [...details.children].filter(child => child !== summary);
+  const current = existing.shift();
   existing.forEach(child => child.remove());
-  summary.insertAdjacentHTML('afterend', markup);
+  if (!current) {
+    summary.insertAdjacentElement('afterend', next);
+    return;
+  }
+  if (!window.AmyFXDomStableRender?.patch?.(current, next)) current.replaceWith(next);
 }
 
 function patchHeaderFreshness() {
   const connection = document.getElementById('conn');
   if (!connection) return;
-  const freshness = candleFreshness(qualityByInterval[TF.M15] || state.candleMeta?.[TF.M15], 'M15');
-  const base = state.conn === 'Connected' ? 'Connected' : state.conn;
-  connection.textContent = state.conn === 'Connected' ? `${base} · ${freshness.state === 'STALE' ? 'M15 Stale' : 'M15 Fresh'}` : base;
+  const freshness = candleFreshness(qualityByInterval[TF[state.tf]] || state.candleMeta?.[TF[state.tf]], state.tf);
+  connection.textContent = '●';
   connection.classList.toggle('stale', freshness.state === 'STALE');
+  connection.setAttribute('aria-label', `${state.conn} · Mapping ${state.tf} ${freshness.state}`);
 }
 
 function uiSignature() {
@@ -332,7 +291,7 @@ function patchUi(force = false) {
   lastUiSignature = signature;
 
   patchDisclosure(findDisclosure('Valid Break'), breakMarkup(result));
-  patchDisclosure(findDisclosure('Mapping M1–H4'), mappingMarkup());
+  patchDisclosure(findDisclosure('Mapping Semua Timeframe'), mappingMarkup());
   patchDisclosure(findDisclosure('Penjelasan Mapping'), explanationMarkup(result));
   const activeDetails = findDisclosure('Setup Aktif');
   const summary = activeDetails?.querySelector(':scope > summary');
@@ -351,7 +310,7 @@ function boot() {
     reconcileResult();
     patchUi();
   }, 750);
-  document.addEventListener('click', () => setTimeout(() => patchUi(true), 20), true);
+  document.addEventListener('click', () => setTimeout(() => patchUi(), 20), true);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
       reconcileResult(true);

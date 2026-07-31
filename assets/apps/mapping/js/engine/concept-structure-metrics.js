@@ -14,7 +14,6 @@ export function structureDisplacementMetrics(candle, localAtr, level, direction)
     penetration,
     penetrationAtr,
     valid: body >= safeAtr * CONCEPT_THRESHOLDS.displacementBodyAtr
-      && range >= safeAtr * CONCEPT_THRESHOLDS.displacementRangeAtr
       && ratio >= CONCEPT_THRESHOLDS.displacementBodyRatio
       && penetrationAtr >= CONCEPT_THRESHOLDS.structurePenetrationAtr
   };

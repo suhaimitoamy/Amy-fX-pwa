@@ -225,6 +225,15 @@ function classifyBucket(bucket, currentPrice) {
   else if (bucket.activeResistanceCount > bucket.activeSupportCount) role = 'RESISTANCE';
   else role = bucket.price <= currentPrice ? 'SUPPORT' : 'RESISTANCE';
 
+  // Strict price position invariant:
+  // A level above current price acts as RESISTANCE (Sellers/BSL).
+  // A level below current price acts as SUPPORT (Buyers/SSL).
+  if (bucket.price > currentPrice && role === 'SUPPORT') {
+    role = 'RESISTANCE';
+  } else if (bucket.price < currentPrice && role === 'RESISTANCE') {
+    role = 'SUPPORT';
+  }
+
   const polarity = role === 'SUPPORT'
     ? bucket.polaritySupportCount > 0
     : bucket.polarityResistanceCount > 0;

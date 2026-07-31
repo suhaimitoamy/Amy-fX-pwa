@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="./style.css?v=20260623-2">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='24' fill='%23050806'/%3E%3Cpath d='M20 62h12V36H20v26Zm22 0h12V24H42v38Zm22 0h12V44H64v18Z' fill='%2339ff88'/%3E%3Cpath d='M18 72h60' stroke='%23f4fff7' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="amy-journal-final-fix.css">
+  <link rel="stylesheet" href="../shared/amyfx-blueprint-v1.css" data-amyfx-blueprint-css="v1">
+<!-- Amy FX PWA runtime overlay -->
+<script src="../../../platform-adapter.js"></script>
+<script src="../../../pwa-live-price-bridge.js"></script>
+<script src="../../../member-auth.js"></script>
+<script src="../../../pwa-bootstrap.js"></script>
+<!-- /Amy FX PWA runtime overlay -->
 </head>
   <body>
     <div class="app-shell">
@@ -273,10 +280,10 @@
         </section>
 
         <section class="view" id="assistantView" aria-labelledby="assistantHeading" hidden>
-          
+
 
           <div class="assistant-workspace">
-            
+
 
             <section class="assistant-card assistant-chat-card assistant-room-card">
               <div class="assistant-chat-headline">
@@ -618,7 +625,8 @@
     </dialog>
 
     <script src="./jszip.min.js?v=20260623" defer></script>
-    <script src="./app.js?v=20260623" defer></script>
+    <script src="./app.js?v=20260725-restore1" defer></script>
+    <script src="./background-video.js?v=20260725-bg1" defer></script>
   <script src="amy-journal-final-fix.js"></script>
 <script>
 /* AMYFX_NOTIFY_GUARD_START */
@@ -747,5 +755,8 @@
 })();
 /* AMYFX_NOTIFY_GUARD_END */
 </script>
+  <script src="../shared/amyfx-blueprint-v1.js" data-amyfx-blueprint-js="v1"></script>
+  <script src="../shared/amyfx-blueprint-hotfix-v1.js" data-amyfx-blueprint-hotfix="v1"></script>
+  <script src="../shared/amyfx-provider-detection-v1.js" data-amyfx-provider-detection="v1"></script>
 </body>
 </html>

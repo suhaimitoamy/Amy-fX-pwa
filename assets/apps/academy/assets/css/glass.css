@@ -555,7 +555,7 @@ body {
     opacity: 1;
     pointer-events: auto;
   }
-  
+
   .navlinks {
     position: fixed !important;
     top: 0; left: 0; bottom: 0; right: auto !important;
@@ -599,7 +599,7 @@ body {
     opacity: 1 !important;
     background: transparent;
   }
-  
+
   .page-nav {
     position: fixed;
     bottom: 0;

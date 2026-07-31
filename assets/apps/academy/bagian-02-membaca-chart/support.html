@@ -10,6 +10,12 @@
   <script>const ROOT_PATH='../';</script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/main.js" defer></script>
+<!-- Amy FX PWA runtime overlay -->
+<script src="../../../../platform-adapter.js"></script>
+<script src="../../../../pwa-live-price-bridge.js"></script>
+<script src="../../../../member-auth.js"></script>
+<script src="../../../../pwa-bootstrap.js"></script>
+<!-- /Amy FX PWA runtime overlay -->
 </head>
 <body>
 <script>requireLogin();</script>
@@ -33,15 +39,15 @@
 <main class="container hide-until-auth">
   <section class="article">
     <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
+      <a href="../index.html">Beranda</a> ›
       <a href="../daftar-materi.html">Daftar Materi</a> ›
       <a href="index.html">Bagian 02 Membaca Chart</a>
     </div>
-    
+
     <div class="glass-panel" style="margin-top: 20px;">
         <h1>Support (Perspektif ICT)</h1>
 <div class="note"><strong>Ikhtisar</strong><br><blockquote>
-<p>[!info] Ikhtisar
+<p<strong>Ikhtisar</strong>
 Dalam dunia ritel (Technical Analysis tradisional), <strong>Support</strong> diajarkan sebagai sebuah "lantai" ajaib yang akan memantulkan harga naik ketika disentuh. Dalam perspektif ICT, Support bukanlah garis pantul, melainkan sebuah <strong>Kolam Likuiditas (<a href="../bagian-04-liquidity/liquidity-pool.html">Liquidity Pool</a>)</strong> atau <strong>Premium/Discount Array (<a href="../bagian-05-smart-money-concept/pd-array.html">PD Array</a>)</strong> yang ditargetkan oleh algoritma untuk tujuan tertentu.</p>
 </blockquote></div>
 
@@ -52,8 +58,8 @@ Dalam dunia ritel (Technical Analysis tradisional), <strong>Support</strong> dia
 <h2>2. Mengapa Support Tradisional Sering "Jebol"?</h2>
 <p>Trader ritel menggambar garis support. Ketika harga mendekat, ritel menekan tombol "Buy" dan menempatkan Stop Loss tepat di bawah garis tersebut. Smart Money (Algoritma) <strong>melihat garis ini sebagai mangsa</strong>. Mereka akan mengarahkan harga untuk dengan sengaja menembus support tersebut (<a href="../bagian-04-liquidity/liquidity-sweep.html">Liquidity Sweep</a> / Stop Run) guna mengambil likuiditas ritel sebelum memantul naik. Inilah yang ritel sebut "Fakeout", namun bagi ICT ini adalah "<a href="../bagian-09-entry-model/turtle-soup.html">Turtle Soup</a>".</p>
 <h2>3. Bagaimana Cara Identifikasi Support yang Benar?</h2>
-<p>Jangan mencari "garis horizontal yang sudah tersentuh berkali-kali". Semakin sering sebuah garis disentuh, semakin lemah level tersebut karena likuiditas terakumulasi besar-besaran di bawahnya. 
-- Cari level <strong>Discount PD Arrays</strong>. Tarik Fibonacci dari Swing Low ke Swing High. Area di bawah 50% adalah Discount. 
+<p>Jangan mencari "garis horizontal yang sudah tersentuh berkali-kali". Semakin sering sebuah garis disentuh, semakin lemah level tersebut karena likuiditas terakumulasi besar-besaran di bawahnya.
+- Cari level <strong>Discount PD Arrays</strong>. Tarik Fibonacci dari Swing Low ke Swing High. Area di bawah 50% adalah Discount.
 - Di area Discount tersebut, cari FVG atau <a href="../bagian-05-smart-money-concept/order-block.html">Order Block</a> yang belum termitigasi (belum tersentuh). Ini adalah support institusi yang sebenarnya.</p>
 <h2>4. Kriteria Setup &amp; Invalidasi</h2>
 <ul>

@@ -1,0 +1,81 @@
+/* Scoped polish for the stable Mapping analysis list and its two-item navigation. */
+#app > details.disclosure {
+  margin-bottom: 14px;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+#app > details.disclosure > summary {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+}
+
+#app > details.disclosure > summary::after {
+  float: none;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+#app > details.disclosure[open] > summary {
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+}
+
+.content {
+  padding-bottom: calc(148px + env(safe-area-inset-bottom, 0px));
+}
+
+.nav {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  padding: 8px 16px calc(env(safe-area-inset-bottom, 0px) + 8px) !important;
+}
+
+.nav button {
+  position: relative;
+  min-height: 48px;
+  justify-content: center;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.1;
+}
+
+.nav button.active {
+  background: rgba(212, 175, 55, .055);
+}
+
+.nav button::after {
+  content: '';
+  width: 0;
+  height: 2px;
+  margin-top: 3px;
+  border-radius: 999px;
+  background: var(--gold);
+  opacity: 0;
+  transition: width .16s ease, opacity .16s ease;
+}
+
+.nav button.active::after {
+  width: 38px;
+  opacity: 1;
+}
+
+@media (max-width: 520px) {
+  #app > details.disclosure > summary {
+    min-height: 68px;
+    padding: 17px 18px;
+  }
+
+  .nav {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav button::after {
+    transition: none;
+  }
+}

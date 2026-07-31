@@ -1,0 +1,207 @@
+/* Amy FX 1.5.1 — compact analysis and stable reading layout */
+:root {
+  --amy-card-gap-compact: 10px;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+.content {
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+}
+
+#app {
+  overflow-anchor: none;
+}
+
+#app > .card,
+#app > details.card {
+  margin-bottom: var(--amy-card-gap-compact);
+}
+
+#app > details.card {
+  padding: 0;
+  overflow: clip;
+}
+
+#app > details.card > summary {
+  min-height: 48px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  letter-spacing: .02em;
+}
+
+#app > details.card > summary::after {
+  content: '+';
+  font-size: 19px;
+  font-weight: 500;
+  opacity: .62;
+}
+
+#app > details.card[open] > summary::after {
+  content: '−';
+}
+
+#app > details.card > section.card,
+#app > details.card > .market-outlook-panel,
+#app > details.card > .outlook-loading {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,.07);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.tf-grid {
+  gap: 7px;
+}
+
+.tf-grid button {
+  min-height: 40px;
+  padding: 8px 9px;
+}
+
+.entry-watch-card {
+  padding: 15px;
+}
+
+.entry-watch-head {
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.entry-watch-head h2 {
+  margin-top: 4px;
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.entry-watch-lifecycle {
+  margin: 13px 0;
+  gap: 5px;
+}
+
+.entry-watch-lifecycle > div {
+  min-width: 0;
+  padding: 8px 4px;
+}
+
+.entry-watch-lifecycle small {
+  font-size: 8px;
+  line-height: 1.15;
+}
+
+.entry-watch-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.entry-watch-grid > div {
+  min-height: 66px;
+  padding: 10px;
+}
+
+.entry-watch-grid strong {
+  font-size: 12px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.entry-watch-reason {
+  margin: 11px 0 0;
+  padding: 11px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.entry-watch-candidates {
+  margin-top: 10px;
+  padding: 0;
+}
+
+.entry-watch-candidates summary {
+  cursor: pointer;
+  padding: 10px 11px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.entry-watch-candidates[open] summary {
+  margin-bottom: 7px;
+}
+
+.entry-watch-candidates span {
+  display: block;
+  margin-top: 5px;
+}
+
+.entry-watch-footnote {
+  margin-top: 10px;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.market-outlook-panel {
+  padding: 12px;
+}
+
+.outlook-overview,
+.outlook-level-grid,
+.outlook-factor-grid,
+.outlook-tracker-grid {
+  gap: 7px;
+}
+
+.outlook-card {
+  padding: 13px;
+}
+
+.outlook-card h3 {
+  font-size: 16px;
+}
+
+.outlook-scenario,
+.outlook-scenarios p,
+.outlook-list-block {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.decision-grid,
+.num-grid,
+.break-grid {
+  gap: 8px;
+}
+
+.decision-box,
+.num,
+.break-box {
+  padding: 10px;
+  min-height: 62px;
+}
+
+.ai-map-note {
+  line-height: 1.55;
+}
+
+@media (max-width: 380px) {
+  .entry-watch-grid,
+  .outlook-level-grid,
+  .outlook-factor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .entry-watch-lifecycle {
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .entry-watch-lifecycle > div {
+    min-width: 68px;
+  }
+}

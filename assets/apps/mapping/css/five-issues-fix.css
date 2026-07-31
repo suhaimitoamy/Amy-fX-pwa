@@ -1,0 +1,166 @@
+/* Amy FX five-issue UI hardening. Version and release metadata are intentionally unchanged. */
+
+.amy-analysis-section{
+  margin:10px 0;
+  padding:0;
+  border:1px solid #292929;
+  border-radius:18px;
+  background:#111;
+  overflow:hidden;
+}
+.amy-analysis-section>summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 18px;
+  cursor:pointer;
+  list-style:none;
+  color:#e3c34d;
+  font-size:14px;
+  font-weight:900;
+}
+.amy-analysis-section>summary::-webkit-details-marker{display:none}
+.amy-analysis-section>summary span{min-width:0}
+.amy-analysis-section>summary small{
+  color:#777;
+  font-size:9px;
+  font-weight:600;
+  text-align:right;
+}
+.amy-analysis-section>summary:after{
+  content:'＋';
+  flex:0 0 auto;
+  color:#777;
+  font-size:18px;
+}
+.amy-analysis-section[open]>summary{
+  border-bottom:1px solid #292929;
+}
+.amy-analysis-section[open]>summary:after{content:'−'}
+.amy-analysis-section>#amy-regime-router-v3{
+  margin:0;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+}
+
+.analyze-context-card .regime-header{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  align-items:start;
+  justify-content:start;
+  gap:8px;
+}
+.analyze-context-card .regime-badge{
+  justify-self:start;
+  max-width:none;
+  padding:6px 10px;
+  border-radius:10px;
+}
+.analyze-context-card .regime-badge.live{
+  border-color:rgba(59,213,139,.30);
+  background:rgba(59,213,139,.07);
+  color:#61d99c;
+}
+.analyze-context-card .regime-badge.stale{
+  border-color:rgba(255,91,102,.42);
+  background:rgba(255,91,102,.09);
+  color:#ff7d86;
+}
+
+.amy-reliability-disclosure{
+  margin-top:12px;
+  border-color:#252525;
+  background:#0b0b0b;
+}
+.amy-reliability-disclosure>summary span{color:#b8b8b8}
+.amy-reliability-disclosure>summary small{color:#666}
+.amy-reliability-disclosure .reliability-grid{
+  margin-top:10px;
+  margin-bottom:12px;
+  opacity:.76;
+}
+.amy-reliability-disclosure .reliability-card{
+  padding:10px;
+  border-color:#252525!important;
+  background:#0c0c0c;
+}
+.amy-reliability-disclosure .reliability-card strong{
+  margin:7px 0 4px;
+  color:#c4c4c4!important;
+  font-size:16px;
+}
+.amy-reliability-disclosure .reliability-card p{
+  min-height:0;
+  color:#858585;
+  font-size:8px;
+}
+.amy-reliability-disclosure .reliability-head span{
+  color:#777;
+  background:#171717;
+}
+
+.amy-outlook-backtest-note{
+  margin:0;
+  padding:11px 12px;
+  border:1px solid rgba(255,184,69,.22);
+  border-radius:13px;
+  background:rgba(255,184,69,.045);
+  color:#a99f7b;
+  font-size:10px;
+  line-height:1.5;
+}
+.amy-outlook-historical-rate{
+  display:block;
+  padding:6px 9px;
+  border-radius:10px;
+  background:#151515;
+  color:#a3a3a3;
+  font-size:9px;
+  font-weight:800;
+  text-align:right;
+}
+.outlook-confidence{
+  flex-wrap:wrap;
+}
+
+#app>details[data-stability-key]{
+  scroll-margin-top:66px;
+}
+
+@media(max-width:560px){
+  .amy-analysis-section>summary{
+    align-items:flex-start;
+    padding:15px 16px;
+  }
+  .amy-analysis-section>summary small{
+    max-width:190px;
+  }
+  .amy-outlook-historical-rate{
+    width:100%;
+    text-align:left;
+  }
+}
+
+.amy-reliability-disclosure{
+  overflow:hidden;
+  border:1px solid #252525;
+  border-radius:15px;
+}
+.amy-reliability-disclosure>summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 12px;
+  cursor:pointer;
+  list-style:none;
+}
+.amy-reliability-disclosure>summary::-webkit-details-marker{display:none}
+.amy-reliability-disclosure>summary span{font-size:11px;font-weight:900}
+.amy-reliability-disclosure>summary small{font-size:8px;text-align:right}
+.amy-reliability-disclosure>summary:after{content:'＋';color:#777;font-size:14px}
+.amy-reliability-disclosure[open]>summary{border-bottom:1px solid #242424}
+.amy-reliability-disclosure[open]>summary:after{content:'−'}
+.amy-reliability-disclosure>.reliability-grid{margin-left:12px;margin-right:12px}

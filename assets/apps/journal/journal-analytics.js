@@ -23,8 +23,49 @@ window.AmyJournalAnalytics = {
   equity(entries){
     let balance = 0;
     return (Array.isArray(entries)?entries:[]).map(x => {
-      balance += Number(x.pnlMoney || 0);
-      return {time:x.analysisTime || x.createdAt, balance};
+      balance += Number(x.pnlMoney || (x.result === 'Win' ? (x.riskReward || 2) * 10 : x.result === 'Loss' ? -10 : 0));
+      return {time:x.analysisTime || x.createdAt || new Date().toISOString(), balance};
     });
+  },
+  renderEquitySVG(entries){
+    const data = this.equity(entries);
+    if (!data.length) {
+      return '<div style="padding:20px;text-align:center;color:var(--muted,#888);font-size:13px;">Belum ada data trade tertutup untuk kurva equity.</div>';
+    }
+    const values = [0, ...data.map(d => d.balance)];
+    const minVal = Math.min(...values);
+    const maxVal = Math.max(...values);
+    const range = (maxVal - minVal) || 1;
+
+    const width = 600;
+    const height = 180;
+    const padding = 20;
+    const innerW = width - padding * 2;
+    const innerH = height - padding * 2;
+
+    const points = values.map((v, i) => {
+      const x = padding + (i / (values.length - 1 || 1)) * innerW;
+      const y = height - padding - ((v - minVal) / range) * innerH;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    });
+
+    const isPositive = values[values.length - 1] >= 0;
+    const strokeColor = isPositive ? '#00d97e' : '#ff4c4c';
+    const fillColor = isPositive ? 'rgba(0, 217, 126, 0.12)' : 'rgba(255, 76, 76, 0.12)';
+
+    const areaPoints = `${padding},${height - padding} ${points.join(' ')} ${width - padding},${height - padding}`;
+
+    return `
+      <div style="background:var(--surface-soft, rgba(255,255,255,0.03));border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:13px;font-weight:700;color:var(--gold,#d4a832);">EQUITY GROWTH CURVE</span>
+          <span style="font-size:13px;font-weight:700;color:${strokeColor};">${values[values.length-1] >= 0 ? '+' : ''}${values[values.length-1].toFixed(2)}</span>
+        </div>
+        <svg viewBox="0 0 ${width} ${height}" style="width:100%;height:auto;overflow:visible;">
+          <polygon points="${areaPoints}" fill="${fillColor}" />
+          <polyline points="${points.join(' ')}" fill="none" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+    `;
   }
 };

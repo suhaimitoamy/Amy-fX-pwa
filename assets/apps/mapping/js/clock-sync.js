@@ -1,7 +1,5 @@
-import { state } from './main.js';
-
-const WIB_FORMATTER = new Intl.DateTimeFormat('en-GB', {
-  timeZone: 'Asia/Jakarta',
+const WITA_FORMATTER = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Asia/Makassar',
   hour: '2-digit',
   minute: '2-digit',
   second: '2-digit',
@@ -12,35 +10,38 @@ let timer = 0;
 let observer = null;
 let lastSecond = '';
 
-export function wibClockText(timestamp = Date.now()) {
-  return WIB_FORMATTER.format(new Date(timestamp));
+export function witaClockText(timestamp = Date.now()) {
+  return WITA_FORMATTER.format(new Date(timestamp));
 }
 
 function setText(element, text) {
   if (element && element.textContent !== text) element.textContent = text;
 }
 
+function hideLegacyTopStatus() {
+  const top = document.getElementById('top-wib') || document.getElementById('top-wita');
+  if (!top) return;
+  setText(top, '');
+  top.style.display = 'none';
+  top.setAttribute('aria-hidden', 'true');
+}
+
 function paint(timestamp = Date.now(), force = false) {
-  const time = wibClockText(timestamp);
+  const time = witaClockText(timestamp);
   if (!force && time === lastSecond) return;
   lastSecond = time;
 
-  const top = document.getElementById('top-wib');
-  if (top) {
-    const connection = state.conn === 'Connected' ? '● Live Price' : `○ ${state.conn}`;
-    setText(top, `${connection} • WIB ${time}`);
-  }
-
-  setText(document.getElementById('kz-wib'), `WIB ${time}`);
-  document.querySelectorAll('[data-wib-clock]').forEach(element => {
-    setText(element, `WIB ${time}`);
+  hideLegacyTopStatus();
+  setText(document.getElementById('kz-wita'), `WITA ${time}`);
+  document.querySelectorAll('[data-wita-clock]').forEach(element => {
+    setText(element, `WITA ${time}`);
   });
 }
 
 function boot() {
   paint(Date.now(), true);
   clearInterval(timer);
-  timer = setInterval(() => paint(Date.now()), 250);
+  timer = setInterval(() => paint(Date.now()), 1000);
 
   const app = document.getElementById('app');
   if (app) {
@@ -55,7 +56,7 @@ function boot() {
 }
 
 window.AmyWibClock = {
-  now: wibClockText,
+  now: witaClockText,
   refresh: () => paint(Date.now(), true)
 };
 

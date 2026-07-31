@@ -1,17 +1,38 @@
 import { CONCEPT_THRESHOLDS } from './concept-config.js';
-import { averageConceptBody, cleanConceptCandles, conceptAtrAtClean } from './concept-candles.js';
+import {
+  averageConceptBody,
+  cleanConceptCandles,
+  conceptAtrAtClean
+} from './concept-candles.js';
 import { evaluateZoneLifecycle } from './concept-zone-lifecycle.js';
+
+function limitedHistory(zones, maxPerDirection) {
+  const output = new Map();
+  for (const direction of ['BULLISH', 'BEARISH']) {
+    for (const zone of zones
+      .filter(item => (item.originalDirection || item.direction) === direction)
+      .sort((a, b) => b.availableIndex - a.availableIndex)
+      .slice(0, maxPerDirection)) {
+      output.set(zone.id, zone);
+    }
+  }
+  return [...output.values()].sort((a, b) => b.availableIndex - a.availableIndex);
+}
 
 export function detectFvgConcepts(candles, {
   lookback = 500,
   currentPrice = null,
-  minWidthAtr = CONCEPT_THRESHOLDS.fvgMinWidthAtr
+  minWidthAtr = CONCEPT_THRESHOLDS.fvgMinWidthAtr,
+  maxWidthAtr = CONCEPT_THRESHOLDS.fvgMaxWidthAtr,
+  maxPerDirection = 8
 } = {}) {
   const values = cleanConceptCandles(candles);
-  const start = Math.max(2, values.length - Math.max(3, lookback));
-  const raw = [];
-  let previousBullIndex = -99;
-  let previousBearIndex = -99;
+  const start = Math.max(
+    2,
+    values.length - Math.max(3, lookback),
+    CONCEPT_THRESHOLDS.fvgBodyLength + 1
+  );
+  const zones = [];
 
   for (let index = start; index < values.length; index += 1) {
     const first = values[index - 2];
@@ -19,28 +40,30 @@ export function detectFvgConcepts(candles, {
     const third = values[index];
     if (!first || !middle || !third) continue;
 
-    const body = Math.abs(middle.close - middle.open);
-    const meanBody = averageConceptBody(values, index - 1, CONCEPT_THRESHOLDS.fvgBodyLength);
-    const upperWick = middle.high - Math.max(middle.open, middle.close);
-    const lowerWick = Math.min(middle.open, middle.close) - middle.low;
-    const displacement = body > meanBody
-      && body > 0
-      && upperWick < body * CONCEPT_THRESHOLDS.fvgWickBodyRatio
-      && lowerWick < body * CONCEPT_THRESHOLDS.fvgWickBodyRatio;
-    if (!displacement) continue;
-
-    const bullish = middle.close > middle.open && third.low > first.high;
-    const bearish = middle.close < middle.open && third.high < first.low;
+    // Amy Market Context Final confirms the gap on the third candle and
+    // compares that closed candle with the preceding 20-body baseline.
+    const body = Math.abs(third.close - third.open);
+    const meanBody = averageConceptBody(
+      values,
+      index - 1,
+      CONCEPT_THRESHOLDS.fvgBodyLength
+    );
+    const range = Math.max(third.high - third.low, 0.0000001);
+    const bodyRatio = body / range;
+    const displacement = meanBody > 0
+      && body >= meanBody * CONCEPT_THRESHOLDS.fvgBodyMeanMultiplier;
+    const bullish = displacement && third.close > third.open && third.low > first.high;
+    const bearish = displacement && third.close < third.open && third.high < first.low;
     if (!bullish && !bearish) continue;
 
     const direction = bullish ? 'BULLISH' : 'BEARISH';
     const bottom = bullish ? first.high : third.high;
     const top = bullish ? third.low : first.low;
-    const localAtr = Math.max(conceptAtrAtClean(values, index - 1), 0.0000001);
+    const localAtr = Math.max(conceptAtrAtClean(values, index), 0.0000001);
     const widthAtr = (top - bottom) / localAtr;
-    if (!(top > bottom) || widthAtr < minWidthAtr) continue;
+    if (!(top > bottom) || widthAtr < minWidthAtr || widthAtr > maxWidthAtr) continue;
 
-    const zone = {
+    zones.push({
       id: `FVG:${direction}:${index}:${bottom.toFixed(5)}:${top.toFixed(5)}`,
       kind: 'FVG',
       direction,
@@ -49,28 +72,25 @@ export function detectFvgConcepts(candles, {
       top,
       mid: (bottom + top) / 2,
       originIndex: index - 2,
-      displacementIndex: index - 1,
+      displacementIndex: index,
       availableIndex: index,
       createdAt: third.time,
       localAtr,
       widthAtr,
+      bodyRatio,
+      bodyMeanMultiple: body / meanBody,
+      status: 'DETECTED',
+      active: true,
+      converted: false,
       filterPassed: true,
-      filterReason: `Lebar gap ${widthAtr.toFixed(2)} ATR memenuhi minimum ${minWidthAtr.toFixed(2)} ATR.`
-    };
-
-    const consecutive = bullish ? previousBullIndex === index - 1 : previousBearIndex === index - 1;
-    const latest = raw.at(-1);
-    if (consecutive && latest?.direction === direction) raw[raw.length - 1] = zone;
-    else raw.push(zone);
-    if (bullish) previousBullIndex = index;
-    if (bearish) previousBearIndex = index;
+      quality: body / meanBody >= 1.5 ? 'STRONG' : 'VALID',
+      filterReason: `FVG displacement ${bodyRatio.toFixed(2)} body/range · width ${widthAtr.toFixed(2)} ATR.`
+    });
   }
 
-  return raw
-    .map(zone => evaluateZoneLifecycle(values, zone, {
-      breakMode: 'WICK',
-      convertedKind: 'IFVG',
-      currentPrice
-    }))
-    .sort((a, b) => (b.availableIndex || 0) - (a.availableIndex || 0));
+  const evaluated = zones.map(zone => evaluateZoneLifecycle(values, zone, {
+    convertedKind: 'IFVG',
+    currentPrice
+  }));
+  return limitedHistory(evaluated, maxPerDirection);
 }
