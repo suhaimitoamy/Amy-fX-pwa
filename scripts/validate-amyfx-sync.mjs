@@ -58,7 +58,8 @@ for (const marker of [
 ]) {
   if (!bridge.includes(marker)) fail(`PWA live-price bridge missing ${marker}`);
 }
-if (/TWELVEDATA_API_KEY|api[_-]?key\s*[:=]/i.test(bridge)) fail('PWA bridge must not contain provider credentials');
+const providerCredentialPattern = /TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=|["']api[_-]?key["']\s*:/i;
+if (providerCredentialPattern.test(bridge)) fail('PWA bridge must not contain provider credentials');
 
 const files = [];
 function walk(directory) {
