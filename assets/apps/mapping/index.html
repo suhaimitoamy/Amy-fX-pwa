@@ -4,28 +4,94 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#050505">
-<title>Amy FX Mapping</title>
+<title>Amy FX · Market Intelligence</title>
 <link rel="stylesheet" href="../shared/market-intelligence.css">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/asia-range.css">
 <link rel="stylesheet" href="css/mapping-integrity.css">
 <link rel="stylesheet" href="css/market-outlook.css">
 <link rel="stylesheet" href="css/mapping-zones.css">
-</head>
-<body>
-<header class="topbar"><div class="brand">XAU</div><div><div class="brand-title">Amy FX Mapping</div><div class="brand-sub">Setup Entry • BSL/SSL • Alerts</div></div><div id="conn" class="status">Offline</div></header>
-<section id="mapping-command-strip" class="amy-command-strip mapping-command-strip" aria-label="Market command strip"></section>
-<main class="content" id="app"></main>
-<nav class="nav"><button data-tab="Dashboard" class="active">▥<span>Dashboard</span></button><button data-tab="Analyze">〽<span>Analyze</span></button><button data-tab="Setups">◎<span>Setup</span></button><button data-tab="History">◷<span>History</span></button><button data-tab="Settings">⚙<span>Settings</span></button></nav>
+<link rel="stylesheet" href="css/liquidity-draw.css">
+<link rel="stylesheet" href="css/entry-watch.css">
+<link rel="stylesheet" href="css/execution-plan.css">
+<link rel="stylesheet" href="css/scalper-entry-watch.css">
+<link rel="stylesheet" href="css/mapping-v2.css">
+<link rel="stylesheet" href="css/analysis-compact.css">
+<link rel="stylesheet" href="css/five-issues-fix.css">
+<link rel="stylesheet" href="../shared/amyfx-blueprint-v1.css" data-amyfx-blueprint-css="v1">
+<link rel="stylesheet" href="css/analysis-list-polish-v1.css">
+<script>
+(function () {
+  var NativeDateTimeFormat = Intl.DateTimeFormat;
+  function AmyDateTimeFormat(locales, options) {
+    try {
+      return new NativeDateTimeFormat(locales, options);
+    } catch (error) {
+      if (options && options.timeZone === 'Asia/Makassar') {
+        var fallback = {};
+        Object.keys(options).forEach(function (key) { fallback[key] = options[key]; });
+        fallback.timeZone = 'Asia/Singapore';
+        return new NativeDateTimeFormat(locales, fallback);
+      }
+      throw error;
+    }
+  }
+  AmyDateTimeFormat.prototype = NativeDateTimeFormat.prototype;
+  AmyDateTimeFormat.supportedLocalesOf = NativeDateTimeFormat.supportedLocalesOf.bind(NativeDateTimeFormat);
+  Intl.DateTimeFormat = AmyDateTimeFormat;
+
+  window.addEventListener('error', function (event) {
+    window.__amyMappingStartupError = event && (event.message || event.error && event.error.message) || 'JavaScript startup error';
+  });
+
+  setTimeout(function () {
+    var app = document.getElementById('app');
+    if (!app || app.children.length || app.textContent.trim()) return;
+    var message = window.__amyMappingStartupError || 'Analisis market belum berhasil dimuat.';
+    app.innerHTML = '<section class="card"><div class="kicker">PEMULIHAN DATA</div><h2>Memuat ulang analisis</h2><p class="muted">' + String(message).replace(/[&<>"']/g, function (char) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[char]; }) + '</p><button class="action" style="width:100%" onclick="location.reload()">Muat Ulang</button></section>';
+  }, 3500);
+})();
+</script>
+<!-- Amy FX PWA runtime overlay -->
 <script src="../../../platform-adapter.js"></script>
+<script src="../../../pwa-live-price-bridge.js"></script>
 <script src="../../../member-auth.js"></script>
 <script src="../../../pwa-bootstrap.js"></script>
+<!-- /Amy FX PWA runtime overlay -->
+</head>
+<body>
+<div id="sticky-bar" class="amy-sticky-bar" aria-hidden="true"><div class="sticky-brand">XAU/USD <span class="sticky-price">$0.00</span></div><div class="sticky-bias neutral">WAIT</div></div>
+<header class="topbar preview-topbar"><div class="brand">XAU</div><div><div class="brand-title">Amy FX</div><div class="brand-sub">Struktur • Arah • Likuiditas</div></div><div id="conn" class="status" aria-label="Status Mapping">●</div></header>
+<section id="mapping-command-strip" class="amy-command-strip mapping-command-strip" aria-label="Ringkasan market"></section>
+<main class="content" id="app"></main>
+<nav class="nav"><button data-tab="Dashboard" class="active">▥<span>Dashboard</span></button><button data-tab="Analyze">〽<span>Analisis</span></button></nav>
+<script src="js/api-request-coordinator.js"></script>
+<script src="../shared/amyfx-market-state-contract-v1.js" data-amyfx-market-contract="v2"></script>
 <script src="../shared/market-intelligence.js"></script>
+<script src="js/notification-route-sync.js"></script>
+<script src="js/production-branding.js"></script>
+<script src="js/scanner-visibility-gate.js"></script>
+<script src="js/dashboard-only-panels-v1.js"></script>
 <script type="module" src="js/main.js"></script>
+<script type="module" src="js/candle-refresh-coordinator.js"></script>
+<script type="module" src="js/entry-watch-runtime-v2.js"></script>
+<script type="module" src="js/scalper-entry-watch-v1.js"></script>
+<script type="module" src="js/scalper-execution-authority.js"></script>
+<script type="module" src="js/scalper-execution-decision-bridge.js"></script>
+<script type="module" src="js/mentor-market-context-sync.js"></script>
 <script type="module" src="js/session/asia-range-ui.js"></script>
 <script type="module" src="js/mapping-integrity.js"></script>
 <script type="module" src="js/market-outlook.js"></script>
 <script type="module" src="js/mapping-zone-sync.js"></script>
 <script type="module" src="js/clock-sync.js"></script>
+<script type="module" src="js/mapping-v2.js"></script>
+<script type="module" src="js/mapping-live-consistency-v1.js"></script>
+<script type="module" src="js/mapping-runtime-repair-v3.js"></script>
+<script src="js/honesty-audit-runtime-v1.js"></script>
+<script src="js/analysis-ui-stability-v4.js"></script>
+<script src="js/blueprint-context-bridge.js"></script>
+<script src="../shared/amyfx-blueprint-hotfix-v1.js" data-amyfx-blueprint-hotfix="v1"></script>
+<script src="../shared/amyfx-blueprint-v1.js" data-amyfx-blueprint-js="v1"></script>
+<script src="../shared/amyfx-provider-detection-v1.js" data-amyfx-provider-detection="v1"></script>
 </body>
 </html>

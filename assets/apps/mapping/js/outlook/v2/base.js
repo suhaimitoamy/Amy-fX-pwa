@@ -183,7 +183,7 @@ function sessionDuration(session, now) {
   if (!value || value.includes('OFF')) return 6 * HOUR;
   const date = new Date(now);
   const formatter = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', hour12: false
+    timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', hour12: false
   });
   const [hour, minute] = formatter.format(date).split(':').map(Number);
   const currentMinutes = hour * 60 + minute;

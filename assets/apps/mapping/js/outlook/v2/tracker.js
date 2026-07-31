@@ -4,10 +4,10 @@ export function predictionSlot(outlook, now = Date.now(), session = {}) {
   if (outlook.id === 'INTRADAY') return `${outlook.id}:${Math.floor(now / HOUR)}`;
   if (outlook.id === 'SESSION') {
     const sessionId = String(session?.id || session?.name || 'OFF').replace(/\s+/g, '_').toUpperCase();
-    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date(now));
+    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Makassar' }).format(new Date(now));
     return `${outlook.id}:${date}:${sessionId}`;
   }
-  const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date(now));
+  const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Makassar' }).format(new Date(now));
   return `${outlook.id}:${date}`;
 }
 

@@ -1,5 +1,5 @@
 (function(){
-  if(window.__amyfxSyncFixLoaded)return;
+  if(typeof window === 'undefined' || window.__amyfxSyncFixLoaded)return;
   window.__amyfxSyncFixLoaded=true;
 
   const TF_KEY='amyfx.selected.tf';
@@ -9,7 +9,7 @@
   const TF_FALLBACK=['M1','M5','M15','M30','H1','H4','D1','W1'];
 
   function wibTime(){
-    return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+    return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Makassar',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
   }
 
   try{
@@ -155,9 +155,14 @@
   function syncHeader(){
     const status=computedStatus();
     const cls=status==='Connected'?'amyfx-status-connected':status==='Cache'?'amyfx-status-cache':'amyfx-status-offline';
+    const mappingDot=document.getElementById('conn');
+    if(mappingDot){
+      mappingDot.textContent='●';
+      mappingDot.setAttribute('aria-label',`Status Mapping ${status}`);
+    }
 
     let targets=Array.from(document.querySelectorAll('#conn,[data-connection-status],header .status,.topbar .status'))
-      .filter(el=>leaf(el)&&/^(Offline|Online|Connected|Cache)$/i.test(el.textContent.trim()));
+      .filter(el=>el!==mappingDot&&leaf(el)&&/^(Offline|Online|Connected|Cache)$/i.test(el.textContent.trim()));
 
     if(!targets.length){
       targets=Array.from(document.querySelectorAll('*')).filter(el=>{
@@ -206,15 +211,15 @@
   function syncClock(){
     const tracked=Array.from(document.querySelectorAll('[data-amyfx-wib-clock]'));
     tracked.forEach(el=>{
-      el.textContent='WIB '+wibTime();
+      el.textContent='WITA '+wibTime();
     });
     if(tracked.length)return;
 
     Array.from(document.querySelectorAll('.muted,small,span,div')).forEach(el=>{
       if(!leaf(el))return;
       const tx=el.textContent.trim();
-      if(/^WIB \d{2}:\d{2}(:\d{2})?$/.test(tx)){
-        el.textContent='WIB '+wibTime();
+      if(/^WITA \d{2}:\d{2}(:\d{2})?$/.test(tx)){
+        el.textContent='WITA '+wibTime();
         el.setAttribute('data-amyfx-wib-clock','1');
       }
     });

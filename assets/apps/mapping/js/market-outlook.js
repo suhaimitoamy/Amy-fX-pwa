@@ -1,23 +1,11 @@
-import { state, TF, p2 } from './main.js';
-import { analyze } from './engine/ict-core.js';
-import {
-  applyLiveLiquidity,
-  candleFreshness
-} from './integrity/mapping-integrity-core.js';
-import {
-  appendPredictionSnapshots,
-  buildMarketOutlooks,
-  evaluatePredictionHistory,
-  predictionStats
-} from './outlook/market-outlook-core.js';
+import { state, p2 } from './main.js';
+import { buildAmyMarketContextOutlook } from './outlook/amy-market-context-final-core.js';
 
-const TRACKER_KEY = 'amy_mapping_outlook_predictions_v1';
 const OPEN_KEY = 'amy_mapping_outlook_open';
-const ANALYSIS_TFS = ['M15', 'M30', 'H1', 'H4', 'D1'];
-let cachedCandleSignature = '';
-let cachedAnalyses = {};
-let lastPaintSignature = '';
-let lastTrackerWrite = '';
+const SUMMARY_TITLE = 'Market Outlook';
+let lastSignature = '';
+let lastResult = null;
+let lastPublishSignature = '';
 let timer = 0;
 
 function safeText(value) {
@@ -26,318 +14,284 @@ function safeText(value) {
   })[character]);
 }
 
-function readHistory() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(TRACKER_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (_) {
-    return [];
-  }
+function priceText(value) {
+  return Number.isFinite(Number(value)) ? p2(value) : '—';
 }
 
-function writeHistory(history) {
-  const serialized = JSON.stringify((history || []).slice(-500));
-  if (serialized === lastTrackerWrite) return;
-  lastTrackerWrite = serialized;
-  localStorage.setItem(TRACKER_KEY, serialized);
+function currentTab() {
+  return state?.tab || localStorage.getItem('amy_mapping_tab') || '';
 }
 
-function lastCandleTime(tf) {
-  const candles = state.candles?.[tf] || [];
-  return Number(candles.at(-1)?.time || 0);
+function qualityState(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  return String(value.state || value.status || value.label || '');
 }
 
-function candleSignature() {
-  return ANALYSIS_TFS.map(tf => `${tf}:${state.candles?.[tf]?.length || 0}:${lastCandleTime(tf)}`).join('|');
-}
-
-function analyzeTimeframe(tf) {
-  const candles = state.candles?.[tf] || [];
-  if (candles.length < 30) return null;
-  try {
-    const result = analyze(candles, tf, {}, Number(state.price || 0), {
-      H4: state.candles?.H4,
-      D1: state.candles?.D1,
-      W1: state.candles?.W1
-    });
-    applyLiveLiquidity(result, { price: Number(state.price || result.price || 0) });
-    return result;
-  } catch (_) {
-    return null;
-  }
-}
-
-function analyses() {
-  const signature = candleSignature();
-  if (signature === cachedCandleSignature && Object.keys(cachedAnalyses).length) {
-    if (state.result?.tf) cachedAnalyses[state.result.tf] = state.result;
-    return cachedAnalyses;
-  }
-  cachedCandleSignature = signature;
-  cachedAnalyses = Object.fromEntries(
-    ANALYSIS_TFS
-      .map(tf => [tf, analyzeTimeframe(tf)])
-      .filter(([, result]) => result)
-  );
-  if (state.result?.tf) cachedAnalyses[state.result.tf] = state.result;
-  return cachedAnalyses;
-}
-
-function freshnessMap() {
+function intervalStale(key, aliases = []) {
   const quality = window.AmyMappingIntegrity?.qualityByInterval || {};
-  return Object.fromEntries(ANALYSIS_TFS.map(tf => [
-    tf,
-    candleFreshness(quality[TF[tf]] || state.candleMeta?.[TF[tf]], tf)
-  ]));
+  const item = quality[key] || aliases.map(alias => quality[alias]).find(Boolean);
+  const status = qualityState(item).toUpperCase();
+  return status.includes('STALE') || status.includes('USANG');
 }
 
-function marketContext() {
-  const intel = window.AmyFXIntel;
-  const stored = intel?.read?.() || {};
-  return {
-    session: intel?.sessionInfo?.() || { id: 'OFF_SESSION', label: 'OFF-SESSION' },
-    newsRisk: intel?.newsRisk?.(stored) || 'UNKNOWN'
-  };
-}
-
-function directionLabel(direction) {
-  if (direction === 'BULLISH') return 'Naik';
-  if (direction === 'BEARISH') return 'Turun';
-  return 'Sideways / Range';
-}
-
-function directionClass(direction) {
-  return String(direction || 'range').toLowerCase();
+function isOutlookStale() {
+  if (state?.result?.dataStale) return true;
+  const freshness = String(document.getElementById('conn')?.dataset?.analysisFreshness || '').toUpperCase();
+  if (freshness === 'STALE' || freshness === 'EXPIRED') return true;
+  return intervalStale('5min', ['M5', 'm5']) || intervalStale('15min', ['M15', 'm15']);
 }
 
 function expiryText(timestamp) {
+  if (!Number.isFinite(Number(timestamp))) return '—';
   return new Intl.DateTimeFormat('id-ID', {
-    timeZone: 'Asia/Jakarta',
+    timeZone: 'Asia/Makassar',
     day: '2-digit',
     month: 'short',
     hour: '2-digit',
     minute: '2-digit'
-  }).format(new Date(timestamp));
+  }).format(new Date(Number(timestamp)));
 }
 
-function priceText(value) {
-  return Number.isFinite(Number(value)) ? p2(value) : 'Belum tersedia';
+function statusText(scenario) {
+  return scenario?.status === 'ACTIVE' ? 'AKTIF' : 'WAIT';
 }
 
-function invalidationText(outlook) {
-  if (outlook.direction === 'RANGE') {
-    return `${priceText(outlook.invalidation?.lower)}–${priceText(outlook.invalidation?.upper)}`;
+function scenarioTitle(scenario) {
+  return ({
+    FVG_REVISIT: 'FVG Revisit',
+    OB_REVISIT: 'Order Block Revisit',
+    DOL: 'Draw on Liquidity',
+    ASIA_ENTRY: 'Asia Entry'
+  })[scenario?.setupType] || 'Context Event';
+}
+
+function invalidationText(scenario) {
+  if (Number.isFinite(Number(scenario?.invalidation))) return priceText(scenario.invalidation);
+  return `timeout ${expiryText(scenario?.expiresAt)} WITA atau zona tidak lagi fresh`;
+}
+
+function scenarioCopyText(scenario) {
+  const rows = [
+    scenarioTitle(scenario),
+    `Arah ${scenario.side}`,
+    `Status ${statusText(scenario)}`,
+    `Harga acuan ${priceText(scenario.referencePrice)}`,
+    `Target ${priceText(scenario.target)}`,
+    `Invalidasi ${invalidationText(scenario)}`,
+    `Berlaku sampai ${expiryText(scenario.expiresAt)} WITA`,
+    `Alasan: ${scenario.reason}`
+  ];
+  if (Number.isFinite(Number(scenario.zoneLow)) && Number.isFinite(Number(scenario.zoneHigh))) {
+    rows.splice(4, 0, `Zona ${priceText(scenario.zoneLow)} - ${priceText(scenario.zoneHigh)}`);
   }
-  return priceText(outlook.invalidation);
+  return rows.join('\n');
 }
 
-function probabilityMarkup(outlook) {
-  return `<div class="outlook-probabilities">
-    <div><span>Skenario utama</span><b>${outlook.probability}%</b><i style="--value:${outlook.probability}%"></i></div>
-    <div><span>Alternatif</span><b>${outlook.alternativeProbability}%</b><i style="--value:${outlook.alternativeProbability}%"></i></div>
-    <div><span>Invalidasi / reversal</span><b>${outlook.invalidationProbability}%</b><i style="--value:${outlook.invalidationProbability}%"></i></div>
-  </div>`;
-}
-
-function listMarkup(title, items, emptyText) {
-  const values = Array.isArray(items) ? items : [];
-  return `<div class="outlook-list-block"><small>${safeText(title)}</small>${
-    values.length
-      ? `<ul>${values.map(item => `<li>${safeText(item)}</li>`).join('')}</ul>`
-      : `<p>${safeText(emptyText)}</p>`
-  }</div>`;
-}
-
-function outlookCard(outlook, horizonStats) {
-  const accuracy = horizonStats?.ready
-    ? `<span class="outlook-calibrated">Akurasi arah historis ${horizonStats.directionalAccuracy.toFixed(1)}%</span>`
-    : `<span class="outlook-collecting">Tracker ${horizonStats?.count || 0}/20 sampel</span>`;
-
-  return `<article class="outlook-card ${directionClass(outlook.direction)}">
-    <div class="outlook-card-head">
-      <div><small>HORIZON</small><h3>${safeText(outlook.label)}</h3></div>
-      <span class="outlook-direction ${directionClass(outlook.direction)}">${safeText(directionLabel(outlook.direction))}</span>
+function scenarioCard(scenario) {
+  const buy = scenario.side === 'BUY';
+  const zone = Number.isFinite(Number(scenario.zoneLow)) && Number.isFinite(Number(scenario.zoneHigh));
+  return `<article class="amy-level-card ${buy ? 'buy' : 'sell'}">
+    <h3><span>${buy ? '↗' : '↘'}</span>${safeText(scenarioTitle(scenario))}</h3>
+    <div class="amy-level-grid">
+      <span>Arah Outlook</span><strong>${safeText(scenario.side)}</strong>
+      <span>Status</span><strong>${safeText(statusText(scenario))}</strong>
+      <span>Timeframe</span><strong>${safeText(scenario.timeframe || 'M5 + M15')}</strong>
+      <span>Harga acuan</span><strong>${priceText(scenario.referencePrice)}</strong>
+      ${zone ? `<span>Zona konteks</span><strong>${priceText(scenario.zoneLow)}–${priceText(scenario.zoneHigh)}</strong>` : ''}
+      <span>Target</span><strong class="profit">${priceText(scenario.target)}</strong>
+      <span>Invalidasi</span><strong class="loss">${safeText(invalidationText(scenario))}</strong>
+      <span>Berlaku sampai</span><strong>${safeText(expiryText(scenario.expiresAt))} WITA</strong>
     </div>
-    <div class="outlook-confidence">
-      <div><small>Probabilitas model</small><strong>${outlook.probability}%</strong></div>
-      ${accuracy}
-    </div>
-    <p class="outlook-scenario"><b>Skenario utama</b><br>${safeText(outlook.scenario)}</p>
-    ${probabilityMarkup(outlook)}
-    <div class="outlook-level-grid">
-      <div><small>Target utama</small><strong>${outlook.primaryTargetType ? `${safeText(outlook.primaryTargetType)} ${priceText(outlook.primaryTarget)}` : 'Belum ada target aktif'}</strong></div>
-      <div><small>Target lanjutan</small><strong>${outlook.secondaryTargetType ? `${safeText(outlook.secondaryTargetType)} ${priceText(outlook.secondaryTarget)}` : 'Belum tersedia'}</strong></div>
-      <div><small>Invalidasi konteks</small><strong>${invalidationText(outlook)}</strong></div>
-      <div><small>Berlaku sampai</small><strong>${safeText(expiryText(outlook.expiresAt))} WIB</strong></div>
-    </div>
-    <div class="outlook-path"><small>Jalur harga yang diperkirakan</small><strong>${safeText(outlook.path)}</strong></div>
-    <div class="outlook-scenarios">
-      <p><b>Skenario alternatif</b><br>${safeText(outlook.alternativeScenario)}</p>
-      <p><b>Kondisi batal</b><br>${safeText(outlook.invalidationScenario)}</p>
-    </div>
-    <div class="outlook-factor-grid">
-      ${listMarkup('Faktor pendukung', outlook.factors, 'Belum ada faktor kuat yang selaras.')}
-      ${listMarkup('Faktor risiko', outlook.risks, 'Tidak ada risiko tambahan yang terdeteksi.')}
-    </div>
+    <p><b>Alasan:</b> ${safeText(scenario.reason)}</p>
+    <button type="button" class="amy-copy-level" data-copy-levels="${safeText(scenarioCopyText(scenario))}"><span>▣</span> Salin outlook</button>
   </article>`;
 }
 
-function trackerMarkup(stats) {
-  const overall = stats.overall;
-  const headline = overall.ready
-    ? `<strong>${overall.directionalAccuracy.toFixed(1)}%</strong><span>Akurasi arah historis</span>`
-    : `<strong>${overall.count}/20</strong><span>Mengumpulkan sampel sebelum menampilkan akurasi</span>`;
+function contextMarkup(result) {
+  const context = result.context || {};
+  return `<div class="amy-level-waiting">
+    <b>M15 Structure:</b> ${safeText(context.bias || 'NEUTRAL')} ·
+    <b>Invalidasi:</b> ${priceText(context.invalidation)} ·
+    <b>BSL:</b> ${priceText(context.bsl)} ·
+    <b>SSL:</b> ${priceText(context.ssl)} ·
+    <b>EMA 5/15 MTF:</b> ${safeText(context.mtfDirection || 'MIXED')}
+  </div>`;
+}
 
-  const recent = stats.recent || [];
-  return `<section class="outlook-tracker">
-    <div class="outlook-tracker-head">
-      <div><small>PREDICTION TRACKER</small><h3>Validasi Otomatis Outlook</h3></div>
-      <span>${stats.pending} aktif</span>
-    </div>
-    <div class="outlook-tracker-main">${headline}</div>
-    <div class="outlook-tracker-grid">
-      <div><small>Outlook selesai</small><b>${overall.count}</b></div>
-      <div><small>Target tercapai</small><b>${overall.count ? overall.targetHitRate.toFixed(1) : '0.0'}%</b></div>
-      <div><small>Invalidasi</small><b>${overall.count ? overall.invalidationRate.toFixed(1) : '0.0'}%</b></div>
-    </div>
-    <p class="outlook-tracker-note">Akurasi baru ditampilkan setelah minimal 20 outlook selesai. Tracker menilai arah, target, dan invalidasi dari candle sesudah outlook dibuat.</p>
-    ${recent.length ? `<details class="outlook-history"><summary>Riwayat hasil terbaru</summary><div>${
-      recent.map(item => `<p><b>${safeText(item.horizonLabel)}</b> · ${safeText(directionLabel(item.direction))} · ${safeText(item.outcome || 'SELESAI')}<br><small>${priceText(item.startPrice)} → ${priceText(item.finalPrice)}</small></p>`).join('')
-    }</div></details>` : ''}
+function waitingMarkup({ stale, result }) {
+  const message = stale
+    ? 'Data M5 atau M15 sedang usang. Market Outlook ditahan sampai candle live kembali tersedia.'
+    : result.message || 'Tidak ada qualified context event. Outlook tetap WAIT.';
+  return `<section class="amy-level-panel waiting">
+    <p class="amy-level-intro">AMY Market Context Final: struktur M15 + trigger M5 untuk FVG revisit, OB revisit, DOL, dan Asia entry.</p>
+    ${result.context ? contextMarkup(result) : ''}
+    <div class="amy-level-waiting">${safeText(message)}</div>
   </section>`;
 }
 
-function panelMarkup(projection, stats, context) {
-  const cards = projection.outlooks.map(outlook =>
-    outlookCard(outlook, stats.byHorizon[outlook.id])
-  ).join('');
-
-  return `<section class="market-outlook-panel">
-    <div class="outlook-overview">
-      <div><small>MARKET REGIME</small><strong>${safeText(projection.regime.label)}</strong></div>
-      <div><small>SESSION</small><strong>${safeText(context.session.label || context.session.id)}</strong></div>
-      <div><small>NEWS RISK</small><strong>${safeText(context.newsRisk)}</strong></div>
-      <div><small>HARGA ACUAN</small><strong>${priceText(projection.price)}</strong></div>
-    </div>
-    <p class="outlook-disclaimer"><b>Proyeksi, bukan kepastian.</b> ${safeText(projection.disclaimer)} Fitur ini membahas kemungkinan arah dan target market, bukan rekomendasi entry.</p>
-    <div class="outlook-cards">${cards}</div>
-    ${trackerMarkup(stats)}
+function panelMarkup(result) {
+  return `<section class="amy-level-panel">
+    <p class="amy-level-intro">AMY Market Context Final hanya mengaktifkan outlook ketika event yang memenuhi threshold terkunci terdeteksi.</p>
+    ${contextMarkup(result)}
+    <div class="amy-level-cards">${result.scenarios.map(scenarioCard).join('')}</div>
+    <p class="amy-level-disclaimer">Market Outlook adalah konteks berbasis aturan, bukan jaminan hasil. Jika event bertentangan, Outlook tetap WAIT.</p>
   </section>`;
 }
 
-function findValidBreak() {
-  return [...document.querySelectorAll('#app details.disclosure')]
-    .find(details => details.querySelector(':scope > summary')?.textContent.trim().startsWith('Valid Break'));
+function summaryMarkup() {
+  return `<span class="amy-level-summary-title"><i>◎</i><b>${SUMMARY_TITLE}</b></span><span class="amy-level-summary-status">WAIT</span>`;
 }
 
 function ensureDisclosure() {
   const app = document.getElementById('app');
-  if (!app || state.tab !== 'Analyze' || !state.result) return null;
+  if (!app || currentTab() !== 'Analyze' || !state.result) return null;
   let details = app.querySelector('.outlook-disclosure');
-  if (details) return details;
-
-  details = document.createElement('details');
-  details.className = 'card disclosure outlook-disclosure';
-  details.open = localStorage.getItem(OPEN_KEY) !== 'false';
-  details.innerHTML = '<summary>Amy Market Outlook</summary><div class="outlook-loading">Menyusun proyeksi market...</div>';
-  details.addEventListener('toggle', () => localStorage.setItem(OPEN_KEY, String(details.open)));
-
-  const validBreak = findValidBreak();
-  if (validBreak) app.insertBefore(details, validBreak);
-  else app.appendChild(details);
-  return details;
+  if (!details) {
+    details = document.createElement('details');
+    details.className = 'card disclosure outlook-disclosure';
+    details.dataset.stabilityKey = 'market-outlook';
+    details.open = localStorage.getItem(OPEN_KEY) !== 'false';
+    details.innerHTML = `<summary class="amy-level-summary">${summaryMarkup()}</summary><div class="amy-trade-scenario-panel" data-amy-level-panel="true"></div>`;
+    details.addEventListener('toggle', () => localStorage.setItem(OPEN_KEY, String(details.open)));
+    const ringkasan = app.querySelector('.amy-analysis-section') || app.querySelector('#amy-regime-router-v3');
+    const validBreak = [...app.querySelectorAll('details.disclosure')].find(item => item.querySelector(':scope > summary')?.textContent.trim().startsWith('Valid Break'));
+    if (ringkasan) app.insertBefore(details, ringkasan);
+    else if (validBreak) app.insertBefore(details, validBreak);
+    else app.appendChild(details);
+  }
+  details.dataset.stabilityKey = 'market-outlook';
+  let summary = details.querySelector(':scope > summary');
+  if (!summary) {
+    summary = document.createElement('summary');
+    details.prepend(summary);
+  }
+  summary.className = 'amy-level-summary';
+  if (!summary.querySelector('.amy-level-summary-title')) summary.innerHTML = summaryMarkup();
+  let panel = details.querySelector('.amy-trade-scenario-panel');
+  if (!panel) {
+    panel = document.createElement('section');
+    panel.className = 'amy-trade-scenario-panel';
+    details.appendChild(panel);
+  }
+  panel.dataset.amyLevelPanel = 'true';
+  return { details, summary, panel };
 }
 
-function projectionSignature(projection, history) {
+function setSummaryState(summary, { stale, result }) {
+  if (!summary) return;
+  const badge = summary.querySelector('.amy-level-summary-status');
+  if (!badge) return;
+  const active = result.status === 'ACTIVE';
+  const mixed = result.status === 'MIXED';
+  const text = stale ? 'DATA USANG' : active ? result.primaryDirection : mixed ? 'KONFLIK · WAIT' : 'WAIT';
+  if (badge.textContent !== text) badge.textContent = text;
+  badge.classList.toggle('stale', stale);
+  badge.classList.toggle('ready', active && !stale);
+  badge.classList.toggle('waiting', (!active || mixed) && !stale);
+}
+
+function signature(result, stale) {
   return JSON.stringify({
-    price: Number(projection.price || 0).toFixed(2),
-    regime: projection.regime?.id,
-    outlooks: projection.outlooks.map(item => ({
-      id: item.id,
-      direction: item.direction,
-      probability: item.probability,
-      target: item.primaryTarget,
-      invalidation: item.invalidation
-    })),
-    resolved: history.filter(item => item.status === 'RESOLVED').length,
-    pending: history.filter(item => item.status === 'PENDING').length
+    tab: currentTab(),
+    stale,
+    status: result.status,
+    sourceTime: result.sourceTime,
+    direction: result.primaryDirection,
+    context: result.context ? {
+      bias: result.context.bias,
+      invalidation: Number(result.context.invalidation || 0).toFixed(2),
+      bsl: Number(result.context.bsl || 0).toFixed(2),
+      ssl: Number(result.context.ssl || 0).toFixed(2)
+    } : null,
+    scenarios: (result.scenarios || []).map(item => ({
+      side: item.side,
+      type: item.setupType,
+      target: Number(item.target || 0).toFixed(2),
+      invalidation: Number(item.invalidation || 0).toFixed(2),
+      expiresAt: item.expiresAt
+    }))
   });
 }
 
-function publishOutlook(projection, stats) {
-  const primary = projection.outlooks?.[0];
-  if (!primary || !window.AmyFXIntel?.write) return;
-  window.AmyFXIntel.write('outlook', {
-    generatedAt: projection.generatedAt,
-    price: projection.price,
-    regime: projection.regime.label,
-    direction: primary.direction,
-    probability: primary.probability,
-    target: primary.primaryTarget,
-    invalidation: primary.invalidation,
-    directionalAccuracy: stats.overall.ready ? stats.overall.directionalAccuracy : null,
-    sampleSize: stats.overall.count
-  });
+function publish(result, stale) {
+  if (state.result) {
+    state.result.marketOutlook = {
+      ...result,
+      status: stale ? 'DATA_STALE' : result.status,
+      mode: 'AMY_MARKET_CONTEXT_FINAL'
+    };
+    state.result.tradeScenarios = result;
+  }
+  if (window.AmyFXIntel?.write) {
+    const payload = {
+      mode: 'AMY_MARKET_CONTEXT_FINAL',
+      generatedAt: result.generatedAt,
+      price: result.referencePrice,
+      status: stale ? 'DATA_STALE' : result.status,
+      direction: stale ? 'WAIT' : result.primaryDirection,
+      context: result.context || null,
+      scenarios: stale ? [] : result.scenarios || []
+    };
+    const nextPublishSignature = JSON.stringify(payload);
+    if (nextPublishSignature !== lastPublishSignature) {
+      lastPublishSignature = nextPublishSignature;
+      window.AmyFXIntel.write('outlook', payload);
+    }
+  }
 }
 
 function refresh(force = false) {
-  const details = ensureDisclosure();
-  if (!details || !state.result || state.tab !== 'Analyze') return;
-
-  const context = marketContext();
-  const fresh = freshnessMap();
-  const projection = buildMarketOutlooks({
-    result: state.result,
-    analyses: analyses(),
-    candlesByTf: state.candles,
+  const target = ensureDisclosure();
+  if (!target || currentTab() !== 'Analyze') return;
+  const stale = isOutlookStale();
+  const result = buildAmyMarketContextOutlook({
+    M1: state.candles?.M1 || [],
+    M5: state.candles?.M5 || [],
+    M15: state.candles?.M15 || [],
+    H1: state.candles?.H1 || [],
+    H4: state.candles?.H4 || [],
+    D1: state.candles?.D1 || [],
     price: state.price,
-    newsRisk: context.newsRisk,
-    freshness: fresh,
-    session: context.session,
     now: Date.now()
   });
-
-  let history = evaluatePredictionHistory(readHistory(), {
-    candlesByTf: state.candles,
-    livePrice: state.price,
-    now: Date.now()
-  });
-  history = appendPredictionSnapshots(history, projection, {
-    now: Date.now(),
-    session: context.session
-  });
-  writeHistory(history);
-  const stats = predictionStats(history);
-  const signature = projectionSignature(projection, history);
-
-  if (force || signature !== lastPaintSignature) {
-    lastPaintSignature = signature;
-    const summary = details.querySelector(':scope > summary');
-    [...details.children].filter(child => child !== summary).forEach(child => child.remove());
-    summary.insertAdjacentHTML('afterend', panelMarkup(projection, stats, context));
-    state.result.marketOutlook = projection;
-    publishOutlook(projection, stats);
-  }
+  setSummaryState(target.summary, { stale, result });
+  const nextSignature = signature(result, stale);
+  if (!force && nextSignature === lastSignature) return;
+  lastSignature = nextSignature;
+  lastResult = result;
+  target.panel.innerHTML = stale || !result.scenarios?.length
+    ? waitingMarkup({ stale, result })
+    : panelMarkup(result);
+  publish(result, stale);
 }
 
 function boot() {
   refresh(true);
   clearInterval(timer);
   timer = setInterval(() => refresh(), 2500);
-  document.addEventListener('click', () => setTimeout(() => refresh(true), 30), true);
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) refresh(true);
-  });
+  document.addEventListener('click', async event => {
+    const button = event.target.closest('[data-copy-levels]');
+    if (!button) {
+      setTimeout(() => refresh(), 30);
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(button.dataset.copyLevels || '');
+      const original = button.innerHTML;
+      button.innerHTML = '<span>✓</span> Tersalin';
+      setTimeout(() => { button.innerHTML = original; }, 1200);
+    } catch (_) {}
+  }, true);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+  window.addEventListener('amyfx:candles-updated', () => refresh());
 }
 
 window.AmyMarketOutlook = {
   refresh: () => refresh(true),
-  history: readHistory,
-  stats: () => predictionStats(readHistory())
+  history: () => [],
+  stats: () => ({ mode: 'AMY_MARKET_CONTEXT_FINAL', current: lastResult })
 };
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', boot, { once: true });
-} else {
-  boot();
-}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+else boot();

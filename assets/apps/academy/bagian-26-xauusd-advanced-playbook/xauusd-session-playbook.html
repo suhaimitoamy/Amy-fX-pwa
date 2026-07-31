@@ -10,6 +10,12 @@
   <script>const ROOT_PATH='../';</script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/main.js" defer></script>
+<!-- Amy FX PWA runtime overlay -->
+<script src="../../../../platform-adapter.js"></script>
+<script src="../../../../pwa-live-price-bridge.js"></script>
+<script src="../../../../member-auth.js"></script>
+<script src="../../../../pwa-bootstrap.js"></script>
+<!-- /Amy FX PWA runtime overlay -->
 </head>
 <body>
 <script>requireLogin();</script>
@@ -33,15 +39,15 @@
 <main class="container hide-until-auth">
   <section class="article">
     <div class="breadcrumb">
-      <a href="../index.html">Beranda</a> › 
+      <a href="../index.html">Beranda</a> ›
       <a href="../daftar-materi.html">Daftar Materi</a> ›
       <a href="index.html">Bagian 26 — XAUUSD Advanced Playbook</a>
     </div>
-    
+
     <div class="glass-panel" style="margin-top: 20px;">
         <h1>XAUUSD Session Playbook</h1>
 <div class="note"><strong>Ikhtisar</strong><br><blockquote>
-<p>[!info] Ikhtisar
+<p<strong>Ikhtisar</strong>
 <strong>XAUUSD Session Playbook</strong> membedah karakteristik Emas di setiap zona waktu perdagangan utama (Asia, London, New York). Setiap sesi memiliki peran spesifik dalam algoritma harian Emas.</p>
 </blockquote></div>
 
@@ -56,7 +62,7 @@
 <h3>🏙️ Sesi New York AM (07:00 - 10:00 EST)</h3>
 <p><strong>Karakteristik:</strong> Sesi paling brutal, paling volatil, dan paling menguntungkan. Didorong oleh rilis data fundamental (berita pukul 08:30 EST).
 - <strong>Peran:</strong> Melanjutkan tren yang dibentuk London (<em>Continuation</em>) atau menghancurkan arah London secara total (<em>New York Reversal</em>).
-- <strong>Setup:</strong> 
+- <strong>Setup:</strong>
   1. Jika London sudah sesuai dengan <em>Daily Bias</em>, NY bertugas melanjutkan (<em>NY Continuation</em>). Cari entri <em>pullback</em> setelah jam 08:30.
   2. Jika London bergerak <em>melawan</em> Daily Bias, tunggu NY menyapu <em>London High/Low</em> lalu berbalik arah (MSS).</p>
 <hr />

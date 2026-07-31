@@ -3,8 +3,9 @@ import {
   conceptZoneLiveStatus,
   detectMarketConcepts
 } from './engine/concept-engine.js';
+import { SUPPORTED_MAPPING_TIMEFRAMES } from './engine/mapping-timeframes.js';
 
-const TIMEFRAMES = ['M1', 'M5', 'M15', 'M30', 'H1', 'H4'];
+const TIMEFRAMES = SUPPORTED_MAPPING_TIMEFRAMES;
 const cache = new Map();
 let patching = false;
 let timer = 0;
@@ -27,30 +28,25 @@ function conceptSignature(tf) {
     tf,
     candleSignature(state.candles?.[tf]),
     candleSignature(state.candles?.H4),
-    candleSignature(state.candles?.D1),
-    Number(state.price || 0).toFixed(4)
+    candleSignature(state.candles?.D1)
   ].join('|');
 }
 
 function conceptsFor(tf) {
+  if (tf === state.result?.tf && state.result?.marketConcepts) {
+    return state.result.marketConcepts;
+  }
   const signature = conceptSignature(tf);
   const cached = cache.get(tf);
   if (cached?.signature === signature) return cached.value;
+  const candles = state.candles?.[tf] || [];
   const value = detectMarketConcepts(state.candles?.[tf] || [], {
     tf,
-    currentPrice: Number(state.price || 0),
-    htfCandles: {
-      H4: state.candles?.H4,
-      D1: state.candles?.D1,
-      W1: state.candles?.W1
-    },
+    currentPrice: Number(candles.at(-1)?.close || 0),
+    htfCandles: { ...state.candles },
     htfBias: tf === state.result?.tf ? state.result?.htfNarrative?.htfBias : 'NEUTRAL'
   });
   cache.set(tf, { signature, value });
-  if (tf === state.result?.tf) {
-    state.result.marketConcepts = value;
-    state.result.mappingZones = value.mappingZones;
-  }
   return value;
 }
 
@@ -147,7 +143,7 @@ function patchExplanation() {
     : 'Belum ada target BSL/SSL aktif yang belum tersapu.';
   const sweepText = sweep
     ? `${sweep.type || sweep.concept} ${p2(sweep.level)} telah terkonfirmasi dengan reclaim ${p2(sweep.reclaimDepthAtr)} ATR.`
-    : 'Belum ada sweep dengan reclaim minimal 0,4 ATR.';
+    : `Belum ada sweep dengan reclaim minimal ${Number(concepts.thresholds?.liquidityReclaimAtr || 0).toFixed(2)} ATR.`;
   const ob = concepts.nearestOrderBlocks.map(compactZone).join('<br>') || 'Belum ada OB/Breaker tervalidasi.';
   const fvg = concepts.nearestFairValueGaps.map(compactZone).join('<br>') || 'Belum ada FVG/IFVG tervalidasi.';
   const html = `<b>4. Likuiditas dan zona</b><br>${safeText(liquidity)}<br>${safeText(sweepText)}<br><b>OB / Breaker:</b><br>${ob}<br><b>FVG / IFVG:</b><br>${fvg}`;
@@ -187,7 +183,7 @@ window.AmyIndicatorZones = {
   detect: tf => conceptsFor(tf || state.tf).mappingZones,
   concepts: tf => conceptsFor(tf || state.tf),
   refresh: patchAll,
-  source: 'AMY_CONCEPT_ENGINE_V2'
+  source: 'AMY_CONCEPT_ENGINE_V3'
 };
 
 if (document.readyState === 'loading') {

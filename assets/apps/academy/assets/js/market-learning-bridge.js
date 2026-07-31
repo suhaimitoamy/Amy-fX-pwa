@@ -13,23 +13,36 @@
   const API_ATTEMPT_TIMEOUT_MS = 6000;
 
   const OFFLINE_RULES = Object.freeze([
+    { id: 'bpr', pattern: /(balanced-price-range|bpr)/ },
+    { id: 'ifvg', pattern: /(ifvg|inversion-fvg|inversion-model)/ },
+    { id: 'breaker_block', pattern: /(breaker-block|mitigation-block)/ },
+    { id: 'turtle_soup', pattern: /(turtle-soup|smart-money-reversal)/ },
+    { id: 'silver_bullet', pattern: /(silver-bullet)/ },
+    { id: 'smt_divergence', pattern: /(smt-divergence|smart-money-tool)/ },
+    { id: 'ipda_ranges', pattern: /(ipda-data-ranges|ipda)/ },
+    { id: 'power_of_three', pattern: /(power-of-three|amd-model|po3)/ },
+    { id: 'nwog_ndog', pattern: /(nwog-dan-ndog|opening-gap)/ },
+    { id: 'standard_deviation', pattern: /(standard-deviation-projections|stdv)/ },
+    { id: 'prop_firm', pattern: /(prop-firm)/ },
+    { id: 'playbook_xau', pattern: /(xauusd-advanced-playbook|xauusd-playbook)/ },
+
     { id: 'trading_basics', pattern: /(apa-itu-trading|pengertian-trading|definisi-trading|realita-trading|cara-belajar-trading)/ },
     { id: 'backtest', pattern: /(backtest|backtesting|forward-test|jurnal|journal|sample-size|expectancy|win-rate)/ },
     { id: 'psychology', pattern: /(psikologi|psychology|fomo|revenge|disiplin|emosi|sabar|overtrading|mindset)/ },
     { id: 'news', pattern: /(news|fundamental|nfp|cpi|fomc|suku-bunga|inflasi|employment|cot-report)/ },
     { id: 'trade_management', pattern: /(trade-management|partial|break-even|breakeven|trailing|scale-out|exit-plan|manage-position|mengelola-hasil)/ },
     { id: 'risk', pattern: /(stop-loss|take-profit|risk|reward|leverage|margin|equity|balance|drawdown|position-sizing|ukuran-posisi|daily-loss|maximum-loss)/ },
-    { id: 'session', pattern: /(session|killzone|london|new-york|asia|true-day-open|midnight-open|nymo|opening-gap|ndog|nwog|macro-time|algorithmic-time)/ },
+    { id: 'session', pattern: /(session|killzone|london|new-york|asia|true-day-open|midnight-open|nymo|macro-time|algorithmic-time)/ },
     { id: 'timeframe', pattern: /(timeframe|multi-timeframe|top-down|topdown|higher-timeframe|lower-timeframe|daily-bias)/ },
-    { id: 'liquidity', pattern: /(liquidity|likuiditas|sweep|grab|bsl|ssl|inducement|stop-hunt|turtle-soup|draw-on-liquidity)/ },
-    { id: 'imbalance', pattern: /(fair-value-gap|fvg|imbalance|balanced-price-range|bpr|ifvg|liquidity-void|volume-imbalance|consequent-encroachment)/ },
-    { id: 'order_block', pattern: /(order-block|breaker-block|mitigation-block|rejection-block|propulsion-block)/ },
+    { id: 'liquidity', pattern: /(liquidity|likuiditas|sweep|grab|bsl|ssl|inducement|stop-hunt|draw-on-liquidity)/ },
+    { id: 'imbalance', pattern: /(fair-value-gap|fvg|imbalance|liquidity-void|volume-imbalance|consequent-encroachment)/ },
+    { id: 'order_block', pattern: /(order-block|rejection-block|propulsion-block)/ },
     { id: 'premium_discount', pattern: /(premium|discount|equilibrium|ote|fibonacci|dealing-range|optimal-trade-entry)/ },
     { id: 'support_resistance', pattern: /(support|resistance|supply|demand|level-kunci|horizontal-level)/ },
-    { id: 'volatility', pattern: /(atr|volatility|volatilitas|range-harian|adr|standard-deviation|stdv)/ },
-    { id: 'momentum', pattern: /(rsi|momentum|divergence|smt|moving-average|ema|sma|macd|stochastic)/ },
+    { id: 'volatility', pattern: /(atr|volatility|volatilitas|range-harian|adr)/ },
+    { id: 'momentum', pattern: /(rsi|momentum|divergence|moving-average|ema|sma|macd|stochastic)/ },
     { id: 'candle', pattern: /(candlestick|candle|ohlc|doji|engulf|pin-bar|wick|body-candle)/ },
-    { id: 'trend', pattern: /(trend|market-structure|struktur-market|bos|choch|mss|cisd|displacement|break-of-structure|change-of-character|mmxm|power-of-three|weekly-cycle|monthly-cycle|ipda)/ },
+    { id: 'trend', pattern: /(trend|market-structure|struktur-market|bos|choch|mss|cisd|displacement|break-of-structure|change-of-character|mmxm|weekly-cycle|monthly-cycle)/ },
     { id: 'order_math', pattern: /(buy|sell|profit|loss|lot|pip|point|spread|long|short|bid|ask)/ },
     { id: 'instruments', pattern: /(market-forex|forex|gold|xauusd|komoditas|indeks|crypto|instrumen|pair)/ }
   ]);
@@ -87,28 +100,41 @@
   function offlineMessage(group, topic) {
     const label = topicLabel(topic);
     const messages = {
-      trading_basics: `Contoh latihan **${label}**: trader tidak perlu menebak hasil berikutnya. Susun skenario, tentukan batas risiko, lalu terima bahwa satu transaksi hanya bagian kecil dari rangkaian probabilitas.`,
-      instruments: `Contoh latihan **${label}**: Gold, Forex, indeks, dan crypto memiliki volatilitas serta biaya transaksi berbeda. Aturan lot dan jarak stop harus disesuaikan dengan karakter instrumennya.`,
-      order_math: `Contoh latihan **${label}**: perubahan harga baru menjadi profit atau loss setelah dihitung bersama arah Buy/Sell, ukuran lot, spread, komisi, dan nilai pip atau point.`,
-      risk: `Contoh latihan **${label}**: tentukan titik invalidasi lebih dahulu, hitung jarak stop, lalu kecilkan atau besarkan lot agar nominal risiko tetap sesuai rencana.`,
-      candle: `Contoh latihan **${label}**: baca open, high, low, close, ukuran body, dan wick sebagai satu kesatuan. Satu bentuk candle tidak cukup tanpa lokasi dan konteks struktur.`,
-      timeframe: `Contoh latihan **${label}**: gunakan timeframe besar untuk konteks arah dan timeframe kecil untuk eksekusi. Konflik antartimeframe adalah alasan menunggu, bukan alasan menebak.`,
-      trend: `Contoh latihan **${label}**: tandai rangkaian high dan low terlebih dahulu. Break level baru bermakna jika didukung penutupan candle, displacement, dan konteks struktur.`,
-      support_resistance: `Contoh latihan **${label}**: perlakukan support dan resistance sebagai area reaksi, bukan garis yang pasti memantulkan harga. Tunggu respons candle sebelum mengambil keputusan.`,
-      liquidity: `Contoh latihan **${label}**: high dan low yang jelas dapat menjadi pool likuiditas. Sweep baru lebih bermakna ketika harga mengambil level lalu kembali menutup ke dalam range.`,
-      imbalance: `Contoh latihan **${label}**: FVG atau imbalance menunjukkan delivery harga yang tidak seimbang. Zona tetap harus dinilai bersama struktur, likuiditas, dan status mitigasinya.`,
-      order_block: `Contoh latihan **${label}**: Order Block bukan sekadar candle terakhir sebelum bergerak. Candle asal harus terhubung dengan displacement dan break struktur yang dapat dibuktikan.`,
-      session: `Contoh latihan **${label}**: bandingkan perilaku Asia, London, dan New York. Volatilitas serta pola pengambilan likuiditas dapat berubah menurut sesi.`,
-      volatility: `Contoh latihan **${label}**: gunakan ATR atau range rata-rata untuk menilai apakah stop dan target masuk akal. Jangan mengejar harga ketika sebagian besar range harian sudah terpakai.`,
-      momentum: `Contoh latihan **${label}**: momentum lebih kuat saat pergerakan harga dan struktur mendukung indikator. Hindari memakai oscillator sebagai sinyal tunggal.`,
-      premium_discount: `Contoh latihan **${label}**: tentukan dealing range, cari titik tengahnya, lalu nilai apakah harga berada di premium atau discount relatif terhadap range tersebut.`,
-      news: `Contoh latihan **${label}**: pisahkan perkiraan, hasil aktual, dan reaksi harga. Candle besar saat news tidak otomatis memberi arah lanjutan yang aman.`,
-      psychology: `Contoh latihan **${label}**: tidak entry juga merupakan keputusan valid. Gunakan checklist agar FOMO, revenge trade, dan rasa ingin membalas kerugian tidak mengambil alih.`,
-      backtest: `Contoh latihan **${label}**: catat setup, sesi, timeframe, kondisi struktur, risiko, dan hasil secara konsisten. Win rate tanpa konteks dan jumlah sampel mudah menyesatkan.`,
-      trade_management: `Contoh latihan **${label}**: aturan partial, break-even, trailing, dan exit harus ditentukan sebelum entry agar keputusan tidak berubah karena takut atau serakah.`,
-      structural_fallback: `Contoh latihan **${label}**: mulai dari struktur, lokasi harga, likuiditas, dan invalidasi. Jangan menggunakan satu konsep struktural secara terpisah dari konteks market.`,
-      management_fallback: `Contoh latihan **${label}**: ubah materi ini menjadi checklist yang dapat diperiksa sebelum, saat, dan setelah transaksi agar keputusan tetap konsisten.`,
-      basics_fallback: `Contoh latihan **${label}**: pahami definisi, tujuan, risiko, dan contoh penerapannya terlebih dahulu sebelum menggunakannya pada chart nyata.`
+      bpr: `[Data Skenario BPR Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: FVG Bullish & FVG Bearish tumpang tindih (Zero-gap rebalance).\n• Rujukan Skenario: Menghidangkan area tumpang tindih FVG M15 sebagai zona penetralan harga.`,
+      ifvg: `[Data Skenario Inversion FVG Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: FVG yang jebol close break berbalik fungsi secara permanen.\n• Rujukan Skenario: Menghidangkan zona FVG terbalik (Inversion Support/Resistance).`,
+      breaker_block: `[Data Skenario Breaker Block Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: Order Block didahului liquidity sweep sebelum pergantian MSS.\n• Rujukan Skenario: Menghidangkan zona Breaker Block dengan bobot dorongan institusional.`,
+      turtle_soup: `[Data Skenario Turtle Soup Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: Wick sweep pada Key High/Low disusul reclaim penutupan body.\n• Rujukan Skenario: Menghidangkan koordinat titik sweep & reclaim untuk konfirmasi M5 MSS.`,
+      silver_bullet: `[Data Skenario Silver Bullet Di-Hidangkan]\n• Topik: **${label}**\n• Jendela Waktu: 10:00–11:00 AM NY (15–20 pips target FVG).\n• Rujukan Skenario: Menghidangkan FVG M1/M5 pertama pasca penyapuan likuiditas sesi.`,
+      smt_divergence: `[Data Skenario SMT Divergence Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: Divergence struktural antarinstrumen berkorelasi (XAUUSD vs DXY).\n• Rujukan Skenario: Menghidangkan akumulasi tersembunyi saat satu instrumen gagal ikuti High/Low.`,
+      ipda_ranges: `[Data Skenario IPDA Lookback Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: Lookback Data Range 20, 40, dan 60 hari.\n• Rujukan Skenario: Menghidangkan rentang harga IPDA harian untuk penentuan bias HTF.`,
+      power_of_three: `[Data Skenario PO3 / AMD Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: Siklus Accumulation (Asia), Manipulation (London), Distribution (NY).\n• Rujukan Skenario: Menghidangkan tahapan AMD harian untuk eksekusi pasca-manipulasi.`,
+      nwog_ndog: `[Data Skenario Opening Gap Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: NWOG (New Week Gap) & NDOG (New Day Gap) antara penutupan & pembukaan.\n• Rujukan Skenario: Menghidangkan celah opening gap sebagai magnet likuiditas.`,
+      standard_deviation: `[Data Skenario Proyeksi STDV Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: Proyeksi Fibonacci STDV (-2.0, -2.5, -4.0) dari manipulation leg.\n• Rujukan Skenario: Menghidangkan level target Take Profit objektif pada -2.0 & -2.5.`,
+      prop_firm: `[Data Skenario Riset Prop Firm Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: Limit rugi harian max 4–5%, max drawdown 8–10%, risk per trade 0.5%–1%.\n• Rujukan Skenario: Menghidangkan toleransi nominal lot & SL terukur.`,
+      playbook_xau: `[Data Skenario Playbook Gold Di-Hidangkan]\n• Topik: **${label}**\n• Karakteristik: ATR harian XAU/USD dengan buffer SL 30–50 pips.\n• Rujukan Skenario: Menghidangkan parameter volatilitas khas Gold pada sesi London/NY.`,
+
+      trading_basics: `[Data Skenario Dasar Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan kalkulasi rasio risiko dan probabilitas.`,
+      instruments: `[Data Skenario Instrumen Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan spesifikasi spread, lot, dan volatilitas instrumen.`,
+      order_math: `[Data Skenario Orde Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan kalkulasi nilai pips, margin, dan profit/loss.`,
+      risk: `[Data Skenario Risiko Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan penentuan jarak Stop Loss (invalidasi) berbasis struktur & ATR.`,
+      candle: `[Data Skenario OHLC Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan bentuk pembacaan 4 harga (Open, High, Low, Close).`,
+      timeframe: `[Data Skenario Timeframe Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan perbandingan arah timeframe besar vs kecil.`,
+      trend: `[Data Skenario Struktur Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan konfirmasi Swing High/Low dan Body Displacement.`,
+      support_resistance: `[Data Skenario Level Kunci Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan koordinat Support & Resistance terdekat.`,
+      liquidity: `[Data Skenario Likuiditas Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan posisi BSL (High) dan SSL (Low) terdekat.`,
+      imbalance: `[Data Skenario Imbalance Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan batas atas dan bawah Fair Value Gap (FVG).`,
+      order_block: `[Data Skenario Order Block Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan batas rentang Order Block aktif.`,
+      session: `[Data Skenario Sesi Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan jadwal killzone sesi Asia, London, dan New York.`,
+      volatility: `[Data Skenario Volatilitas Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan perhitungan ATR dan pemakaian range harian.`,
+      momentum: `[Data Skenario Momentum Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan persentase perubahan harga M15 vs H1.`,
+      premium_discount: `[Data Skenario Premium/Discount Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan posisi harga relatif terhadap Equilibrium 50%.`,
+      news: `[Data Skenario Berita Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan besaran fluktuasi candle saat rilis berita.`,
+      psychology: `[Data Skenario Psikologi Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan checklist keputusan objektif bebas emosi.`,
+      backtest: `[Data Skenario Backtest Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan template pencatatan variabel sampel backtest.`,
+      trade_management: `[Data Skenario Manajemen Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan aturan eksekusi partial dan break-even.`,
+      structural_fallback: `[Data Skenario Struktur Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan parameter struktural dasar.`,
+      management_fallback: `[Data Skenario Manajemen Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan parameter manajemen risiko.`,
+      basics_fallback: `[Data Skenario Dasar Di-Hidangkan]\n• Topik: **${label}**\n• Rujukan Skenario: Menghidangkan parameter dasar materi.`
     };
     return messages[group] || messages.basics_fallback;
   }
@@ -289,17 +315,103 @@
     hydrateUI(ui, lessonConfig);
   }
 
+  function cleanTitle(path) {
+    if (!path) return '';
+    const filename = path.split('/').pop().replace(/\.html$/, '');
+    return topicLabel(filename);
+  }
+
+  function markLessonCompleted(currentPath) {
+    try {
+      const readSet = JSON.parse(localStorage.getItem('amy_read_topics') || '[]');
+      const folderMatch = currentPath.match(/bagian-\d+[^/]+/);
+      if (folderMatch && readSet.indexOf(folderMatch[0]) === -1) {
+        readSet.push(folderMatch[0]);
+        localStorage.setItem('amy_read_topics', JSON.stringify(readSet));
+      }
+    } catch (_) {}
+  }
+
+  function injectChapterNavigation(registry) {
+    if (document.querySelector('.chapter-nav-box')) return;
+
+    const currentPath = getCurrentPath();
+    if (!currentPath || currentPath.endsWith('/index.html')) return;
+
+    const lessonKeys = Object.keys(registry?.lessons || {}).filter(k => {
+      const cfg = registry.lessons[k];
+      return cfg && cfg.enabled && cfg.topic !== 'index' && !k.endsWith('/index.html');
+    });
+
+    const currentIndex = lessonKeys.indexOf(currentPath);
+    if (currentIndex === -1) return;
+
+    const prevPath = currentIndex > 0 ? lessonKeys[currentIndex - 1] : null;
+    const nextPath = currentIndex < lessonKeys.length - 1 ? lessonKeys[currentIndex + 1] : null;
+
+    const nav = document.createElement('nav');
+    nav.className = 'chapter-nav-box glass-panel';
+    nav.setAttribute('aria-label', 'Navigasi Bab');
+
+    if (prevPath) {
+      const prevBtn = document.createElement('a');
+      prevBtn.className = 'chapter-nav-btn prev-btn';
+      prevBtn.href = `../${prevPath}`;
+      prevBtn.innerHTML = `<span class="nav-dir">← Materi Sebelumnya</span><span class="nav-title">${escapeHtml(cleanTitle(prevPath))}</span>`;
+      nav.appendChild(prevBtn);
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'chapter-nav-placeholder';
+      nav.appendChild(placeholder);
+    }
+
+    const catalogBtn = document.createElement('a');
+    catalogBtn.className = 'chapter-nav-btn catalog-btn';
+    catalogBtn.href = '../daftar-materi.html';
+    catalogBtn.innerHTML = `<span class="nav-icon">📚</span><span class="nav-title">Daftar Materi</span>`;
+    nav.appendChild(catalogBtn);
+
+    if (nextPath) {
+      const nextBtn = document.createElement('a');
+      nextBtn.className = 'chapter-nav-btn next-btn';
+      nextBtn.href = `../${nextPath}`;
+      nextBtn.id = 'btn-next-chapter';
+      nextBtn.innerHTML = `<span class="nav-dir">Materi Berikutnya →</span><span class="nav-title">${escapeHtml(cleanTitle(nextPath))}</span>`;
+      if (typeof nextBtn.addEventListener === 'function') {
+        nextBtn.addEventListener('click', () => {
+          markLessonCompleted(currentPath);
+        });
+      }
+      nav.appendChild(nextBtn);
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'chapter-nav-placeholder';
+      nav.appendChild(placeholder);
+    }
+
+    const target = document.querySelector('.article-layout .article, .article');
+    if (target) {
+      target.appendChild(nav);
+    }
+  }
+
   async function boot() {
     const registry = await loadRegistry();
     if (!registry?.lessons) return;
 
     const lessonConfig = registry.lessons[getCurrentPath()];
-    if (!lessonConfig?.enabled || !lessonConfig.topic || lessonConfig.topic === 'index') return;
+
+    const runInjections = () => {
+      injectChapterNavigation(registry);
+      if (lessonConfig?.enabled && lessonConfig.topic && lessonConfig.topic !== 'index') {
+        injectExample(lessonConfig);
+      }
+    };
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => injectExample(lessonConfig), { once: true });
+      document.addEventListener('DOMContentLoaded', runInjections, { once: true });
     } else {
-      injectExample(lessonConfig);
+      runInjections();
     }
   }
 
@@ -308,6 +420,7 @@
     buildOfflineExample,
     fetchLiveExample,
     getCurrentPath,
-    renderMessage
+    renderMessage,
+    injectChapterNavigation
   };
 });

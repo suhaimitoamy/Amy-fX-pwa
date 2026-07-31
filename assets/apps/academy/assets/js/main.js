@@ -93,22 +93,22 @@
     // Glass Control
     var glassControl = document.createElement('div');
     glassControl.className = 'glass-control';
-    
+
     var glassLabel = document.createElement('label');
     glassLabel.innerHTML = '<span>Transparansi Kaca</span><span id="glassValDisplay">66%</span>';
-    
+
     var glassRange = document.createElement('input');
     glassRange.type = 'range';
     glassRange.min = '36';
     glassRange.max = '92';
-    
+
     var savedAlpha = localStorage.getItem('amy_glass_alpha');
     var currentAlpha = savedAlpha ? parseFloat(savedAlpha) : 0.66;
     glassRange.value = Math.round(currentAlpha * 100);
-    
+
     var displaySpan = glassLabel.querySelector('#glassValDisplay');
     displaySpan.textContent = glassRange.value + '%';
-    
+
     glassRange.addEventListener('input', function() {
       var val = parseInt(this.value, 10);
       var alpha = val / 100;
@@ -116,14 +116,14 @@
       displaySpan.textContent = val + '%';
       localStorage.setItem('amy_glass_alpha', alpha);
     });
-    
+
     var glassNote = document.createElement('small');
     glassNote.textContent = 'Sesuaikan efek tembus pandang (glass) sesuai selera Anda.';
-    
+
     glassControl.appendChild(glassLabel);
     glassControl.appendChild(glassRange);
     glassControl.appendChild(glassNote);
-    
+
     panel.appendChild(glassControl);
 
     var closeBtn = document.createElement('button');
@@ -235,15 +235,15 @@
   function initLanjutBelajar() {
     var container = document.getElementById('lanjutBelajarContainer');
     if (!container) return;
-    
+
     container.style.display = 'block';
-    
+
     var titleEl = document.getElementById('lanjutBelajarTitle');
     var btnEl = document.getElementById('lanjutBelajarBtn');
-    
+
     var lastTitle = localStorage.getItem('amy_last_opened_title');
     var lastUrl = localStorage.getItem('amy_last_opened_url');
-    
+
     if (lastTitle && lastUrl) {
       titleEl.textContent = lastTitle;
       btnEl.href = lastUrl;
@@ -255,14 +255,28 @@
     if (article && !article.querySelector('.chapter-list')) {
       var h1 = article.querySelector('h1');
       if (h1) {
-        localStorage.setItem('amy_last_opened_title', h1.textContent);
-        localStorage.setItem('amy_last_opened_url', window.location.href);
+        var title = h1.textContent.trim();
+        var url = window.location.href;
+        localStorage.setItem('amy_last_opened_title', title);
+        localStorage.setItem('amy_last_opened_url', url);
+
+        try {
+          var readSet = JSON.parse(localStorage.getItem('amy_read_topics') || '[]');
+          var folderMatch = url.match(/bagian-\d+[^/]+/);
+          if (folderMatch && readSet.indexOf(folderMatch[0]) === -1) {
+            readSet.push(folderMatch[0]);
+            localStorage.setItem('amy_read_topics', JSON.stringify(readSet));
+          }
+        } catch(e) {}
       }
     }
   }
 
   function updateCourseProgress() {
     var lastUrl = localStorage.getItem('amy_last_opened_url') || '';
+    var readSet = [];
+    try { readSet = JSON.parse(localStorage.getItem('amy_read_topics') || '[]'); } catch(e) {}
+
     var courseCards = document.querySelectorAll('.course-card');
     courseCards.forEach(function(card) {
       var link = card.querySelector('a');
@@ -280,26 +294,61 @@
         badge.style.marginBottom = '8px';
         badge.style.display = 'inline-block';
         badge.style.width = 'fit-content';
-        
-        if (lastUrl.indexOf(folder) !== -1) {
+
+        if (readSet.indexOf(folder) !== -1) {
+          badge.textContent = '✓ Selesai dibaca';
+          badge.style.background = 'rgba(0, 217, 126, 0.15)';
+          badge.style.color = '#00d97e';
+          badge.style.border = '1px solid rgba(0, 217, 126, 0.3)';
+        } else if (lastUrl.indexOf(folder) !== -1) {
           badge.textContent = 'Sedang dipelajari';
-          badge.style.background = 'var(--accent-soft)';
-          badge.style.color = 'var(--accent)';
+          badge.style.background = 'var(--accent-soft, rgba(212, 168, 50, 0.15))';
+          badge.style.color = 'var(--accent, #d4a832)';
         } else {
           badge.textContent = 'Belum mulai';
-          badge.style.background = 'var(--surface-soft)';
-          badge.style.color = 'var(--muted)';
+          badge.style.background = 'var(--surface-soft, rgba(255, 255, 255, 0.05))';
+          badge.style.color = 'var(--muted, #888)';
           badge.style.border = '1px solid var(--border)';
         }
         card.insertBefore(badge, card.firstChild);
       }
+    });
+
+    // Update Progress Bar on daftar-materi.html
+    var pBar = document.getElementById('academyProgressBar');
+    var pText = document.getElementById('academyProgressText');
+    if (pBar && pText) {
+      var totalBagian = 36;
+      var count = readSet.length;
+      var pct = Math.min(100, Math.round((count / totalBagian) * 100));
+      pBar.style.width = pct + '%';
+      pText.textContent = 'Membaca ' + count + ' dari ' + totalBagian + ' Bagian (' + pct + '%)';
+    }
+  }
+
+  function initAcademySearch() {
+    var sInput = document.getElementById('academySearchInput');
+    if (!sInput) return;
+
+    sInput.addEventListener('input', function() {
+      var query = this.value.toLowerCase().trim();
+      var panels = document.querySelectorAll('.panel');
+
+      panels.forEach(function(panel) {
+        var text = panel.textContent.toLowerCase();
+        if (!query || text.indexOf(query) !== -1) {
+          panel.style.display = 'block';
+        } else {
+          panel.style.display = 'none';
+        }
+      });
     });
   }
 
   function initFilters() {
     var filterBtns = document.querySelectorAll('.filter-btn');
     if (filterBtns.length === 0) return;
-    
+
     filterBtns.forEach(function(btn) {
       btn.addEventListener('click', function() {
         filterBtns.forEach(function(b) {
@@ -308,7 +357,7 @@
         });
         btn.classList.add('active');
         btn.classList.remove('ghost');
-        
+
         var filter = btn.dataset.filter;
         var panels = document.querySelectorAll('.panel');
         panels.forEach(function(panel) {
@@ -325,23 +374,23 @@
   function initReaderMode() {
     var article = document.querySelector('.article-layout .article, .article');
     if (!article) return;
-    
+
     var progressBar = document.createElement('div');
     progressBar.className = 'reading-progress-bar';
     document.body.appendChild(progressBar);
-    
+
     var fab = document.createElement('button');
     fab.className = 'fab-to-top';
     fab.innerHTML = '↑';
     fab.onclick = function() { window.scrollTo({top: 0, behavior: 'smooth'}); };
     document.body.appendChild(fab);
-    
+
     window.addEventListener('scroll', function() {
       var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       var scrolled = (winScroll / height) * 100;
       progressBar.style.width = scrolled + '%';
-      
+
       if (winScroll > 300) {
         fab.classList.add('visible');
       } else {
@@ -371,6 +420,7 @@
     trackReadingProgress();
     updateCourseProgress();
     initFilters();
+    initAcademySearch();
     initReaderMode();
   }
 

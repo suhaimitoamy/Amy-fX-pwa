@@ -1,5 +1,6 @@
-const NY_ZONE = 'America/New_York';
-const WIB_ZONE = 'Asia/Jakarta';
+const ASIA_ZONE = 'Asia/Makassar';
+const ASIA_START_HOUR = 6;
+const ASIA_END_HOUR = 14;
 
 function zonedParts(timestamp, timeZone) {
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -72,39 +73,40 @@ function validCandle(candle) {
     Number.isFinite(Number(candle?.close));
 }
 
-function formatWib(timestamp) {
+function formatWita(timestamp) {
   return new Intl.DateTimeFormat('id-ID', {
-    timeZone: WIB_ZONE,
+    timeZone: ASIA_ZONE,
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
   }).format(new Date(timestamp)).replace('.', ':');
 }
 
-function formatWibDate(timestamp) {
+function formatWitaDate(timestamp) {
   return new Intl.DateTimeFormat('id-ID', {
-    timeZone: WIB_ZONE,
+    timeZone: ASIA_ZONE,
     day: '2-digit',
     month: 'short'
   }).format(new Date(timestamp));
 }
 
 export function asiaSessionWindows(nowMs = Date.now(), count = 8) {
-  const nowNy = zonedParts(nowMs, NY_ZONE);
-  const anchorOffset = nowNy.hour >= 20 ? 0 : -1;
+  const nowAsia = zonedParts(nowMs, ASIA_ZONE);
+  const today = { year: nowAsia.year, month: nowAsia.month, day: nowAsia.day };
+  const todayStart = zonedTimestamp(today, ASIA_START_HOUR, 0, ASIA_ZONE);
+  const anchorOffset = nowMs >= todayStart ? 0 : -1;
   const windows = [];
 
   for (let index = 0; index < count; index += 1) {
-    const startDate = addCalendarDays(nowNy, anchorOffset - index);
-    const endDate = addCalendarDays(startDate, 1);
-    const start = zonedTimestamp(startDate, 20, 0, NY_ZONE);
-    const end = zonedTimestamp(endDate, 0, 0, NY_ZONE);
+    const sessionDate = addCalendarDays(today, anchorOffset - index);
+    const start = zonedTimestamp(sessionDate, ASIA_START_HOUR, 0, ASIA_ZONE);
+    const end = zonedTimestamp(sessionDate, ASIA_END_HOUR, 0, ASIA_ZONE);
     windows.push({
       start,
       end,
       active: nowMs >= start && nowMs < end,
       complete: nowMs >= end,
-      label: `${formatWibDate(start)} • ${formatWib(start)}–${formatWib(end)} WIB`
+      label: `${formatWitaDate(start)} • ${formatWita(start)}–${formatWita(end)} WITA`
     });
   }
   return windows;
@@ -179,15 +181,21 @@ export function calculateAsiaRange(candles = [], livePrice = NaN, nowMs = Date.n
       return time >= window.start && time < window.end;
     });
 
-    if (window.active && index === 0 && rows.length === 0) {
-      return {
-        valid: false,
-        state: 'DEVELOPING',
-        active: true,
-        windowLabel: window.label,
-        note: 'Asia Range baru dimulai; menunggu candle M15 pertama selesai.'
-      };
+    if (window.active && index === 0) {
+      if (rows.length === 0) {
+        return {
+          valid: false,
+          state: 'DEVELOPING',
+          active: true,
+          windowLabel: window.label,
+          note: 'Asia Range baru dimulai; menunggu candle M15 pertama selesai.'
+        };
+      }
+      selected = window;
+      sessionCandles = rows;
+      break;
     }
+
     if (rows.length >= 2) {
       selected = window;
       sessionCandles = rows;

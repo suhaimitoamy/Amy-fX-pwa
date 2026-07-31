@@ -4192,7 +4192,7 @@ body {
 
 /* Premium Video Fallback/Placeholder */
 .video-fallback:not(.has-native-thumb):not(.has-video-thumb) {
-  background: 
+  background:
     radial-gradient(circle at center, rgba(57, 255, 136, 0.08) 0%, transparent 70%),
     linear-gradient(135deg, #09100c 0%, #050806 100%) !important;
   border: 1px dashed rgba(57, 255, 136, 0.2) !important;

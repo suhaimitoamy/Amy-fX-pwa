@@ -8,10 +8,10 @@ const Editor = {
   historyIndex: -1,
   isRestoringHistory: false,
   selectedBlockId: null,
-  
+
   init() {
     ImageManager.init();
-    
+
     this.container = document.getElementById('blocksContainer');
     this.titleInput = document.getElementById('metaTitle');
     this.eyebrowInput = document.getElementById('metaEyebrow');
@@ -20,25 +20,25 @@ const Editor = {
     this.previewContent = document.getElementById('previewContent');
     this.saveStatus = document.getElementById('saveStatus');
     this.themeSelect = document.getElementById('previewTheme');
-    
+
     this.navFilterAll = document.getElementById('navFilterAll');
     this.navFilterImage = document.getElementById('navFilterImage');
     this.navBody = document.getElementById('navBody');
     this.navFilter = 'all';
-    
+
     this.bindEvents();
-    
+
     // Check URL params for existing file to load
     const urlParams = new URLSearchParams(window.location.search);
     const folder = urlParams.get('folder');
     const file = urlParams.get('file');
-    
+
     if (folder && file) {
       document.getElementById('editorTitle').innerText = `Edit: ${file}`;
-      
+
       const draftKey = `amy_admin_draft_${folder}_${file}`;
       const draftData = localStorage.getItem(draftKey);
-      
+
       if (draftData) {
         if (confirm("Ada draft lokal yang belum disimpan. Pulihkan draft?\n[OK = Pulihkan] [Cancel = Abaikan]")) {
           try {
@@ -67,10 +67,10 @@ const Editor = {
       // Empty state
       this.addBlock('paragraph');
     }
-    
+
     // Start auto-save
     setInterval(() => this.autoSave(), 30000);
-    
+
     // Add global click listener for closing dropdowns
     document.addEventListener('click', () => {
       document.querySelectorAll('.type-dropdown-menu').forEach(menu => {
@@ -78,12 +78,12 @@ const Editor = {
       });
     });
   },
-  
+
   bindEvents() {
     // Toggle Add Block Drawer
     const btnToggleAddBlock = document.getElementById('btnToggleAddBlock');
     const layout = document.getElementById('editorLayout');
-    
+
     if (btnToggleAddBlock) {
       btnToggleAddBlock.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -91,7 +91,7 @@ const Editor = {
         layout.classList.remove('show-nav');
       });
     }
-    
+
     const addBlockCloseBtn = document.getElementById('addBlockCloseBtn');
     if (addBlockCloseBtn) {
       addBlockCloseBtn.addEventListener('click', () => {
@@ -107,13 +107,13 @@ const Editor = {
         layout.classList.remove('show-add-block');
       });
     });
-    
+
     // Undo / Redo
     const btnUndo = document.getElementById('btnUndo');
     const btnRedo = document.getElementById('btnRedo');
     if (btnUndo) btnUndo.addEventListener('click', () => this.undo());
     if (btnRedo) btnRedo.addEventListener('click', () => this.redo());
-    
+
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
@@ -125,7 +125,7 @@ const Editor = {
         this.redo();
       }
     });
-    
+
     // Metadata inputs
     const updateMeta = () => {
       this.metadata.title = this.titleInput.value;
@@ -134,21 +134,21 @@ const Editor = {
       this.metadata.nextLink = this.nextInput.value;
       this.triggerPreviewUpdate();
     };
-    
+
     this.titleInput.addEventListener('input', updateMeta);
     this.eyebrowInput.addEventListener('input', updateMeta);
     this.prevInput.addEventListener('input', updateMeta);
     this.nextInput.addEventListener('input', updateMeta);
-    
+
     this.titleInput.addEventListener('blur', () => this.saveHistory());
     this.eyebrowInput.addEventListener('blur', () => this.saveHistory());
     this.prevInput.addEventListener('blur', () => this.saveHistory());
     this.nextInput.addEventListener('blur', () => this.saveHistory());
-    
+
     // Export/Import
     document.getElementById('btnExport').addEventListener('click', () => this.exportHTML());
     document.getElementById('btnImport').addEventListener('click', () => document.getElementById('importFileInput').click());
-    
+
     // Navigator Filter
     if (this.navFilterAll) {
       this.navFilterAll.addEventListener('click', () => {
@@ -164,7 +164,7 @@ const Editor = {
         this.renderNavigator();
       });
     }
-    
+
     // Toggle mobile views
     const btnTogglePreview = document.getElementById('btnTogglePreview');
     if (btnTogglePreview) {
@@ -178,7 +178,7 @@ const Editor = {
         }
       });
     }
-    
+
     const btnToggleNav = document.getElementById('btnToggleNav');
     if (btnToggleNav) {
       btnToggleNav.addEventListener('click', () => {
@@ -186,14 +186,14 @@ const Editor = {
         document.getElementById('editorLayout').classList.remove('show-add-block');
       });
     }
-    
+
     const navCloseBtn = document.getElementById('navCloseBtn');
     if (navCloseBtn) {
       navCloseBtn.addEventListener('click', () => {
         document.getElementById('editorLayout').classList.remove('show-nav');
       });
     }
-    
+
     const navOverlay = document.getElementById('navOverlay');
     if (navOverlay) {
       navOverlay.addEventListener('click', () => {
@@ -201,7 +201,7 @@ const Editor = {
         document.getElementById('editorLayout').classList.remove('show-add-block');
       });
     }
-    
+
     // GitHub Save & Settings
     document.getElementById('btnGithubSettings').addEventListener('click', () => {
       const token = localStorage.getItem('amy_github_token') || '';
@@ -210,51 +210,51 @@ const Editor = {
       document.getElementById('imgbbApiKey').value = imgbbKey;
       document.getElementById('githubModalOverlay').classList.add('active');
     });
-    
+
     document.getElementById('githubModalClose').addEventListener('click', () => {
       document.getElementById('githubModalOverlay').classList.remove('active');
     });
-    
+
     document.getElementById('githubModalCancel').addEventListener('click', () => {
       document.getElementById('githubModalOverlay').classList.remove('active');
     });
-    
+
     document.getElementById('githubModalSave').addEventListener('click', () => {
       const token = document.getElementById('githubTokenInput').value.trim();
       const imgbbKey = document.getElementById('imgbbApiKey').value.trim();
-      
+
       if (token) {
         localStorage.setItem('amy_github_token', token);
       } else {
         localStorage.removeItem('amy_github_token');
       }
-      
+
       if (imgbbKey) {
         localStorage.setItem('amy_imgbb_api_key', imgbbKey);
       } else {
         localStorage.removeItem('amy_imgbb_api_key');
       }
-      
+
       document.getElementById('githubModalOverlay').classList.remove('active');
       this.showToast('Pengaturan Editor disimpan lokal', 'success');
     });
-    
+
     document.getElementById('btnSaveGithub').addEventListener('click', () => this.saveToGithub());
     const btnPushGithub = document.getElementById('btnPushGithub');
     if (btnPushGithub) btnPushGithub.addEventListener('click', () => this.saveToGithub());
-    
+
     document.getElementById('importFileInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      
+
       this.currentFileName = file.name;
       document.getElementById('editorTitle').innerText = `Edit: ${this.currentFileName}`;
-      
+
       const reader = new FileReader();
       reader.onload = (ev) => this.importHTML(ev.target.result);
       reader.readAsText(file);
     });
-    
+
     // Theme switch
     this.themeSelect.addEventListener('change', (e) => {
       const theme = e.target.value;
@@ -273,16 +273,16 @@ const Editor = {
       layout.classList.toggle('show-preview');
       btnToggle.innerText = layout.classList.contains('show-preview') ? '📝 Editor' : '👁️ Preview';
     });
-    
+
     if (window.innerWidth <= 900) {
       btnToggle.style.display = 'block';
     }
   },
-  
+
   generateId() {
     return 'block_' + Math.random().toString(36).substr(2, 9);
   },
-  
+
   saveHistory() {
     if (this.isRestoringHistory) return;
     if (this.historyIndex < this.history.length - 1) {
@@ -299,58 +299,58 @@ const Editor = {
     this.historyIndex = this.history.length - 1;
     this.updateHistoryButtons();
   },
-  
+
   undo() {
     if (this.historyIndex > 0) {
       this.historyIndex--;
       this.restoreHistoryState(this.history[this.historyIndex]);
     }
   },
-  
+
   redo() {
     if (this.historyIndex < this.history.length - 1) {
       this.historyIndex++;
       this.restoreHistoryState(this.history[this.historyIndex]);
     }
   },
-  
+
   restoreHistoryState(state) {
     this.isRestoringHistory = true;
     this.blocks = JSON.parse(JSON.stringify(state.blocks));
     this.metadata = JSON.parse(JSON.stringify(state.metadata));
-    
+
     this.titleInput.value = this.metadata.title;
     this.eyebrowInput.value = this.metadata.eyebrow;
     this.prevInput.value = this.metadata.prevLink;
     this.nextInput.value = this.metadata.nextLink;
-    
+
     this.renderBlocks();
     this.triggerPreviewUpdate();
-    
+
     this.updateHistoryButtons();
-    
+
     setTimeout(() => { this.isRestoringHistory = false; }, 50);
   },
-  
+
   updateHistoryButtons() {
     const btnUndo = document.getElementById('btnUndo');
     const btnRedo = document.getElementById('btnRedo');
     if (btnUndo) btnUndo.disabled = this.historyIndex <= 0;
     if (btnRedo) btnRedo.disabled = this.historyIndex >= this.history.length - 1;
   },
-  
+
   addBlock(type, afterId = null, initialContent = '') {
     const newBlock = {
       id: this.generateId(),
       type: type,
       content: initialContent
     };
-    
+
     if (type === 'list') {
       newBlock.listType = 'ul';
       newBlock.listItems = [''];
     }
-    
+
     if (afterId) {
       const index = this.blocks.findIndex(b => b.id === afterId);
       if (index !== -1) {
@@ -361,16 +361,16 @@ const Editor = {
     } else {
       this.blocks.push(newBlock);
     }
-    
+
     this.renderBlocks();
     this.saveHistory();
-    
+
     // Focus new block
     setTimeout(() => {
       const el = document.getElementById(newBlock.id);
       if (el) {
         this.scrollToEditorBlock(newBlock.id);
-        
+
         setTimeout(() => {
           const editable = el.querySelector('.block-content');
           if (editable) editable.focus();
@@ -378,18 +378,18 @@ const Editor = {
       }
     }, 50);
   },
-  
+
   removeBlock(id) {
     this.blocks = this.blocks.filter(b => b.id !== id);
     this.renderBlocks();
     this.triggerPreviewUpdate();
     this.saveHistory();
   },
-  
+
   moveBlock(id, direction) {
     const index = this.blocks.findIndex(b => b.id === id);
     if (index === -1) return;
-    
+
     if (direction === 'up' && index > 0) {
       const temp = this.blocks[index];
       this.blocks[index] = this.blocks[index - 1];
@@ -409,12 +409,12 @@ const Editor = {
       const middleIndex = Math.floor(this.blocks.length / 2);
       this.blocks.splice(middleIndex, 0, block);
     }
-    
+
     this.renderBlocks();
     this.triggerPreviewUpdate();
     this.saveHistory();
   },
-  
+
   updateBlockContent(id, content) {
     const block = this.blocks.find(b => b.id === id);
     if (block) {
@@ -422,7 +422,7 @@ const Editor = {
       this.triggerPreviewUpdate();
     }
   },
-  
+
   updateListBlock(id, index, content) {
     const block = this.blocks.find(b => b.id === id);
     if (block && block.listItems) {
@@ -430,22 +430,22 @@ const Editor = {
       this.triggerPreviewUpdate();
     }
   },
-  
+
   changeBlockType(id, newType) {
     const block = this.blocks.find(b => b.id === id);
     if (!block || block.type === newType) return;
-    
+
     let oldContent = block.content || '';
     if (block.type === 'image') oldContent = block.imageCaption || '';
     if (block.type === 'list') oldContent = block.listItems ? block.listItems.join('<br>') : '';
-    
+
     // Changing TO list
     if (newType === 'list') {
       block.listType = 'ul';
       const items = oldContent.replace(/<\/div>/g, '').split(/<br>|<div>/);
       block.listItems = items.filter(i => i.trim() !== '');
       if (block.listItems.length === 0) block.listItems = [''];
-    } 
+    }
     // Changing FROM list
     else if (block.type === 'list') {
       block.content = block.listItems.join('<br>');
@@ -463,29 +463,29 @@ const Editor = {
     else {
       block.content = oldContent;
     }
-    
+
     block.type = newType;
     this.renderBlocks();
     this.triggerPreviewUpdate();
     this.saveHistory();
   },
-  
+
   renderBlocks() {
     this.container.innerHTML = '';
-    
+
     this.blocks.forEach(block => {
       const blockEl = document.createElement('div');
       blockEl.className = 'editor-block';
       blockEl.id = block.id;
       blockEl.dataset.type = block.type;
-      
+
       const typeIndicator = document.createElement('div');
       typeIndicator.className = 'block-type-indicator';
-      
+
       const typeLabel = document.createElement('span');
       typeLabel.innerText = block.type.toUpperCase() + ' ▾';
       typeIndicator.appendChild(typeLabel);
-      
+
       const dropdown = document.createElement('div');
       dropdown.className = 'type-dropdown-menu';
       dropdown.style.display = 'none';
@@ -501,7 +501,7 @@ const Editor = {
         <div data-val="code">Code</div>
       `;
       typeIndicator.appendChild(dropdown);
-      
+
       typeIndicator.addEventListener('click', (e) => {
         e.stopPropagation();
         document.querySelectorAll('.type-dropdown-menu').forEach(menu => {
@@ -509,7 +509,7 @@ const Editor = {
         });
         dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
       });
-      
+
       dropdown.querySelectorAll('div').forEach(item => {
         item.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -517,16 +517,16 @@ const Editor = {
           Editor.changeBlockType(block.id, item.getAttribute('data-val'));
         });
       });
-      
+
       blockEl.appendChild(typeIndicator);
-      
+
       // Global click to select block
       blockEl.addEventListener('mousedown', () => {
         document.querySelectorAll('.editor-block').forEach(el => el.classList.remove('selected'));
         blockEl.classList.add('selected');
         Editor.selectedBlockId = block.id;
       });
-      
+
       const actions = document.createElement('div');
       actions.className = 'block-actions';
       actions.innerHTML = `
@@ -535,7 +535,7 @@ const Editor = {
         <button onclick="Editor.removeBlock('${block.id}')" class="delete" title="Delete">❌</button>
       `;
       blockEl.appendChild(actions);
-      
+
       if (block.type === 'list') {
         const listContainer = document.createElement('div');
         block.listItems.forEach((item, index) => {
@@ -547,10 +547,10 @@ const Editor = {
             <span style="color:var(--text-muted)">•</span>
             <div class="block-content" contenteditable="true" style="flex:1" data-placeholder="List item...">${item}</div>
           `;
-          
+
           const editable = itemEl.querySelector('.block-content');
           editable.addEventListener('input', (e) => this.updateListBlock(block.id, index, e.target.innerHTML));
-          
+
           editable.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
@@ -567,15 +567,15 @@ const Editor = {
               }
             }
           });
-          
+
           listContainer.appendChild(itemEl);
         });
         blockEl.appendChild(listContainer);
-        
+
       } else if (block.type === 'image') {
         const imgContainer = document.createElement('div');
         imgContainer.className = 'image-block';
-        
+
         if (block.imageUrl) {
           imgContainer.innerHTML = `
             <img src="${block.imageUrl}">
@@ -593,7 +593,7 @@ const Editor = {
           `;
         }
         blockEl.appendChild(imgContainer);
-        
+
       } else {
         // Text blocks (paragraph, heading, warning, note, blockquote)
         const contentEl = document.createElement('div');
@@ -601,7 +601,7 @@ const Editor = {
         contentEl.contentEditable = true;
         contentEl.innerHTML = block.content;
         contentEl.dataset.placeholder = `Type ${block.type} here...`;
-        
+
         contentEl.addEventListener('input', (e) => this.updateBlockContent(block.id, e.target.innerHTML));
         contentEl.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
@@ -612,7 +612,7 @@ const Editor = {
             this.removeBlock(block.id);
           }
         });
-        
+
         // Focus state
         contentEl.addEventListener('focus', () => {
           blockEl.classList.add('selected');
@@ -622,12 +622,12 @@ const Editor = {
           blockEl.classList.remove('selected');
           this.saveHistory();
         });
-        
+
         blockEl.appendChild(contentEl);
       }
-      
+
       this.container.appendChild(blockEl);
-      
+
       // Add inline + button
       const addBtn = document.createElement('div');
       addBtn.className = 'add-block-btn';
@@ -635,27 +635,27 @@ const Editor = {
       addBtn.onclick = () => this.addBlock('paragraph', block.id);
       this.container.appendChild(addBtn);
     });
-    
+
     this.renderNavigator();
     this.triggerPreviewUpdate();
   },
-  
+
   editImage(blockId) {
     const block = this.blocks.find(b => b.id === blockId);
     if (!block) return;
-    
+
     ImageManager.showModal(block, (newData) => {
       block.imageUrl = newData.imageUrl;
       block.imageCaption = newData.imageCaption;
       block.imageSize = newData.imageSize;
       block.imagePosition = newData.imagePosition;
-      
+
       this.renderBlocks();
       this.triggerPreviewUpdate();
       this.saveHistory();
     });
   },
-  
+
   // Preview
   previewTimeout: null,
   triggerPreviewUpdate() {
@@ -666,116 +666,116 @@ const Editor = {
       this.saveStatus.innerText = '• Perubahan belum disimpan';
     }, 300);
   },
-  
+
   updatePreview() {
     const html = HtmlIO.exportHtml(this.metadata, this.blocks);
-    
+
     // We only want the inner part of article for the preview div
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const article = doc.querySelector('.article');
-    
+
     if (article) {
       this.previewContent.innerHTML = article.innerHTML;
     }
   },
-  
+
   // I/O
   importHTML(htmlString) {
     const result = HtmlIO.importHtml(htmlString);
     this.metadata = result.metadata;
     this.blocks = result.blocks;
-    
+
     this.titleInput.value = this.metadata.title;
     this.eyebrowInput.value = this.metadata.eyebrow;
     this.prevInput.value = this.metadata.prevLink;
     this.nextInput.value = this.metadata.nextLink;
-    
+
     this.renderBlocks();
     this.showToast('HTML berhasil di-import', 'success');
   },
-  
+
   exportHTML() {
     const html = HtmlIO.exportHtml(this.metadata, this.blocks);
-    
+
     // Create download link
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     const fileName = urlParams.get('file') || 'materi-export.html';
-    
+
     a.download = fileName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     this.saveStatus.innerText = '✓ Tersimpan';
     this.showToast(`HTML diekspor sebagai ${fileName}`, 'success');
   },
-  
+
   async saveToGithub() {
     const urlParams = new URLSearchParams(window.location.search);
     const folder = urlParams.get('folder');
     // Prioritas path save: Gunakan "folder" + "file" dari URL editor secara absolut
     const file = urlParams.get('file');
-    
+
     if (!folder || !file) {
       alert("Error: Folder atau file tidak ditemukan di URL. Anda harus membuka materi melalui Dashboard Admin.");
       return;
     }
-    
+
     const token = localStorage.getItem('amy_github_token');
     if (!token) {
       alert("GitHub token belum diisi. Silakan klik tombol ⚙️ Pengaturan Editor.");
       return;
     }
-    
+
     const actualFilePath = `${folder}/${file}`;
     const baseFilename = file.replace('.html', '');
     const timestamp = Date.now();
     let imageCounter = 0;
-    
+
     const filesToCommit = [];
-    
+
     // Process images
     this.blocks.forEach(block => {
       if (block.type === 'image' && block.imageUrl && block.imageUrl.startsWith('data:image/')) {
         imageCounter++;
         const imagePath = `images/materi/${folder}/${baseFilename}-${timestamp}-${imageCounter}.jpg`;
         const relativeHtmlPath = `../images/materi/${folder}/${baseFilename}-${timestamp}-${imageCounter}.jpg`;
-        
+
         // Extract base64 (remove 'data:image/jpeg;base64,')
         const base64Data = block.imageUrl.split(',')[1];
-        
+
         filesToCommit.push({
           path: imagePath,
           content: base64Data
         });
-        
+
         // Update URL to relative path for HTML export
         block.imageUrl = relativeHtmlPath;
       }
     });
-    
+
     const html = HtmlIO.exportHtml(this.metadata, this.blocks);
-    
+
     // Validasi gambar base64 tersisa yang mungkin tidak tertangkap
     if (html.includes('data:image/') || html.includes('base64,')) {
       alert('Peringatan: Masih ada gambar base64 yang tidak valid di konten.');
       this.saveStatus.innerText = '❌ Gagal menyimpan';
       return;
     }
-    
+
     const confirmMsg = `File yang akan disimpan ke GitHub:\n1. ${actualFilePath}\n${filesToCommit.length > 0 ? '+ ' + filesToCommit.length + ' file gambar' : ''}\n\nLanjutkan?`;
     if (!confirm(confirmMsg)) {
       this.saveStatus.innerText = 'Batal menyimpan';
       return;
     }
-    
+
     // Encode UTF-8 to Base64 safely for HTML
     const encoder = new TextEncoder();
     const data = encoder.encode(html);
@@ -784,29 +784,29 @@ const Editor = {
       binary += String.fromCharCode(data[i]);
     }
     const contentBase64 = btoa(binary);
-    
+
     filesToCommit.push({
       path: actualFilePath,
       content: contentBase64
     });
-    
+
     this.saveStatus.innerText = 'Menyimpan ke GitHub...';
-    
+
     try {
       await this.commitMultipleFiles(
-        token, 
-        'suhaimitoamy/amy-trading-academy', 
-        'main', 
-        filesToCommit, 
+        token,
+        'suhaimitoamy/amy-trading-academy',
+        'main',
+        filesToCommit,
         `Update materi: ${file} beserta ${filesToCommit.length - 1} gambar`
       );
       this.saveStatus.innerText = '✓ Berhasil disimpan';
       this.showToast('Berhasil disimpan ke GitHub secara instan.', 'success');
-      
+
       // Remove draft after successful save
       const draftKey = `amy_admin_draft_${folder}_${file}`;
       localStorage.removeItem(draftKey);
-      
+
       this.triggerPreviewUpdate(); // re-render preview
     } catch (err) {
       console.error(err);
@@ -894,7 +894,7 @@ const Editor = {
     if (!res.ok) throw new Error('Gagal mengupdate branch reference');
     return await res.json();
   },
-  
+
   async loadFromServer(folder, file) {
     try {
       this.saveStatus.innerText = 'Memuat...';
@@ -912,36 +912,36 @@ const Editor = {
       this.saveStatus.innerText = 'Gagal memuat';
     }
   },
-  
+
   autoSave() {
     const urlParams = new URLSearchParams(window.location.search);
     const folder = urlParams.get('folder');
     const file = urlParams.get('file');
     const key = `amy_admin_draft_${folder || 'new'}_${file || 'materi'}`;
-    
+
     const data = {
       metadata: this.metadata,
       blocks: this.blocks
     };
-    
+
     localStorage.setItem(key, JSON.stringify(data));
   },
-  
+
   showToast(message, type = 'success') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.innerText = message;
-    
+
     container.appendChild(toast);
-    
+
     setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => {
       toast.classList.remove('show');
       setTimeout(() => toast.remove(), 300);
     }, 3000);
   },
-  
+
   scrollToEditorBlock(blockId) {
     const layout = document.getElementById('editorLayout');
     const targetBlock = document.getElementById(blockId);
@@ -986,15 +986,15 @@ const Editor = {
   renderNavigator() {
     if (!this.navBody) return;
     this.navBody.innerHTML = '';
-    
+
     this.blocks.forEach((block, index) => {
       if (this.navFilter === 'image' && block.type !== 'image') return;
-      
+
       const el = document.createElement('div');
       el.className = 'nav-item';
       el.draggable = true;
       el.dataset.id = block.id;
-      
+
       let label = '';
       if (block.type === 'paragraph') label = 'P — ' + (block.content.replace(/<[^>]+>/g, '').substring(0, 30) || 'Kosong...');
       else if (block.type === 'heading2') label = 'H2 — ' + block.content.replace(/<[^>]+>/g, '');
@@ -1006,18 +1006,18 @@ const Editor = {
       else if (block.type === 'blockquote') label = '❞ Quote';
       else if (block.type === 'code') label = '</> Code';
       else label = block.type;
-      
+
       const titleEl = document.createElement('div');
       titleEl.className = 'nav-item-title';
       titleEl.innerText = label;
       el.appendChild(titleEl);
-      
+
       // Jump to block
       el.addEventListener('click', (e) => {
         if (e.target.tagName === 'BUTTON') return;
         Editor.scrollToEditorBlock(block.id);
       });
-      
+
       // Drag & Drop
       el.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text/plain', block.id);
@@ -1044,41 +1044,41 @@ const Editor = {
           }
         }
       });
-      
+
       // Quick Controls for Image
       if (block.type === 'image') {
         const controls = document.createElement('div');
         controls.className = 'nav-item-controls';
-        
+
         const btnTop = document.createElement('button');
         btnTop.innerText = 'Top';
         btnTop.onclick = (e) => { e.stopPropagation(); this.moveBlock(block.id, 'top'); };
-        
+
         const btnUp = document.createElement('button');
         btnUp.innerText = '↑';
         btnUp.onclick = (e) => { e.stopPropagation(); this.moveBlock(block.id, 'up'); };
-        
+
         const btnMid = document.createElement('button');
         btnMid.innerText = 'Mid';
         btnMid.onclick = (e) => { e.stopPropagation(); this.moveBlock(block.id, 'mid'); };
-        
+
         const btnDown = document.createElement('button');
         btnDown.innerText = '↓';
         btnDown.onclick = (e) => { e.stopPropagation(); this.moveBlock(block.id, 'down'); };
-        
+
         const btnBottom = document.createElement('button');
         btnBottom.innerText = 'Bottom';
         btnBottom.onclick = (e) => { e.stopPropagation(); this.moveBlock(block.id, 'bottom'); };
-        
+
         controls.appendChild(btnTop);
         controls.appendChild(btnUp);
         controls.appendChild(btnMid);
         controls.appendChild(btnDown);
         controls.appendChild(btnBottom);
-        
+
         el.appendChild(controls);
       }
-      
+
       this.navBody.appendChild(el);
     });
   }
@@ -1212,4 +1212,3 @@ document.addEventListener('DOMContentLoaded', () => Editor.init());
   window.__amyfxNotifyOpenRoute=openRoute;
 })();
 /* AMYFX_NOTIFY_GUARD_END */
-

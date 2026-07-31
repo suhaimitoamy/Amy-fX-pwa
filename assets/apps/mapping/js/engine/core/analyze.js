@@ -78,7 +78,40 @@ function decorateStructureWithLiveState(structure, price) {
   };
 }
 
-export function analyze(cs, tf, htfBiases = {}, currentPrice = null, htfCandles = {}) {
+function timestampMs(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return null;
+  return numeric < 10_000_000_000 ? numeric * 1000 : numeric;
+}
+
+export function resolveAnalysisTimeMs(candles, {
+  mode = 'LIVE',
+  analysisTimeMs = null,
+  analysisTimestamp = null
+} = {}) {
+  const explicit = timestampMs(analysisTimeMs ?? analysisTimestamp);
+  if (explicit !== null) return explicit;
+
+  if (String(mode).toUpperCase() === 'REPLAY') {
+    const lastClosed = [...(Array.isArray(candles) ? candles : [])]
+      .reverse()
+      .find(candle => candle?.isClosed !== false && timestampMs(candle?.time) !== null);
+    const replayTime = timestampMs(lastClosed?.time);
+    if (replayTime !== null) return replayTime;
+  }
+
+  return Date.now();
+}
+
+export function analyze(
+  cs,
+  tf,
+  htfBiases = {},
+  currentPrice = null,
+  htfCandles = {},
+  analysisOptions = {}
+) {
   if (!cs || cs.length < 30) {
     return {
       tf,
@@ -155,7 +188,7 @@ export function analyze(cs, tf, htfBiases = {}, currentPrice = null, htfCandles 
     ? (htfDirections.reduce((sum, value) => sum + value, 0) > 0 ? 'BULLISH'
       : htfDirections.reduce((sum, value) => sum + value, 0) < 0 ? 'BEARISH' : 'NEUTRAL')
     : htfNarrative.htfBias;
-  const sessionContext = buildSessionContext(Date.now());
+  const sessionContext = buildSessionContext(resolveAnalysisTimeMs(cs, analysisOptions));
 
   const ctx = {
     tf,

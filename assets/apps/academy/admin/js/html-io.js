@@ -2,7 +2,7 @@ const HtmlIO = {
   importHtml(htmlString) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
-    
+
     const metadata = {
       title: doc.querySelector('h1') ? doc.querySelector('h1').innerText : '',
       eyebrow: doc.querySelector('.eyebrow') ? doc.querySelector('.eyebrow').innerText : '',
@@ -10,7 +10,7 @@ const HtmlIO = {
       prevLink: '',
       nextLink: ''
     };
-    
+
     // Extract prev/next links
     const pageNavLinks = doc.querySelectorAll('.page-nav a.btn');
     if (pageNavLinks.length >= 2) {
@@ -19,19 +19,19 @@ const HtmlIO = {
       }
       metadata.nextLink = pageNavLinks[pageNavLinks.length - 1].getAttribute('href');
     }
-    
+
     // Extract blocks from article
     const article = doc.querySelector('.article');
     const blocks = [];
-    
+
     if (article) {
       // Remove metadata elements from article before parsing children
       const toRemove = article.querySelectorAll('.breadcrumb, .eyebrow, h1, .source-note, .page-nav');
       toRemove.forEach(el => el.remove());
-      
+
       Array.from(article.children).forEach(child => {
         const id = 'block_' + Math.random().toString(36).substr(2, 9);
-        
+
         if (child.tagName === 'P') {
           blocks.push({ id, type: 'paragraph', content: child.innerHTML });
         } else if (child.tagName === 'H2') {
@@ -52,19 +52,19 @@ const HtmlIO = {
           const captionEl = child.querySelector('.slot-caption');
           let imageUrl = '';
           if (img) imageUrl = img.getAttribute('src') || '';
-          
+
           // Ignore base64
           if (imageUrl.startsWith('data:image')) {
             imageUrl = '';
           }
-          
+
           let caption = '';
           if (captionEl) caption = captionEl.innerText;
-          
-          blocks.push({ 
-            id, 
-            type: 'image', 
-            imageUrl, 
+
+          blocks.push({
+            id,
+            type: 'image',
+            imageUrl,
             imageCaption: caption,
             imageSize: child.style.maxWidth || '100%',
             imagePosition: child.style.textAlign || 'center'
@@ -72,13 +72,13 @@ const HtmlIO = {
         }
       });
     }
-    
+
     return { metadata, blocks };
   },
-  
+
   exportHtml(metadata, blocks) {
     let blocksHtml = '';
-    
+
     blocks.forEach(block => {
       switch (block.type) {
         case 'paragraph':
@@ -120,10 +120,10 @@ const HtmlIO = {
           break;
       }
     });
-    
+
     let prevHtml = metadata.prevLink ? `<a class="btn" href="${metadata.prevLink}">← Sebelumnya</a>` : `<span></span>`;
     let nextHtml = metadata.nextLink ? `<a class="btn primary" href="${metadata.nextLink}">Selanjutnya →</a>` : `<span></span>`;
-    
+
     return `<!doctype html>
 <html lang="id">
 <head>
@@ -158,9 +158,9 @@ const HtmlIO = {
         <div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="index.html">${metadata.eyebrow}</a></div>
         <div class="eyebrow">${metadata.eyebrow}</div>
         <h1>${metadata.title}</h1>
-        
+
 ${blocksHtml}
-        
+
         <div class="source-note">${metadata.sourceNote || 'Materi ini disusun untuk Amy Trading Academy.'}</div>
         <nav class="page-nav">
           ${prevHtml}
@@ -309,4 +309,3 @@ ${blocksHtml}
   window.__amyfxNotifyOpenRoute=openRoute;
 })();
 /* AMYFX_NOTIFY_GUARD_END */
-

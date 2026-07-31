@@ -84,15 +84,20 @@ function mountDashboard(range) {
 
 function mountAnalyze(range) {
   const app = document.getElementById('app');
-  const decisionCard = app?.querySelector('.decision-main')?.closest('.card');
-  if (!decisionCard) return;
+  if (!app) return;
+  if (state.tab !== 'Analyze') return;
+  const explanation = [...app.querySelectorAll('details.disclosure')].find(item =>
+    item.querySelector(':scope > summary')?.textContent?.trim() === 'Penjelasan Mapping'
+  );
+  const anchor = explanation || app.querySelector('#amy-execution-plan-detail') || app.firstElementChild;
+  if (!anchor) return;
   let strip = app.querySelector('[data-asia-range-analyze]');
   if (!strip) {
     strip = document.createElement('section');
     strip.className = 'card asia-liquidity-strip';
     strip.dataset.asiaRangeAnalyze = '';
-    decisionCard.insertAdjacentElement('afterend', strip);
   }
+  if (anchor.nextElementSibling !== strip) anchor.insertAdjacentElement('afterend', strip);
   setMarkupIfChanged(strip, analyzeMarkup(range));
 }
 

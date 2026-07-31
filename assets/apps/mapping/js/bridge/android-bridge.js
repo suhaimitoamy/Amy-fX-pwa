@@ -26,114 +26,159 @@ function stopNativeMonitorOnce() {
   window.Android?.stopBackgroundScanner?.();
 }
 
-export function notifyImportant(result) {
-  const setup = result?.bestSetup;
-  if (!setup || setup.score < 70) return;
+function validatedContract(result = state.result) {
+  const directionDecision = result?.directionDecision || null;
+  const setupExecution = result?.setupExecution || null;
+  const mappingExplanation = result?.mappingExplanation || null;
+  const active = Boolean(
+    result &&
+    !result.dataStale &&
+    directionDecision?.source === 'VALIDATED_DIRECTION_FORECAST' &&
+    directionDecision?.invalidated === false &&
+    (directionDecision?.signal === 'BUY' || directionDecision?.signal === 'SELL') &&
+    setupExecution?.active === true &&
+    setupExecution?.terminal === false &&
+    setupExecution?.direction === directionDecision.signal
+  );
 
-  const key = `${setup.type}:${setup.dir}:${Math.round(setup.entryLow * 10)}:${Math.round(setup.sl * 10)}`;
-  const last = state.notified[key] || 0;
-  if (Date.now() - last < 300000) return;
+  return { result, directionDecision, setupExecution, mappingExplanation, active };
+}
+
+function notificationTitle(execution) {
+  const stage = execution?.lifecycleStage || 'WAITING_ENTRY';
+  if (stage === 'ENTRY_ACTIVE') return `AMY FX — ENTRY ${execution.direction}`;
+  if (stage === 'TP1_SECURED' || stage === 'RUNNER_ACTIVE') return 'AMY FX — TP1 DIAMANKAN';
+  if (stage === 'TARGET_HIT') return 'AMY FX — TARGET TERCAPAI';
+  if (stage === 'STOPPED') return 'AMY FX — SETUP BERHENTI';
+  return `AMY FX — SETUP ${execution?.direction || 'WAIT'}`;
+}
+
+export function notifyImportant(result = state.result) {
+  const contract = validatedContract(result);
+  const execution = contract.setupExecution;
+  if (!execution?.setupId) return;
+
+  const allowedStages = new Set([
+    'WAITING_ENTRY',
+    'ENTRY_ACTIVE',
+    'TP1_SECURED',
+    'RUNNER_ACTIVE',
+    'TARGET_HIT',
+    'STOPPED',
+    'MISSED_ENTRY',
+    'EXPIRED',
+    'FORECAST_INVALIDATED',
+    'DATA_STALE',
+    'SETUP_REPLACED',
+    'INVALID_GEOMETRY'
+  ]);
+  if (!allowedStages.has(execution.lifecycleStage)) return;
+
+  const activeOrTerminalEvent = contract.active || execution.terminal;
+  if (!activeOrTerminalEvent) return;
+
+  const key = `${execution.setupId}:${execution.lifecycleStage}:${execution.status}`;
+  if (state.notified[key]) return;
 
   state.notified[key] = Date.now();
+  const entries = Object.entries(state.notified)
+    .sort((a, b) => Number(b[1]) - Number(a[1]))
+    .slice(0, 80);
+  state.notified = Object.fromEntries(entries);
   localStorage.setItem('amy_mapping_notified', JSON.stringify(state.notified));
-  const message = setupText(setup);
+
+  const title = notificationTitle(execution);
+  const message = setupText(execution, result);
 
   if (window.Android?.showNotificationWithUrl) {
-    window.Android.showNotificationWithUrl(
-      `AMY FX — ${setup.type}`,
-      message,
-      location.href
-    );
+    window.Android.showNotificationWithUrl(title, message, `${location.href.split('#')[0]}#Analyze`);
   } else {
-    browserNotify(`AMY FX — ${setup.type}`, message);
+    browserNotify(title, message, 'Analyze');
   }
 }
 
 export function sendTargetsToNative() {
-  if (!window.Android?.startBackgroundScanner) return;
-
-  const setup = state.result?.bestSetup;
-  const validSetup =
-    state.tf === 'M15' &&
-    setup?.executionMode === 'M15_PRECISION' &&
-    setup?.status !== 'INVALID' &&
-    setup?.status !== 'WAIT' &&
-    Number.isFinite(setup?.entryLow) &&
-    Number.isFinite(setup?.entryHigh);
-
-  if (!validSetup) {
-    stopNativeMonitorOnce();
-    return;
-  }
-
-  let upper = 0;
-  let lower = 0;
-  if (String(setup.dir).includes('SELL')) {
-    upper = Math.min(Number(setup.entryLow), Number(setup.entryHigh));
-  } else if (String(setup.dir).includes('BUY')) {
-    lower = Math.max(Number(setup.entryLow), Number(setup.entryHigh));
-  }
-
-  if (upper <= 0 && lower <= 0) {
-    stopNativeMonitorOnce();
-    return;
-  }
-
-  const targetKey = `${setup.dir}|${upper.toFixed(2)}|${lower.toFixed(2)}|${setup.timestamp || 0}`;
-  if (targetKey === lastNativeTargetKey) return;
-  lastNativeTargetKey = targetKey;
-
-  // Proxy server dipakai; pengguna tidak perlu mengaktifkan scanner atau mengisi API key.
-  window.Android.startBackgroundScanner(
-    'amyfx-proxy',
-    String(upper),
-    String(lower)
-  );
+  // Scanner area Mapping lokal sudah dinonaktifkan. Backend menjadi satu-satunya
+  // sumber notifikasi setup/scalper agar tidak terjadi alert ganda atau stale.
+  stopNativeMonitorOnce();
 }
 
 export function saveConnect() {
+  const input = document.getElementById('apiKey');
+  const apiKey = String(input?.value || '').trim();
+  if (apiKey) {
+    let saved = false;
+    try {
+      saved = window.AmyLivePrice?.saveApiKey?.(apiKey) === true;
+    } catch (_) {
+      saved = false;
+    }
+    if (!saved) {
+      state.conn = 'Key Required';
+      window.Android?.showAppToast?.('API key Twelve Data tidak valid.');
+      render();
+      return;
+    }
+  } else {
+    let hasStoredKey = false;
+    try {
+      hasStoredKey = window.AmyLivePrice?.hasApiKey?.() === true;
+    } catch (_) {
+      hasStoredKey = false;
+    }
+    if (!hasStoredKey) {
+      state.conn = 'Key Required';
+      window.Android?.showAppToast?.('Masukkan API key Twelve Data untuk harga WebSocket.');
+      render();
+      return;
+    }
+  }
+
   state.key = '';
   try { localStorage.removeItem('twelve_api_key'); } catch (_) {}
-  const input = document.getElementById('apiKey');
   if (input) input.value = '';
 
-  state.bg = true;
-  save();
-  connect();
+  state.bg = false;
+  try { localStorage.setItem('bg_scanner', 'false'); } catch (_) {}
+  connect({ force: true });
   sendTargetsToNative();
   render();
 }
 
 export function toggleBg() {
-  // Scanner tidak lagi membutuhkan tombol manual. Fungsi dipertahankan agar UI lama tetap aman.
-  state.bg = true;
-  save();
+  state.bg = false;
+  try { localStorage.setItem('bg_scanner', 'false'); } catch (_) {}
   sendTargetsToNative();
   render();
 }
 
 export function testNotif() {
-  const setup = state.result?.bestSetup || {
-    type: 'LIQUIDITY SWEEP',
-    dir: 'BUY WATCH',
-    tf: 'M15',
-    score: 78,
-    entryLow: 2355.20,
-    entryHigh: 2356.00,
-    sl: 2353.50,
-    tp1: 2358.50,
-    tp2: 2362.00,
-    reason: 'Contoh notifikasi setup angka.'
-  };
-  const message = setupText(setup);
+  const current = validatedContract();
+  const execution = current.setupExecution?.active
+    ? current.setupExecution
+    : {
+        active: true,
+        terminal: false,
+        setupId: 'PREVIEW-UPDATE-NOTIFICATION',
+        direction: 'BUY',
+        status: 'PREVIEW UPDATE',
+        lifecycleStage: 'WAITING_ENTRY',
+        entryLow: 2355.20,
+        entryHigh: 2356.00,
+        stopLoss: 2353.50,
+        target1: 2358.50,
+        target2: 2362.00,
+        singleTarget: false
+      };
+  const message = setupText(execution, current.result);
+  const title = current.setupExecution?.active
+    ? notificationTitle(execution)
+    : 'AMY FX — UPDATE PREVIEW';
+
   if (window.Android?.showNotificationWithUrl) {
-    window.Android.showNotificationWithUrl(
-      `AMY FX — ${setup.type}`,
-      message,
-      location.href
-    );
+    window.Android.showNotificationWithUrl(title, message, `${location.href.split('#')[0]}#Analyze`);
   } else {
-    browserNotify(`AMY FX — ${setup.type}`, message);
+    browserNotify(title, message, 'Analyze');
   }
 }
 

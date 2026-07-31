@@ -12,7 +12,7 @@ export function htfDirectionAt(candlesByTf, eventTime) {
 }
 
 export function obCreatedImbalance(candles, originIndex, breakIndex, direction) {
-  for (let index = Math.max(2, originIndex); index <= Math.min(candles.length - 1, breakIndex + 2); index += 1) {
+  for (let index = Math.max(2, originIndex); index <= Math.min(candles.length - 1, breakIndex); index += 1) {
     if (direction === 'BULLISH' && candles[index - 2].high < candles[index].low) return true;
     if (direction === 'BEARISH' && candles[index - 2].low > candles[index].high) return true;
   }

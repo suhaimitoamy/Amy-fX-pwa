@@ -1,3 +1,4 @@
+import "./ui/dom-stable-render.js";
 import "./bridge/sync-fix.js";
 import "./bridge/notify-guard.js";
 import {
@@ -13,10 +14,7 @@ import {
   analyzeActiveSetups
 } from './ui/ui-render.js';
 import {
-  saveConnect,
-  toggleBg,
-  testNotif,
-  downloadLogs
+  toggleBg
 } from './bridge/android-bridge.js';
 
 export const TF = {
@@ -36,21 +34,25 @@ export const state = {
   key: '',
   price: Number(localStorage.getItem('last_price') || 0),
   conn: 'Offline',
-  logs: JSON.parse(localStorage.getItem('amy_mapping_logs') || '[]'),
-  analyses: JSON.parse(localStorage.getItem('amy_mapping_analyses') || '[]'),
-  setups: JSON.parse(localStorage.getItem('amy_mapping_setups') || '[]'),
+  logs: [],
+  analyses: [],
+  setups: [],
   candles: {},
   result: null,
   bg: true,
   notified: JSON.parse(localStorage.getItem('amy_mapping_notified') || '{}')
 };
 
+const DISPLAY_TIME_ZONE = 'Asia/Makassar';
+const INTERNAL_LOG_LIMIT = 30;
+const INTERNAL_LOG_PATTERN = /error|gagal|usang|offline|invalid|timeout/i;
+
 export const p2 = value =>
   Number.isFinite(+value) ? Number(value).toFixed(2) : '-';
 
 export function nowTime() {
   return new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Asia/Jakarta',
+    timeZone: DISPLAY_TIME_ZONE,
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
@@ -97,57 +99,64 @@ export function sessions() {
   return zones.map(item => {
     const range = timeRange(...item.slice(1));
     const format = timestamp => new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Asia/Jakarta',
+      timeZone: DISPLAY_TIME_ZONE,
       hour: '2-digit',
       minute: '2-digit',
       hour12: false
     }).format(new Date(timestamp));
+    const displayRange = `${format(range.start)} - ${format(range.end)}`;
     return {
       name: item[0],
       active: now >= range.start && now < range.end,
-      wib: `${format(range.start)} - ${format(range.end)}`
+      wita: displayRange,
+      wib: displayRange
     };
   });
 }
 
 export function curSession() {
   return sessions().find(item => item.active) ||
-    { name: 'Off-Session', active: false, wib: '-' };
+    { name: 'Off-Session', active: false, wita: '-', wib: '-' };
 }
 
 export function log(message) {
-  state.logs = [`[${nowTime()}] ${message}`, ...state.logs].slice(0, 200);
-  save();
-  try { render(); } catch (_) {}
+  const entry = `[${nowTime()}] ${message}`;
+  if (INTERNAL_LOG_PATTERN.test(String(message || ''))) {
+    state.logs = [entry, ...state.logs].slice(0, INTERNAL_LOG_LIMIT);
+    console.warn(entry);
+  } else {
+    console.info(entry);
+  }
 }
 
 export function save() {
-  localStorage.setItem('amy_mapping_logs', JSON.stringify(state.logs.slice(0, 200)));
-  localStorage.setItem('amy_mapping_analyses', JSON.stringify(state.analyses.slice(0, 80)));
-  localStorage.setItem('amy_mapping_setups', JSON.stringify(state.setups.slice(0, 50)));
   localStorage.setItem('bg_scanner', 'true');
 }
 
-export function setupText(setup) {
-  if (!setup) return '';
-  const action = setup.status === 'WAIT'
-    ? 'Tunggu konfirmasi.'
-    : setup.status === 'INVALID'
-      ? 'Setup tidak valid.'
-      : 'Pantau harga saat masuk ke area, jangan mengejar.';
-  return `${fmtDir(setup.dir)} • ${setup.tf}
-Kualitas: ${setup.score}/100
-Area rencana: ${p2(setup.entryLow)} - ${p2(setup.entryHigh)}
-Batas salah: ${p2(setup.sl)}
-Target aman: ${p2(setup.tp1)}
-Target lanjutan: ${p2(setup.tp2)}
-${action}
-${setup.reason}`;
+export function setupText(execution, result = state.result) {
+  if (!execution) return 'Belum ada setup tervalidasi.';
+
+  const explanation = result?.mappingExplanation;
+  if (!execution.active) {
+    return `Status: ${execution.status || 'TUNGGU'}\n${execution.invalidationReason || explanation?.reason || 'Belum ada setup aktif.'}`;
+  }
+
+  const targetText = execution.singleTarget
+    ? `Target: ${p2(execution.target1)}`
+    : `TP1: ${p2(execution.target1)}\nTP2: ${p2(execution.target2)}`;
+
+  return `${fmtDir(execution.direction)} • ${result?.tf || state.tf}
+Status: ${execution.status}
+Area rencana: ${p2(execution.entryLow)} - ${p2(execution.entryHigh)}
+Batas salah: ${p2(execution.stopLoss)}
+${targetText}
+${explanation?.action || 'Ikuti lifecycle setup; jangan mengejar harga.'}`;
 }
 
 function setTab(tab) {
-  state.tab = tab;
-  localStorage.setItem('amy_mapping_tab', tab);
+  const allowedTab = tab === 'Analyze' ? 'Analyze' : 'Dashboard';
+  state.tab = allowedTab;
+  localStorage.setItem('amy_mapping_tab', allowedTab);
   render();
   syncAutomaticScannerUi();
 }
@@ -156,10 +165,7 @@ window.setTab = setTab;
 window.runAnalysis = runAnalysis;
 window.render = render;
 window.analyzeActiveSetups = analyzeActiveSetups;
-window.saveConnect = saveConnect;
 window.toggleBg = toggleBg;
-window.testNotif = testNotif;
-window.downloadLogs = downloadLogs;
 window.state = state;
 window.TF = TF;
 
@@ -174,7 +180,7 @@ function livePriceWatchdog() {
 
 function syncAutomaticScannerUi() {
   const button = document.querySelector('[data-scanner-status]');
-  const buttonText = '📡 Background Scanner Otomatis Aktif';
+  const buttonText = '📡 Scanner mengikuti setup causal';
   if (button) {
     if (button.textContent !== buttonText) button.textContent = buttonText;
     if (!button.classList.contains('action')) button.className = 'action';
@@ -182,20 +188,43 @@ function syncAutomaticScannerUi() {
 
   const settings = document.querySelector('.settings');
   if (!settings) return;
-
   const helpText =
-    'Harga live dan Background Scanner memakai server Amy FX secara otomatis. API key lokal tidak wajib.';
+    'Harga live, snapshot Mapping, scanner, dan notifikasi memakai kontrak setupExecution yang sama.';
   const help = settings.querySelector('p.muted');
   if (help && help.textContent !== helpText) help.textContent = helpText;
 
   const warningHtml =
-    '<b>Monitor Otomatis</b><br>News dan area M15 tetap dipantau setelah aplikasi ditutup.';
+    '<b>Monitor Causal</b><br>Scanner hanya aktif ketika setup causal timeframe terpilih masih aktif, searah forecast, dan belum terminal.';
   const warning = settings.querySelector('.warn');
   if (warning && warning.innerHTML !== warningHtml) warning.innerHTML = warningHtml;
 }
 
+export function pruneStorage() {
+  const keysToClean = [
+    'amy_mapping_logs',
+    'amy_mapping_analyses',
+    'amy_mapping_setups',
+    'amy_mapping_tmp',
+    'amy_test_cache',
+    'amy_debug_log'
+  ];
+  keysToClean.forEach(key => {
+    try { localStorage.removeItem(key); } catch (_) {}
+  });
+  state.logs = [];
+  state.analyses = [];
+  state.setups = [];
+}
+
 function initApp() {
   try { localStorage.removeItem('twelve_api_key'); } catch (_) {}
+  try {
+    const storedTab = localStorage.getItem('amy_mapping_tab');
+    if (storedTab !== 'Analyze' && storedTab !== 'Dashboard') {
+      localStorage.setItem('amy_mapping_tab', 'Dashboard');
+    }
+  } catch (_) {}
+  pruneStorage();
 
   document.querySelectorAll('.nav button')
     .forEach(button => button.addEventListener('click', () => setTab(button.dataset.tab)));
@@ -203,11 +232,9 @@ function initApp() {
   window.AmyFXIntel?.mountStrip(document.getElementById('mapping-command-strip'));
   window.AmyFXIntel?.mountBriefing(document.getElementById('intel-briefing'));
   applyAmyFxRoute();
+  if (state.tab !== 'Analyze') state.tab = 'Dashboard';
   render();
   syncAutomaticScannerUi();
-
-  // MutationObserver sebelumnya menulis ulang Settings lalu memicu dirinya sendiri.
-  // Tanpa observer, navigasi tetap ringan dan semua tombol dapat menerima sentuhan.
 
   setTimeout(autoConnectLivePrice, 600);
   setInterval(livePriceWatchdog, 30000);

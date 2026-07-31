@@ -44,7 +44,7 @@
   };
 
   AmyFX.sessionInfo = function(date = new Date()){
-    const fmt = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',hour12:false});
+    const fmt = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Makassar',hour:'2-digit',minute:'2-digit',hour12:false});
     const [h,m] = fmt.format(date).split(':').map(Number);
     const minutes = h*60+m;
     if(minutes >= 6*60 && minutes < 12*60) return {id:'asia', label:'Asia Session'};

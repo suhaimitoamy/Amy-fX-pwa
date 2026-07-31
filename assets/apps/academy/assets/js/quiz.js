@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch(root + 'assets/data/quizzes.json');
         const allQuizzes = await response.json();
         const quizzes = allQuizzes[moduleName];
-        
+
         if (!quizzes || quizzes.length === 0) return;
 
         let currentQ = 0;
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.selectAnswer = function(idx) {
             const btns = document.querySelectorAll('.quiz-btn');
             btns.forEach(b => b.disabled = true);
-            
+
             const q = quizzes[currentQ];
             const feedback = document.getElementById('quiz-feedback');
             const nextBtn = document.getElementById('quiz-next');
-            
+
             if (idx === q.correctIndex) {
                 btns[idx].classList.add('correct');
                 feedback.innerHTML = `<strong>Benar! 🎉</strong><br>${q.explanation}`;
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 feedback.innerHTML = `<strong>Salah! ❌</strong><br>${q.explanation}`;
                 feedback.className = 'quiz-feedback error';
             }
-            
+
             feedback.style.display = 'block';
             nextBtn.style.display = 'block';
         };
@@ -227,4 +227,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.__amyfxNotifyOpenRoute=openRoute;
 })();
 /* AMYFX_NOTIFY_GUARD_END */
-
