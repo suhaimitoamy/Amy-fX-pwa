@@ -11,24 +11,40 @@ on:
       - scripts/validate-amyfx-sync.mjs
       - pwa-live-price-bridge.js
       - package.json
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - .github/workflows/sync-amyfx-main.yml
+      - scripts/sync-from-amyfx-main.mjs
+      - scripts/validate-amyfx-sync.mjs
+      - pwa-live-price-bridge.js
+      - package.json
 
 permissions:
   contents: write
+  pull-requests: read
 
 concurrency:
-  group: amyfx-pwa-production-sync-${{ github.ref }}
+  group: amyfx-pwa-production-sync-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 jobs:
   sync-production-assets:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
 
     steps:
       - name: Checkout PWA migration branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ env.TARGET_BRANCH }}
           fetch-depth: 0
           path: pwa
 
@@ -78,4 +94,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
           git commit -m "sync: refresh PWA from Amy FX main ${AMYFX_SOURCE_SHA:0:12}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "HEAD:${TARGET_BRANCH}"
