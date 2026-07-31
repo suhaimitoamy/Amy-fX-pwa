@@ -2,16 +2,6 @@ name: Sync Amy FX production assets
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - upgrade/sync-amyfx-main-20260731
-    paths:
-      - .github/workflows/sync-amyfx-main.yml
-      - scripts/sync-from-amyfx-main.mjs
-      - scripts/normalize-amyfx-export.mjs
-      - scripts/validate-amyfx-sync.mjs
-      - pwa-live-price-bridge.js
-      - package.json
   pull_request:
     branches:
       - main
@@ -32,7 +22,7 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: amyfx-pwa-production-sync-${{ github.head_ref || github.ref }}
+  group: amyfx-pwa-production-sync-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -100,4 +90,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
           git commit -m "sync: refresh PWA from Amy FX main ${AMYFX_SOURCE_SHA:0:12}"
+          git fetch origin "${TARGET_BRANCH}"
+          git rebase "origin/${TARGET_BRANCH}"
           git push origin "HEAD:${TARGET_BRANCH}"
