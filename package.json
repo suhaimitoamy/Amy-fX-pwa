@@ -5,6 +5,7 @@
   "scripts": {
     "test": "node scripts/validate-pwa.mjs",
     "test:sync": "node scripts/validate-amyfx-sync.mjs",
+    "test:live-price": "node scripts/validate-pwa.mjs && node scripts/validate-amyfx-sync.mjs",
     "sync:amyfx-main": "node scripts/sync-from-amyfx-main.mjs ../amyfx-source/app/src/main/assets . && node scripts/apply-live-price-stream-guard.mjs"
   }
 }
