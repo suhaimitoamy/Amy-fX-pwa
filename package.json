@@ -1,5 +1,6 @@
 {
   "name": "amy-fx-pwa",
+  "version": "2.2.0-pwa.2",
   "private": true,
   "type": "module",
   "scripts": {
