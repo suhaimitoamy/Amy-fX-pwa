@@ -1,10 +1,10 @@
-/* Amy FX PWA live-price stream bridge. Twelve Data credentials stay on the Supabase Edge Function. */
+/* Amy FX PWA live-price stream bridge. Twelve Data credentials stay on the Amy FX production relay. */
 (function () {
   'use strict';
 
   if (window.AmyLivePrice) return;
 
-  const FALLBACK_ENDPOINT = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-live-price';
+  const FALLBACK_ENDPOINT = 'https://amy-fx.vercel.app/api/pwa-live-price';
   const MAX_RECONNECT_MS = 15_000;
   let requestController = null;
   let reconnectTimer = 0;
@@ -60,7 +60,7 @@
         timestamp: capturedAt,
         capturedAt,
         symbol: 'XAU/USD',
-        source: String(payload?.source || 'TWELVE_DATA_WEBSOCKET_EDGE'),
+        source: String(payload?.source || 'TWLEVE_DATA_WEBSOCKET_EDGE'),
         snapshot: payload?.snapshot === true,
         marketOpen
       }
@@ -236,7 +236,7 @@
   });
 
   window.AmyLivePrice = Object.freeze({
-    version: 'pwa-websocket-edge-stream-2.0.0',
+    version: 'pwa-websocket-production-relay-3.0.0',
     connect,
     disconnect,
     hasApiKey: function () { return true; },
