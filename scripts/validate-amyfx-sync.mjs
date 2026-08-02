@@ -7,6 +7,7 @@ const required = [
   'pwa-live-price-bridge.js',
   'pwa-update-bridge.js',
   'service-worker.js',
+  'supabase/functions/pwa-live-price/index.ts',
   'assets/amyfx-source.json',
   'assets/app-version.js',
   'assets/apps/mapping/index.html',
@@ -22,12 +23,10 @@ const required = [
 function read(file) {
   return fs.readFileSync(path.join(root, file), 'utf8');
 }
-
 function fail(message) {
   console.error(`Amy FX sync validation failed: ${message}`);
   process.exitCode = 1;
 }
-
 function versionAtLeast(actual, minimum) {
   const left = String(actual || '').split('.').map(value => Number.parseInt(value, 10) || 0);
   const right = String(minimum || '').split('.').map(value => Number.parseInt(value, 10) || 0);
@@ -57,22 +56,12 @@ else {
   if (Number(versionMatch[2]) < 56) fail(`Amy FX code ${versionMatch[2]} is older than 56`);
 }
 
+const expectedStream = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-live-price';
 const config = JSON.parse(read('pwa-config.json'));
-if (config.livePriceStreamEndpoint !== 'https://amy-fx.vercel.app/api/pwa-live-price') {
-  fail('PWA live stream is not routed through the production WebSocket relay');
-}
+if (config.livePriceStreamEndpoint !== expectedStream) fail('PWA live stream is not routed through the Vault-backed Supabase edge');
 
 const mappingIndex = read('assets/apps/mapping/index.html');
-for (const marker of [
-  'platform-adapter.js',
-  'pwa-live-price-bridge.js',
-  'member-auth.js',
-  'pwa-bootstrap.js',
-  'pwa-update-bridge.js',
-  'execution-plan.css',
-  'scalper-entry-watch.css',
-  'scalper-execution-authority.js'
-]) {
+for (const marker of ['platform-adapter.js', 'pwa-live-price-bridge.js', 'member-auth.js', 'pwa-bootstrap.js', 'pwa-update-bridge.js', 'execution-plan.css', 'scalper-entry-watch.css', 'scalper-execution-authority.js']) {
   if (!mappingIndex.includes(marker)) fail(`Mapping index missing ${marker}`);
 }
 
@@ -81,74 +70,57 @@ for (const marker of [
   'window.AmyLivePrice',
   'amyfx:twelvedata-price',
   'amyfx:twelvedata-status',
-  'https://amy-fx.vercel.app/api/pwa-live-price',
+  expectedStream,
   "Accept: 'text/event-stream'",
   'Authorization: `Bearer ${session.access_token}`',
   'response.body.getReader()',
   'TWELVE_DATA_WEBSOCKET_EDGE',
-  "version: 'pwa-websocket-production-relay-3.0.0'",
+  "version: 'pwa-websocket-vault-edge-3.0.0'",
   'hasApiKey'
 ]) {
   if (!bridge.includes(marker)) fail(`PWA live-price bridge missing ${marker}`);
 }
 if (bridge.includes('/api/twelvedata')) fail('PWA live price must not use REST candle polling');
 if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain legacy polling');
-if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) {
-  fail('PWA bridge must not contain provider credentials');
+if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) fail('PWA bridge must not contain provider credentials');
+
+const liveEdge = read('supabase/functions/pwa-live-price/index.ts');
+for (const marker of [
+  'get_amyfx_runtime_secret',
+  'amyfx_twelvedata_api_key',
+  'wss://ws.twelvedata.com/v1/quotes/price?apikey=',
+  'TWELVE_DATA_WEBSOCKET_EDGE',
+  'action: "heartbeat"'
+]) {
+  if (!liveEdge.includes(marker)) fail(`PWA live-price edge missing ${marker}`);
 }
+if (liveEdge.includes('bootstrapQuote')) fail('PWA live-price edge must not publish REST bootstrap prices');
 
 const worker = read('service-worker.js');
-for (const marker of [
-  '-pwa-ws-price-v3',
-  'function isLivePriceStream(url)',
-  "url.pathname.endsWith('/api/pwa-live-price')",
-  'event.respondWith(fetch(request))'
-]) {
+for (const marker of ['-pwa-ws-price-v3', 'function isLivePriceStream(url)', "url.pathname.endsWith('/functions/v1/pwa-live-price')", 'event.respondWith(fetch(request))']) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
 const updateBridge = read('pwa-update-bridge.js');
-for (const marker of [
-  'navigator.serviceWorker.getRegistration',
-  'registration.update()',
-  "Object.defineProperty(window, 'AmyFXUpdateManifestUrl'",
-  'window.AmyFXUpdate = Object.freeze({ checkNow })'
-]) {
+for (const marker of ['navigator.serviceWorker.getRegistration', 'registration.update()', "Object.defineProperty(window, 'AmyFXUpdateManifestUrl'", 'window.AmyFXUpdate = Object.freeze({ checkNow })']) {
   if (!updateBridge.includes(marker)) fail(`PWA update bridge missing ${marker}`);
 }
 
 const scalperWatch = read('assets/apps/mapping/js/scalper-entry-watch-v1.js');
-for (const marker of [
-  '10 driver BT6/BT6.1 + AMD',
-  'TP1 +10',
-  'TP2 +20',
-  'Stop Loss tetap pada level awal'
-]) {
+for (const marker of ['10 driver BT6/BT6.1 + AMD', 'TP1 +10', 'TP2 +20', 'Stop Loss tetap pada level awal']) {
   if (!scalperWatch.includes(marker)) fail(`Scalper Entry Watch missing ${marker}`);
 }
-
 const scalperAuthority = read('assets/apps/mapping/js/scalper-execution-authority.js');
-for (const marker of [
-  "CURRENT_ENGINE_VERSION = 'amyfx-preview-scalper-pattern-v3.0'",
-  'SCALPER_ENGINE_EXECUTION_AUTHORITY',
-  'TP1_HIT_NO_BE',
-  'ENTRY_TRIGGERED'
-]) {
+for (const marker of ["CURRENT_ENGINE_VERSION = 'amyfx-preview-scalper-pattern-v3.0'", 'SCALPER_ENGINE_EXECUTION_AUTHORITY', 'TP1_HIT_NO_BE', 'ENTRY_TRIGGERED']) {
   if (!scalperAuthority.includes(marker)) fail(`Scalper authority missing ${marker}`);
 }
 
-const forbiddenPreviewIdentity = [
-  'com.amyelitesuite.learningpreview',
-  'personal/amyfx-private/preview-update.json',
-  'AmyFX-Preview-latest.apk',
-  'amyfxpreview://'
-];
+const forbiddenPreviewIdentity = ['com.amyelitesuite.learningpreview', 'personal/amyfx-private/preview-update.json', 'AmyFX-Preview-latest.apk', 'amyfxpreview://'];
 const files = [];
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     const full = path.join(directory, entry.name);
-    if (entry.isDirectory()) walk(full);
-    else files.push(full);
+    if (entry.isDirectory()) walk(full); else files.push(full);
   }
 }
 walk(path.join(root, 'assets/apps'));
@@ -163,13 +135,7 @@ for (const file of files.filter(file => /\.(?:html|js|mjs|css|json)$/i.test(file
 }
 
 for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service-worker.js']) {
-  try {
-    new Function(read(file));
-  } catch (error) {
-    fail(`${file} has invalid JavaScript: ${error.message}`);
-  }
+  try { new Function(read(file)); } catch (error) { fail(`${file} has invalid JavaScript: ${error.message}`); }
 }
 
-if (!process.exitCode) {
-  console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with production WebSocket relay v3.`);
-}
+if (!process.exitCode) console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with Vault-backed WebSocket edge v3.`);
