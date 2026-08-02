@@ -1,7 +1,7 @@
 /* Amy FX PWA service worker */
 'use strict';
 
-const VERSION = 'amyfx-a18826f0de09-pwa-ws-price-v2';
+const VERSION = 'amyfx-a18826f0de09-pwa-ws-price-v3';
 const SHELL_CACHE = `amyfx-pwa-shell-${VERSION}`;
 const STATIC_CACHE = `amyfx-pwa-static-${VERSION}`;
 const DATA_CACHE = `amyfx-pwa-data-${VERSION}`;
@@ -78,6 +78,11 @@ function isDataRequest(url) {
     url.hostname.includes('supabase.co') ||
     url.hostname.includes('twelvedata.com') ||
     url.pathname.includes('/functions/v1/');
+}
+
+function isLivePriceStream(url) {
+  return url.pathname.endsWith('/functions/v1/pwa-live-price') ||
+    url.pathname.endsWith('/api/pwa-live-price');
 }
 
 async function networkFirst(request, cacheName, timeoutMs) {
@@ -178,7 +183,7 @@ self.addEventListener('fetch', event => {
   }
 
   // Streaming live prices must never be cached or wrapped in the 10-second data timeout.
-  if (url.hostname.includes('supabase.co') && url.pathname.endsWith('/functions/v1/pwa-live-price')) {
+  if (isLivePriceStream(url)) {
     event.respondWith(fetch(request));
     return;
   }
