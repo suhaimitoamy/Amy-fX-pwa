@@ -5,6 +5,7 @@ const root = process.cwd();
 const required = [
   'pwa-live-price-bridge.js',
   'pwa-update-bridge.js',
+  'service-worker.js',
   'assets/amyfx-source.json',
   'assets/app-version.js',
   'assets/apps/mapping/js/execution-plan-core.js',
@@ -95,11 +96,17 @@ const updateBridge = read('pwa-update-bridge.js');
 for (const marker of [
   'navigator.serviceWorker.getRegistration',
   'registration.update()',
-  'window.AmyFXUpdateManifestUrl = null',
+  "Object.defineProperty(window, 'AmyFXUpdateManifestUrl'",
+  'get: function () { return null; }',
   'window.AmyFXUpdate = Object.freeze({ checkNow })',
   'amyfx:pwa-update-check'
 ]) {
   if (!updateBridge.includes(marker)) fail(`PWA update bridge missing ${marker}`);
+}
+
+const serviceWorker = read('service-worker.js');
+for (const asset of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js']) {
+  if (!serviceWorker.includes(`appUrl('${asset}')`)) fail(`service worker shell does not precache ${asset}`);
 }
 
 const scalperWatch = read('assets/apps/mapping/js/scalper-entry-watch-v1.js');
@@ -149,7 +156,7 @@ for (const file of files.filter(file => /\.(?:html|js|mjs|css|json)$/i.test(file
   }
 }
 
-for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js']) {
+for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service-worker.js']) {
   try {
     new Function(read(file));
   } catch (error) {

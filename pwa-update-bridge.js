@@ -58,7 +58,18 @@
     }
   }
 
-  // PWA tidak memakai manifest APK Android. UI versi tetap dapat memanggil API yang sama.
-  window.AmyFXUpdateManifestUrl = null;
+  // Aset produksi Android boleh mencoba menulis URL manifest APK, tetapi PWA selalu
+  // menguncinya ke null dan memakai service worker sebagai satu-satunya kanal update.
+  try {
+    Object.defineProperty(window, 'AmyFXUpdateManifestUrl', {
+      configurable: true,
+      enumerable: true,
+      get: function () { return null; },
+      set: function () {}
+    });
+  } catch (_) {
+    window.AmyFXUpdateManifestUrl = null;
+  }
+
   window.AmyFXUpdate = Object.freeze({ checkNow });
 })();

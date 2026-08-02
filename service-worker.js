@@ -19,6 +19,8 @@ const SHELL = [
   appUrl('platform-adapter.js'),
   appUrl('member-auth.js'),
   appUrl('pwa-bootstrap.js'),
+  appUrl('pwa-live-price-bridge.js'),
+  appUrl('pwa-update-bridge.js'),
   appUrl('pwa-navigation.js'),
   appUrl('pwa-push-test.js'),
   appUrl('icons/amy-fx.svg'),
