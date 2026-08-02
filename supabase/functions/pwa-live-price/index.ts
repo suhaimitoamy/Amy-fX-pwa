@@ -94,38 +94,6 @@ async function persistQuote(price: number, providerTimestamp: number, source: st
   if (!response.ok) throw new Error(`quote_persist_${response.status}`);
 }
 
-async function bootstrapQuote(): Promise<Quote | null> {
-  if (!TWELVEDATA_API_KEY) return null;
-  const url = new URL("https://api.twelvedata.com/price");
-  url.searchParams.set("symbol", SYMBOL);
-  url.searchParams.set("apikey", TWELVEDATA_API_KEY);
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8_000);
-  try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: { Accept: "application/json" },
-    });
-    if (!response.ok) return null;
-    const payload = await response.json().catch(() => null);
-    const price = Number(payload?.price);
-    if (!Number.isFinite(price) || price <= 0) return null;
-    const providerTimestamp = Math.floor(Date.now() / 1000);
-    await persistQuote(price, providerTimestamp, "TWELVE_DATA_REST_BOOTSTRAP");
-    return {
-      symbol: SYMBOL,
-      price,
-      provider_timestamp: providerTimestamp,
-      captured_at: new Date(providerTimestamp * 1000).toISOString(),
-      source: "TWELVE_DATA_REST_BOOTSTRAP",
-    };
-  } catch (_) {
-    return null;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "GET") return json({ ok: false, error: "method_not_allowed" }, 405);
@@ -188,6 +156,15 @@ Deno.serve(async (req: Request) => {
           source: snapshot.source,
           snapshot: true,
           stale: marketOpen && ageMs > SNAPSHOT_FRESH_MS,
+          marketOpen,
+        });
+      } else {
+        send("status", {
+          status: marketOpen ? "WAITING_FOR_FIRST_TICK" : "MARKET_CLOSED_NO_WEBSOCKET_SNAPSHOT",
+          source: "TWELVE_DATA_WEBSOCKET_EDGE",
+          message: marketOpen
+            ? "Menunggu tick WebSocket pertama XAU/USD."
+            : "Market tutup dan belum ada snapshot WebSocket tersimpan.",
           marketOpen,
         });
       }
