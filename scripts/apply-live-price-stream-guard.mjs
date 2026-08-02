@@ -18,6 +18,13 @@ function replaceOnce(content, before, after, label) {
 }
 
 let worker = read('service-worker.js');
+worker = worker.replace(
+  /const VERSION = '([^']+)';/,
+  (_match, current) => {
+    const base = String(current).replace(/-pwa-ws-price-v2$/, '');
+    return `const VERSION = '${base}-pwa-ws-price-v2';`;
+  }
+);
 worker = replaceOnce(
   worker,
   "  if (isDataRequest(url)) {\n    event.respondWith(networkFirst(request, DATA_CACHE, 10000).catch(() => fetch(request)));\n    return;\n  }",
@@ -25,6 +32,15 @@ worker = replaceOnce(
   'service-worker data request block'
 );
 write('service-worker.js', worker);
+
+let liveEdge = read('supabase/functions/pwa-live-price/index.ts');
+liveEdge = replaceOnce(
+  liveEdge,
+  "      let snapshot = await readSnapshot();\n      if (!snapshot) snapshot = await bootstrapQuote();",
+  "      const snapshot = await readSnapshot();",
+  'REST bootstrap call'
+);
+write('supabase/functions/pwa-live-price/index.ts', liveEdge);
 
 let validatePwa = read('scripts/validate-pwa.mjs');
 validatePwa = replaceOnce(
@@ -48,7 +64,7 @@ validatePwa = replaceOnce(
 validatePwa = replaceOnce(
   validatePwa,
   "if (!worker.includes('pwa-push-test.js')) fail('service worker does not load the Web Push verification UI');",
-  "if (!worker.includes('pwa-push-test.js')) fail('service worker does not load the Web Push verification UI');\nif (!worker.includes(\"url.pathname.endsWith('/functions/v1/pwa-live-price')\")) fail('service worker does not bypass the live price stream');\nif (!worker.includes('event.respondWith(fetch(request))')) fail('service worker must pass the live price stream directly to network');",
+  "if (!worker.includes('pwa-push-test.js')) fail('service worker does not load the Web Push verification UI');\nif (!worker.includes('-pwa-ws-price-v2')) fail('service worker cache version was not bumped for the WebSocket price repair');\nif (!worker.includes(\"url.pathname.endsWith('/functions/v1/pwa-live-price')\")) fail('service worker does not bypass the live price stream');\nif (!worker.includes('event.respondWith(fetch(request))')) fail('service worker must pass the live price stream directly to network');",
   'service-worker live stream validation'
 );
 validatePwa = replaceOnce(
@@ -65,6 +81,12 @@ validateSync = replaceOnce(
   "for (const marker of [\n  'window.AmyLivePrice',\n  'amyfx:twelvedata-price',\n  'amyfx:twelvedata-status',\n  '/api/twelvedata',\n  'hasApiKey'\n]) {\n  if (!bridge.includes(marker)) fail(`PWA live-price bridge missing ${marker}`);\n}",
   "for (const marker of [\n  'window.AmyLivePrice',\n  'amyfx:twelvedata-price',\n  'amyfx:twelvedata-status',\n  'pwa-live-price',\n  \"Accept: 'text/event-stream'\",\n  'Authorization: `Bearer ${session.access_token}`',\n  'response.body.getReader()',\n  'TWELVE_DATA_WEBSOCKET_EDGE',\n  'hasApiKey'\n]) {\n  if (!bridge.includes(marker)) fail(`PWA live-price bridge missing ${marker}`);\n}\nif (bridge.includes('/api/twelvedata')) fail('PWA live price must not use REST candle polling');\nif (bridge.includes('setInterval(poll')) fail('PWA live price must not retain the legacy polling timer');",
   'synchronized live bridge markers'
+);
+validateSync = replaceOnce(
+  validateSync,
+  "if (!process.exitCode) {",
+  "const liveEdge = read('supabase/functions/pwa-live-price/index.ts');\nif (liveEdge.includes('snapshot = await bootstrapQuote')) fail('PWA live-price edge function must not publish a REST bootstrap as a live quote');\nconst worker = read('service-worker.js');\nif (!worker.includes('-pwa-ws-price-v2')) fail('PWA service-worker cache must be refreshed for the live-price repair');\n\nif (!process.exitCode) {",
+  'WebSocket-only backend validation'
 );
 write('scripts/validate-amyfx-sync.mjs', validateSync);
 
