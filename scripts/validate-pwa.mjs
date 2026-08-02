@@ -164,6 +164,9 @@ if (!worker.includes("new URL('./', self.location.href)")) fail('service worker 
 if (!worker.includes('showNotification')) fail('service worker does not display Web Push notifications');
 if (!worker.includes('displayPushNotification')) fail('service worker does not use the hardened notification display path');
 if (!worker.includes('pwa-push-test.js')) fail('service worker does not load the Web Push verification UI');
+if (!worker.includes('-pwa-ws-price-v2')) fail('service worker cache version was not bumped for the WebSocket price repair');
+if (!worker.includes("url.pathname.endsWith('/functions/v1/pwa-live-price')")) fail('service worker does not bypass the live price stream');
+if (!worker.includes('event.respondWith(fetch(request))')) fail('service worker must pass the live price stream directly to network');
 if (!worker.includes("url.pathname.endsWith('/functions/v1/pwa-live-price')")) fail('service worker does not bypass the live price stream');
 if (!worker.includes('event.respondWith(fetch(request))')) fail('service worker must pass the live price stream directly to network');
 if (!worker.includes('amyfx-news-')) fail('service worker does not deduplicate news notifications');

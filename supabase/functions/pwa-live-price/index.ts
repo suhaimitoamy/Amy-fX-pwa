@@ -176,8 +176,7 @@ Deno.serve(async (req: Request) => {
       }, STREAM_MAX_MS);
 
       const marketOpen = isMarketOpen();
-      let snapshot = await readSnapshot();
-      if (!snapshot) snapshot = await bootstrapQuote();
+      const snapshot = await readSnapshot();
       if (snapshot) {
         const capturedAt = Date.parse(snapshot.captured_at);
         const ageMs = Number.isFinite(capturedAt) ? Math.max(0, Date.now() - capturedAt) : Number.POSITIVE_INFINITY;

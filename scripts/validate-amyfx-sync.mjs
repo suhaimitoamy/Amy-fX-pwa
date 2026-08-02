@@ -170,6 +170,11 @@ for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service
   }
 }
 
+const liveEdge = read('supabase/functions/pwa-live-price/index.ts');
+if (liveEdge.includes('snapshot = await bootstrapQuote')) fail('PWA live-price edge function must not publish a REST bootstrap as a live quote');
+const worker = read('service-worker.js');
+if (!worker.includes('-pwa-ws-price-v2')) fail('PWA service-worker cache must be refreshed for the live-price repair');
+
 if (!process.exitCode) {
   console.log(`Amy FX PWA Pattern v3 sync validation passed for source ${String(metadata.commit || 'unknown').slice(0, 12)} and app ${versionMatch?.[1] || 'unknown'}.`);
 }
