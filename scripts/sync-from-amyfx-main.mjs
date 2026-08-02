@@ -135,10 +135,22 @@ const sourceSha = String(process.env.AMYFX_SOURCE_SHA || 'unknown');
 const serviceWorkerPath = path.join(targetRoot, 'service-worker.js');
 if (exists(serviceWorkerPath)) {
   const version = `amyfx-${sourceSha.slice(0, 12) || 'manual'}`;
-  const worker = read(serviceWorkerPath).replace(
+  let worker = read(serviceWorkerPath).replace(
     /const VERSION = ['"][^'"]+['"];?/,
     `const VERSION = '${version}';`
   );
+  const shellAnchor = "  appUrl('pwa-bootstrap.js'),";
+  const missingShellAssets = [
+    'pwa-live-price-bridge.js',
+    'pwa-update-bridge.js'
+  ].filter(asset => !worker.includes(`appUrl('${asset}')`));
+  if (missingShellAssets.length) {
+    if (!worker.includes(shellAnchor)) fail('service worker shell anchor is missing');
+    worker = worker.replace(
+      shellAnchor,
+      [shellAnchor, ...missingShellAssets.map(asset => `  appUrl('${asset}'),`)].join('\n')
+    );
+  }
   write(serviceWorkerPath, worker);
 }
 
