@@ -177,6 +177,12 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  // Streaming live prices must never be cached or wrapped in the 10-second data timeout.
+  if (url.hostname.includes('supabase.co') && url.pathname.endsWith('/functions/v1/pwa-live-price')) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
   if (isDataRequest(url)) {
     event.respondWith(networkFirst(request, DATA_CACHE, 10000).catch(() => fetch(request)));
     return;

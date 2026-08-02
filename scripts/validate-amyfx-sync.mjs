@@ -84,11 +84,17 @@ for (const marker of [
   'window.AmyLivePrice',
   'amyfx:twelvedata-price',
   'amyfx:twelvedata-status',
-  '/api/twelvedata',
+  'pwa-live-price',
+  "Accept: 'text/event-stream'",
+  'Authorization: `Bearer ${session.access_token}`',
+  'response.body.getReader()',
+  'TWELVE_DATA_WEBSOCKET_EDGE',
   'hasApiKey'
 ]) {
   if (!bridge.includes(marker)) fail(`PWA live-price bridge missing ${marker}`);
 }
+if (bridge.includes('/api/twelvedata')) fail('PWA live price must not use REST candle polling');
+if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain the legacy polling timer');
 const providerCredentialPattern = /TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=|["']api[_-]?key["']\s*:/i;
 if (providerCredentialPattern.test(bridge)) fail('PWA bridge must not contain provider credentials');
 

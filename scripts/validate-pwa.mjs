@@ -10,6 +10,7 @@ const required = [
   'platform-adapter.js',
   'member-auth.js',
   'pwa-bootstrap.js',
+  'pwa-live-price-bridge.js',
   'pwa-navigation.js',
   'pwa-push-test.js',
   'offline.html',
@@ -67,6 +68,8 @@ if ((manifest.icons || []).some(icon => String(icon.src || '').startsWith('/')))
 if (config.authRequired !== true) fail('member authentication must be enabled for production');
 if (!String(config.authEndpoint || '').startsWith('https://')) fail('authEndpoint must use HTTPS');
 if (!String(config.apiBaseUrl || '').startsWith('https://')) fail('apiBaseUrl must use HTTPS');
+if (!String(config.livePriceStreamEndpoint || '').startsWith('https://')) fail('livePriceStreamEndpoint must use HTTPS');
+if (!String(config.livePriceStreamEndpoint || '').includes('/functions/v1/pwa-live-price')) fail('livePriceStreamEndpoint must use the Amy FX WebSocket edge stream');
 if (config.webPushEnabled !== true) fail('Web Push must be enabled for production');
 if (!String(config.webPushRegisterEndpoint || '').startsWith('https://')) fail('webPushRegisterEndpoint must use HTTPS');
 if (!/^[A-Za-z0-9_-]{80,100}$/.test(String(config.webPushVapidPublicKey || ''))) fail('webPushVapidPublicKey is invalid');
@@ -127,6 +130,20 @@ for (const marker of [
   if (!bootstrap.includes(marker)) fail(`PWA bootstrap missing Web Push marker: ${marker}`);
 }
 
+const livePriceBridge = read('pwa-live-price-bridge.js');
+for (const marker of [
+  'pwa-live-price',
+  "Accept: 'text/event-stream'",
+  'Authorization: `Bearer ${session.access_token}`',
+  'response.body.getReader()',
+  'TWELVE_DATA_WEBSOCKET_EDGE',
+  'amyfx:twelvedata-price'
+]) {
+  if (!livePriceBridge.includes(marker)) fail(`PWA live-price bridge missing marker: ${marker}`);
+}
+if (livePriceBridge.includes('/api/twelvedata')) fail('PWA live price must not poll the Twelve Data REST candle endpoint');
+if (livePriceBridge.includes('setInterval(poll')) fail('PWA live price must not use legacy REST polling');
+
 const pushTest = read('pwa-push-test.js');
 for (const marker of [
   "body: JSON.stringify({ action: 'test' })",
@@ -147,6 +164,8 @@ if (!worker.includes("new URL('./', self.location.href)")) fail('service worker 
 if (!worker.includes('showNotification')) fail('service worker does not display Web Push notifications');
 if (!worker.includes('displayPushNotification')) fail('service worker does not use the hardened notification display path');
 if (!worker.includes('pwa-push-test.js')) fail('service worker does not load the Web Push verification UI');
+if (!worker.includes("url.pathname.endsWith('/functions/v1/pwa-live-price')")) fail('service worker does not bypass the live price stream');
+if (!worker.includes('event.respondWith(fetch(request))')) fail('service worker must pass the live price stream directly to network');
 if (!worker.includes('amyfx-news-')) fail('service worker does not deduplicate news notifications');
 if (!worker.includes('assets/apps/market-intel/index.html')) fail('service worker notification target is missing Market Intel');
 
