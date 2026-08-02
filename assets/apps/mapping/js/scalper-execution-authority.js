@@ -1,4 +1,4 @@
-const CURRENT_ENGINE_VERSION = 'amyfx-preview-scalper-multidriver-v2.0';
+const CURRENT_ENGINE_VERSION = 'amyfx-preview-scalper-pattern-v3.0';
 const ENTRY_ACTIVE_STATUSES = new Set(['ACTIVE']);
 const NON_TERMINAL_STATUSES = new Set(['WAITING_TRIGGER', 'WAITING_NEXT_OPEN', 'ENTRY_READY', 'ACTIVE', 'BE_ACTIVE']);
 
@@ -59,6 +59,9 @@ function setupSignature(setup, availability) {
     stopLoss: setup?.stopLoss ?? null,
     tp1: setup?.tp1 ?? setup?.breakEvenTrigger ?? null,
     tp2: setup?.tp2 ?? setup?.target ?? null,
+    tp1Hit: setup?.tp1Hit === true,
+    lifecycleSequence: setup?.lifecycleSequence ?? null,
+    patternGate: setup?.patternGate || null,
     updatedAt: setup?.updatedAt || null,
   });
 }
@@ -127,12 +130,12 @@ function activeAuthority(setup, availability) {
   const rawStatus = String(setup.status || '').toUpperCase();
   const levels = geometry(setup, side);
   const fresh = availability === 'LIVE';
-  const entryActive = ENTRY_ACTIVE_STATUSES.has(rawStatus) && fresh && levels.valid;
-  const tp1Secured = rawStatus === 'BE_ACTIVE';
+  const tp1Secured = setup.tp1Hit === true;
+  const entryActive = ENTRY_ACTIVE_STATUSES.has(rawStatus) && fresh && levels.valid && !tp1Secured;
   const entryLow = levels.entry ?? number(setup.zoneBottom);
   const entryHigh = levels.entry ?? number(setup.zoneTop);
-  const stage = lifecycleStage(rawStatus);
-  const status = statusText(rawStatus);
+  const stage = tp1Secured ? 'TP1_HIT_NO_BE' : lifecycleStage(rawStatus);
+  const status = tp1Secured ? 'TP1 HIT · SL TETAP' : statusText(rawStatus);
   const setupId = String(setup.id || '');
   const driverName = String(setup.driverName || setup.driverId || setup.model || 'Scalper Engine');
 
@@ -168,7 +171,7 @@ function activeAuthority(setup, availability) {
     timestamp: number(setup.entryTimestamp ?? setup.entryCandleOpenTime ?? setup.signalCandleCloseTime),
     reason: setup.reason || `${driverName} dipilih oleh Scalper Engine.`,
     targetType: 'SCALPER_ENGINE_TARGET',
-    source: 'AMY_SCALPER_ENGINE_MULTIDRIVER_V2',
+    source: 'AMY_SCALPER_ENGINE_PATTERN_V3',
   };
 
   return {
@@ -244,7 +247,7 @@ function cloneSnapshot(snapshot, authority, scenario) {
     scenario,
     authority: {
       ...(snapshot.authority || {}),
-      entry: 'AMY_SCALPER_ENGINE_MULTIDRIVER_V2',
+      entry: 'AMY_SCALPER_ENGINE_PATTERN_V3',
       execution: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
       uiMayMutate: false,
     },
@@ -332,7 +335,7 @@ function applyAuthority() {
 
     const placeholder = document.querySelector('#amy-scalper-entry-watch .scalper-watch__instruction');
     if (placeholder && /IFVG|FVG BUY High Quality/i.test(placeholder.textContent || '')) {
-      placeholder.textContent = 'Sembilan driver Scalper Engine memindai XAUUSD dari candle yang sudah close.';
+      placeholder.textContent = 'Sepuluh driver BT6/BT6.1 + AMD memindai XAUUSD dari candle yang sudah close.';
     }
 
     lastResult = result;

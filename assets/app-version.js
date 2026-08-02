@@ -1,6 +1,6 @@
 // Amy FX production release identity.
 (function () {
-  const VERSION = Object.freeze({ name: '2.1.1', code: 55 });
+  const VERSION = Object.freeze({ name: '2.2.0', code: 56 });
   window.AmyFXAppVersion = VERSION;
   window.AmyFXUpdateManifestUrl = 'https://raw.githubusercontent.com/suhaimitoamy/Amy-fx/main/update.json';
 
