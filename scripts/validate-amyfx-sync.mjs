@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 const required = [
   'pwa-live-price-bridge.js',
+  'pwa-update-bridge.js',
   'assets/amyfx-source.json',
   'assets/app-version.js',
   'assets/apps/mapping/js/execution-plan-core.js',
@@ -60,12 +61,16 @@ else {
   if (Number(versionMatch[2]) < 56) fail(`PWA still uses version code ${versionMatch[2]}; expected 56 or newer`);
 }
 
+const rootIndex = read('index.html');
+if (!rootIndex.includes('pwa-update-bridge.js')) fail('PWA app shell does not load pwa-update-bridge.js');
+
 const mappingIndex = read('assets/apps/mapping/index.html');
 for (const marker of [
   'platform-adapter.js',
   'pwa-live-price-bridge.js',
   'member-auth.js',
   'pwa-bootstrap.js',
+  'pwa-update-bridge.js',
   'execution-plan.css',
   'scalper-entry-watch.css',
   'scalper-execution-authority.js'
@@ -85,6 +90,17 @@ for (const marker of [
 }
 const providerCredentialPattern = /TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=|["']api[_-]?key["']\s*:/i;
 if (providerCredentialPattern.test(bridge)) fail('PWA bridge must not contain provider credentials');
+
+const updateBridge = read('pwa-update-bridge.js');
+for (const marker of [
+  'navigator.serviceWorker.getRegistration',
+  'registration.update()',
+  'window.AmyFXUpdateManifestUrl = null',
+  'window.AmyFXUpdate = Object.freeze({ checkNow })',
+  'amyfx:pwa-update-check'
+]) {
+  if (!updateBridge.includes(marker)) fail(`PWA update bridge missing ${marker}`);
+}
 
 const scalperWatch = read('assets/apps/mapping/js/scalper-entry-watch-v1.js');
 for (const marker of [
@@ -133,10 +149,12 @@ for (const file of files.filter(file => /\.(?:html|js|mjs|css|json)$/i.test(file
   }
 }
 
-try {
-  new Function(read('pwa-live-price-bridge.js'));
-} catch (error) {
-  fail(`pwa-live-price-bridge.js has invalid JavaScript: ${error.message}`);
+for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js']) {
+  try {
+    new Function(read(file));
+  } catch (error) {
+    fail(`${file} has invalid JavaScript: ${error.message}`);
+  }
 }
 
 if (!process.exitCode) {
