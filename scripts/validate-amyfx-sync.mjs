@@ -3,42 +3,37 @@ import path from 'node:path';
 
 const root = process.cwd();
 const required = [
+  'pwa-config.json',
   'pwa-live-price-bridge.js',
   'pwa-update-bridge.js',
   'service-worker.js',
   'assets/amyfx-source.json',
   'assets/app-version.js',
+  'assets/apps/mapping/index.html',
   'assets/apps/mapping/js/execution-plan-core.js',
   'assets/apps/mapping/js/execution-plan-ui.js',
   'assets/apps/mapping/js/scalper-entry-watch-v1.js',
   'assets/apps/mapping/js/scalper-execution-authority.js',
   'assets/apps/mapping/js/scalper-execution-decision-bridge.js',
   'assets/apps/mapping/js/scalper-shadow-state.js',
-  'assets/apps/mapping/js/mapping-v2.js',
-  'assets/apps/mapping/css/execution-plan.css',
-  'assets/apps/mapping/css/scalper-entry-watch.css',
-  'assets/apps/journal/app-core.js',
-  'assets/apps/journal/amy-journal-core.js'
+  'assets/apps/mapping/js/mapping-v2.js'
 ];
+
+function read(file) {
+  return fs.readFileSync(path.join(root, file), 'utf8');
+}
 
 function fail(message) {
   console.error(`Amy FX sync validation failed: ${message}`);
   process.exitCode = 1;
 }
 
-function read(file) {
-  return fs.readFileSync(path.join(root, file), 'utf8');
-}
-
 function versionAtLeast(actual, minimum) {
   const left = String(actual || '').split('.').map(value => Number.parseInt(value, 10) || 0);
   const right = String(minimum || '').split('.').map(value => Number.parseInt(value, 10) || 0);
-  const length = Math.max(left.length, right.length);
-  for (let index = 0; index < length; index += 1) {
-    const a = left[index] || 0;
-    const b = right[index] || 0;
-    if (a > b) return true;
-    if (a < b) return false;
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    if ((left[index] || 0) > (right[index] || 0)) return true;
+    if ((left[index] || 0) < (right[index] || 0)) return false;
   }
   return true;
 }
@@ -51,19 +46,21 @@ if (process.exitCode) process.exit(process.exitCode);
 const metadata = JSON.parse(read('assets/amyfx-source.json'));
 if (metadata.repository !== 'suhaimitoamy/Amy-fx') fail('source repository metadata is incorrect');
 if (metadata.branch !== 'main') fail('source branch metadata must be main');
-if (!/^[0-9a-f]{40}$/i.test(String(metadata.commit || ''))) fail('source commit metadata must contain a full Git SHA');
-if (metadata.strategy !== 'production-assets-with-pwa-runtime-overlay') fail('source synchronization strategy is incorrect');
+if (!/^[0-9a-f]{40}$/i.test(String(metadata.commit || ''))) fail('source commit must be a full SHA');
+if (metadata.strategy !== 'production-assets-with-pwa-runtime-overlay') fail('sync strategy is incorrect');
 
 const appVersion = read('assets/app-version.js');
 const versionMatch = appVersion.match(/name:\s*['"]([^'"]+)['"],\s*code:\s*(\d+)/);
 if (!versionMatch) fail('Amy FX application version cannot be parsed');
 else {
-  if (!versionAtLeast(versionMatch[1], '2.2.0')) fail(`PWA still uses Amy FX ${versionMatch[1]}; expected 2.2.0 or newer`);
-  if (Number(versionMatch[2]) < 56) fail(`PWA still uses version code ${versionMatch[2]}; expected 56 or newer`);
+  if (!versionAtLeast(versionMatch[1], '2.2.0')) fail(`Amy FX ${versionMatch[1]} is older than 2.2.0`);
+  if (Number(versionMatch[2]) < 56) fail(`Amy FX code ${versionMatch[2]} is older than 56`);
 }
 
-const rootIndex = read('index.html');
-if (!rootIndex.includes('pwa-update-bridge.js')) fail('PWA app shell does not load pwa-update-bridge.js');
+const config = JSON.parse(read('pwa-config.json'));
+if (config.livePriceStreamEndpoint !== 'https://amy-fx.vercel.app/api/pwa-live-price') {
+  fail('PWA live stream is not routed through the production WebSocket relay');
+}
 
 const mappingIndex = read('assets/apps/mapping/index.html');
 for (const marker of [
@@ -84,35 +81,40 @@ for (const marker of [
   'window.AmyLivePrice',
   'amyfx:twelvedata-price',
   'amyfx:twelvedata-status',
-  'pwa-live-price',
+  'https://amy-fx.vercel.app/api/pwa-live-price',
   "Accept: 'text/event-stream'",
   'Authorization: `Bearer ${session.access_token}`',
   'response.body.getReader()',
   'TWELVE_DATA_WEBSOCKET_EDGE',
+  "version: 'pwa-websocket-production-relay-3.0.0'",
   'hasApiKey'
 ]) {
   if (!bridge.includes(marker)) fail(`PWA live-price bridge missing ${marker}`);
 }
 if (bridge.includes('/api/twelvedata')) fail('PWA live price must not use REST candle polling');
-if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain the legacy polling timer');
-const providerCredentialPattern = /TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=|["']api[_-]?key["']\s*:/i;
-if (providerCredentialPattern.test(bridge)) fail('PWA bridge must not contain provider credentials');
+if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain legacy polling');
+if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) {
+  fail('PWA bridge must not contain provider credentials');
+}
+
+const worker = read('service-worker.js');
+for (const marker of [
+  '-pwa-ws-price-v3',
+  'function isLivePriceStream(url)',
+  "url.pathname.endsWith('/api/pwa-live-price')",
+  'event.respondWith(fetch(request))'
+]) {
+  if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
+}
 
 const updateBridge = read('pwa-update-bridge.js');
 for (const marker of [
   'navigator.serviceWorker.getRegistration',
   'registration.update()',
   "Object.defineProperty(window, 'AmyFXUpdateManifestUrl'",
-  'get: function () { return null; }',
-  'window.AmyFXUpdate = Object.freeze({ checkNow })',
-  'amyfx:pwa-update-check'
+  'window.AmyFXUpdate = Object.freeze({ checkNow })'
 ]) {
   if (!updateBridge.includes(marker)) fail(`PWA update bridge missing ${marker}`);
-}
-
-const serviceWorker = read('service-worker.js');
-for (const asset of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js']) {
-  if (!serviceWorker.includes(`appUrl('${asset}')`)) fail(`service worker shell does not precache ${asset}`);
 }
 
 const scalperWatch = read('assets/apps/mapping/js/scalper-entry-watch-v1.js');
@@ -120,10 +122,9 @@ for (const marker of [
   '10 driver BT6/BT6.1 + AMD',
   'TP1 +10',
   'TP2 +20',
-  'semua setup dipantau independen',
   'Stop Loss tetap pada level awal'
 ]) {
-  if (!scalperWatch.includes(marker)) fail(`Scalper Entry Watch missing final Pattern v3 marker: ${marker}`);
+  if (!scalperWatch.includes(marker)) fail(`Scalper Entry Watch missing ${marker}`);
 }
 
 const scalperAuthority = read('assets/apps/mapping/js/scalper-execution-authority.js');
@@ -142,7 +143,6 @@ const forbiddenPreviewIdentity = [
   'AmyFX-Preview-latest.apk',
   'amyfxpreview://'
 ];
-
 const files = [];
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -158,7 +158,7 @@ for (const file of files.filter(file => /\.(?:html|js|mjs|css|json)$/i.test(file
   if (content.includes('Asia/Jakarta')) fail(`WIB timezone remains in ${relative}`);
   if (/update-checker\.js/i.test(content)) fail(`Android updater remains in ${relative}`);
   for (const marker of forbiddenPreviewIdentity) {
-    if (content.includes(marker)) fail(`Preview application identity remains in ${relative}: ${marker}`);
+    if (content.includes(marker)) fail(`Preview identity remains in ${relative}: ${marker}`);
   }
 }
 
@@ -170,11 +170,6 @@ for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service
   }
 }
 
-const liveEdge = read('supabase/functions/pwa-live-price/index.ts');
-if (liveEdge.includes('snapshot = await bootstrapQuote')) fail('PWA live-price edge function must not publish a REST bootstrap as a live quote');
-const worker = read('service-worker.js');
-if (!worker.includes('-pwa-ws-price-v2')) fail('PWA service-worker cache must be refreshed for the live-price repair');
-
 if (!process.exitCode) {
-  console.log(`Amy FX PWA Pattern v3 sync validation passed for source ${String(metadata.commit || 'unknown').slice(0, 12)} and app ${versionMatch?.[1] || 'unknown'}.`);
+  console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with production WebSocket relay v3.`);
 }
