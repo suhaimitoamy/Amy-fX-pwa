@@ -58,7 +58,8 @@ function injectPwaRuntime(html, file) {
     'platform-adapter.js',
     'pwa-live-price-bridge.js',
     'member-auth.js',
-    'pwa-bootstrap.js'
+    'pwa-bootstrap.js',
+    'pwa-update-bridge.js'
   ];
 
   const missing = scripts.filter(name => !html.includes(name));
@@ -153,6 +154,7 @@ const requiredProductionFiles = [
   'apps/mapping/js/execution-plan-ui.js',
   'apps/mapping/js/scalper-entry-watch-v1.js',
   'apps/mapping/js/scalper-execution-authority.js',
+  'apps/mapping/js/scalper-shadow-state.js',
   'apps/mapping/js/mapping-v2.js',
   'apps/mapping/css/execution-plan.css',
   'apps/mapping/css/scalper-entry-watch.css'
@@ -166,6 +168,8 @@ for (const file of walk(targetAppsRoot)) {
   const content = fs.readFileSync(file, 'utf8');
   if (content.includes('Asia/Jakarta')) fail(`WIB timezone remains in ${path.relative(targetRoot, file)}`);
   if (/update-checker\.js/i.test(content)) fail(`Android updater remains in ${path.relative(targetRoot, file)}`);
+  if (!path.extname(file).toLowerCase().includes('html')) continue;
+  if (!content.includes('pwa-update-bridge.js')) fail(`PWA update bridge missing in ${path.relative(targetRoot, file)}`);
 }
 
 console.log(`Amy FX production assets synchronized from ${sourceSha.slice(0, 12) || 'unknown'} with PWA overlays preserved.`);
