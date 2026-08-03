@@ -33,11 +33,9 @@ const required = [
 function absolute(file) {
   return path.join(root, file);
 }
-
 function read(file) {
   return fs.readFileSync(absolute(file), 'utf8');
 }
-
 function fail(message) {
   console.error(`PWA validation failed: ${message}`);
   process.exitCode = 1;
@@ -50,7 +48,7 @@ if (process.exitCode) process.exit(process.exitCode);
 
 const manifest = JSON.parse(read('manifest.webmanifest'));
 const config = JSON.parse(read('pwa-config.json'));
-const expectedStream = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-live-price';
+const expectedStream = 'https://amy-fx.vercel.app/api/pwa-live-price';
 
 if (manifest.id !== './' || manifest.start_url !== './' || manifest.scope !== './') fail('manifest paths must stay portable');
 if (manifest.display !== 'standalone') fail('manifest display must be standalone');
@@ -61,7 +59,7 @@ if (!(manifest.icons || []).some(icon => String(icon.purpose || '').includes('ma
 if (config.authRequired !== true) fail('member authentication must be enabled');
 if (!String(config.authEndpoint || '').startsWith('https://')) fail('authEndpoint must use HTTPS');
 if (config.apiBaseUrl !== 'https://amy-fx.vercel.app') fail('apiBaseUrl must use Amy FX production');
-if (config.livePriceStreamEndpoint !== expectedStream) fail('livePriceStreamEndpoint must use the Vault-backed Supabase WebSocket stream');
+if (config.livePriceStreamEndpoint !== expectedStream) fail('livePriceStreamEndpoint must use the Amy FX authenticated WebSocket relay');
 if (config.webPushEnabled !== true) fail('Web Push must remain enabled');
 if (!String(config.webPushRegisterEndpoint || '').startsWith('https://')) fail('webPushRegisterEndpoint must use HTTPS');
 
@@ -84,11 +82,11 @@ for (const marker of [
   'response.body.getReader()',
   'TWELVE_DATA_WEBSOCKET_EDGE',
   'amyfx:twelvedata-price',
-  "version: 'pwa-websocket-vault-edge-3.0.0'"
+  "version: 'pwa-websocket-backend-relay-4.0.0'"
 ]) {
   if (!bridge.includes(marker)) fail(`live-price bridge missing ${marker}`);
 }
-if (bridge.includes('/api/twelvedata')) fail('live price must not poll the REST candle endpoint');
+if (bridge.includes('api.twelvedata.com')) fail('browser bridge must not call Twelve Data directly');
 if (bridge.includes('setInterval(poll')) fail('live price must not retain REST polling');
 if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) fail('browser bridge must not contain provider credentials');
 
@@ -96,7 +94,7 @@ const worker = read('service-worker.js');
 for (const eventName of ['install', 'activate', 'fetch', 'push', 'notificationclick']) {
   if (!worker.includes(`addEventListener('${eventName}'`)) fail(`service worker missing ${eventName}`);
 }
-for (const marker of ['-pwa-ws-price-v3', 'function isLivePriceStream(url)', "url.pathname.endsWith('/functions/v1/pwa-live-price')", 'event.respondWith(fetch(request))', "appUrl('pwa-live-price-bridge.js')", "appUrl('pwa-update-bridge.js')"]) {
+for (const marker of ['-pwa-ws-price-v4', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))', "appUrl('pwa-live-price-bridge.js')", "appUrl('pwa-update-bridge.js')"]) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
@@ -115,4 +113,4 @@ for (const file of ['service-worker.js', 'platform-adapter.js', 'member-auth.js'
 }
 
 JSON.parse(read('vercel.json'));
-if (!process.exitCode) console.log(`PWA validation passed: ${required.length} files, authenticated Vault-backed WebSocket stream, offline cache, and Web Push.`);
+if (!process.exitCode) console.log(`PWA validation passed: ${required.length} files, authenticated backend WebSocket relay v4, offline cache, and Web Push.`);
