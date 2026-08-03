@@ -10,6 +10,7 @@ const required = [
   'assets/amyfx-source.json',
   'assets/app-version.js',
   'assets/apps/mapping/index.html',
+  'assets/apps/mapping/js/api-request-coordinator.js',
   'assets/apps/mapping/js/execution-plan-core.js',
   'assets/apps/mapping/js/execution-plan-ui.js',
   'assets/apps/mapping/js/scalper-entry-watch-v1.js',
@@ -51,8 +52,8 @@ const appVersion = read('assets/app-version.js');
 const versionMatch = appVersion.match(/name:\s*['"]([^'"]+)['"],\s*code:\s*(\d+)/);
 if (!versionMatch) fail('Amy FX application version cannot be parsed');
 else {
-  if (!versionAtLeast(versionMatch[1], '2.2.0')) fail(`Amy FX ${versionMatch[1]} is older than 2.2.0`);
-  if (Number(versionMatch[2]) < 56) fail(`Amy FX code ${versionMatch[2]} is older than 56`);
+  if (!versionAtLeast(versionMatch[1], '2.2.1')) fail(`Amy FX ${versionMatch[1]} is older than 2.2.1`);
+  if (Number(versionMatch[2]) < 57) fail(`Amy FX code ${versionMatch[2]} is older than 57`);
 }
 
 const expectedStream = 'https://amy-fx.vercel.app/api/pwa-live-price';
@@ -62,6 +63,18 @@ if (config.livePriceStreamEndpoint !== expectedStream) fail('PWA live stream is 
 const mappingIndex = read('assets/apps/mapping/index.html');
 for (const marker of ['platform-adapter.js', 'pwa-live-price-bridge.js', 'member-auth.js', 'pwa-bootstrap.js', 'pwa-update-bridge.js', 'execution-plan.css', 'scalper-entry-watch.css', 'scalper-execution-authority.js']) {
   if (!mappingIndex.includes(marker)) fail(`Mapping index missing ${marker}`);
+}
+
+const coordinator = read('assets/apps/mapping/js/api-request-coordinator.js');
+for (const marker of [
+  "PERSISTENT_CACHE_KEY = 'amyfx_market_response_cache_v3'",
+  'BACKGROUND_M1_REFRESH_SECONDS = 300',
+  'RETRY_COOLDOWN_MS = 60_000',
+  'SUPABASE_VERIFIED_CURRENT',
+  'restorePersistentCache()',
+  'persistResponseCache()'
+]) {
+  if (!coordinator.includes(marker)) fail(`PWA market coordinator missing ${marker}`);
 }
 
 const bridge = read('pwa-live-price-bridge.js');
@@ -84,7 +97,7 @@ if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain le
 if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) fail('PWA bridge must not contain provider credentials');
 
 const worker = read('service-worker.js');
-for (const marker of ['-pwa-ws-price-v4', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
+for (const marker of ['-pwa-ws-price-v4-market-cache-v5', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
@@ -121,8 +134,8 @@ for (const file of files.filter(file => /\.(?:html|js|mjs|css|json)$/i.test(file
   }
 }
 
-for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service-worker.js']) {
+for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service-worker.js', 'assets/apps/mapping/js/api-request-coordinator.js']) {
   try { new Function(read(file)); } catch (error) { fail(`${file} has invalid JavaScript: ${error.message}`); }
 }
 
-if (!process.exitCode) console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with authenticated backend WebSocket relay v4.`);
+if (!process.exitCode) console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with persistent candle freshness, market-cache v5, and authenticated backend WebSocket relay v4.`);
