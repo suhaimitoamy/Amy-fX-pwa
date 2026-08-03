@@ -22,6 +22,7 @@ const required = [
   'assets/styles.css',
   'assets/app.js',
   'assets/apps/mapping/index.html',
+  'assets/apps/mapping/js/api-request-coordinator.js',
   'assets/apps/market-intel/index.html',
   'assets/apps/journal/index.html',
   'assets/apps/journal/app.js',
@@ -48,8 +49,10 @@ if (process.exitCode) process.exit(process.exitCode);
 
 const manifest = JSON.parse(read('manifest.webmanifest'));
 const config = JSON.parse(read('pwa-config.json'));
+const packageInfo = JSON.parse(read('package.json'));
 const expectedStream = 'https://amy-fx.vercel.app/api/pwa-live-price';
 
+if (packageInfo.version !== '2.2.1-pwa.5.0') fail('package version must be 2.2.1-pwa.5.0');
 if (manifest.id !== './' || manifest.start_url !== './' || manifest.scope !== './') fail('manifest paths must stay portable');
 if (manifest.display !== 'standalone') fail('manifest display must be standalone');
 if (!(manifest.icons || []).some(icon => icon.type === 'image/png' && icon.sizes === '192x192')) fail('manifest needs a 192x192 PNG icon');
@@ -74,6 +77,19 @@ for (const marker of ['../../../platform-adapter.js', '../../../pwa-live-price-b
   if (!mappingIndex.includes(marker)) fail(`Mapping index missing ${marker}`);
 }
 
+const coordinator = read('assets/apps/mapping/js/api-request-coordinator.js');
+for (const marker of [
+  "PERSISTENT_CACHE_KEY = 'amyfx_market_response_cache_v3'",
+  'BACKGROUND_M1_REFRESH_SECONDS = 300',
+  'RETRY_COOLDOWN_MS = 60_000',
+  'SUPABASE_VERIFIED_CURRENT',
+  'restorePersistentCache()',
+  'persistResponseCache()'
+]) {
+  if (!coordinator.includes(marker)) fail(`market request coordinator missing ${marker}`);
+}
+try { new Function(coordinator); } catch (error) { fail(`market request coordinator has invalid JavaScript: ${error.message}`); }
+
 const bridge = read('pwa-live-price-bridge.js');
 for (const marker of [
   `const FALLBACK_ENDPOINT = '${expectedStream}'`,
@@ -94,7 +110,7 @@ const worker = read('service-worker.js');
 for (const eventName of ['install', 'activate', 'fetch', 'push', 'notificationclick']) {
   if (!worker.includes(`addEventListener('${eventName}'`)) fail(`service worker missing ${eventName}`);
 }
-for (const marker of ['-pwa-ws-price-v4', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))', "appUrl('pwa-live-price-bridge.js')", "appUrl('pwa-update-bridge.js')"]) {
+for (const marker of ['-pwa-ws-price-v4-market-cache-v5', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))', "appUrl('pwa-live-price-bridge.js')", "appUrl('pwa-update-bridge.js')"]) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
@@ -113,4 +129,4 @@ for (const file of ['service-worker.js', 'platform-adapter.js', 'member-auth.js'
 }
 
 JSON.parse(read('vercel.json'));
-if (!process.exitCode) console.log(`PWA validation passed: ${required.length} files, authenticated backend WebSocket relay v4, offline cache, and Web Push.`);
+if (!process.exitCode) console.log(`PWA validation passed: ${required.length} files, persistent candle cache, authenticated backend WebSocket relay v4, market-cache v5, offline cache, and Web Push.`);
