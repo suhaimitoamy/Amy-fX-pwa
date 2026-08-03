@@ -1,10 +1,10 @@
-/* Amy FX PWA live-price stream bridge. Twelve Data credentials stay encrypted in Supabase Vault. */
+/* Amy FX PWA live-price stream bridge. Twelve Data credentials stay server-side in the Amy FX backend. */
 (function () {
   'use strict';
 
   if (window.AmyLivePrice) return;
 
-  const FALLBACK_ENDPOINT = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-live-price';
+  const FALLBACK_ENDPOINT = 'https://amy-fx.vercel.app/api/pwa-live-price';
   const MAX_RECONNECT_MS = 15_000;
   let requestController = null;
   let reconnectTimer = 0;
@@ -156,7 +156,7 @@
         if (response.status === 401) {
           window.AmyFXAuth?.requireAuth?.().catch(function () {});
         }
-        throw new Error(body?.error || `HTTP ${response.status}`);
+        throw new Error(body?.error || body?.message || `HTTP ${response.status}`);
       }
 
       connected = true;
@@ -236,7 +236,7 @@
   });
 
   window.AmyLivePrice = Object.freeze({
-    version: 'pwa-websocket-vault-edge-3.0.0',
+    version: 'pwa-websocket-backend-relay-4.0.0',
     connect,
     disconnect,
     hasApiKey: function () { return true; },
