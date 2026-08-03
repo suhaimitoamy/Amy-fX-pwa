@@ -7,7 +7,6 @@ const required = [
   'pwa-live-price-bridge.js',
   'pwa-update-bridge.js',
   'service-worker.js',
-  'supabase/functions/pwa-live-price/index.ts',
   'assets/amyfx-source.json',
   'assets/app-version.js',
   'assets/apps/mapping/index.html',
@@ -56,9 +55,9 @@ else {
   if (Number(versionMatch[2]) < 56) fail(`Amy FX code ${versionMatch[2]} is older than 56`);
 }
 
-const expectedStream = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-live-price';
+const expectedStream = 'https://amy-fx.vercel.app/api/pwa-live-price';
 const config = JSON.parse(read('pwa-config.json'));
-if (config.livePriceStreamEndpoint !== expectedStream) fail('PWA live stream is not routed through the Vault-backed Supabase edge');
+if (config.livePriceStreamEndpoint !== expectedStream) fail('PWA live stream is not routed through the authenticated Amy FX backend relay');
 
 const mappingIndex = read('assets/apps/mapping/index.html');
 for (const marker of ['platform-adapter.js', 'pwa-live-price-bridge.js', 'member-auth.js', 'pwa-bootstrap.js', 'pwa-update-bridge.js', 'execution-plan.css', 'scalper-entry-watch.css', 'scalper-execution-authority.js']) {
@@ -75,29 +74,17 @@ for (const marker of [
   'Authorization: `Bearer ${session.access_token}`',
   'response.body.getReader()',
   'TWELVE_DATA_WEBSOCKET_EDGE',
-  "version: 'pwa-websocket-vault-edge-3.0.0'",
+  "version: 'pwa-websocket-backend-relay-4.0.0'",
   'hasApiKey'
 ]) {
   if (!bridge.includes(marker)) fail(`PWA live-price bridge missing ${marker}`);
 }
-if (bridge.includes('/api/twelvedata')) fail('PWA live price must not use REST candle polling');
+if (bridge.includes('api.twelvedata.com')) fail('PWA browser must not connect to Twelve Data directly');
 if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain legacy polling');
 if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) fail('PWA bridge must not contain provider credentials');
 
-const liveEdge = read('supabase/functions/pwa-live-price/index.ts');
-for (const marker of [
-  'get_amyfx_runtime_secret',
-  'amyfx_twelvedata_api_key',
-  'wss://ws.twelvedata.com/v1/quotes/price?apikey=',
-  'TWELVE_DATA_WEBSOCKET_EDGE',
-  'action: "heartbeat"'
-]) {
-  if (!liveEdge.includes(marker)) fail(`PWA live-price edge missing ${marker}`);
-}
-if (liveEdge.includes('bootstrapQuote')) fail('PWA live-price edge must not publish REST bootstrap prices');
-
 const worker = read('service-worker.js');
-for (const marker of ['-pwa-ws-price-v3', 'function isLivePriceStream(url)', "url.pathname.endsWith('/functions/v1/pwa-live-price')", 'event.respondWith(fetch(request))']) {
+for (const marker of ['-pwa-ws-price-v4', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
@@ -138,4 +125,4 @@ for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service
   try { new Function(read(file)); } catch (error) { fail(`${file} has invalid JavaScript: ${error.message}`); }
 }
 
-if (!process.exitCode) console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with Vault-backed WebSocket edge v3.`);
+if (!process.exitCode) console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with authenticated backend WebSocket relay v4.`);
