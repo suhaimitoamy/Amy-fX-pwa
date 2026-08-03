@@ -11,6 +11,7 @@ const required = [
   'assets/app-version.js',
   'assets/apps/mapping/index.html',
   'assets/apps/mapping/js/api-request-coordinator.js',
+  'assets/apps/mapping/js/mapping-runtime-repair-v3.js',
   'assets/apps/mapping/js/execution-plan-core.js',
   'assets/apps/mapping/js/execution-plan-ui.js',
   'assets/apps/mapping/js/scalper-entry-watch-v1.js',
@@ -77,6 +78,17 @@ for (const marker of [
   if (!coordinator.includes(marker)) fail(`PWA market coordinator missing ${marker}`);
 }
 
+const freshnessRepair = read('assets/apps/mapping/js/mapping-runtime-repair-v3.js');
+for (const marker of [
+  "version: '4.0.0'",
+  'cachedSeriesIsCurrent',
+  'expectedClosedCandleOpen',
+  'primeCurrentCandleFreshness',
+  'setCandleFetchedAt(normalizedTf, current ? nowMs : 0)'
+]) {
+  if (!freshnessRepair.includes(marker)) fail(`PWA Mapping freshness repair missing ${marker}`);
+}
+
 const bridge = read('pwa-live-price-bridge.js');
 for (const marker of [
   'window.AmyLivePrice',
@@ -97,7 +109,7 @@ if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain le
 if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) fail('PWA bridge must not contain provider credentials');
 
 const worker = read('service-worker.js');
-for (const marker of ['-pwa-ws-price-v4-market-cache-v5', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
+for (const marker of ['-pwa-ws-price-v4-market-cache-v6', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
@@ -138,4 +150,4 @@ for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service
   try { new Function(read(file)); } catch (error) { fail(`${file} has invalid JavaScript: ${error.message}`); }
 }
 
-if (!process.exitCode) console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with persistent candle freshness, market-cache v5, and authenticated backend WebSocket relay v4.`);
+if (!process.exitCode) console.log(`Amy FX PWA sync validation passed for ${String(metadata.commit).slice(0, 12)} with closed-candle Mapping freshness, persistent candle cache, market-cache v6, and authenticated backend WebSocket relay v4.`);
