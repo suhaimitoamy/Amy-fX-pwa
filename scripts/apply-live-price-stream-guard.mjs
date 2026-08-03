@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const STREAM_ENDPOINT = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/pwa-live-price';
+const STREAM_ENDPOINT = 'https://amy-fx.vercel.app/api/pwa-live-price';
 
 function read(relative) {
   return fs.readFileSync(path.join(root, relative), 'utf8');
@@ -16,10 +16,10 @@ let bridge = read('pwa-live-price-bridge.js');
 bridge = bridge
   .replace(
     /\/\* Amy FX PWA live-price stream bridge\.[^*]+\*\//,
-    '/* Amy FX PWA live-price stream bridge. Twelve Data credentials stay encrypted in Supabase Vault. */'
+    '/* Amy FX PWA live-price stream bridge. Twelve Data credentials stay server-side in the Amy FX backend. */'
   )
   .replace(/const FALLBACK_ENDPOINT = '[^']+';/, `const FALLBACK_ENDPOINT = '${STREAM_ENDPOINT}';`)
-  .replace(/version: 'pwa-websocket-[^']+',/, "version: 'pwa-websocket-vault-edge-3.0.0',");
+  .replace(/version: 'pwa-websocket-[^']+',/, "version: 'pwa-websocket-backend-relay-4.0.0',");
 write('pwa-live-price-bridge.js', bridge);
 
 const configPath = path.join(root, 'pwa-config.json');
@@ -32,7 +32,7 @@ worker = worker.replace(
   /const VERSION = '([^']+)';/,
   (_match, current) => {
     const base = String(current).replace(/-pwa-ws-price-v\d+$/, '');
-    return `const VERSION = '${base}-pwa-ws-price-v3';`;
+    return `const VERSION = '${base}-pwa-ws-price-v4';`;
   }
 );
 
@@ -43,9 +43,7 @@ if (!worker.includes('function isLivePriceStream(url)')) {
   worker = worker.replace(anchor, addition);
 }
 
-const legacyBypass = "  if (url.hostname.includes('supabase.co') && url.pathname.endsWith('/functions/v1/pwa-live-price')) {\n    event.respondWith(fetch(request));\n    return;\n  }";
 const streamBypass = "  if (isLivePriceStream(url)) {\n    event.respondWith(fetch(request));\n    return;\n  }";
-if (worker.includes(legacyBypass)) worker = worker.replace(legacyBypass, streamBypass);
 if (!worker.includes(streamBypass)) {
   const dataBlock = "  if (isDataRequest(url)) {\n    event.respondWith(networkFirst(request, DATA_CACHE, 10000).catch(() => fetch(request)));\n    return;\n  }";
   if (!worker.includes(dataBlock)) throw new Error('[live-price-stream-guard] service-worker fetch block missing');
@@ -53,4 +51,4 @@ if (!worker.includes(streamBypass)) {
 }
 write('service-worker.js', worker);
 
-console.log('Amy FX PWA Vault-backed WebSocket stream guard applied.');
+console.log('Amy FX PWA authenticated backend WebSocket relay guard applied.');
