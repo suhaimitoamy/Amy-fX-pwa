@@ -1,5 +1,5 @@
 import { state } from './main.js';
-import { runAnalysis } from './api/market-data.js';
+import { runAnalysis, setCandleFetchedAt } from './api/market-data.js';
 import {
   SUPPORTED_MAPPING_TIMEFRAMES,
   timeframeDurationMs
@@ -7,6 +7,8 @@ import {
 
 const REQUIRED_TFS = SUPPORTED_MAPPING_TIMEFRAMES;
 const REFRESH_INTERVAL_MS = 2 * 60 * 1000;
+const CLOSE_GRACE_MS = 10_000;
+const SOURCE_VALIDATED_TFS = new Set(['M1', 'M5', 'M15', 'M30', 'H1', 'H4']);
 
 let refreshInFlight = null;
 let lastRefreshAt = 0;
@@ -21,10 +23,75 @@ function finite(value, fallback = NaN) {
   return Number.isFinite(number) ? number : fallback;
 }
 
+function candleOpenMs(candle) {
+  const value = finite(candle?.time);
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  return value > 100_000_000_000 ? value : value * 1000;
+}
+
+function marketReference(nowMs = Date.now()) {
+  const now = new Date(nowMs);
+  const day = now.getUTCDay();
+  const hour = now.getUTCHours();
+  const minute = now.getUTCMinutes();
+  const fridayClosed = day === 5 && (hour > 22 || (hour === 22 && minute >= 0));
+  const saturday = day === 6;
+  const sundayClosed = day === 0 && hour < 22;
+
+  if (!fridayClosed && !saturday && !sundayClosed) {
+    return { time: nowMs, marketClosed: false };
+  }
+
+  const daysBack = fridayClosed ? 0 : saturday ? 1 : 2;
+  return {
+    time: Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate() - daysBack,
+      22, 0, 0, 0
+    ),
+    marketClosed: true
+  };
+}
+
+function expectedClosedCandleOpen(tf, nowMs = Date.now()) {
+  const normalizedTf = String(tf || '').toUpperCase();
+  if (!SOURCE_VALIDATED_TFS.has(normalizedTf)) return null;
+  const interval = durationMs(normalizedTf);
+  if (!Number.isFinite(interval) || interval <= 0) return null;
+  const reference = marketReference(nowMs);
+  const safeTime = reference.marketClosed
+    ? reference.time
+    : reference.time - CLOSE_GRACE_MS;
+  return Math.floor(safeTime / interval) * interval - interval;
+}
+
+function cachedSeriesIsCurrent(tf = state.tf, nowMs = Date.now()) {
+  const normalizedTf = String(tf || '').toUpperCase();
+  if (!SOURCE_VALIDATED_TFS.has(normalizedTf)) return null;
+  const latest = state.candles?.[normalizedTf]?.at(-1);
+  const latestOpen = candleOpenMs(latest);
+  const expectedOpen = expectedClosedCandleOpen(normalizedTf, nowMs);
+  if (!latestOpen || !Number.isFinite(expectedOpen)) return false;
+  return latestOpen >= expectedOpen;
+}
+
+function primeCurrentCandleFreshness(nowMs = Date.now()) {
+  const status = {};
+  for (const tf of REQUIRED_TFS) {
+    const normalizedTf = String(tf || '').toUpperCase();
+    if (!SOURCE_VALIDATED_TFS.has(normalizedTf)) continue;
+    const current = cachedSeriesIsCurrent(normalizedTf, nowMs);
+    status[normalizedTf] = current;
+    setCandleFetchedAt(normalizedTf, current ? nowMs : 0);
+  }
+  return status;
+}
+
 function latestClosedCandleClose(tf = state.tf) {
   const latest = state.candles?.[tf]?.at(-1);
-  const openMs = finite(latest?.time) * 1000;
-  if (!Number.isFinite(openMs) || openMs <= 0) return null;
+  const openMs = candleOpenMs(latest);
+  if (!openMs) return null;
   return new Date(openMs + durationMs(tf)).toISOString();
 }
 
@@ -65,13 +132,20 @@ function scheduleWatchRepair() {
 async function refreshMapping(reason = 'manual', force = false) {
   if (document.hidden) return false;
   if (refreshInFlight) return refreshInFlight;
-  if (!force && Date.now() - lastRefreshAt < REFRESH_INTERVAL_MS) {
+
+  const sourceStatus = primeCurrentCandleFreshness();
+  const selectedTf = String(state.tf || '').toUpperCase();
+  const selectedHasData = Boolean(state.candles?.[selectedTf]?.length);
+  const selectedNeedsRefresh = !selectedHasData || sourceStatus[selectedTf] === false;
+
+  if (!force && !selectedNeedsRefresh && Date.now() - lastRefreshAt < REFRESH_INTERVAL_MS) {
     publishFreshMappingClock();
     scheduleWatchRepair();
     return true;
   }
 
   refreshInFlight = (async () => {
+    primeCurrentCandleFreshness();
     await runAnalysis(state.tf);
     window.dispatchEvent(new CustomEvent('amyfx:candles-updated', {
       detail: {
@@ -113,11 +187,14 @@ function boot() {
 }
 
 window.AmyFXMappingRuntimeRepair = Object.freeze({
-  version: '3.0.0',
+  version: '4.0.0',
   refresh: refreshMapping,
   publishFreshMappingClock,
   repairEntryWatchVisibility,
-  latestClosedCandleClose
+  latestClosedCandleClose,
+  cachedSeriesIsCurrent,
+  expectedClosedCandleOpen,
+  primeCurrentCandleFreshness
 });
 
 if (document.readyState === 'loading') {
