@@ -1,6 +1,13 @@
 import { HOUR, OUTLOOK_HORIZONS, num } from './base.js';
 
+function candleTimeMs(value) {
+  const numeric = num(value);
+  if (!Number.isFinite(numeric) || numeric <= 0) return 0;
+  return numeric > 100_000_000_000 ? numeric : numeric * 1000;
+}
+
 export function predictionSlot(outlook, now = Date.now(), session = {}) {
+  if (outlook.id === 'SCALPING') return `${outlook.id}:${Math.floor(now / (HOUR / 2))}`;
   if (outlook.id === 'INTRADAY') return `${outlook.id}:${Math.floor(now / HOUR)}`;
   if (outlook.id === 'SESSION') {
     const sessionId = String(session?.id || session?.name || 'OFF').replace(/\s+/g, '_').toUpperCase();
@@ -51,7 +58,7 @@ function candlePoints(candlesByTf, createdAt, expiresAt, livePrice, now) {
     : candlesByTf.M5?.length ? candlesByTf.M5 : candlesByTf.M15 || [];
   const points = preferred
     .map(candle => ({
-      time: num(candle.time) * 1000,
+      time: candleTimeMs(candle.time),
       high: num(candle.high),
       low: num(candle.low),
       close: num(candle.close)

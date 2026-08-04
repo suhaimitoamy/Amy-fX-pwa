@@ -3,10 +3,11 @@ import { buildAmyMarketContextOutlook } from './outlook/amy-market-context-final
 
 const OPEN_KEY = 'amy_mapping_outlook_open';
 const SUMMARY_TITLE = 'Market Outlook';
-let lastSignature = '';
-let lastResult = null;
+let lastSourceSignature = '';
+let lastSemanticSignature = '';
 let lastPublishSignature = '';
-let timer = 0;
+let lastResult = null;
+let copyListenerInstalled = false;
 
 function safeText(value) {
   return String(value ?? '').replace(/[&<>"']/g, character => ({
@@ -14,128 +15,307 @@ function safeText(value) {
   })[character]);
 }
 
+function number(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function priceText(value) {
-  return Number.isFinite(Number(value)) ? p2(value) : '—';
+  return number(value) == null ? '—' : p2(value);
 }
 
-function currentTab() {
-  return state?.tab || localStorage.getItem('amy_mapping_tab') || '';
+function normalizedDirection(value) {
+  const text = String(value || '').toUpperCase();
+  if (text.includes('BUY') || text.includes('BULL')) return 'BUY';
+  if (text.includes('SELL') || text.includes('BEAR')) return 'SELL';
+  return 'WAIT';
 }
 
-function qualityState(value) {
-  if (!value) return '';
-  if (typeof value === 'string') return value;
-  return String(value.state || value.status || value.label || '');
+function timestampMs(value) {
+  const numeric = number(value);
+  if (numeric == null || numeric <= 0) return 0;
+  return numeric > 100000000000 ? numeric : numeric * 1000;
 }
 
-function intervalStale(key, aliases = []) {
-  const quality = window.AmyMappingIntegrity?.qualityByInterval || {};
-  const item = quality[key] || aliases.map(alias => quality[alias]).find(Boolean);
-  const status = qualityState(item).toUpperCase();
-  return status.includes('STALE') || status.includes('USANG');
-}
-
-function isOutlookStale() {
-  if (state?.result?.dataStale) return true;
-  const freshness = String(document.getElementById('conn')?.dataset?.analysisFreshness || '').toUpperCase();
-  if (freshness === 'STALE' || freshness === 'EXPIRED') return true;
-  return intervalStale('5min', ['M5', 'm5']) || intervalStale('15min', ['M15', 'm15']);
-}
-
-function expiryText(timestamp) {
-  if (!Number.isFinite(Number(timestamp))) return '—';
+function formatWita(value) {
+  const timestamp = timestampMs(value);
+  if (!timestamp) return '—';
   return new Intl.DateTimeFormat('id-ID', {
     timeZone: 'Asia/Makassar',
     day: '2-digit',
     month: 'short',
     hour: '2-digit',
     minute: '2-digit'
-  }).format(new Date(Number(timestamp)));
+  }).format(new Date(timestamp));
 }
 
-function statusText(scenario) {
-  return scenario?.status === 'ACTIVE' ? 'AKTIF' : 'WAIT';
+function currentTab() {
+  return state?.tab || localStorage.getItem('amy_mapping_tab') || '';
+}
+
+function closedCandles(tf) {
+  return (Array.isArray(state.candles?.[tf]) ? state.candles[tf] : [])
+    .filter(candle => candle?.isClosed !== false);
+}
+
+function candleFingerprint(tf) {
+  const values = closedCandles(tf);
+  const candle = values.at(-1);
+  return [
+    tf,
+    values.length,
+    timestampMs(candle?.time),
+    number(candle?.open),
+    number(candle?.high),
+    number(candle?.low),
+    number(candle?.close)
+  ];
+}
+
+function sourceSignature() {
+  return JSON.stringify({
+    symbol: state?.result?.symbol || 'XAUUSD',
+    tf: state.tf,
+    candles: ['M1', 'M5', 'M15', 'H1', 'H4', 'D1']
+      .map(candleFingerprint)
+  });
+}
+
+function officialExecution() {
+  const result = state.result || {};
+  const execution = result.setupExecution || result.entryWatch?.executionPlan || null;
+  const watch = result.entryWatch || {};
+  const direction = normalizedDirection(execution?.direction || watch?.direction);
+  const geometryValid = execution?.geometryValid !== false
+    && number(execution?.entryLow ?? execution?.entry) != null
+    && number(execution?.stopLoss ?? execution?.sl) != null
+    && number(execution?.target1 ?? execution?.tp1) != null;
+  const entryAllowed = watch.entryAllowed === true
+    || (execution?.active === true && watch.entryAllowed !== false);
+  const active = Boolean(
+    execution
+    && execution.active !== false
+    && execution.terminal !== true
+    && watch.terminal !== true
+    && entryAllowed
+    && geometryValid
+    && ['BUY', 'SELL'].includes(direction)
+    && execution.alignedWithForecast !== false
+  );
+  return { execution, watch, direction, geometryValid, entryAllowed, active };
+}
+
+function forecastDirection(result = state.result) {
+  const forecast = result?.validatedMarketContext?.directionForecast
+    || result?.validatedDirectionForecast;
+  return forecast?.active ? normalizedDirection(forecast.direction) : 'WAIT';
+}
+
+function marketStateDirection(result = state.result) {
+  return normalizedDirection(
+    result?.validatedMarketContext?.marketState?.direction
+    || result?.validatedMarketState?.direction
+    || result?.st?.confirmedTrend
+    || result?.st?.trend
+  );
+}
+
+function marketCondition(result = state.result) {
+  const stateText = result?.validatedMarketContext?.marketState?.state
+    || result?.validatedMarketState?.state
+    || result?.st?.confirmedTrend
+    || result?.st?.trend
+    || 'RANGE / TRANSITION';
+  return String(stateText).replaceAll('_', ' ');
+}
+
+function mappingVsScalperConflict(result = state.result) {
+  const mappingDecision = result?.mappingContextBeforeScalper?.directionDecision
+    || result?.directionDecision;
+  const mappingDirection = normalizedDirection(mappingDecision?.signal || mappingDecision?.bias);
+  const scalperDirection = normalizedDirection(
+    result?.scalperExecutionAuthority?.setupExecution?.direction
+    || result?.executionDirectionDecision?.signal
+  );
+  const conflict = ['BUY', 'SELL'].includes(mappingDirection)
+    && ['BUY', 'SELL'].includes(scalperDirection)
+    && mappingDirection !== scalperDirection;
+  return { conflict, mappingDirection, scalperDirection };
+}
+
+function zoneRange(zone) {
+  if (!zone) return null;
+  const low = number(zone.bottom ?? zone.low ?? zone.zoneLow);
+  const high = number(zone.top ?? zone.high ?? zone.zoneHigh);
+  if (low == null || high == null) return null;
+  return `${priceText(Math.min(low, high))}–${priceText(Math.max(low, high))}`;
+}
+
+function nearestArea(result = state.result, generated = lastResult) {
+  const execution = officialExecution().execution;
+  const entryLow = number(execution?.entryLow ?? execution?.entry);
+  const entryHigh = number(execution?.entryHigh ?? execution?.entry);
+  if (entryLow != null && entryHigh != null) {
+    return `Area entry resmi ${priceText(Math.min(entryLow, entryHigh))}–${priceText(Math.max(entryLow, entryHigh))}`;
+  }
+
+  const zones = [
+    ...(result?.mappingZones?.nearestOrderBlocks || []),
+    ...(result?.mappingZones?.nearestFairValueGaps || []),
+    ...(result?.marketConcepts?.nearestOrderBlocks || []),
+    ...(result?.marketConcepts?.nearestFairValueGaps || [])
+  ];
+  const zone = zones.find(item => zoneRange(item));
+  if (zone) return `${zone.kind || 'Zona Mapping'} ${zoneRange(zone)}`;
+
+  const scenario = generated?.scenarios?.find(item => zoneRange(item));
+  if (scenario) return `${scenario.setupType || 'Zona konteks'} ${zoneRange(scenario)}`;
+  return 'Belum ada zona resmi yang cukup dekat.';
+}
+
+function positionText(result = state.result) {
+  const location = result?.entryMap?.scenario?.location
+    || result?.entryMap?.location
+    || result?.dealingLocation;
+  const entryZone = location?.entryLocation?.zone;
+  const poiZone = location?.poiLocation?.zone;
+  const sweepZone = location?.sweepLocation?.zone || location?.zone;
+  if (entryZone) return `Lokasi entry: ${String(entryZone).replaceAll('_', ' ')}.`;
+  if (poiZone) return `Lokasi POI: ${String(poiZone).replaceAll('_', ' ')}.`;
+  if (sweepZone) return `Lokasi sweep: ${String(sweepZone).replaceAll('_', ' ')}; entry belum dianggap valid hanya dari sweep.`;
+  return 'Lokasi entry belum lengkap; Mapping masih menunggu struktur causal.';
+}
+
+function waitingText(result = state.result) {
+  const scenario = result?.entryMap?.scenario || result?.entryWatch?.scenario || {};
+  const missing = Array.isArray(scenario.missing) ? scenario.missing.filter(Boolean) : [];
+  if (missing.length) return `Menunggu: ${missing.join(', ')}.`;
+  if (scenario.reason) return scenario.reason;
+  if (scenario.status) return `Tahap sekarang: ${String(scenario.status).replaceAll('_', ' ')}.`;
+  return 'Menunggu area, sweep, MSS, dan candle close sesuai urutan resmi.';
+}
+
+function confirmationText(result = state.result) {
+  const scenario = result?.entryMap?.scenario || result?.entryWatch?.scenario || {};
+  const failed = (scenario.requirements || []).filter(item => item?.passed === false);
+  if (failed.length) {
+    return failed.slice(0, 3).map(item => `${item.label}: ${item.detail || 'belum terpenuhi'}`).join(' · ');
+  }
+  if (officialExecution().active) return 'Seluruh syarat entry resmi telah lengkap dan execution plan terkunci.';
+  return 'Opposing liquidity sweep → displaced MSS → trigger candle close → filter konteks lengkap.';
+}
+
+function invalidationText(result = state.result, generated = lastResult) {
+  const execution = officialExecution().execution;
+  const stop = number(execution?.stopLoss ?? execution?.sl ?? execution?.initialStopLoss);
+  if (stop != null) return priceText(stop);
+  const scenarioInvalidation = generated?.scenarios?.map(item => number(item.invalidation)).find(value => value != null);
+  if (scenarioInvalidation != null) return priceText(scenarioInvalidation);
+  const contextInvalidation = number(generated?.context?.invalidation ?? result?.entryMap?.scenario?.protectedLevel);
+  return contextInvalidation == null ? 'Belum tersedia dari struktur resmi.' : priceText(contextInvalidation);
+}
+
+function targetText(result = state.result, generated = lastResult) {
+  const execution = officialExecution().execution;
+  const target = number(execution?.target2 ?? execution?.tp2 ?? execution?.target1 ?? execution?.tp1);
+  if (target != null) return priceText(target);
+  const draw = number(result?.liquidityHierarchy?.drawTarget?.level || result?.drawTarget?.level);
+  if (draw != null) return priceText(draw);
+  const scenarioTarget = generated?.scenarios?.map(item => number(item.target)).find(value => value != null);
+  return scenarioTarget == null ? 'Belum ada target struktural aktif.' : priceText(scenarioTarget);
+}
+
+function sourceTime(result = state.result, generated = lastResult) {
+  const tf = result?.tf || state.tf;
+  const candle = closedCandles(tf).at(-1);
+  return generated?.sourceTime || candle?.time || 0;
+}
+
+function focusText(result = state.result) {
+  const forecast = forecastDirection(result);
+  const structure = marketStateDirection(result);
+  const conflict = mappingVsScalperConflict(result);
+  if (conflict.conflict) {
+    return `WAIT: Mapping ${conflict.mappingDirection}, Scalper ${conflict.scalperDirection}.`;
+  }
+  if (['BUY', 'SELL'].includes(forecast)) return `Fokus ${forecast}, tetapi entry tetap menunggu syarat resmi.`;
+  if (['BUY', 'SELL'].includes(structure)) return `Struktur ${structure}; Direction Forecast belum memberi izin entry.`;
+  return 'WAIT sampai arah dan urutan entry menjadi jelas.';
+}
+
+function practicalModel(generated) {
+  const result = state.result || {};
+  const execution = officialExecution();
+  const conflict = mappingVsScalperConflict(result);
+  const action = execution.active && !conflict.conflict ? execution.direction : 'WAIT';
+  const source = sourceTime(result, generated);
+  return {
+    action,
+    condition: marketCondition(result),
+    focus: focusText(result),
+    position: positionText(result),
+    area: nearestArea(result, generated),
+    waiting: execution.active ? 'Setup entry resmi sudah aktif.' : waitingText(result),
+    confirmation: confirmationText(result),
+    invalidation: invalidationText(result, generated),
+    target: targetText(result, generated),
+    sourceTime: source,
+    sourceTimeText: formatWita(source),
+    conflict
+  };
 }
 
 function scenarioTitle(scenario) {
   return ({
-    FVG_REVISIT: 'FVG Revisit',
-    OB_REVISIT: 'Order Block Revisit',
+    FVG_REVISIT: 'Kunjungan FVG',
+    OB_REVISIT: 'Kunjungan Order Block',
     DOL: 'Draw on Liquidity',
-    ASIA_ENTRY: 'Asia Entry'
-  })[scenario?.setupType] || 'Context Event';
-}
-
-function invalidationText(scenario) {
-  if (Number.isFinite(Number(scenario?.invalidation))) return priceText(scenario.invalidation);
-  return `timeout ${expiryText(scenario?.expiresAt)} WITA atau zona tidak lagi fresh`;
-}
-
-function scenarioCopyText(scenario) {
-  const rows = [
-    scenarioTitle(scenario),
-    `Arah ${scenario.side}`,
-    `Status ${statusText(scenario)}`,
-    `Harga acuan ${priceText(scenario.referencePrice)}`,
-    `Target ${priceText(scenario.target)}`,
-    `Invalidasi ${invalidationText(scenario)}`,
-    `Berlaku sampai ${expiryText(scenario.expiresAt)} WITA`,
-    `Alasan: ${scenario.reason}`
-  ];
-  if (Number.isFinite(Number(scenario.zoneLow)) && Number.isFinite(Number(scenario.zoneHigh))) {
-    rows.splice(4, 0, `Zona ${priceText(scenario.zoneLow)} - ${priceText(scenario.zoneHigh)}`);
-  }
-  return rows.join('\n');
+    ASIA_ENTRY: 'Target Asia'
+  })[scenario?.setupType] || 'Skenario konteks';
 }
 
 function scenarioCard(scenario) {
-  const buy = scenario.side === 'BUY';
-  const zone = Number.isFinite(Number(scenario.zoneLow)) && Number.isFinite(Number(scenario.zoneHigh));
-  return `<article class="amy-level-card ${buy ? 'buy' : 'sell'}">
-    <h3><span>${buy ? '↗' : '↘'}</span>${safeText(scenarioTitle(scenario))}</h3>
+  const range = zoneRange(scenario);
+  return `<article class="amy-level-card wait" data-stability-key="outlook-scenario-${safeText(scenario.setupType || 'context')}">
+    <h3><span>◎</span>${safeText(scenarioTitle(scenario))}</h3>
     <div class="amy-level-grid">
-      <span>Arah Outlook</span><strong>${safeText(scenario.side)}</strong>
-      <span>Status</span><strong>${safeText(statusText(scenario))}</strong>
+      <span>Jenis informasi</span><strong>KUNJUNGAN / KONTEKS</strong>
+      <span>Arah perjalanan</span><strong>${safeText(scenario.side || 'WAIT')}</strong>
       <span>Timeframe</span><strong>${safeText(scenario.timeframe || 'M5 + M15')}</strong>
-      <span>Harga acuan</span><strong>${priceText(scenario.referencePrice)}</strong>
-      ${zone ? `<span>Zona konteks</span><strong>${priceText(scenario.zoneLow)}–${priceText(scenario.zoneHigh)}</strong>` : ''}
-      <span>Target</span><strong class="profit">${priceText(scenario.target)}</strong>
-      <span>Invalidasi</span><strong class="loss">${safeText(invalidationText(scenario))}</strong>
-      <span>Berlaku sampai</span><strong>${safeText(expiryText(scenario.expiresAt))} WITA</strong>
+      ${range ? `<span>Zona pantauan</span><strong>${range}</strong>` : ''}
+      <span>Target konteks</span><strong>${priceText(scenario.target)}</strong>
+      <span>Invalidasi</span><strong>${priceText(scenario.invalidation)}</strong>
     </div>
-    <p><b>Alasan:</b> ${safeText(scenario.reason)}</p>
-    <button type="button" class="amy-copy-level" data-copy-levels="${safeText(scenarioCopyText(scenario))}"><span>▣</span> Salin outlook</button>
+    <p><b>Makna:</b> ${safeText(scenario.reason || 'Skenario area, bukan izin entry.')}</p>
+    <p class="amy-level-disclaimer">Arah perjalanan menuju zona bukan perintah BUY/SELL.</p>
   </article>`;
 }
 
-function contextMarkup(result) {
-  const context = result.context || {};
-  return `<div class="amy-level-waiting">
-    <b>M15 Structure:</b> ${safeText(context.bias || 'NEUTRAL')} ·
-    <b>Invalidasi:</b> ${priceText(context.invalidation)} ·
-    <b>BSL:</b> ${priceText(context.bsl)} ·
-    <b>SSL:</b> ${priceText(context.ssl)} ·
-    <b>EMA 5/15 MTF:</b> ${safeText(context.mtfDirection || 'MIXED')}
-  </div>`;
-}
+function practicalMarkup(model, generated) {
+  const conflictText = model.conflict.conflict
+    ? `<div class="amy-level-waiting"><b>Konflik:</b> Mapping ${safeText(model.conflict.mappingDirection)} sedangkan Scalper ${safeText(model.conflict.scalperDirection)}. Tindakan tetap WAIT sampai selaras.</div>`
+    : '';
+  const scenarios = (generated?.scenarios || []).length
+    ? `<div class="amy-level-cards">${generated.scenarios.map(scenarioCard).join('')}</div>`
+    : '<div class="amy-level-waiting">Belum ada kunjungan zona khusus. Analisis struktur terakhir tetap berlaku.</div>';
 
-function waitingMarkup({ stale, result }) {
-  const message = stale
-    ? 'Data M5 atau M15 sedang usang. Market Outlook ditahan sampai candle live kembali tersedia.'
-    : result.message || 'Tidak ada qualified context event. Outlook tetap WAIT.';
-  return `<section class="amy-level-panel waiting">
-    <p class="amy-level-intro">AMY Market Context Final: struktur M15 + trigger M5 untuk FVG revisit, OB revisit, DOL, dan Asia entry.</p>
-    ${result.context ? contextMarkup(result) : ''}
-    <div class="amy-level-waiting">${safeText(message)}</div>
-  </section>`;
-}
-
-function panelMarkup(result) {
-  return `<section class="amy-level-panel">
-    <p class="amy-level-intro">AMY Market Context Final hanya mengaktifkan outlook ketika event yang memenuhi threshold terkunci terdeteksi.</p>
-    ${contextMarkup(result)}
-    <div class="amy-level-cards">${result.scenarios.map(scenarioCard).join('')}</div>
-    <p class="amy-level-disclaimer">Market Outlook adalah konteks berbasis aturan, bukan jaminan hasil. Jika event bertentangan, Outlook tetap WAIT.</p>
+  return `<section class="amy-level-panel ${model.action === 'WAIT' ? 'waiting' : ''}" data-stability-key="outlook-practical">
+    <p class="amy-level-intro">Ringkasan praktis dari candle terakhir yang sudah close.</p>
+    <div class="amy-level-grid">
+      <span>Kondisi market</span><strong>${safeText(model.condition)}</strong>
+      <span>Status sekarang</span><strong>${safeText(model.action)}</strong>
+      <span>Fokus</span><strong>${safeText(model.focus)}</strong>
+      <span>Posisi harga</span><strong>${safeText(model.position)}</strong>
+      <span>Area pantauan</span><strong>${safeText(model.area)}</strong>
+      <span>Yang ditunggu</span><strong>${safeText(model.waiting)}</strong>
+      <span>Konfirmasi</span><strong>${safeText(model.confirmation)}</strong>
+      <span>Invalidasi</span><strong>${safeText(model.invalidation)}</strong>
+      <span>Target</span><strong>${safeText(model.target)}</strong>
+      <span>Sumber analisis</span><strong>${safeText(model.sourceTimeText)} WITA</strong>
+    </div>
+    ${conflictText}
+    ${scenarios}
+    <p class="amy-level-disclaimer">Harga live bergerak terpisah. Mapping berubah hanya setelah candle baru sudah close atau refresh manual.</p>
   </section>`;
 }
 
@@ -153,144 +333,163 @@ function ensureDisclosure() {
     details.dataset.stabilityKey = 'market-outlook';
     details.open = localStorage.getItem(OPEN_KEY) !== 'false';
     details.innerHTML = `<summary class="amy-level-summary">${summaryMarkup()}</summary><div class="amy-trade-scenario-panel" data-amy-level-panel="true"></div>`;
-    details.addEventListener('toggle', () => localStorage.setItem(OPEN_KEY, String(details.open)));
     const ringkasan = app.querySelector('.amy-analysis-section') || app.querySelector('#amy-regime-router-v3');
-    const validBreak = [...app.querySelectorAll('details.disclosure')].find(item => item.querySelector(':scope > summary')?.textContent.trim().startsWith('Valid Break'));
     if (ringkasan) app.insertBefore(details, ringkasan);
-    else if (validBreak) app.insertBefore(details, validBreak);
     else app.appendChild(details);
   }
-  details.dataset.stabilityKey = 'market-outlook';
+  if (!details.dataset.outlookToggleBound) {
+    details.dataset.outlookToggleBound = 'true';
+    details.addEventListener('toggle', () => localStorage.setItem(OPEN_KEY, String(details.open)));
+  }
   let summary = details.querySelector(':scope > summary');
   if (!summary) {
     summary = document.createElement('summary');
+    summary.className = 'amy-level-summary';
+    summary.innerHTML = summaryMarkup();
     details.prepend(summary);
   }
-  summary.className = 'amy-level-summary';
-  if (!summary.querySelector('.amy-level-summary-title')) summary.innerHTML = summaryMarkup();
   let panel = details.querySelector('.amy-trade-scenario-panel');
   if (!panel) {
-    panel = document.createElement('section');
+    panel = document.createElement('div');
     panel.className = 'amy-trade-scenario-panel';
+    panel.dataset.amyLevelPanel = 'true';
     details.appendChild(panel);
   }
-  panel.dataset.amyLevelPanel = 'true';
   return { details, summary, panel };
 }
 
-function setSummaryState(summary, { stale, result }) {
-  if (!summary) return;
-  const badge = summary.querySelector('.amy-level-summary-status');
+function setSummaryState(summary, model) {
+  const badge = summary?.querySelector('.amy-level-summary-status');
   if (!badge) return;
-  const active = result.status === 'ACTIVE';
-  const mixed = result.status === 'MIXED';
-  const text = stale ? 'DATA USANG' : active ? result.primaryDirection : mixed ? 'KONFLIK · WAIT' : 'WAIT';
-  if (badge.textContent !== text) badge.textContent = text;
-  badge.classList.toggle('stale', stale);
-  badge.classList.toggle('ready', active && !stale);
-  badge.classList.toggle('waiting', (!active || mixed) && !stale);
+  if (badge.textContent !== model.action) badge.textContent = model.action;
+  badge.classList.remove('stale');
+  badge.classList.toggle('ready', model.action !== 'WAIT');
+  badge.classList.toggle('waiting', model.action === 'WAIT');
 }
 
-function signature(result, stale) {
+function patchPanel(panel, markup) {
+  const template = document.createElement('template');
+  template.innerHTML = `<div class="amy-trade-scenario-panel" data-amy-level-panel="true">${markup}</div>`;
+  const next = template.content.firstElementChild;
+  if (window.AmyFXDomStableRender?.patch) {
+    window.AmyFXDomStableRender.patch(panel, next);
+    return;
+  }
+  panel.replaceChildren(...[...next.childNodes].map(node => node.cloneNode(true)));
+}
+
+function publish(generated, model) {
+  if (state.result) {
+    state.result.marketOutlook = {
+      ...generated,
+      status: model.action,
+      mode: 'AMY_MARKET_CONTEXT_PRACTICAL_V2',
+      practical: model,
+      dataStale: false
+    };
+    state.result.tradeScenarios = generated;
+  }
+  if (!window.AmyFXIntel?.write) return;
+  const payload = {
+    mode: 'AMY_MARKET_CONTEXT_PRACTICAL_V2',
+    generatedAt: generated.generatedAt,
+    sourceTime: model.sourceTime,
+    price: generated.referencePrice,
+    status: model.action,
+    direction: model.action === 'WAIT' ? normalizedDirection(forecastDirection()) : model.action,
+    context: generated.context || null,
+    scenarios: generated.scenarios || [],
+    practical: model
+  };
+  const signature = JSON.stringify(payload);
+  if (signature === lastPublishSignature) return;
+  lastPublishSignature = signature;
+  window.AmyFXIntel.write('outlook', payload);
+}
+
+function semanticSignature(generated, model) {
   return JSON.stringify({
-    tab: currentTab(),
-    stale,
-    status: result.status,
-    sourceTime: result.sourceTime,
-    direction: result.primaryDirection,
-    context: result.context ? {
-      bias: result.context.bias,
-      invalidation: Number(result.context.invalidation || 0).toFixed(2),
-      bsl: Number(result.context.bsl || 0).toFixed(2),
-      ssl: Number(result.context.ssl || 0).toFixed(2)
-    } : null,
-    scenarios: (result.scenarios || []).map(item => ({
-      side: item.side,
-      type: item.setupType,
-      target: Number(item.target || 0).toFixed(2),
-      invalidation: Number(item.invalidation || 0).toFixed(2),
-      expiresAt: item.expiresAt
-    }))
+    source: sourceSignature(),
+    action: model.action,
+    condition: model.condition,
+    focus: model.focus,
+    position: model.position,
+    area: model.area,
+    waiting: model.waiting,
+    confirmation: model.confirmation,
+    invalidation: model.invalidation,
+    target: model.target,
+    setupId: state.result?.setupExecution?.setupId || state.result?.entryMap?.setup?.id || null,
+    lifecycle: state.result?.setupExecution?.lifecycleStage || state.result?.entryWatch?.lifecycleStage || null,
+    scenarios: (generated.scenarios || []).map(item => [item.setupType, item.side, item.target, item.zoneLow, item.zoneHigh])
   });
 }
 
-function publish(result, stale) {
-  if (state.result) {
-    state.result.marketOutlook = {
-      ...result,
-      status: stale ? 'DATA_STALE' : result.status,
-      mode: 'AMY_MARKET_CONTEXT_FINAL'
-    };
-    state.result.tradeScenarios = result;
-  }
-  if (window.AmyFXIntel?.write) {
-    const payload = {
-      mode: 'AMY_MARKET_CONTEXT_FINAL',
-      generatedAt: result.generatedAt,
-      price: result.referencePrice,
-      status: stale ? 'DATA_STALE' : result.status,
-      direction: stale ? 'WAIT' : result.primaryDirection,
-      context: result.context || null,
-      scenarios: stale ? [] : result.scenarios || []
-    };
-    const nextPublishSignature = JSON.stringify(payload);
-    if (nextPublishSignature !== lastPublishSignature) {
-      lastPublishSignature = nextPublishSignature;
-      window.AmyFXIntel.write('outlook', payload);
-    }
-  }
+function buildResult() {
+  return buildAmyMarketContextOutlook({
+    M1: closedCandles('M1'),
+    M5: closedCandles('M5'),
+    M15: closedCandles('M15'),
+    H1: closedCandles('H1'),
+    H4: closedCandles('H4'),
+    D1: closedCandles('D1'),
+    price: state.result?.price || closedCandles(state.tf).at(-1)?.close || state.price,
+    now: Date.now()
+  });
 }
 
 function refresh(force = false) {
   const target = ensureDisclosure();
-  if (!target || currentTab() !== 'Analyze') return;
-  const stale = isOutlookStale();
-  const result = buildAmyMarketContextOutlook({
-    M1: state.candles?.M1 || [],
-    M5: state.candles?.M5 || [],
-    M15: state.candles?.M15 || [],
-    H1: state.candles?.H1 || [],
-    H4: state.candles?.H4 || [],
-    D1: state.candles?.D1 || [],
-    price: state.price,
-    now: Date.now()
-  });
-  setSummaryState(target.summary, { stale, result });
-  const nextSignature = signature(result, stale);
-  if (!force && nextSignature === lastSignature) return;
-  lastSignature = nextSignature;
-  lastResult = result;
-  target.panel.innerHTML = stale || !result.scenarios?.length
-    ? waitingMarkup({ stale, result })
-    : panelMarkup(result);
-  publish(result, stale);
+  if (!target || currentTab() !== 'Analyze') return false;
+
+  const nextSourceSignature = sourceSignature();
+  const generated = buildResult();
+  const usableResult = generated.status === 'WAITING_DATA' && lastResult
+    ? { ...lastResult, generatedAt: generated.generatedAt }
+    : generated;
+  const model = practicalModel(usableResult);
+  const nextSemanticSignature = semanticSignature(usableResult, model);
+  if (!force && nextSourceSignature === lastSourceSignature && nextSemanticSignature === lastSemanticSignature) {
+    return false;
+  }
+
+  lastSourceSignature = nextSourceSignature;
+  lastSemanticSignature = nextSemanticSignature;
+  if (generated.status !== 'WAITING_DATA' || !lastResult) lastResult = usableResult;
+  setSummaryState(target.summary, model);
+  patchPanel(target.panel, practicalMarkup(model, usableResult));
+  publish(usableResult, model);
+  return true;
+}
+
+function installCopyListener() {
+  if (copyListenerInstalled) return;
+  copyListenerInstalled = true;
+  document.addEventListener('click', async event => {
+    const button = event.target.closest('[data-copy-levels]');
+    if (!button) return;
+    try {
+      await navigator.clipboard.writeText(button.dataset.copyLevels || '');
+    } catch (_) {}
+  }, true);
 }
 
 function boot() {
+  installCopyListener();
   refresh(true);
-  clearInterval(timer);
-  timer = setInterval(() => refresh(), 2500);
-  document.addEventListener('click', async event => {
-    const button = event.target.closest('[data-copy-levels]');
-    if (!button) {
-      setTimeout(() => refresh(), 30);
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(button.dataset.copyLevels || '');
-      const original = button.innerHTML;
-      button.innerHTML = '<span>✓</span> Tersalin';
-      setTimeout(() => { button.innerHTML = original; }, 1200);
-    } catch (_) {}
-  }, true);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
-  window.addEventListener('amyfx:candles-updated', () => refresh());
+  ['amyfx:candles-updated', 'amyfx:mapping-state-change', 'amyfx:entry-watch-updated', 'amyfx:execution-authority-updated']
+    .forEach(name => window.addEventListener(name, () => refresh(false)));
 }
 
 window.AmyMarketOutlook = {
   refresh: () => refresh(true),
   history: () => [],
-  stats: () => ({ mode: 'AMY_MARKET_CONTEXT_FINAL', current: lastResult })
+  stats: () => ({
+    mode: 'AMY_MARKET_CONTEXT_PRACTICAL_V2',
+    current: lastResult,
+    sourceSignature: lastSourceSignature,
+    semanticSignature: lastSemanticSignature
+  })
 };
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });

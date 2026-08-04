@@ -13,7 +13,7 @@
       row.className = 'profile-row';
       row.dataset.profileSystem = 'market-api';
       row.innerHTML = `
-        <span class="tool-icon">⌁</span>
+        <span class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"></path></svg></span>
         <span>
           <strong>Data Market API</strong>
           <small>Dikelola otomatis melalui Vercel dan Supabase. Tidak perlu API key di HP.</small>
@@ -30,7 +30,7 @@
       button.type = 'button';
       button.dataset.profileAction = 'test-notification';
       button.innerHTML = `
-        <span class="tool-icon">🔔</span>
+        <span class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg></span>
         <span>
           <strong>Tes Notifikasi</strong>
           <small>Periksa notifikasi Amy FX pada perangkat ini.</small>
@@ -52,7 +52,7 @@
 
   function testNotification() {
     const title = 'AMY FX — TES NOTIFIKASI';
-    const body = 'Notifikasi Amy FX Preview berfungsi pada perangkat ini.';
+    const body = 'Notifikasi Amy FX berfungsi pada perangkat ini.';
     const target = location.href.split('#')[0];
 
     if (window.Android?.showNotificationWithUrl) {

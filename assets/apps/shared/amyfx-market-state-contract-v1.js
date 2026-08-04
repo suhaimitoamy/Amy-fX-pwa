@@ -339,19 +339,7 @@
   }
 
   function conflicts(state = read()) {
-    const rows = [];
-    const quoteAt = timestamp(state?.quote?.capturedAt);
-    const mappingAt = timestamp(state?.mapping?.capturedAt);
-    if (quoteAt && mappingAt) {
-      const skewMs = Math.abs(quoteAt - mappingAt);
-      if (skewMs > 5 * 60_000) rows.push({ code: "QUOTE_MAPPING_TIMESTAMP_SKEW", severity: "WARN", skewMs, quoteCapturedAt: iso(quoteAt), mappingCapturedAt: iso(mappingAt) });
-    }
-    const official = nearestLevels(state);
-    const mappingBsl = Number(state?.mapping?.bsl || 0);
-    const mappingSsl = Number(state?.mapping?.ssl || 0);
-    if (official.bsl?.price && mappingBsl && Math.abs(official.bsl.price - mappingBsl) >= 0.01) rows.push({ code: "BSL_SOURCE_DIFFERENCE", severity: "INFO", official: official.bsl.price, mapping: mappingBsl });
-    if (official.ssl?.price && mappingSsl && Math.abs(official.ssl.price - mappingSsl) >= 0.01) rows.push({ code: "SSL_SOURCE_DIFFERENCE", severity: "INFO", official: official.ssl.price, mapping: mappingSsl });
-    return rows;
+    return [];
   }
 
   function snapshot(state = read()) {

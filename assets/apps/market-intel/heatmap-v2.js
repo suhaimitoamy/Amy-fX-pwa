@@ -196,7 +196,7 @@
       <div><small>QUOTE</small><strong>${safeText(quote.state)}</strong></div>
     </div>
     <div class="heat-filter-toolbar">
-      <button class="heat-filter-btn ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">🔥 Semua Zona</button>
+      <button class="heat-filter-btn ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">Semua Zona</button>
       <button class="heat-filter-btn ${activeFilter === 'hot' ? 'active' : ''}" data-filter="hot">🔴 Hot Spots</button>
       <button class="heat-filter-btn ${activeFilter === 'dynamic' ? 'active' : ''}" data-filter="dynamic">⚡ Reaksi / Sweep</button>
     </div>`;
@@ -233,7 +233,7 @@
     canvas.classList.add('dynamic-heatmap-canvas');
     canvas.innerHTML = zones.map(rowMarkup).join('');
     const priceNode = document.getElementById('heatmap-price');
-    if (priceNode) priceNode.textContent = `💰 XAU/USD ${p2(price)} · ${quoteState}`;
+    if (priceNode) priceNode.textContent = `XAU/USD ${p2(price)} · ${quoteState}`;
     canvas.querySelectorAll('.dynamic-heat-row').forEach(row => {
       row.onclick = event => {
         if (event.target.closest('.heat-alert-btn')) return;
@@ -279,13 +279,13 @@
   async function loadDynamicHeatmap(silent = false) {
     const status = document.getElementById('heatmap-status');
     if (!status) return;
-    if (!silent) status.textContent = '🔄 Memperbarui heatmap dinamis...';
+    if (!silent) status.textContent = 'Memperbarui heatmap dinamis...';
     try {
       controller?.abort();
       controller = new AbortController();
       const data = await fetchComputedHeatmap(controller.signal);
       if (!Array.isArray(data.zones) || !data.zones.length) {
-        status.textContent = '⚠️ Data candle belum cukup untuk heatmap';
+        status.textContent = 'Data candle belum cukup untuk heatmap';
         return;
       }
       const previous = readSnapshot();
@@ -293,7 +293,7 @@
       lastPayload = { ...data, zones };
       renderDynamicHeatmap(lastPayload, previous);
       writeSnapshot(lastPayload);
-      status.textContent = `🔥 ${Number(data.summary?.activeZones || 0)} zona aktif · ${sourceTimeText(data.sourceCandleTime)} · ${updatedText(data.computedAt)}`;
+      status.textContent = `${Number(data.summary?.activeZones || 0)} zona aktif · ${sourceTimeText(data.sourceCandleTime)} · ${updatedText(data.computedAt)}`;
       try { panelLoadedAt.heatmap = Date.now(); } catch (_) {}
       window.AmyFXIntel?.write?.('heatmap', {
         sourceCandleTime: data.sourceCandleTime,
@@ -307,7 +307,7 @@
       if (typeof hideLoading === 'function') hideLoading();
     } catch (error) {
       if (error?.name === 'AbortError') return;
-      status.textContent = '⚠️ Gagal memperbarui heatmap';
+      status.textContent = 'Gagal memperbarui heatmap';
       console.error('Dynamic heatmap failed', error);
     }
   }

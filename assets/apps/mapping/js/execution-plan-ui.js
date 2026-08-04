@@ -463,7 +463,7 @@ if (typeof document !== 'undefined' && typeof window !== 'undefined') {
     const action = button.dataset.executionPlanAction;
     if (action === 'detail') {
       window.setTab?.('Analyze');
-      document.getElementById('amy-execution-plan-detail')?.scrollIntoView({ block: 'start' });
+
       return;
     }
     if (action === 'ask-amy') askAmy(currentViewModel());

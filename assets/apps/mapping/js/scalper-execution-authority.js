@@ -3,6 +3,7 @@ const ENTRY_ACTIVE_STATUSES = new Set(['ACTIVE']);
 const NON_TERMINAL_STATUSES = new Set(['WAITING_TRIGGER', 'WAITING_NEXT_OPEN', 'ENTRY_READY', 'ACTIVE', 'BE_ACTIVE']);
 
 let applying = false;
+let applyQueued = false;
 let lastSignature = '';
 let lastResult = null;
 
@@ -24,7 +25,7 @@ function statusText(status) {
     WAITING_NEXT_OPEN: 'WAITING_NEXT_OPEN',
     ENTRY_READY: 'WAITING_NEXT_OPEN',
     ACTIVE: 'ENTRY CONFIRMED · SCALPER ENGINE',
-    BE_ACTIVE: 'TP1 HIT / BE',
+    BE_ACTIVE: 'TP1 HIT / BE'
   })[String(status || '').toUpperCase()] || 'WAITING_FOR_SCALPER_SETUP';
 }
 
@@ -34,7 +35,7 @@ function lifecycleStage(status) {
     WAITING_NEXT_OPEN: 'WAITING_FOR_CLOSE',
     ENTRY_READY: 'WAITING_FOR_CLOSE',
     ACTIVE: 'ENTRY_TRIGGERED',
-    BE_ACTIVE: 'TP1 HIT / BE',
+    BE_ACTIVE: 'TP1 HIT / BE'
   })[String(status || '').toUpperCase()] || 'WAITING_FOR_AREA';
 }
 
@@ -48,9 +49,10 @@ function validCurrentSetup(setup) {
   );
 }
 
-function setupSignature(setup, availability) {
+function setupSignature(setup, availability, mappingAlignment) {
   return JSON.stringify({
     availability,
+    mappingAlignment,
     id: setup?.id || null,
     engineVersion: setup?.engineVersion || null,
     status: setup?.status || null,
@@ -62,7 +64,7 @@ function setupSignature(setup, availability) {
     tp1Hit: setup?.tp1Hit === true,
     lifecycleSequence: setup?.lifecycleSequence ?? null,
     patternGate: setup?.patternGate || null,
-    updatedAt: setup?.updatedAt || null,
+    updatedAt: setup?.updatedAt || null
   });
 }
 
@@ -72,30 +74,64 @@ function geometry(setup, side) {
   const tp1 = number(setup?.tp1 ?? setup?.breakEvenTrigger);
   const tp2 = number(setup?.tp2 ?? setup?.target);
   const valid = entry != null && stop != null && tp1 != null && tp2 != null
-    && (side === 'BUY' ? stop < entry && tp1 > entry && tp2 >= tp1 : stop > entry && tp1 < entry && tp2 <= tp1);
+    && (side === 'BUY'
+      ? stop < entry && tp1 > entry && tp2 >= tp1
+      : stop > entry && tp1 < entry && tp2 <= tp1);
   return { entry, stop, tp1, tp2, valid };
 }
 
+function mappingDirection(result) {
+  const preserved = result?.mappingContextBeforeScalper || {};
+  const decision = preserved.directionDecision || result?.directionDecision || {};
+  const forecast = result?.validatedMarketContext?.directionForecast
+    || result?.validatedDirectionForecast;
+  if (forecast?.active) return direction(forecast.direction);
+  const decided = direction(decision.signal || decision.bias);
+  if (decided !== 'WAIT') return decided;
+  return direction(
+    result?.validatedMarketContext?.marketState?.direction
+    || result?.validatedMarketState?.direction
+    || result?.st?.confirmedTrend
+  );
+}
+
+function alignmentFor(result, side) {
+  const mapping = mappingDirection(result);
+  const aligned = ['BUY', 'SELL'].includes(mapping) && mapping === side;
+  return {
+    aligned,
+    mappingDirection: mapping,
+    scalperDirection: side,
+    reason: aligned
+      ? `Scalper ${side} selaras dengan Mapping ${mapping}.`
+      : mapping === 'WAIT'
+        ? `Mapping belum memberi arah resmi untuk memvalidasi Scalper ${side}.`
+        : `Scalper ${side} bertentangan dengan Mapping ${mapping}.`
+  };
+}
+
 function waitAuthority(availability) {
-  const stale = availability === 'STALE' || availability === 'DATA BELUM TERSEDIA';
+  const unavailable = availability !== 'LIVE';
+  const waitStatus = unavailable ? 'WAITING_FOR_SCALPER_UPDATE' : 'WAITING_FOR_SCALPER_SETUP';
   return {
     authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
     engineVersion: CURRENT_ENGINE_VERSION,
     setup: null,
+    mappingAlignment: { aligned: false, mappingDirection: 'WAIT', scalperDirection: 'WAIT', reason: 'Belum ada setup Scalper.' },
     directionDecision: {
       bias: 'WAIT',
       signal: 'WAIT',
       source: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
-      status: stale ? 'SCALPER DATA STALE' : 'WAITING FOR SCALPER SETUP',
-      invalidated: stale,
-      invalidationReason: stale ? 'Data Scalper Engine belum segar.' : '',
+      status: waitStatus,
+      invalidated: unavailable,
+      invalidationReason: unavailable ? 'Snapshot Scalper belum diperbarui.' : ''
     },
     setupExecution: {
       active: false,
       setupId: '',
       direction: 'WAIT',
-      status: stale ? 'SCALPER DATA STALE' : 'WAITING FOR SCALPER SETUP',
-      lifecycleStage: stale ? 'DATA_STALE' : 'WAITING_FOR_AREA',
+      status: waitStatus,
+      lifecycleStage: 'WAITING_FOR_AREA',
       entryLow: null,
       entryHigh: null,
       stopLoss: null,
@@ -105,37 +141,43 @@ function waitAuthority(availability) {
       entryTouched: false,
       target1Secured: false,
       terminal: false,
-      alignedWithForecast: true,
+      alignedWithForecast: false,
       geometryValid: false,
-      invalidated: stale,
-      invalidationReason: stale
-        ? 'Data Scalper Engine belum segar. Entry dinonaktifkan.'
+      invalidated: unavailable,
+      invalidationReason: unavailable
+        ? 'Snapshot Scalper belum diperbarui; entry tetap WAIT.'
         : 'Scalper Engine belum memilih setup aktif.',
-      authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
+      authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY'
     },
     entryWatch: {
       active: false,
       terminal: false,
       entryAllowed: false,
-      status: stale ? 'DATA_STALE' : 'WAITING_FOR_SCALPER_SETUP',
-      lifecycleStage: stale ? 'DATA_STALE' : 'WAITING_FOR_AREA',
+      status: waitStatus,
+      lifecycleStage: 'WAITING_FOR_AREA',
       executionPlan: { locked: false, tp1Hit: false },
-      authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
-    },
+      authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY'
+    }
   };
 }
 
-function activeAuthority(setup, availability) {
+function activeAuthority(setup, availability, result) {
   const side = direction(setup.direction);
   const rawStatus = String(setup.status || '').toUpperCase();
   const levels = geometry(setup, side);
   const fresh = availability === 'LIVE';
+  const alignment = alignmentFor(result, side);
   const tp1Secured = setup.tp1Hit === true;
-  const entryActive = ENTRY_ACTIVE_STATUSES.has(rawStatus) && fresh && levels.valid && !tp1Secured;
+  const entryActive = ENTRY_ACTIVE_STATUSES.has(rawStatus)
+    && fresh
+    && levels.valid
+    && alignment.aligned
+    && !tp1Secured;
   const entryLow = levels.entry ?? number(setup.zoneBottom);
   const entryHigh = levels.entry ?? number(setup.zoneTop);
   const stage = tp1Secured ? 'TP1_HIT_NO_BE' : lifecycleStage(rawStatus);
-  const status = tp1Secured ? 'TP1 HIT · SL TETAP' : statusText(rawStatus);
+  const baseStatus = tp1Secured ? 'TP1 HIT · SL TETAP' : statusText(rawStatus);
+  const status = alignment.aligned ? baseStatus : `WAIT · ${alignment.reason}`;
   const setupId = String(setup.id || '');
   const driverName = String(setup.driverName || setup.driverId || setup.model || 'Scalper Engine');
 
@@ -172,22 +214,33 @@ function activeAuthority(setup, availability) {
     reason: setup.reason || `${driverName} dipilih oleh Scalper Engine.`,
     targetType: 'SCALPER_ENGINE_TARGET',
     source: 'AMY_SCALPER_ENGINE_PATTERN_V3',
+    mappingAlignment: alignment
   };
+
+  const invalid = !fresh || !levels.valid || !alignment.aligned;
+  const invalidationReason = !fresh
+    ? 'Snapshot Scalper belum diperbarui; entry tetap WAIT.'
+    : !levels.valid
+      ? 'Geometri entry, Stop Loss, atau target Scalper Engine tidak valid.'
+      : !alignment.aligned
+        ? alignment.reason
+        : '';
 
   return {
     authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
     engineVersion: CURRENT_ENGINE_VERSION,
     setup: normalizedSetup,
+    mappingAlignment: alignment,
     directionDecision: {
-      bias: side,
-      signal: side,
+      bias: alignment.aligned ? side : 'WAIT',
+      signal: alignment.aligned ? side : 'WAIT',
       source: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
       status: `${driverName} · ${setup.timeframe || 'M15'} · ${status}`,
-      invalidated: !fresh,
-      invalidationReason: fresh ? '' : 'Data Scalper Engine belum segar.',
+      invalidated: invalid,
+      invalidationReason
     },
     setupExecution: {
-      active: entryActive || tp1Secured,
+      active: entryActive || (tp1Secured && alignment.aligned && fresh),
       setupId,
       direction: side,
       status,
@@ -202,29 +255,26 @@ function activeAuthority(setup, availability) {
       entryTouched: entryActive || tp1Secured,
       target1Secured: tp1Secured,
       terminal: false,
-      alignedWithForecast: true,
+      alignedWithForecast: alignment.aligned,
+      mappingDirection: alignment.mappingDirection,
       geometryValid: levels.valid,
-      invalidated: !fresh || (rawStatus === 'ACTIVE' && !levels.valid),
-      invalidationReason: !fresh
-        ? 'Data Scalper Engine belum segar. Entry dinonaktifkan.'
-        : levels.valid || !ENTRY_ACTIVE_STATUSES.has(rawStatus)
-          ? ''
-          : 'Geometri entry, Stop Loss, atau target Scalper Engine tidak valid.',
+      invalidated: invalid,
+      invalidationReason,
       liquidityTarget: levels.tp2 == null ? null : { type: 'SCALPER_ENGINE_TARGET', level: levels.tp2 },
       driverId: setup.driverId,
       driverName,
       timeframe: setup.timeframe || 'M15',
-      authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
+      authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY'
     },
     entryWatch: {
-      active: entryActive || tp1Secured,
+      active: entryActive || (tp1Secured && alignment.aligned && fresh),
       terminal: false,
       entryAllowed: entryActive,
       direction: side,
       status,
       lifecycleStage: stage,
       executionPlan: {
-        locked: entryActive || tp1Secured,
+        locked: entryActive || (tp1Secured && alignment.aligned && fresh),
         entry: levels.entry,
         entryLow,
         entryHigh,
@@ -232,10 +282,11 @@ function activeAuthority(setup, availability) {
         initialSl: number(setup.initialStopLoss) ?? levels.stop,
         tp1: levels.tp1,
         tp2: levels.tp2,
-        tp1Hit: tp1Secured,
+        tp1Hit: tp1Secured
       },
-      authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
-    },
+      mappingAlignment: alignment,
+      authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY'
+    }
   };
 }
 
@@ -249,8 +300,8 @@ function cloneSnapshot(snapshot, authority, scenario) {
       ...(snapshot.authority || {}),
       entry: 'AMY_SCALPER_ENGINE_PATTERN_V3',
       execution: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
-      uiMayMutate: false,
-    },
+      uiMayMutate: false
+    }
   };
 }
 
@@ -264,6 +315,7 @@ function publishMarketState(result) {
 }
 
 function applyAuthority() {
+  applyQueued = false;
   if (applying) return false;
   const runtime = window.AmyFXScalperState || {};
   const payload = runtime.payload || null;
@@ -273,38 +325,66 @@ function applyAuthority() {
   const result = window.state?.result || window.AmyFXMarketState?.result || null;
   if (!result) return false;
 
-  const signature = setupSignature(primary, availability);
+  if (!result.mappingContextBeforeScalper) {
+    result.mappingContextBeforeScalper = {
+      directionDecision: result.directionDecision || null,
+      setupExecution: result.setupExecution || null,
+      entryMapSetup: result.entryMap?.setup || null,
+      entryWatch: result.entryWatch || null
+    };
+  }
+
+  const previewAlignment = primary
+    ? alignmentFor(result, direction(primary.direction))
+    : { aligned: false, mappingDirection: mappingDirection(result), scalperDirection: 'WAIT' };
+  const signature = setupSignature(primary, availability, previewAlignment);
   if (lastResult === result && lastSignature === signature) return false;
+
   applying = true;
   try {
-    if (!result.mappingContextBeforeScalper) {
-      result.mappingContextBeforeScalper = {
-        directionDecision: result.directionDecision || null,
-        setupExecution: result.setupExecution || null,
-        entryMapSetup: result.entryMap?.setup || null,
-        entryWatch: result.entryWatch || null,
-      };
-    }
-
-    const authority = primary ? activeAuthority(primary, availability) : waitAuthority(availability);
+    const authority = primary
+      ? activeAuthority(primary, availability, result)
+      : waitAuthority(availability);
     const originalScenario = result.mappingContextBeforeScalper?.entryWatch?.scenario
       || result.mappingSnapshot?.scenario
       || result.entryMap?.scenario
       || {};
+    const activeStatus = ENTRY_ACTIVE_STATUSES.has(String(primary?.status || '').toUpperCase());
     const scenario = primary
       ? {
           ...originalScenario,
           tf: primary.timeframe || result.tf || 'M15',
           triggerTf: primary.timeframe || result.tf || 'M15',
-          direction: direction(primary.direction),
+          direction: authority.setupExecution.active ? direction(primary.direction) : 'WAIT',
+          candidateDirection: direction(primary.direction),
           status: authority.setupExecution.status,
-          missing: ENTRY_ACTIVE_STATUSES.has(String(primary.status || '').toUpperCase()) ? [] : ['NEXT OPEN / ENTRY LOCK'],
-          requirements: [
-            { label: 'DATA', passed: availability === 'LIVE', detail: availability === 'LIVE' ? 'Data Scalper Engine aktif.' : 'Data Scalper Engine belum segar.' },
-            { label: 'SCALPER DRIVER', passed: true, detail: `${primary.driverName || primary.driverId} ${primary.timeframe || 'M15'} dipilih sebagai setup utama.` },
-            { label: 'ENTRY LOCK', passed: ENTRY_ACTIVE_STATUSES.has(String(primary.status || '').toUpperCase()), detail: authority.setupExecution.status },
+          missing: [
+            ...(activeStatus ? [] : ['NEXT OPEN / ENTRY LOCK']),
+            ...(authority.mappingAlignment.aligned ? [] : ['MAPPING ALIGNMENT'])
           ],
-          source: 'SCALPER_ENGINE_EXECUTION_AUTHORITY',
+          requirements: [
+            {
+              label: 'SCALPER SNAPSHOT',
+              passed: availability === 'LIVE',
+              detail: availability === 'LIVE' ? 'Snapshot Scalper aktif.' : 'Snapshot Scalper belum diperbarui.'
+            },
+            {
+              label: 'SCALPER DRIVER',
+              passed: true,
+              detail: `${primary.driverName || primary.driverId} ${primary.timeframe || 'M15'} dipilih sebagai kandidat.`
+            },
+            {
+              label: 'MAPPING ALIGNMENT',
+              passed: authority.mappingAlignment.aligned,
+              detail: authority.mappingAlignment.reason
+            },
+            {
+              label: 'ENTRY LOCK',
+              passed: activeStatus && authority.mappingAlignment.aligned,
+              detail: authority.setupExecution.status
+            }
+          ],
+          source: 'SCALPER_ENGINE_EXECUTION_AUTHORITY'
         }
       : originalScenario;
 
@@ -312,12 +392,17 @@ function applyAuthority() {
       ...authority,
       availability,
       generatedAt: payload.generatedAt || null,
-      engine: payload.engine || null,
+      engine: payload.engine || null
     };
     result.executionDirectionDecision = authority.directionDecision;
     result.setupExecution = authority.setupExecution;
     result.entryWatch = { ...authority.entryWatch, scenario };
-    result.entryMap = { ...(result.entryMap || {}), setup: authority.setup, scenario, source: 'SCALPER_ENGINE_EXECUTION_AUTHORITY' };
+    result.entryMap = {
+      ...(result.entryMap || {}),
+      setup: authority.setup,
+      scenario,
+      source: 'SCALPER_ENGINE_EXECUTION_AUTHORITY'
+    };
     result.mappingSnapshot = cloneSnapshot(result.mappingSnapshot, authority, scenario);
 
     if (result.mappingContextBeforeScalper?.directionDecision) {
@@ -330,21 +415,27 @@ function applyAuthority() {
       engineVersion: CURRENT_ENGINE_VERSION,
       primarySetupId: primary?.id || null,
       availability,
-      updatedAt: Date.now(),
+      mappingAlignment: authority.mappingAlignment,
+      updatedAt: Date.now()
     });
 
     const placeholder = document.querySelector('#amy-scalper-entry-watch .scalper-watch__instruction');
     if (placeholder && /IFVG|FVG BUY High Quality/i.test(placeholder.textContent || '')) {
-      placeholder.textContent = 'Sepuluh driver BT6/BT6.1 + AMD memindai XAUUSD dari candle yang sudah close.';
+      placeholder.textContent = '';
     }
 
     lastResult = result;
     lastSignature = signature;
     window.dispatchEvent(new CustomEvent('amyfx:entry-watch-updated', {
-      detail: { watch: result.entryWatch, scenario, readOnly: true, authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY' },
+      detail: {
+        watch: result.entryWatch,
+        scenario,
+        readOnly: true,
+        authority: 'SCALPER_ENGINE_EXECUTION_AUTHORITY'
+      }
     }));
     window.dispatchEvent(new CustomEvent('amyfx:execution-authority-updated', {
-      detail: result.scalperExecutionAuthority,
+      detail: result.scalperExecutionAuthority
     }));
     window.render?.();
     return true;
@@ -354,16 +445,14 @@ function applyAuthority() {
 }
 
 function scheduleApply() {
-  setTimeout(applyAuthority, 0);
-  setTimeout(applyAuthority, 250);
+  if (applyQueued) return;
+  applyQueued = true;
+  queueMicrotask(applyAuthority);
 }
 
 window.addEventListener('amyfx:scalper-state-change', scheduleApply);
 window.addEventListener('amyfx:candles-updated', scheduleApply);
-window.addEventListener('amyfx:market-update', scheduleApply);
 window.addEventListener('amyfx:mapping-state-change', scheduleApply);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) scheduleApply(); });
-setInterval(applyAuthority, 1_500);
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scheduleApply, { once: true });
 else scheduleApply();

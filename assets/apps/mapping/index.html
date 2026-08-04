@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050505">
+<meta name="theme-color" content="#070B12">
 <title>Amy FX · Market Intelligence</title>
+<script src="../shared/amyfx-theme-controller.js" data-amyfx-theme-controller="v1"></script>
 <link rel="stylesheet" href="../shared/market-intelligence.css">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/asia-range.css">
@@ -20,6 +21,9 @@
 <link rel="stylesheet" href="css/five-issues-fix.css">
 <link rel="stylesheet" href="../shared/amyfx-blueprint-v1.css" data-amyfx-blueprint-css="v1">
 <link rel="stylesheet" href="css/analysis-list-polish-v1.css">
+<link rel="stylesheet" href="../shared/amyfx-ui-tokens.css" data-amyfx-ui-tokens="v1">
+<link rel="stylesheet" href="../shared/amyfx-theme.css" data-amyfx-theme="v1">
+<link rel="stylesheet" href="../shared/amyfx-components.css" data-amyfx-components="v1">
 <script>
 (function () {
   var NativeDateTimeFormat = Intl.DateTimeFormat;
@@ -60,12 +64,13 @@
 <script src="../../../pwa-update-bridge.js"></script>
 <!-- /Amy FX PWA runtime overlay -->
 </head>
-<body>
-<div id="sticky-bar" class="amy-sticky-bar" aria-hidden="true"><div class="sticky-brand">XAU/USD <span class="sticky-price">$0.00</span></div><div class="sticky-bias neutral">WAIT</div></div>
-<header class="topbar preview-topbar"><div class="brand">XAU</div><div><div class="brand-title">Amy FX</div><div class="brand-sub">Struktur • Arah • Likuiditas</div></div><div id="conn" class="status" aria-label="Status Mapping">●</div></header>
+<body class="amyfx-module amyfx-module--mapping">
+<div id="sticky-bar" class="amy-sticky-bar" aria-hidden="true"><div class="sticky-brand">XAU/USD <span class="sticky-price">--</span></div><div class="sticky-bias neutral">MEMUAT</div></div>
+<header class="topbar"><a class="mapping-back" href="../../index.html" aria-label="Kembali ke Amy FX"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></a><div class="brand" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><path d="M9 3v15M15 6v15"></path></svg></div><div><div class="brand-title">Mapping</div><div class="brand-sub">Struktur • Arah • Likuiditas</div></div><div id="conn" class="status" aria-label="Status Mapping">●</div></header>
 <section id="mapping-command-strip" class="amy-command-strip mapping-command-strip" aria-label="Ringkasan market"></section>
 <main class="content" id="app"></main>
-<nav class="nav"><button data-tab="Dashboard" class="active">▥<span>Dashboard</span></button><button data-tab="Analyze">〽<span>Analisis</span></button></nav>
+<nav class="nav"><button data-tab="Dashboard" class="active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg><span>Dashboard</span></button><button data-tab="Analyze"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18M5 15l4-5 4 3 6-8"></path></svg><span>Analisis</span></button></nav>
+<script src="../shared/amyfx-loading.js" data-amyfx-loading="v1"></script>
 <script src="js/api-request-coordinator.js"></script>
 <script src="../shared/amyfx-market-state-contract-v1.js" data-amyfx-market-contract="v2"></script>
 <script src="../shared/market-intelligence.js"></script>
@@ -73,6 +78,7 @@
 <script src="js/production-branding.js"></script>
 <script src="js/scanner-visibility-gate.js"></script>
 <script src="js/dashboard-only-panels-v1.js"></script>
+<script src="js/live-price-display-only-v1.js"></script>
 <script type="module" src="js/main.js"></script>
 <script type="module" src="js/candle-refresh-coordinator.js"></script>
 <script type="module" src="js/entry-watch-runtime-v2.js"></script>

@@ -1,7 +1,7 @@
 const ACTIVE_DIRECTIONS = new Set(['BUY', 'SELL']);
-const FRESH_STATES = new Set(['FRESH', 'LIVE', 'CLOSED_CANDLE', 'VALID', 'ACTIVE']);
 const TERMINAL_STATUS = /(TP2 HIT|TP1 \/ BE|SL HIT|STOPPED|TARGET_HIT|EXPIRED|INVALID|LEVEL_RETIRED|RETIRED|TERMINAL|SETUP REPLACED|SETUP NO LONGER ACTIVE)/i;
 const FORECAST_PAUSED = /(FORECAST_INVALIDATED|FORECAST INVALIDATED|FORECAST_PAUSED|FORECAST PAUSED)/i;
+const NON_BLOCKING_SCALPER_CONFLICT = /(QUOTE_MAPPING_TIMESTAMP_SKEW|BSL_SOURCE_DIFFERENCE|SSL_SOURCE_DIFFERENCE|HTF.*LOCAL|MACRO.*SCALP)/i;
 
 function clean(value) {
   return String(value ?? '').trim();
@@ -118,7 +118,7 @@ function requirementLabel(label, focusDirection, timeframe) {
     DIRECTION: 'Menunggu Direction Forecast resmi menetapkan arah.',
     'OPPOSING LIQUIDITY SWEEP': `Menunggu ${side} disapu dan reaksi sweep dikonfirmasi Mapping.`,
     'DISPLACED MSS': `Menunggu displaced MSS ${structure} ${tf} dari candle yang sudah close.`,
-    'HTF ALIGNMENT': 'Menunggu konteks HTF resmi selaras.',
+    'HTF ALIGNMENT': 'Menunggu konteks timeframe Mapping resmi selaras.',
     'EMA STACK': 'Menunggu filter EMA resmi terpenuhi.',
     'EMA DISTANCE': 'Menunggu jarak EMA resmi memenuhi filter.',
     SESSION: 'Menunggu session resmi yang diizinkan Mapping.',
@@ -138,7 +138,7 @@ function passedRequirementLabel(item, focusDirection, timeframe) {
     DIRECTION: `Direction Forecast resmi memprioritaskan ${focusDirection || 'arah setup'}.`,
     'OPPOSING LIQUIDITY SWEEP': `${side} sudah disapu dan dikonfirmasi oleh Mapping.`,
     'DISPLACED MSS': `Displaced MSS ${structure} ${tf} sudah terkonfirmasi.`,
-    'HTF ALIGNMENT': 'Konteks HTF resmi sudah selaras.',
+    'HTF ALIGNMENT': 'Konteks timeframe Mapping resmi sudah selaras.',
     'EMA STACK': 'Filter EMA stack resmi sudah terpenuhi.',
     'EMA DISTANCE': 'Filter jarak EMA resmi sudah terpenuhi.',
     SESSION: 'Filter session resmi sudah terpenuhi.',
@@ -167,60 +167,95 @@ function meaningfulExecution(execution) {
   );
 }
 
-function freshnessFrom(input, result, snapshot) {
-  const supplied = typeof input.mappingFreshness === 'object'
-    ? input.mappingFreshness
-    : { state: input.mappingFreshness };
-  let raw = upper(supplied?.state);
-  if (!raw || raw === 'UNKNOWN') raw = upper(snapshot?.freshness?.state);
+function latestClosedCandle(input, result, snapshot) {
+  const candlesByTf = input?.runtimeState?.candles
+    || input?.marketState?.candles
+    || {};
+  const candidates = [
+    result?.tf,
+    snapshot?.timeframe,
+    input?.marketState?.timeframe,
+    'M15', 'M5', 'M1', 'M30', 'H1'
+  ].filter(Boolean);
 
-  const explicitlyExpired = Boolean(
-    result?.dataStale
-    || snapshot?.data?.stale
-    || upper(result?.directionDecision?.source) === 'DATA_STALE'
+  for (const timeframe of [...new Set(candidates)]) {
+    const candles = Array.isArray(candlesByTf?.[timeframe]) ? candlesByTf[timeframe] : [];
+    const candle = [...candles].reverse().find(item =>
+      item?.isClosed !== false
+      && timestamp(item?.time)
+      && positivePrice(item?.close)
+    );
+    if (candle) return { timeframe, candle };
+  }
+  return null;
+}
+
+function freshnessFrom(input, result, snapshot) {
+  const supplied = typeof input?.mappingFreshness === 'object'
+    ? input.mappingFreshness
+    : { state: input?.mappingFreshness };
+  const internalState = upper(
+    supplied?.state
+    || snapshot?.freshness?.state
+    || (result?.dataStale ? 'STALE' : '')
+    || 'UNKNOWN'
   );
-  if (explicitlyExpired) {
+  const internalStale = /STALE/.test(internalState);
+  const internalExpired = /EXPIRED/.test(internalState);
+  const executable = !internalStale && !internalExpired;
+  const closed = latestClosedCandle(input, result, snapshot);
+  const sourceTime = timestamp(
+    snapshot?.freshness?.sourceCandleTime
+    || snapshot?.sourceCandle?.time
+    || closed?.candle?.time
+    || input?.marketState?.mappingCapturedAt
+    || input?.marketState?.capturedAt
+  );
+  const hasAnalysis = Boolean(
+    result?.st
+    || result?.validatedMarketContext?.marketState
+    || snapshot?.facts?.structure
+    || snapshot?.context?.marketState
+  );
+
+  if (sourceTime || closed) {
     return {
-      state: 'EXPIRED',
-      valid: false,
-      stale: false,
-      expired: true,
-      label: 'EXPIRED'
-    };
-  }
-  if (raw === 'EXPIRED' || raw === 'OFFLINE') {
-    return {
-      state: raw,
-      valid: false,
-      stale: false,
-      expired: true,
-      label: raw
-    };
-  }
-  if (raw === 'STALE' || raw === 'STRUCTURAL') {
-    return {
-      state: raw,
-      valid: false,
-      stale: true,
-      expired: false,
-      label: raw
-    };
-  }
-  if (FRESH_STATES.has(raw)) {
-    return {
-      state: raw,
+      state: 'CLOSED_CANDLE',
       valid: true,
-      stale: false,
-      expired: false,
-      label: raw === 'CLOSED_CANDLE' ? 'LIVE' : raw
+      executable,
+      stale: internalStale,
+      expired: internalExpired,
+      label: 'CANDLE TERTUTUP',
+      sourceTime,
+      sourceTimeframe: closed?.timeframe || result?.tf || snapshot?.timeframe || null,
+      internalState
     };
   }
+
+  if (hasAnalysis) {
+    return {
+      state: 'ANALYSIS_AVAILABLE',
+      valid: true,
+      executable,
+      stale: internalStale,
+      expired: internalExpired,
+      label: 'ANALISIS TERAKHIR',
+      sourceTime: null,
+      sourceTimeframe: result?.tf || snapshot?.timeframe || null,
+      internalState
+    };
+  }
+
   return {
-    state: raw || 'UNAVAILABLE',
+    state: 'UNAVAILABLE',
     valid: false,
+    executable: false,
     stale: false,
     expired: false,
-    label: 'BELUM TERSEDIA'
+    label: 'BELUM TERSEDIA',
+    sourceTime: null,
+    sourceTimeframe: null,
+    internalState
   };
 }
 
@@ -376,25 +411,16 @@ function contextFields(result, snapshot, conflicts) {
     || result?.entryMap?.scenario?.location?.zone
     || dealing?.zone
   );
-  const higherTimeframeBias = upper(htf?.htfBias || htf?.bias || 'NEUTRAL');
-  const localStructure = upper(
-    structure?.localTrend
-    || marketState?.structureTrend
-    || structure?.confirmedTrend
-    || structure?.trend
-    || 'NEUTRAL'
-  );
-  const htfDirection = direction(higherTimeframeBias);
-  const localDirection = direction(localStructure);
-  const structuralConflict = Boolean(
-    htfDirection
-    && localDirection
-    && htfDirection !== localDirection
-  );
   return {
-    higherTimeframeBias,
-    localStructure,
-    marketCondition: conflicts.length || structuralConflict
+    higherTimeframeBias: upper(htf?.htfBias || htf?.bias || 'NEUTRAL'),
+    localStructure: upper(
+      structure?.localTrend
+      || marketState?.structureTrend
+      || structure?.confirmedTrend
+      || structure?.trend
+      || 'NEUTRAL'
+    ),
+    marketCondition: conflicts.length
       ? 'CONFLICT'
       : upper(marketState?.state || result?.marketCondition || 'BELUM TERSEDIA'),
     dealingLocation: upper(dealingLocation || 'BELUM TERSEDIA'),
@@ -402,41 +428,34 @@ function contextFields(result, snapshot, conflicts) {
   };
 }
 
-function hasOfficialContextConflict(result, snapshot, input) {
-  const explicitConflicts = Array.isArray(input.conflicts)
+function canonicalBlockingConflicts(input) {
+  const explicitConflicts = Array.isArray(input?.conflicts)
     ? input.conflicts
-    : Array.isArray(input.marketState?.conflicts)
+    : Array.isArray(input?.marketState?.conflicts)
       ? input.marketState.conflicts
       : [];
-  if (explicitConflicts.some(item => Boolean(conflictText(item)))) return true;
-  const higherTimeframeBias = direction(
-    result?.htfNarrative?.htfBias
-    || snapshot?.context?.htfNarrative?.htfBias
-  );
-  const localStructure = direction(
-    snapshot?.facts?.structure?.localTrend
-    || result?.st?.localTrend
-    || result?.validatedMarketContext?.marketState?.structureTrend
-  );
-  return Boolean(
-    higherTimeframeBias
-    && localStructure
-    && higherTimeframeBias !== localStructure
-  );
+  return explicitConflicts
+    .map(conflictText)
+    .filter(text => text && !NON_BLOCKING_SCALPER_CONFLICT.test(text));
+}
+
+function hasOfficialContextConflict(input) {
+  return canonicalBlockingConflicts(input).length > 0;
 }
 
 function statusHeadline({
   decision,
   freshness,
+  freshnessBlocked,
   focusDirection,
   terminal,
   targetOneSecured,
   status,
   invalidated
 }) {
-  if (freshness.expired) return 'WAIT — ANALISIS KEDALUWARSA';
-  if (freshness.stale) return 'WAIT — DATA MAPPING SUDAH LAMA';
   if (!freshness.valid) return 'WAIT — DATA MAPPING BELUM TERSEDIA';
+  if (freshnessBlocked && freshness.expired) return 'WAIT — ANALISIS KEDALUWARSA';
+  if (freshnessBlocked && freshness.stale) return 'WAIT — DATA MAPPING SUDAH LAMA';
   if (decision === 'BUY') return 'BUY — ENTRY SUDAH VALID';
   if (decision === 'SELL') return 'SELL — ENTRY SUDAH VALID';
   if (/TP2 HIT|TARGET_HIT/i.test(status)) return 'WAIT — TARGET AKHIR TERCAPAI';
@@ -487,9 +506,8 @@ function decisionMatrix({
   const hasEntryArea = levels.entryLow != null && levels.entryHigh != null;
   const hasTargets = levels.tp1 != null
     && (execution?.singleTarget === true || setup?.singleTarget === true || levels.tp2 != null);
-  const complete = Boolean(
-    freshness.valid
-    && ACTIVE_DIRECTIONS.has(officialDirection)
+  const completeWithoutFreshness = Boolean(
+    ACTIVE_DIRECTIONS.has(officialDirection)
     && execution?.active === true
     && execution?.terminal !== true
     && execution?.invalidated !== true
@@ -507,14 +525,23 @@ function decisionMatrix({
     && levels.stopLoss != null
     && hasTargets
   );
+  const freshnessExecutable = Boolean(freshness.valid && freshness.executable !== false);
+  const complete = Boolean(freshnessExecutable && completeWithoutFreshness);
+  const freshnessBlocked = Boolean(
+    freshness.valid
+    && freshness.executable === false
+    && completeWithoutFreshness
+  );
   return {
     decision: complete ? officialDirection : 'WAIT',
     officialDirection,
     aligned,
     entryTriggered,
     complete,
+    freshnessBlocked,
     checks: {
-      freshnessValid: freshness.valid,
+      freshnessValid: freshnessExecutable,
+      analysisAvailable: freshness.valid,
       executionActive: execution?.active === true,
       setupActive: setup?.live !== false,
       entryAllowed: watch?.entryAllowed === true,
@@ -592,7 +619,7 @@ export function determineExecutionDisplayStatus(input = {}) {
     || snapshot?.context?.directionDecision
     || input.marketState?.directionDecision
     || null;
-  const contextConflict = hasOfficialContextConflict(result, snapshot, input);
+  const contextConflict = hasOfficialContextConflict(input);
   const matrix = decisionMatrix({
     freshness,
     execution,
@@ -666,13 +693,8 @@ export function buildExecutionPlanViewModel(input = {}) {
   const confirmations = requirements.filter(item => item.passed).map(item =>
     formatExecutionReason(item, { focusDirection, timeframe, passed: true })
   );
-  const canonicalConflicts = Array.isArray(input.conflicts)
-    ? input.conflicts
-    : Array.isArray(input.marketState?.conflicts)
-      ? input.marketState.conflicts
-      : [];
-  const conflicts = uniqueTexts(canonicalConflicts.map(conflictText));
-  const context = contextFields(result, snapshot, conflicts);
+  const blockingConflicts = canonicalBlockingConflicts(input);
+  const context = contextFields(result, snapshot, blockingConflicts);
   const officialArea = watchArea({
     decision: display.decision,
     levels: display.levels,
@@ -680,18 +702,18 @@ export function buildExecutionPlanViewModel(input = {}) {
     result,
     snapshot
   });
-  const area = !display.freshness.valid
+  const area = !display.freshness.valid || display.freshnessBlocked
     ? {
         kind: 'UNAVAILABLE',
         low: null,
         high: null,
         level: null,
         source: null,
-        label: display.freshness.expired
-          ? 'Analisis kedaluwarsa — jangan gunakan level lama.'
-          : display.freshness.stale
-            ? 'Data Mapping sudah lama — lakukan analisis ulang.'
-            : 'Data Mapping belum tersedia.'
+        label: display.freshnessBlocked
+          ? (display.freshness.expired
+              ? 'Analisis terakhir tetap ditampilkan, tetapi setup sudah kedaluwarsa.'
+              : 'Analisis terakhir tetap ditampilkan, tetapi izin entry menunggu pembaruan candle.')
+          : 'Data Mapping belum tersedia.'
       }
     : display.terminal || display.targetOneSecured
       ? {
@@ -704,9 +726,12 @@ export function buildExecutionPlanViewModel(input = {}) {
         }
       : officialArea;
   const target = structuralTarget(execution, setup, scenario);
+  const closed = latestClosedCandle(input, result, snapshot);
   const sourceCandleTime = isoTime(
     snapshot?.freshness?.sourceCandleTime
     || snapshot?.sourceCandle?.time
+    || closed?.candle?.time
+    || display.freshness.sourceTime
     || input.marketState?.mappingCapturedAt
     || input.marketState?.capturedAt
   );
@@ -730,6 +755,7 @@ export function buildExecutionPlanViewModel(input = {}) {
   const headline = statusHeadline({
     decision: display.decision,
     freshness: display.freshness,
+    freshnessBlocked: display.freshnessBlocked,
     focusDirection,
     terminal: display.terminal,
     targetOneSecured: display.targetOneSecured,
@@ -756,20 +782,17 @@ export function buildExecutionPlanViewModel(input = {}) {
         : 'Belum tersedia — menunggu invalidasi resmi Mapping.');
 
   const reasons = [];
-  if (display.freshness.expired) {
-    reasons.push('Freshness resmi menandai analisis kedaluwarsa.');
-  } else if (display.freshness.stale) {
-    reasons.push('Freshness resmi menandai data Mapping sudah lama.');
+  if (display.freshnessBlocked) {
+    reasons.push(display.freshness.expired
+      ? 'Freshness internal menandai setup kedaluwarsa; analisis terakhir tetap terlihat tetapi entry dinonaktifkan.'
+      : 'Freshness internal menunggu pembaruan; analisis terakhir tetap terlihat tetapi entry dinonaktifkan.');
   }
   if (focusDirection) reasons.push(`Arah yang sedang dipantau oleh Mapping: ${focusDirection}.`);
-  if (context.marketCondition === 'CONFLICT') {
-    reasons.push(`Konteks HTF ${context.higherTimeframeBias} dan struktur lokal ${context.localStructure} belum selaras.`);
-  }
   reasons.push(...waitingRequirements.map(item => {
     const detail = clean(item.detail);
     return detail || formatExecutionReason(item, { focusDirection, timeframe });
   }));
-  reasons.push(...conflicts);
+  reasons.push(...blockingConflicts);
   if (display.decision === 'WAIT' && !display.terminal && !display.targetOneSecured) {
     if (display.checks.executionPlanLocked !== true) reasons.push('Execution plan resmi belum dikunci.');
     if (display.checks.entryAllowed !== true) reasons.push('Causal Entry Watch belum mengizinkan entry.');
@@ -782,24 +805,27 @@ export function buildExecutionPlanViewModel(input = {}) {
   let conclusion = '';
   if (display.decision === 'BUY' || display.decision === 'SELL') {
     conclusion = `Setup ${display.decision} sudah valid berdasarkan Mapping. Gunakan hanya level yang telah dikunci oleh setup resmi.`;
-  } else if (display.freshness.expired) {
-    conclusion = 'Jangan gunakan level entry lama. Lakukan analisis ulang sebelum mempertimbangkan entry.';
-  } else if (display.freshness.stale) {
-    conclusion = 'Lakukan analisis ulang sebelum mempertimbangkan entry.';
+  } else if (!display.freshness.valid) {
+    conclusion = 'Tunggu candle tertutup tersedia sebelum mempertimbangkan entry.';
+  } else if (display.freshnessBlocked) {
+    conclusion = 'Arah Mapping terakhir tetap berlaku sebagai konteks, tetapi jangan entry sampai freshness internal kembali valid.';
   } else if (display.terminal || display.targetOneSecured) {
     conclusion = `${lifecycleLabel}. Jangan entry ulang menggunakan setup ini; tunggu setup baru dari Mapping.`;
   } else if (focusDirection) {
     conclusion = `Jangan ${focusDirection} sekarang. ${waitingFor[0] || 'Tunggu sampai setup resmi Mapping mengizinkan entry.'}`;
   } else {
-    conclusion = 'Jangan entry sekarang. Tunggu Direction Forecast dan setup resmi Mapping menetapkan arah yang valid.';
+    conclusion = 'Jangan entry sekarang. Tunggu arah scalping dan setup resmi Mapping menjadi jelas.';
   }
 
   const levelsAreExecutable = display.decision === 'BUY' || display.decision === 'SELL';
-  const visibleTarget = display.terminal || display.targetOneSecured || !display.freshness.valid
+  const visibleTarget = display.terminal
+    || display.targetOneSecured
+    || !display.freshness.valid
+    || display.freshnessBlocked
     ? { type: null, subtype: null, level: null }
     : target;
   const plan = {
-    version: '1.0.0',
+    version: '1.1.0',
     source: 'AMY_MAPPING_EXECUTION_PLAN_READ_ONLY',
     authoritySource: result?.setupExecution
       ? 'setupExecution'
@@ -827,7 +853,7 @@ export function buildExecutionPlanViewModel(input = {}) {
     waitingFor: uniqueTexts(waitingFor),
     confirmations: uniqueTexts(confirmations),
     reasons: uniqueTexts(reasons),
-    conflicts,
+    conflicts: blockingConflicts,
     invalidation,
     conclusion,
     entryWatchStage: lifecycleStage,
@@ -836,10 +862,12 @@ export function buildExecutionPlanViewModel(input = {}) {
     terminal: display.terminal,
     targetOneSecured: display.targetOneSecured,
     mappingFreshness: display.freshness.state,
+    internalFreshness: display.freshness.internalState,
     dataStatus: display.freshness.label,
     sourceCandleTime,
+    sourceTimeframe: closed?.timeframe || display.freshness.sourceTimeframe || timeframe,
     analysisTime: analyzedAt,
-    analysisTimeWita: witaTime(analyzedAt || sourceCandleTime),
+    analysisTimeWita: witaTime(sourceCandleTime || analyzedAt),
     higherTimeframeBias: context.higherTimeframeBias,
     localStructure: context.localStructure,
     marketCondition: context.marketCondition,
@@ -864,6 +892,7 @@ export function buildAmyExecutionContext(viewModel) {
     focusDirection: vm.focusDirection || null,
     currentPrice: finite(vm.currentPrice),
     timeframe: clean(vm.timeframe),
+    sourceTimeframe: clean(vm.sourceTimeframe),
     higherTimeframeBias: clean(vm.higherTimeframeBias),
     localStructure: clean(vm.localStructure),
     marketCondition: clean(vm.marketCondition),
@@ -874,26 +903,26 @@ export function buildAmyExecutionContext(viewModel) {
     waitingFor: clone(vm.waitingFor || [], []),
     confirmations: clone(vm.confirmations || [], []),
     entryArea: {
-      low: finite(vm.entryLow),
-      high: finite(vm.entryHigh)
+      low: positivePrice(vm.entryLow),
+      high: positivePrice(vm.entryHigh)
     },
     watchArea: {
       kind: clean(vm.area?.kind),
       label: clean(vm.area?.label),
-      low: finite(vm.area?.low),
-      high: finite(vm.area?.high),
-      level: finite(vm.area?.level),
+      low: positivePrice(vm.area?.low),
+      high: positivePrice(vm.area?.high),
+      level: positivePrice(vm.area?.level),
       source: clean(vm.area?.source)
     },
-    entry: finite(vm.entry),
-    stopLoss: finite(vm.stopLoss),
-    tp1: finite(vm.tp1),
-    tp2: finite(vm.tp2),
+    entry: positivePrice(vm.entry),
+    stopLoss: positivePrice(vm.stopLoss),
+    tp1: positivePrice(vm.tp1),
+    tp2: positivePrice(vm.tp2),
     rr: finite(vm.rr),
     structuralTarget: {
       type: clean(vm.structuralTarget?.type) || null,
       subtype: clean(vm.structuralTarget?.subtype) || null,
-      level: finite(vm.structuralTarget?.level)
+      level: positivePrice(vm.structuralTarget?.level)
     },
     invalidation: clean(vm.invalidation),
     reasons: clone(vm.reasons || [], []),
@@ -901,6 +930,7 @@ export function buildAmyExecutionContext(viewModel) {
     conclusion: clean(vm.conclusion),
     terminal: Boolean(vm.terminal),
     mappingFreshness: clean(vm.mappingFreshness),
+    internalFreshness: clean(vm.internalFreshness),
     sourceCandleTime: vm.sourceCandleTime || null,
     analysisTimeWita: clean(vm.analysisTimeWita),
     fingerprint: clean(vm.fingerprint)

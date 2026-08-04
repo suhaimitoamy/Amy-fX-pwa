@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#070B12">
   <title>Berita — Amy FX</title>
+  <script src="../shared/amyfx-theme-controller.js" data-amyfx-theme-controller="v1"></script>
   <link rel="stylesheet" href="../shared/market-intelligence.css">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="heatmap-v2.css">
   <link rel="stylesheet" href="../shared/amyfx-blueprint-v1.css" data-amyfx-blueprint-css="v1">
+  <link rel="stylesheet" href="../shared/amyfx-ui-tokens.css" data-amyfx-ui-tokens="v1">
+  <link rel="stylesheet" href="../shared/amyfx-theme.css" data-amyfx-theme="v1">
+  <link rel="stylesheet" href="../shared/amyfx-components.css" data-amyfx-components="v1">
 <!-- Amy FX PWA runtime overlay -->
 <script src="../../../platform-adapter.js"></script>
 <script src="../../../pwa-live-price-bridge.js"></script>
@@ -16,25 +21,25 @@
 <script src="../../../pwa-update-bridge.js"></script>
 <!-- /Amy FX PWA runtime overlay -->
 </head>
-<body>
+<body class="amyfx-module amyfx-module--intel">
   <div class="intel-container">
     <section id="market-command-strip" class="amy-command-strip" aria-label="Market command strip"></section>
     <header class="intel-header">
-      <h1>📰 Berita</h1>
-      <p class="subtitle">News & Liquidity Heatmap</p>
+      <a class="intel-back" href="../../index.html" aria-label="Kembali ke Amy FX"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></a>
+      <div class="intel-header__copy"><h1>Berita</h1><p class="subtitle">Berita, heatmap, dan likuiditas market</p></div>
     </header>
     <nav class="intel-tabs">
-      <button class="intel-tab active" data-tab="news">📰 News</button>
-      <button class="intel-tab" data-tab="heatmap">🔥 Heatmap</button>
-      <button class="intel-tab" data-tab="liquidity">💧 Liquidity</button>
+      <button class="intel-tab active" data-tab="news">Berita</button>
+      <button class="intel-tab" data-tab="heatmap">Heatmap</button>
+      <button class="intel-tab" data-tab="liquidity">Likuiditas</button>
     </nav>
     <section id="intel-briefing" class="amy-briefing" aria-live="polite"></section>
     <section id="panel-news" class="intel-panel active">
-      <div class="status-bar" id="news-status">🔄 Memuat berita...</div>
+      <div class="status-bar" id="news-status">Memuat berita...</div>
       <div id="news-list" class="news-list"></div>
     </section>
     <section id="panel-heatmap" class="intel-panel">
-      <div class="status-bar" id="heatmap-status">🔄 Menghitung heatmap...</div>
+      <div class="status-bar" id="heatmap-status">Menghitung heatmap...</div>
       <div class="heatmap-info">
         <span class="current-price" id="heatmap-price">--</span>
         <span class="timeframe">M15 · Dynamic</span>
@@ -47,16 +52,18 @@
       </div>
     </section>
     <section id="panel-liquidity" class="intel-panel">
-      <div class="status-bar" id="liquidity-status">🔄 Melacak liquidity...</div>
+      <div class="status-bar" id="liquidity-status">Melacak likuiditas...</div>
       <div id="liquidity-list" class="liquidity-list"></div>
     </section>
-    <div id="loading-overlay" class="loading-overlay">
+    <div id="loading-overlay" class="loading-overlay" hidden>
       <div class="spinner"></div>
       <p>Memuat Berita...</p>
     </div>
   </div>
+  <script src="../shared/amyfx-loading.js" data-amyfx-loading="v1"></script>
   <script src="../shared/amyfx-market-state-contract-v1.js" data-amyfx-market-contract="v2"></script>
   <script src="../shared/market-intelligence.js"></script>
+  <script src="private-market-api-router.js"></script>
   <script src="app.js"></script>
   <script src="heatmap-v2.js"></script>
   <script src="../shared/amyfx-blueprint-hotfix-v1.js" data-amyfx-blueprint-hotfix="v1"></script>

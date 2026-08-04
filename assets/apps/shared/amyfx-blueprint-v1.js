@@ -5,7 +5,7 @@
   window.__amyFxBlueprintPreviewV1 = true;
 
   const CONFIG = Object.freeze({
-    product: "Amy FX Preview",
+    product: "Amy FX",
     blueprintVersion: "1.0.0",
     schemaVersion: 1,
     timezone: "Asia/Makassar",
@@ -382,7 +382,7 @@
     }
     notify(event) {
       if (!this.shouldSend(event)) return false;
-      const title = text(event.title) || "Amy FX Preview";
+      const title = text(event.title) || "Amy FX";
       const message = text(event.message);
       try {
         if (window.Android?.showNotificationWithUrl) {
@@ -623,7 +623,7 @@
       throw Object.assign(new Error("Tambahkan API key pada Pengaturan Amy global."), { category: "no_key" });
     }
     const system = [
-      "Kamu adalah Amy AI Mentor di Amy FX Preview.",
+      "Kamu adalah Amy AI Mentor di Amy FX.",
       "Gunakan hanya Context Envelope yang diberikan sebagai fakta.",
       "Pisahkan fakta pasar, hipotesis arah, dan setup eksekusi.",
       "Jangan membuat sinyal BUY/SELL baru dari berita atau data yang stale.",
@@ -844,7 +844,7 @@
     });
     mentor.querySelector("[data-amy-save-keys]").addEventListener("click", () => {
       if (!NativeVault.available()) {
-        addMessage("amy", "Secure native vault belum tersedia. Update build Preview diperlukan.");
+        addMessage("amy", "Secure native vault belum tersedia. Pembaruan aplikasi diperlukan.");
         return;
       }
       const settings = globalSettings();
@@ -1042,7 +1042,7 @@
     if (migration.state === "success") {
       notificationLedger.notify({
         id: "amyfx-blueprint-migration-v1-success",
-        title: "Amy FX Preview Upgrade",
+        title: "Pembaruan Amy FX",
         message: "Global Amy Mentor dan Journal v2 siap. Data lama tetap dipertahankan.",
         expires_at: new Date(Date.now() + 7 * 86_400_000).toISOString()
       });
