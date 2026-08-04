@@ -1,8 +1,14 @@
 import { state, p2 } from '../main.js';
-import { calculateAsiaRange } from './asia-range.js';
+import {
+  calculateAsiaRange,
+  nextAsiaSessionBoundary
+} from './asia-range.js';
 
 const renderedMarkup = new WeakMap();
 let syncQueued = false;
+let observer = null;
+let boundaryTimer = 0;
+let lifecycleController = null;
 
 function currentRange() {
   try {
@@ -84,8 +90,7 @@ function mountDashboard(range) {
 
 function mountAnalyze(range) {
   const app = document.getElementById('app');
-  if (!app) return;
-  if (state.tab !== 'Analyze') return;
+  if (!app || state.tab !== 'Analyze') return;
   const explanation = [...app.querySelectorAll('details.disclosure')].find(item =>
     item.querySelector(':scope > summary')?.textContent?.trim() === 'Penjelasan Mapping'
   );
@@ -101,10 +106,38 @@ function mountAnalyze(range) {
   setMarkupIfChanged(strip, analyzeMarkup(range));
 }
 
+function syncClarityAsiaWindow(range) {
+  const label = String(range?.windowLabel || '').trim();
+  if (!label) return;
+
+  const canonicalAsia = state.result?.marketOutlook?.canonicalAsia;
+  if (canonicalAsia && canonicalAsia.window !== label) canonicalAsia.window = label;
+
+  document.querySelectorAll('.clarity-note > b').forEach(node => {
+    if (!String(node.textContent || '').startsWith('Asia Session Context')) return;
+    const next = `Asia Session Context · ${label}`;
+    if (node.textContent !== next) node.textContent = next;
+  });
+}
+
+function scheduleBoundarySync() {
+  clearTimeout(boundaryTimer);
+  boundaryTimer = 0;
+  const now = Date.now();
+  const boundary = nextAsiaSessionBoundary(now);
+  const delay = Math.max(1000, Math.min(2_147_000_000, boundary - now + 1000));
+  boundaryTimer = setTimeout(() => {
+    boundaryTimer = 0;
+    scheduleAsiaRangeSync();
+  }, delay);
+}
+
 export function syncAsiaRangeUi() {
   const range = currentRange();
   mountDashboard(range);
   mountAnalyze(range);
+  syncClarityAsiaWindow(range);
+  scheduleBoundarySync();
 }
 
 function scheduleAsiaRangeSync() {
@@ -122,15 +155,47 @@ function scheduleAsiaRangeSync() {
   else setTimeout(run, 0);
 }
 
-const app = document.getElementById('app');
-if (app) {
-  new MutationObserver(scheduleAsiaRangeSync).observe(app, { childList: true, subtree: true });
+function stop() {
+  observer?.disconnect();
+  observer = null;
+  lifecycleController?.abort();
+  lifecycleController = null;
+  clearTimeout(boundaryTimer);
+  boundaryTimer = 0;
+  syncQueued = false;
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', scheduleAsiaRangeSync, { once: true });
-} else {
+function start() {
+  if (lifecycleController) return;
+  const app = document.getElementById('app');
+  lifecycleController = new AbortController();
+  const signal = lifecycleController.signal;
+
+  if (app) {
+    observer = new MutationObserver(scheduleAsiaRangeSync);
+    observer.observe(app, { childList: true, subtree: false });
+  }
+
+  window.addEventListener('amyfx:live-price-display', scheduleAsiaRangeSync, { signal });
+  window.addEventListener('amyfx:candles-updated', scheduleAsiaRangeSync, { signal });
+  window.addEventListener('amyfx:mapping-ui-rendered', scheduleAsiaRangeSync, { signal });
+  window.addEventListener('amyfx:mapping-state-change', scheduleAsiaRangeSync, { signal });
+  window.addEventListener('storage', event => {
+    if (event.key === 'last_price' || event.key === 'last_ws_tick_at') scheduleAsiaRangeSync();
+  }, { signal });
+  window.addEventListener('pagehide', stop, { once: true, signal });
   scheduleAsiaRangeSync();
 }
 
-setInterval(scheduleAsiaRangeSync, 20_000);
+window.AmyFXAsiaRangeUiLifecycle = Object.freeze({
+  version: '2.1.0',
+  start,
+  stop,
+  schedule: scheduleAsiaRangeSync
+});
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', start, { once: true });
+} else {
+  start();
+}

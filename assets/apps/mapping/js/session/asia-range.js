@@ -1,6 +1,7 @@
-const ASIA_ZONE = 'Asia/Makassar';
-const ASIA_START_HOUR = 6;
-const ASIA_END_HOUR = 14;
+const DISPLAY_ZONE = 'Asia/Makassar';
+const SESSION_ZONE = 'America/New_York';
+const SESSION_START_HOUR = 18;
+const SESSION_END_HOUR = 2;
 
 function zonedParts(timestamp, timeZone) {
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -43,7 +44,7 @@ function zonedTimestamp(dateParts, hour, minute, timeZone) {
     0
   );
   let guess = targetAsUtc;
-  for (let attempt = 0; attempt < 3; attempt += 1) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
     const observed = zonedParts(guess, timeZone);
     const observedAsUtc = Date.UTC(
       observed.year,
@@ -58,6 +59,33 @@ function zonedTimestamp(dateParts, hour, minute, timeZone) {
     if (Math.abs(correction) < 1000) break;
   }
   return guess;
+}
+
+function sourceOffsetMinutes(timestamp) {
+  const observed = zonedParts(timestamp, SESSION_ZONE);
+  const observedAsUtc = Date.UTC(
+    observed.year,
+    observed.month - 1,
+    observed.day,
+    observed.hour,
+    observed.minute,
+    observed.second
+  );
+  return Math.round((observedAsUtc - timestamp) / 60000);
+}
+
+function sourceSeason(timestamp) {
+  const offset = sourceOffsetMinutes(timestamp);
+  if (offset === -240) return 'EDT';
+  if (offset === -300) return 'EST';
+  return `UTC${offset >= 0 ? '+' : ''}${Math.trunc(offset / 60)}`;
+}
+
+function sessionWindowForDate(sessionDate) {
+  const nextDate = addCalendarDays(sessionDate, 1);
+  const start = zonedTimestamp(sessionDate, SESSION_START_HOUR, 0, SESSION_ZONE);
+  const end = zonedTimestamp(nextDate, SESSION_END_HOUR, 0, SESSION_ZONE);
+  return { start, end };
 }
 
 function candleTimeMs(candle) {
@@ -75,7 +103,7 @@ function validCandle(candle) {
 
 function formatWita(timestamp) {
   return new Intl.DateTimeFormat('id-ID', {
-    timeZone: ASIA_ZONE,
+    timeZone: DISPLAY_ZONE,
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
@@ -84,32 +112,54 @@ function formatWita(timestamp) {
 
 function formatWitaDate(timestamp) {
   return new Intl.DateTimeFormat('id-ID', {
-    timeZone: ASIA_ZONE,
+    timeZone: DISPLAY_ZONE,
     day: '2-digit',
     month: 'short'
   }).format(new Date(timestamp));
 }
 
+function windowLabel(start, end) {
+  return `${formatWitaDate(start)} • ${formatWita(start)}–${formatWita(end)} WITA · ${sourceSeason(start)}`;
+}
+
 export function asiaSessionWindows(nowMs = Date.now(), count = 8) {
-  const nowAsia = zonedParts(nowMs, ASIA_ZONE);
-  const today = { year: nowAsia.year, month: nowAsia.month, day: nowAsia.day };
-  const todayStart = zonedTimestamp(today, ASIA_START_HOUR, 0, ASIA_ZONE);
+  const nowSource = zonedParts(nowMs, SESSION_ZONE);
+  const today = { year: nowSource.year, month: nowSource.month, day: nowSource.day };
+  const todayStart = sessionWindowForDate(today).start;
   const anchorOffset = nowMs >= todayStart ? 0 : -1;
   const windows = [];
 
   for (let index = 0; index < count; index += 1) {
     const sessionDate = addCalendarDays(today, anchorOffset - index);
-    const start = zonedTimestamp(sessionDate, ASIA_START_HOUR, 0, ASIA_ZONE);
-    const end = zonedTimestamp(sessionDate, ASIA_END_HOUR, 0, ASIA_ZONE);
+    const { start, end } = sessionWindowForDate(sessionDate);
     windows.push({
       start,
       end,
       active: nowMs >= start && nowMs < end,
       complete: nowMs >= end,
-      label: `${formatWitaDate(start)} • ${formatWita(start)}–${formatWita(end)} WITA`
+      sourceZone: SESSION_ZONE,
+      sourceSeason: sourceSeason(start),
+      sourceStartHour: SESSION_START_HOUR,
+      sourceEndHour: SESSION_END_HOUR,
+      label: windowLabel(start, end)
     });
   }
   return windows;
+}
+
+export function nextAsiaSessionBoundary(nowMs = Date.now()) {
+  const nowSource = zonedParts(nowMs, SESSION_ZONE);
+  const today = { year: nowSource.year, month: nowSource.month, day: nowSource.day };
+  const candidates = [];
+
+  for (let offset = -1; offset <= 2; offset += 1) {
+    const sessionDate = addCalendarDays(today, offset);
+    const { start, end } = sessionWindowForDate(sessionDate);
+    if (start > nowMs) candidates.push(start);
+    if (end > nowMs) candidates.push(end);
+  }
+
+  return candidates.length ? Math.min(...candidates) : nowMs + 60 * 60_000;
 }
 
 function classifyLevel(direction, level, postSession, livePrice, tolerance, active) {
@@ -229,6 +279,8 @@ export function calculateAsiaRange(candles = [], livePrice = NaN, nowMs = Date.n
     complete: selected.complete,
     start: selected.start,
     end: selected.end,
+    sourceZone: selected.sourceZone,
+    sourceSeason: selected.sourceSeason,
     windowLabel: selected.label,
     high,
     low,
@@ -241,3 +293,10 @@ export function calculateAsiaRange(candles = [], livePrice = NaN, nowMs = Date.n
   result.summary = buildSummary(result);
   return result;
 }
+
+export const ASIA_SESSION_CONFIG = Object.freeze({
+  sourceZone: SESSION_ZONE,
+  displayZone: DISPLAY_ZONE,
+  sourceStartHour: SESSION_START_HOUR,
+  sourceEndHour: SESSION_END_HOUR
+});

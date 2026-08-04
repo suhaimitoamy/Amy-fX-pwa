@@ -14,7 +14,9 @@ on:
       - scripts/sync-from-amyfx-main.mjs
       - scripts/normalize-amyfx-export.mjs
       - scripts/validate-amyfx-sync.mjs
+      - scripts/validate-preview-engine-zero-drift.mjs
       - pwa-live-price-bridge.js
+      - assets/app-version.js
       - package.json
 
 permissions:
@@ -66,6 +68,12 @@ jobs:
       - name: Normalize synchronized text
         working-directory: pwa
         run: node scripts/normalize-amyfx-export.mjs assets/apps
+
+      - name: Validate zero-drift Mapping engine parity
+        working-directory: pwa
+        env:
+          AMYFX_SOURCE_ROOT: ../amyfx-source/app/src/main/assets
+        run: npm run test:engine-parity
 
       - name: Validate PWA platform safeguards
         working-directory: pwa

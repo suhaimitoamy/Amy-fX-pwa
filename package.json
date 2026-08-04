@@ -1,12 +1,13 @@
 {
   "name": "amy-fx-pwa",
-  "version": "2.2.1-pwa.6.0",
+  "version": "2.3.0-pwa.7.0",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node scripts/validate-pwa.mjs",
     "test:sync": "node scripts/validate-amyfx-sync.mjs",
-    "test:live-price": "node scripts/validate-pwa.mjs && node scripts/validate-amyfx-sync.mjs",
+    "test:engine-parity": "node scripts/validate-preview-engine-zero-drift.mjs",
+    "test:live-price": "node scripts/validate-pwa.mjs && node scripts/validate-amyfx-sync.mjs && node scripts/validate-preview-engine-zero-drift.mjs",
     "sync:amyfx-main": "node scripts/sync-from-amyfx-main.mjs ../amyfx-source/app/src/main/assets . && node scripts/apply-live-price-stream-guard.mjs"
   }
 }

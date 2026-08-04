@@ -5,7 +5,8 @@ import {
   runAnalysis,
   connect,
   isLivePriceRunning,
-  lastWsTickAt
+  lastWsTickAt,
+  stopLivePrice
 } from './api/market-data.js';
 import { fmtDir } from './ui/ui-render.js';
 import {
@@ -47,6 +48,11 @@ export const state = {
 const DISPLAY_TIME_ZONE = 'Asia/Makassar';
 const INTERNAL_LOG_LIMIT = 30;
 const INTERNAL_LOG_PATTERN = /error|gagal|usang|offline|invalid|timeout/i;
+const RUNTIME_SNAPSHOT_KEY = 'amy_mapping_runtime_snapshot_v1';
+
+let runtimeStarted = false;
+let autoConnectTimer = 0;
+let livePriceWatchdogTimer = 0;
 
 export const p2 = value =>
   Number.isFinite(+value) ? Number(value).toFixed(2) : '-';
@@ -131,7 +137,20 @@ export function log(message) {
 }
 
 export function save() {
-  localStorage.setItem('bg_scanner', 'true');
+  try {
+    localStorage.setItem('bg_scanner', 'true');
+    localStorage.setItem(RUNTIME_SNAPSHOT_KEY, JSON.stringify({
+      timeframe: state.tf,
+      tab: state.tab,
+      price: Number(state.price || 0),
+      connection: state.conn,
+      directionDecision: state.result?.directionDecision || null,
+      setupExecution: state.result?.setupExecution || null,
+      mappingExplanation: state.result?.mappingExplanation || null,
+      mappingSnapshot: state.result?.mappingSnapshot || null,
+      savedAt: Date.now()
+    }));
+  } catch (_) {}
 }
 
 export function setupText(execution, result = state.result) {
@@ -154,17 +173,33 @@ ${targetText}
 ${explanation?.action || 'Ikuti lifecycle setup; jangan mengejar harga.'}`;
 }
 
+function dispatchMappingUiRendered() {
+  if (typeof window?.dispatchEvent !== 'function' || typeof CustomEvent !== 'function') return;
+  window.dispatchEvent(new CustomEvent('amyfx:mapping-ui-rendered', {
+    detail: { tab: state.tab, timeframe: state.tf, renderedAt: Date.now() }
+  }));
+}
+
+function renderAndNotify() {
+  const changed = render();
+  if (changed) {
+    if (typeof queueMicrotask === 'function') queueMicrotask(dispatchMappingUiRendered);
+    else Promise.resolve().then(dispatchMappingUiRendered);
+  }
+  return changed;
+}
+
 function setTab(tab) {
   const allowedTab = tab === 'Analyze' ? 'Analyze' : 'Dashboard';
   state.tab = allowedTab;
   localStorage.setItem('amy_mapping_tab', allowedTab);
-  render();
+  renderAndNotify();
   syncAutomaticScannerUi();
 }
 
 window.setTab = setTab;
 window.runAnalysis = runAnalysis;
-window.render = render;
+window.render = renderAndNotify;
 window.analyzeActiveSetups = analyzeActiveSetups;
 window.saveConnect = saveConnect;
 window.toggleBg = toggleBg;
@@ -178,6 +213,7 @@ function effectiveLastWsTickAt() {
 }
 
 function autoConnectLivePrice() {
+  autoConnectTimer = 0;
   if (!isLivePriceRunning()) connect();
 }
 
@@ -227,6 +263,66 @@ export function pruneStorage() {
   state.setups = [];
 }
 
+function handleOnline() {
+  connect({ force: true });
+}
+
+function handleVisibilityChange() {
+  document.body?.classList?.toggle('webview-idle', document.hidden);
+  if (!document.hidden) {
+    const tickAt = effectiveLastWsTickAt();
+    const stale = !tickAt || Date.now() - tickAt > 45000;
+    connect({ force: stale });
+  }
+}
+
+function handlePageHide() {
+  stopRuntime();
+}
+
+function hasBrowserRuntimeLifecycle() {
+  return typeof window?.setTimeout === 'function'
+    && typeof window?.setInterval === 'function'
+    && typeof window?.addEventListener === 'function'
+    && typeof document?.addEventListener === 'function';
+}
+
+function startRuntime() {
+  if (runtimeStarted || !hasBrowserRuntimeLifecycle()) return false;
+  runtimeStarted = true;
+  autoConnectTimer = setTimeout(autoConnectLivePrice, 600);
+  livePriceWatchdogTimer = setInterval(livePriceWatchdog, 30000);
+  window.addEventListener('online', handleOnline);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  window.addEventListener('pagehide', handlePageHide, { once: true });
+  return true;
+}
+
+function stopRuntime() {
+  if (autoConnectTimer) {
+    clearTimeout(autoConnectTimer);
+    autoConnectTimer = 0;
+  }
+  if (livePriceWatchdogTimer) {
+    clearInterval(livePriceWatchdogTimer);
+    livePriceWatchdogTimer = 0;
+  }
+  window.removeEventListener?.('online', handleOnline);
+  document.removeEventListener?.('visibilitychange', handleVisibilityChange);
+  window.removeEventListener?.('pagehide', handlePageHide);
+  try { stopLivePrice(); } catch (_) {}
+  runtimeStarted = false;
+  return true;
+}
+
+window.AmyFXMappingRuntimeLifecycle = Object.freeze({
+  version: '1.0.0',
+  start: startRuntime,
+  stop: stopRuntime,
+  isStarted: () => runtimeStarted,
+  supported: hasBrowserRuntimeLifecycle
+});
+
 function initApp() {
   try { localStorage.removeItem('twelve_api_key'); } catch (_) {}
   try {
@@ -244,24 +340,13 @@ function initApp() {
   window.AmyFXIntel?.mountBriefing(document.getElementById('intel-briefing'));
   applyAmyFxRoute();
   if (state.tab !== 'Analyze') state.tab = 'Dashboard';
-  render();
+  renderAndNotify();
   syncAutomaticScannerUi();
-
-  setTimeout(autoConnectLivePrice, 600);
-  setInterval(livePriceWatchdog, 30000);
-  window.addEventListener('online', () => connect({ force: true }));
-  document.addEventListener('visibilitychange', () => {
-    document.body.classList.toggle('webview-idle', document.hidden);
-    if (!document.hidden) {
-      const tickAt = effectiveLastWsTickAt();
-      const stale = !tickAt || Date.now() - tickAt > 45000;
-      connect({ force: stale });
-    }
-  });
+  startRuntime();
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initApp);
+  document.addEventListener('DOMContentLoaded', initApp, { once: true });
 } else {
   initApp();
 }

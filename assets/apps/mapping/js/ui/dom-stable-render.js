@@ -8,6 +8,7 @@ if (hasDom && !window.__amyFxDomStableRenderV5Installed && nativeInnerHtml?.get 
   const REGIME_CARD_ID = 'amy-regime-router-v3';
   let lastAppView = '';
   let patchedAppRenders = 0;
+  let replacedViewRenders = 0;
   let patchedCardRenders = 0;
   let removedDuplicateNodes = 0;
   let persistentNodesPreserved = 0;
@@ -194,6 +195,13 @@ if (hasDom && !window.__amyFxDomStableRenderV5Installed && nativeInnerHtml?.get 
       }
 
       const view = currentView();
+      if (lastAppView && lastAppView !== view) {
+        nativeInnerHtml.set.call(this, markup);
+        lastAppView = view;
+        replacedViewRenders += 1;
+        return;
+      }
+
       patchSameViewApp(this, parseFragment(markup));
       lastAppView = view;
     }
@@ -219,12 +227,19 @@ if (hasDom && !window.__amyFxDomStableRenderV5Installed && nativeInnerHtml?.get 
   });
 
   window.AmyFXDomStableRender = Object.freeze({
-    version: '5.2.0',
+    version: '5.3.0',
     patch(current, next) {
       if (!(current instanceof Element) || !(next instanceof Element)) return false;
       patchNode(current, next);
       return true;
     },
-    stats: () => ({ patchedAppRenders, patchedCardRenders, removedDuplicateNodes, persistentNodesPreserved, view: lastAppView })
+    stats: () => ({
+      patchedAppRenders,
+      replacedViewRenders,
+      patchedCardRenders,
+      removedDuplicateNodes,
+      persistentNodesPreserved,
+      view: lastAppView
+    })
   });
 }

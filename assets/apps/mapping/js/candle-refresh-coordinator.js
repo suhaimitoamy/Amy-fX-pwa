@@ -4,6 +4,7 @@ import {
   TIMEFRAME_SECONDS,
   expectedClosedCandleOpenTime
 } from './engine/mapping-timeframes.js';
+import { mappingRefreshDependencies } from './engine/mapping-refresh-dependencies.js';
 
 const STORAGE_KEY = 'amy_entry_watch_state_v3';
 const CLOSE_GRACE_MS = 12000;
@@ -11,16 +12,12 @@ const FAILURE_BACKOFF_MS = 60000;
 
 let refreshRunning = false;
 let nextCloseTimer = 0;
+let lifecycleController = null;
 const lastAttemptAt = new Map();
 
 function finite(value, fallback = 0) {
   const number = Number(value);
   return Number.isFinite(number) ? number : fallback;
-}
-
-function timestampMs(value) {
-  const number = finite(value, 0);
-  return number > 100000000000 ? number : number * 1000;
 }
 
 function readStoredWatch() {
@@ -35,13 +32,22 @@ function currentWatch() {
   return state?.result?.entryWatch || readStoredWatch();
 }
 
+function includeDependencies(requested, timeframe) {
+  for (const dependency of mappingRefreshDependencies(timeframe)) {
+    requested.add(String(dependency).toUpperCase());
+  }
+}
+
 function trackedTimeframes() {
-  const requested = new Set([String(state.tf || 'M15').toUpperCase()]);
+  const requested = new Set();
+  includeDependencies(requested, String(state.tf || 'M15').toUpperCase());
+
   const watch = currentWatch();
   if (watch && !watch.terminal && watch.active) {
-    if (watch.triggerTf) requested.add(String(watch.triggerTf).toUpperCase());
-    if (watch.sourceTf) requested.add(String(watch.sourceTf).toUpperCase());
+    if (watch.triggerTf) includeDependencies(requested, watch.triggerTf);
+    if (watch.sourceTf) includeDependencies(requested, watch.sourceTf);
   }
+
   return [...requested].filter(tf => TIMEFRAME_SECONDS[tf]);
 }
 
@@ -84,19 +90,22 @@ function nextBoundaryMs(tf, now = Date.now()) {
 
 function scheduleNextClosedCandle() {
   clearTimeout(nextCloseTimer);
+  nextCloseTimer = 0;
+  if (document.hidden || !lifecycleController) return;
   const timeframes = trackedTimeframes();
   if (!timeframes.length) return;
   const now = Date.now();
   const next = Math.min(...timeframes.map(tf => nextBoundaryMs(tf, now)));
   const delay = Math.max(1000, next - now);
   nextCloseTimer = window.setTimeout(async () => {
+    nextCloseTimer = 0;
     await refreshDueCandles('scheduled-close');
     scheduleNextClosedCandle();
   }, delay);
 }
 
 async function refreshDueCandles(reason = 'manual') {
-  if (document.hidden || refreshRunning) return false;
+  if (document.hidden || refreshRunning || !lifecycleController) return false;
   const due = dueTimeframes();
   if (!due.length) return false;
 
@@ -104,16 +113,18 @@ async function refreshDueCandles(reason = 'manual') {
   const updated = [];
   try {
     for (const tf of due) {
+      if (!lifecycleController || lifecycleController.signal.aborted) break;
       const before = sourceSignature(tf);
       lastAttemptAt.set(tf, Date.now());
       try {
-        await fetchTf(tf);
+        await fetchTf(tf, { signal: lifecycleController.signal });
         const after = sourceSignature(tf);
         if (after !== before) {
           updated.push(tf);
           lastAttemptAt.delete(tf);
         }
-      } catch (_) {
+      } catch (error) {
+        if (error?.name === 'AbortError') break;
         // Keep the last valid closed candle and retry only after the backoff.
       }
     }
@@ -121,7 +132,7 @@ async function refreshDueCandles(reason = 'manual') {
     refreshRunning = false;
   }
 
-  if (!updated.length) return false;
+  if (!updated.length || !lifecycleController || lifecycleController.signal.aborted) return false;
   window.dispatchEvent(new CustomEvent('amyfx:candles-updated', {
     detail: {
       timeframes: updated,
@@ -134,20 +145,50 @@ async function refreshDueCandles(reason = 'manual') {
   return true;
 }
 
-function start() {
-  refreshDueCandles('startup');
-  scheduleNextClosedCandle();
-  window.addEventListener('amyfx:entry-watch-updated', scheduleNextClosedCandle);
-  window.addEventListener('amyfx:mapping-state-change', scheduleNextClosedCandle);
-  window.addEventListener('amyfx:candle-refresh-request', event => {
-    refreshDueCandles(event?.detail?.reason || 'manual').finally(scheduleNextClosedCandle);
-  });
+function handleRefreshRequest(event) {
+  refreshDueCandles(event?.detail?.reason || 'manual').finally(scheduleNextClosedCandle);
 }
 
+function handleVisibilityChange() {
+  if (document.hidden) {
+    clearTimeout(nextCloseTimer);
+    nextCloseTimer = 0;
+    return;
+  }
+  refreshDueCandles('visible-resume').finally(scheduleNextClosedCandle);
+}
+
+function stop() {
+  clearTimeout(nextCloseTimer);
+  nextCloseTimer = 0;
+  lifecycleController?.abort();
+  lifecycleController = null;
+  refreshRunning = false;
+  lastAttemptAt.clear();
+}
+
+function start() {
+  if (lifecycleController) return;
+  lifecycleController = new AbortController();
+  const signal = lifecycleController.signal;
+  window.addEventListener('amyfx:entry-watch-updated', scheduleNextClosedCandle, { signal });
+  window.addEventListener('amyfx:mapping-state-change', scheduleNextClosedCandle, { signal });
+  window.addEventListener('amyfx:candle-refresh-request', handleRefreshRequest, { signal });
+  document.addEventListener('visibilitychange', handleVisibilityChange, { signal });
+  window.addEventListener('pagehide', stop, { once: true, signal });
+  refreshDueCandles('startup').finally(scheduleNextClosedCandle);
+}
+
+window.addEventListener('pageshow', event => {
+  if (event.persisted) start();
+});
+
 window.AmyFXCandleRefreshCoordinator = Object.freeze({
-  version: '2.0.0',
+  version: '4.0.0',
   refresh: refreshDueCandles,
   schedule: scheduleNextClosedCandle,
+  start,
+  stop,
   trackedTimeframes,
   sourceSignature,
   nextBoundaryMs

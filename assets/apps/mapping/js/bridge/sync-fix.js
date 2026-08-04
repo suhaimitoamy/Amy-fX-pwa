@@ -1,5 +1,14 @@
 (function(){
-  if(typeof window === 'undefined' || window.__amyfxSyncFixLoaded)return;
+  if(typeof window==='undefined'||window.__amyfxSyncFixLoaded)return;
+
+  const hasBrowserLifecycle=
+    typeof window.setTimeout==='function'&&
+    typeof window.setInterval==='function'&&
+    typeof window.addEventListener==='function'&&
+    typeof document!=='undefined'&&
+    typeof document.addEventListener==='function';
+  if(!hasBrowserLifecycle)return;
+
   window.__amyfxSyncFixLoaded=true;
 
   const TF_KEY='amyfx.selected.tf';
@@ -7,16 +16,23 @@
   const SNAP_KEY='amyfx.mapping.last.state';
   const SETUP_DOM_KEY='amyfx.mapping.last.setup.dom';
   const TF_FALLBACK=['M1','M5','M15','M30','H1','H4','D1','W1'];
+  const pendingTimers=new Set();
+  let clockTimer=0;
+  let stopped=false;
 
-  function wibTime(){
-    return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Makassar',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+  function schedule(callback,delay){
+    if(stopped)return 0;
+    const timer=window.setTimeout(function(){
+      pendingTimers.delete(timer);
+      if(!stopped)callback();
+    },delay);
+    pendingTimers.add(timer);
+    return timer;
   }
 
-  try{
-    if(typeof nowTime==='function'){
-      nowTime=function(){return wibTime()};
-    }
-  }catch(e){}
+  function witaTime(){
+    return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Makassar',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+  }
 
   function getState(){
     try{return typeof window.state!=='undefined'&&window.state?window.state:null}catch(e){return null}
@@ -180,7 +196,6 @@
   }
 
   function syncScanner(){
-    const status=computedStatus();
     const st=getState();
     const scannerStatus=st&&st.bg?'ON':'OFF';
 
@@ -202,25 +217,27 @@
         if(/^(ON|OFF|CACHE|Offline|Connected)$/i.test(tx)){
           x.textContent=scannerStatus;
           x.classList.remove('amyfx-status-connected','amyfx-status-cache','amyfx-status-offline');
-          x.classList.add(scannerStatus==='ON'?'amyfx-status-connected':scannerStatus==='CACHE'?'amyfx-status-cache':'amyfx-status-offline');
+          x.classList.add(scannerStatus==='ON'?'amyfx-status-connected':'amyfx-status-offline');
         }
       });
     });
   }
 
   function syncClock(){
-    const tracked=Array.from(document.querySelectorAll('[data-amyfx-wib-clock]'));
+    const tracked=Array.from(document.querySelectorAll('[data-amyfx-wita-clock],[data-amyfx-wib-clock]'));
     tracked.forEach(el=>{
-      el.textContent='WITA '+wibTime();
+      el.textContent='WITA '+witaTime();
+      el.removeAttribute('data-amyfx-wib-clock');
+      el.setAttribute('data-amyfx-wita-clock','1');
     });
     if(tracked.length)return;
 
     Array.from(document.querySelectorAll('.muted,small,span,div')).forEach(el=>{
       if(!leaf(el))return;
       const tx=el.textContent.trim();
-      if(/^WITA \d{2}:\d{2}(:\d{2})?$/.test(tx)){
-        el.textContent='WITA '+wibTime();
-        el.setAttribute('data-amyfx-wib-clock','1');
+      if(/^(WITA|WITA) \d{2}:\d{2}(:\d{2})?$/.test(tx)){
+        el.textContent='WITA '+witaTime();
+        el.setAttribute('data-amyfx-wita-clock','1');
       }
     });
   }
@@ -243,7 +260,7 @@
 
     card.classList.add('amyfx-tf-card');
 
-    const cur=savedTf()||(getState()&&getState().tf)||'M5';
+    const cur=savedTf()||(getState()&&getState().tf)||'M15';
 
     btns.forEach(b=>{
       const tf=b.textContent.trim();
@@ -323,12 +340,12 @@
     const html=localStorage.getItem(SETUP_DOM_KEY);
     if(!html)return;
 
-    const snapRaw = localStorage.getItem(SNAP_KEY);
-    if(snapRaw) {
-      try {
-        const snap = JSON.parse(snapRaw);
-        if(Date.now() - snap.at > 24 * 60 * 60 * 1000) return;
-      } catch(e) {}
+    const snapRaw=localStorage.getItem(SNAP_KEY);
+    if(snapRaw){
+      try{
+        const snap=JSON.parse(snapRaw);
+        if(Date.now()-snap.at>24*60*60*1000)return;
+      }catch(e){}
     }
 
     const card=findSetupCard();
@@ -349,6 +366,7 @@
   }
 
   function postRender(){
+    if(stopped)return;
     restoreSnapshot();
     forceCacheMode();
     syncHeader();
@@ -358,18 +376,39 @@
     if(!saveSetupDom())restoreSetupDom();
   }
 
-  document.addEventListener('click',function(e){
+  function handleDocumentClick(e){
     const btn=e.target.closest('button');
     if(!btn)return;
     const tf=btn.textContent.trim();
     if(validTf(tf)){
       setTf(tf,false);
-      setTimeout(function(){
+      schedule(function(){
         saveSnapshot();
         postRender();
       },80);
     }
-  },true);
+  }
+
+  function handleOnline(){postRender()}
+  function handleOffline(){postRender()}
+
+  function stop(){
+    if(stopped)return false;
+    stopped=true;
+    pendingTimers.forEach(timer=>window.clearTimeout(timer));
+    pendingTimers.clear();
+    if(clockTimer){
+      window.clearInterval(clockTimer);
+      clockTimer=0;
+    }
+    document.removeEventListener('click',handleDocumentClick,true);
+    window.removeEventListener('online',handleOnline);
+    window.removeEventListener('offline',handleOffline);
+    window.removeEventListener('pagehide',stop);
+    return true;
+  }
+
+  document.addEventListener('click',handleDocumentClick,true);
 
   try{
     if(typeof window.runAnalysis==='function'&&!window.runAnalysis.__amyfxSyncFix){
@@ -379,7 +418,7 @@
         restoreSnapshot();
         forceCacheMode();
         const out=oldRunAnalysis.apply(this,arguments);
-        setTimeout(function(){
+        schedule(function(){
           saveSnapshot();
           postRender();
         },100);
@@ -396,7 +435,7 @@
         restoreSnapshot();
         forceCacheMode();
         const out=oldRender.apply(this,arguments);
-        setTimeout(postRender,0);
+        schedule(postRender,0);
         return out;
       };
       window.render.__amyfxSyncFix=true;
@@ -406,7 +445,7 @@
   restoreSnapshot();
   forceCacheMode();
 
-  setTimeout(function(){
+  schedule(function(){
     const tf=savedTf();
     if(tf){
       try{
@@ -420,10 +459,16 @@
     }
   },0);
 
-  setInterval(function(){
-    syncClock();
-  },1000);
+  clockTimer=window.setInterval(syncClock,1000);
+  window.addEventListener('online',handleOnline);
+  window.addEventListener('offline',handleOffline);
+  window.addEventListener('pagehide',stop,{once:true});
 
-  window.addEventListener('online',postRender);
-  window.addEventListener('offline',postRender);
+  window.AmyFXSyncFixLifecycle=Object.freeze({
+    version:'2.0.0',
+    stop,
+    isStopped:()=>stopped,
+    pendingTimers:()=>pendingTimers.size,
+    clockRunning:()=>clockTimer!==0
+  });
 })();
