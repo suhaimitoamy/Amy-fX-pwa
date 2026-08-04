@@ -1,4 +1,4 @@
-name: Sync Amy FX production assets
+name: Sync Amy FX Preview parity assets
 
 on:
   workflow_dispatch:
@@ -22,15 +22,16 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: amyfx-pwa-production-sync-${{ github.head_ref || github.ref_name }}
+  group: amyfx-pwa-preview-parity-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
-  sync-production-assets:
+  sync-preview-parity-assets:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
+      AMYFX_SOURCE_BRANCH: personal/amyfx-private
 
     steps:
       - name: Checkout PWA migration branch
@@ -40,11 +41,11 @@ jobs:
           fetch-depth: 0
           path: pwa
 
-      - name: Checkout Amy FX production source
+      - name: Checkout Amy FX Preview source
         uses: actions/checkout@v4
         with:
           repository: suhaimitoamy/Amy-fx
-          ref: main
+          ref: personal/amyfx-private
           fetch-depth: 1
           path: amyfx-source
           persist-credentials: false
@@ -54,11 +55,11 @@ jobs:
         with:
           node-version: 22
 
-      - name: Record Amy FX source revision
+      - name: Record Amy FX Preview source revision
         shell: bash
         run: echo "AMYFX_SOURCE_SHA=$(git -C amyfx-source rev-parse HEAD)" >> "$GITHUB_ENV"
 
-      - name: Synchronize production web assets
+      - name: Synchronize Preview-parity web assets
         working-directory: pwa
         run: npm run sync:amyfx-main
 
@@ -70,7 +71,7 @@ jobs:
         working-directory: pwa
         run: npm test
 
-      - name: Validate synchronized Amy FX modules
+      - name: Validate Amy FX Preview engine parity
         working-directory: pwa
         run: npm run test:sync
 
@@ -83,13 +84,13 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet && git diff --cached --quiet; then
-            echo "Amy FX PWA is already synchronized."
+            echo "Amy FX PWA is already synchronized with Preview."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
-          git commit -m "sync: refresh PWA from Amy FX main ${AMYFX_SOURCE_SHA:0:12}"
+          git commit -m "sync: align PWA engine with Amy FX Preview ${AMYFX_SOURCE_SHA:0:12}"
           git fetch origin "${TARGET_BRANCH}"
           git rebase "origin/${TARGET_BRANCH}"
           git push origin "HEAD:${TARGET_BRANCH}"
