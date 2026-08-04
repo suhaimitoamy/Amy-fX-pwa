@@ -32,9 +32,10 @@ worker = worker.replace(
   /const VERSION = '([^']+)';/,
   (_match, current) => {
     const base = String(current)
+      .replace(/-preview-parity-v\d+(?:-pwa-ws-price-v\d+)?(?:-market-cache-v\d+)?$/, '')
       .replace(/-pwa-ws-price-v\d+(?:-market-cache-v\d+)?$/, '')
       .replace(/-market-cache-v\d+$/, '');
-    return `const VERSION = '${base}-pwa-ws-price-v4-market-cache-v5';`;
+    return `const VERSION = '${base}-preview-parity-v1-pwa-ws-price-v4-market-cache-v7';`;
   }
 );
 
@@ -53,4 +54,4 @@ if (!worker.includes(streamBypass)) {
 }
 write('service-worker.js', worker);
 
-console.log('Amy FX PWA authenticated backend WebSocket relay and market-cache v5 guard applied.');
+console.log('Amy FX PWA authenticated backend WebSocket relay and Preview parity cache v7 guard applied.');
