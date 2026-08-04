@@ -134,7 +134,9 @@ for (const marker of ['navigator.serviceWorker.getRegistration', 'registration.u
 const scalperWatch = read('assets/apps/mapping/js/scalper-entry-watch-v1.js');
 for (const marker of [
   'SCALPER ENGINE · SHADOW MODE',
-  'scalper-setups?limit=50',
+  "const ENDPOINT = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/scalper-setups'",
+  "new URLSearchParams({ limit: '50', history: 'all', history_limit: '2000' })",
+  "params.set('setup_id', displaySelectedSetupId)",
   'reconcileScalperPayload',
   'TP1 +10',
   'TP2 +20',
