@@ -55,8 +55,8 @@ const appVersion = read('assets/app-version.js');
 const versionMatch = appVersion.match(/name:\s*['"]([^'"]+)['"],\s*code:\s*(\d+)/);
 if (!versionMatch) fail('Amy FX PWA application version cannot be parsed');
 else {
-  if (!versionAtLeast(versionMatch[1], '2.2.1')) fail(`Amy FX PWA ${versionMatch[1]} is older than 2.2.1`);
-  if (Number(versionMatch[2]) < 57) fail(`Amy FX PWA code ${versionMatch[2]} is older than 57`);
+  if (!versionAtLeast(versionMatch[1], '2.3.0')) fail(`Amy FX PWA ${versionMatch[1]} is older than 2.3.0`);
+  if (Number(versionMatch[2]) < 58) fail(`Amy FX PWA code ${versionMatch[2]} is older than 58`);
 }
 
 const expectedStream = 'https://amy-fx.vercel.app/api/pwa-live-price';
@@ -93,7 +93,7 @@ for (const marker of [
 
 const freshnessRepair = read('assets/apps/mapping/js/mapping-runtime-repair-v3.js');
 for (const marker of [
-  "version: '5.0.0'",
+  "version: '6.0.0'",
   'markCachedSeriesUsable',
   'sourceSignature',
   'latestClosedCandleClose',
@@ -183,4 +183,4 @@ for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service
   try { new Function(read(file)); } catch (error) { fail(`${file} has invalid JavaScript: ${error.message}`); }
 }
 
-if (!process.exitCode) console.log(`Amy FX PWA Preview parity validation passed for ${String(metadata.commit).slice(0, 12)} with the current Scalper Engine, closed-candle Mapping runtime v5, persistent candle cache, cache v7, and authenticated backend WebSocket relay v4.`);
+if (!process.exitCode) console.log(`Amy FX PWA Preview parity validation passed for ${String(metadata.commit).slice(0, 12)} with the current Scalper Engine, closed-candle Mapping runtime v6, persistent candle cache, cache v7, and authenticated backend WebSocket relay v4.`);
