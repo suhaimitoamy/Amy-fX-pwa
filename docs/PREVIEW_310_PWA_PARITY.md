@@ -4,6 +4,8 @@ Rilis ini menyelaraskan Amy FX PWA dengan branch `suhaimitoamy/Amy-fx@personal/a
 
 Kesetaraan engine dijaga dengan pemeriksaan zero-drift terhadap seluruh `apps/mapping/js`, `apps/mapping/css`, dan `apps/shared` setelah normalisasi WITA. Overlay khusus PWA tetap dipertahankan untuk autentikasi member, Service Worker, Web Push, update web, navigasi browser/iOS, serta relay harga WebSocket server-side.
 
+Source Preview yang dipromosikan dan diverifikasi: `9e160f65e4e1d0211b6432029ef946f47e665b0b`. Saat validasi dilakukan, commit tersebut identik dengan HEAD `personal/amyfx-private`.
+
 Fokus Preview 310 yang ikut dipromosikan:
 
 - Ringkasan Market tidak dirender ulang pada setiap tick harga live.
