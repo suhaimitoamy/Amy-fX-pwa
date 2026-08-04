@@ -132,7 +132,14 @@ for (const marker of ['navigator.serviceWorker.getRegistration', 'registration.u
 }
 
 const scalperWatch = read('assets/apps/mapping/js/scalper-entry-watch-v1.js');
-for (const marker of ['10 driver BT6/BT6.1 + AMD', 'TP1 +10', 'TP2 +20', 'Stop Loss tetap pada level awal']) {
+for (const marker of [
+  'SCALPER ENGINE · SHADOW MODE',
+  'scalper-setups?limit=50',
+  'reconcileScalperPayload',
+  'TP1 +10',
+  'TP2 +20',
+  'Stop Loss tetap pada level awal'
+]) {
   if (!scalperWatch.includes(marker)) fail(`Scalper Entry Watch missing ${marker}`);
 }
 const scalperAuthority = read('assets/apps/mapping/js/scalper-execution-authority.js');
