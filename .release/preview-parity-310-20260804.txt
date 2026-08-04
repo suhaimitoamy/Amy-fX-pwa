@@ -1,0 +1,4 @@
+Amy FX PWA 2.3.0
+Source: suhaimitoamy/Amy-fx@personal/amyfx-private
+Minimum Preview: 2.0.0-preview.310 / 940310
+Strategy: zero-drift Mapping and shared runtime parity with PWA platform overlays preserved
