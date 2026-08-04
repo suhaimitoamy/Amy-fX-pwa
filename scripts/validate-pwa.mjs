@@ -53,7 +53,7 @@ const config = JSON.parse(read('pwa-config.json'));
 const packageInfo = JSON.parse(read('package.json'));
 const expectedStream = 'https://amy-fx.vercel.app/api/pwa-live-price';
 
-if (packageInfo.version !== '2.2.1-pwa.6.0') fail('package version must be 2.2.1-pwa.6.0');
+if (packageInfo.version !== '2.3.0-pwa.7.0') fail('package version must be 2.3.0-pwa.7.0');
 if (manifest.id !== './' || manifest.start_url !== './' || manifest.scope !== './') fail('manifest paths must stay portable');
 if (manifest.display !== 'standalone') fail('manifest display must be standalone');
 if (!(manifest.icons || []).some(icon => icon.type === 'image/png' && icon.sizes === '192x192')) fail('manifest needs a 192x192 PNG icon');
@@ -93,7 +93,7 @@ try { new Function(coordinator); } catch (error) { fail(`market request coordina
 
 const freshnessRepair = read('assets/apps/mapping/js/mapping-runtime-repair-v3.js');
 for (const marker of [
-  "version: '5.0.0'",
+  "version: '6.0.0'",
   'markCachedSeriesUsable',
   'sourceSignature',
   'latestClosedCandleClose',
@@ -141,4 +141,4 @@ for (const file of ['service-worker.js', 'platform-adapter.js', 'member-auth.js'
 }
 
 JSON.parse(read('vercel.json'));
-if (!process.exitCode) console.log(`PWA validation passed: ${required.length} files, Amy FX Preview engine parity, closed-candle Mapping runtime v5, persistent candle cache, authenticated backend WebSocket relay v4, cache v7, offline cache, and Web Push.`);
+if (!process.exitCode) console.log(`PWA validation passed: ${required.length} files, Amy FX Preview engine parity, closed-candle Mapping runtime v6, persistent candle cache, authenticated backend WebSocket relay v4, cache v7, offline cache, and Web Push.`);
