@@ -6,9 +6,10 @@ const targetRoot = path.resolve(process.argv[3] || process.cwd());
 const targetAssetsRoot = path.join(targetRoot, 'assets');
 const sourceAppsRoot = path.join(sourceAssetsRoot, 'apps');
 const targetAppsRoot = path.join(targetAssetsRoot, 'apps');
+const sourceBranch = String(process.env.AMYFX_SOURCE_BRANCH || 'personal/amyfx-private');
 
 function fail(message) {
-  throw new Error(`[sync-from-amyfx-main] ${message}`);
+  throw new Error(`[sync-from-amyfx-preview] ${message}`);
 }
 
 function exists(file) {
@@ -81,7 +82,7 @@ function normalizeWebText(content) {
     .replace(/\bWIB\b/g, 'WITA');
 }
 
-if (!exists(sourceAppsRoot)) fail(`Amy FX source apps not found: ${sourceAppsRoot}`);
+if (!exists(sourceAppsRoot)) fail(`Amy FX Preview source apps not found: ${sourceAppsRoot}`);
 if (!exists(targetAssetsRoot)) fail(`PWA assets root not found: ${targetAssetsRoot}`);
 
 const pwaJournalLoader = read(path.join(targetAppsRoot, 'journal/app.js'));
@@ -99,6 +100,7 @@ copyEntry(sourceAppsRoot, targetAppsRoot);
 
 const protectedTargetAssetEntries = new Set([
   'app.js',
+  'app-version.js',
   'styles.css',
   'apps'
 ]);
@@ -134,7 +136,7 @@ for (const file of walk(targetAppsRoot)) {
 const sourceSha = String(process.env.AMYFX_SOURCE_SHA || 'unknown');
 const serviceWorkerPath = path.join(targetRoot, 'service-worker.js');
 if (exists(serviceWorkerPath)) {
-  const version = `amyfx-${sourceSha.slice(0, 12) || 'manual'}`;
+  const version = `amyfx-${sourceSha.slice(0, 12) || 'manual'}-preview-parity-v1-market-cache-v7`;
   let worker = read(serviceWorkerPath).replace(
     /const VERSION = ['"][^'"]+['"];?/,
     `const VERSION = '${version}';`
@@ -156,23 +158,26 @@ if (exists(serviceWorkerPath)) {
 
 write(path.join(targetAssetsRoot, 'amyfx-source.json'), `${JSON.stringify({
   repository: 'suhaimitoamy/Amy-fx',
-  branch: 'main',
+  branch: sourceBranch,
   commit: sourceSha,
-  strategy: 'production-assets-with-pwa-runtime-overlay'
+  strategy: 'preview-parity-with-pwa-runtime-overlay'
 }, null, 2)}\n`);
 
-const requiredProductionFiles = [
+const requiredParityFiles = [
   'apps/mapping/js/execution-plan-core.js',
   'apps/mapping/js/execution-plan-ui.js',
+  'apps/mapping/js/live-price-display-only-v1.js',
   'apps/mapping/js/scalper-entry-watch-v1.js',
   'apps/mapping/js/scalper-execution-authority.js',
+  'apps/mapping/js/scalper-execution-decision-bridge.js',
   'apps/mapping/js/scalper-shadow-state.js',
+  'apps/mapping/js/engine/bt71-market-state-reconciliation.js',
   'apps/mapping/js/mapping-v2.js',
   'apps/mapping/css/execution-plan.css',
   'apps/mapping/css/scalper-entry-watch.css'
 ];
-for (const relative of requiredProductionFiles) {
-  if (!exists(path.join(targetAssetsRoot, relative))) fail(`production module was not copied: ${relative}`);
+for (const relative of requiredParityFiles) {
+  if (!exists(path.join(targetAssetsRoot, relative))) fail(`Preview parity module was not copied: ${relative}`);
 }
 
 for (const file of walk(targetAppsRoot)) {
@@ -184,4 +189,4 @@ for (const file of walk(targetAppsRoot)) {
   if (!content.includes('pwa-update-bridge.js')) fail(`PWA update bridge missing in ${path.relative(targetRoot, file)}`);
 }
 
-console.log(`Amy FX production assets synchronized from ${sourceSha.slice(0, 12) || 'unknown'} with PWA overlays preserved.`);
+console.log(`Amy FX Preview assets synchronized from ${sourceBranch}@${sourceSha.slice(0, 12) || 'unknown'} with PWA overlays preserved.`);
