@@ -93,13 +93,13 @@ for (const marker of [
 
 const freshnessRepair = read('assets/apps/mapping/js/mapping-runtime-repair-v3.js');
 for (const marker of [
-  "version: '4.0.0'",
-  'cachedSeriesIsCurrent',
-  'expectedClosedCandleOpen',
-  'primeCurrentCandleFreshness',
-  'setCandleFetchedAt(normalizedTf, current ? nowMs : 0)'
+  "version: '5.0.0'",
+  'markCachedSeriesUsable',
+  'sourceSignature',
+  'latestClosedCandleClose',
+  'lastAnalyzedSignature'
 ]) {
-  if (!freshnessRepair.includes(marker)) fail(`PWA Mapping freshness repair missing ${marker}`);
+  if (!freshnessRepair.includes(marker)) fail(`PWA Mapping closed-candle runtime missing ${marker}`);
 }
 
 const bridge = read('pwa-live-price-bridge.js');
@@ -122,7 +122,7 @@ if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain le
 if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) fail('PWA bridge must not contain provider credentials');
 
 const worker = read('service-worker.js');
-for (const marker of ['-preview-parity-v1-market-cache-v7', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
+for (const marker of ['-preview-parity-v1-pwa-ws-price-v4-market-cache-v7', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
@@ -176,4 +176,4 @@ for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service
   try { new Function(read(file)); } catch (error) { fail(`${file} has invalid JavaScript: ${error.message}`); }
 }
 
-if (!process.exitCode) console.log(`Amy FX PWA Preview parity validation passed for ${String(metadata.commit).slice(0, 12)} with the current Scalper Engine, closed-candle Mapping freshness, persistent candle cache, cache v7, and authenticated backend WebSocket relay v4.`);
+if (!process.exitCode) console.log(`Amy FX PWA Preview parity validation passed for ${String(metadata.commit).slice(0, 12)} with the current Scalper Engine, closed-candle Mapping runtime v5, persistent candle cache, cache v7, and authenticated backend WebSocket relay v4.`);
