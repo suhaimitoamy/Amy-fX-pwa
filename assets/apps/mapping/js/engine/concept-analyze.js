@@ -5,6 +5,7 @@ import {
   detectTimeframeEntryMap
 } from './concept-entry-map-v3.js';
 import { evaluateValidatedMarketContext } from './validated-market-context.js';
+import { reconcileBt71MarketState } from './bt71-market-state-reconciliation.js';
 
 export { tfGroup };
 
@@ -102,10 +103,15 @@ export function analyze(
     htfCandles,
     htfBias: result.htfNarrative?.htfBias || 'NEUTRAL'
   });
-  const validatedMarketContext = evaluateValidatedMarketContext({
+  const strictValidatedMarketContext = evaluateValidatedMarketContext({
     candles,
     tf,
     htfCandles
+  });
+  const validatedMarketContext = reconcileBt71MarketState(strictValidatedMarketContext, {
+    objectiveStructure: marketConcepts.structure,
+    objectiveStructureSnapshot: marketConcepts.structureSnapshot,
+    close: result.price || currentPrice || candles.at(-1)?.close
   });
   const entryMap = detectTimeframeEntryMap(candles, {
     tf,

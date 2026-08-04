@@ -3,13 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#050806">
+    <meta name="theme-color" content="#070B12">
     <meta name="description" content="Trading Library Manager untuk mengelola materi, indikator, gambar chart, video pembelajaran, dan dokumen trading.">
-    <title>Trading Library Manager</title>
+    <title>Jurnal Trading — Amy FX</title>
+    <script src="../shared/amyfx-theme-controller.js" data-amyfx-theme-controller="v1"></script>
     <link rel="stylesheet" href="./style.css?v=20260623-2">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='24' fill='%23050806'/%3E%3Cpath d='M20 62h12V36H20v26Zm22 0h12V24H42v38Zm22 0h12V44H64v18Z' fill='%2339ff88'/%3E%3Cpath d='M18 72h60' stroke='%23f4fff7' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="amy-journal-final-fix.css">
   <link rel="stylesheet" href="../shared/amyfx-blueprint-v1.css" data-amyfx-blueprint-css="v1">
+  <link rel="stylesheet" href="../shared/amyfx-ui-tokens.css" data-amyfx-ui-tokens="v1">
+  <link rel="stylesheet" href="../shared/amyfx-theme.css" data-amyfx-theme="v1">
+  <link rel="stylesheet" href="../shared/amyfx-components.css" data-amyfx-components="v1">
 <!-- Amy FX PWA runtime overlay -->
 <script src="../../../platform-adapter.js"></script>
 <script src="../../../pwa-live-price-bridge.js"></script>
@@ -18,17 +22,17 @@
 <script src="../../../pwa-update-bridge.js"></script>
 <!-- /Amy FX PWA runtime overlay -->
 </head>
-  <body>
+  <body class="amyfx-module amyfx-module--journal">
     <div class="app-shell">
       <header class="app-header">
         <button class="icon-button menu-button" id="openSidebarBtn" type="button" aria-label="Buka navigasi">
           <span class="menu-icon" aria-hidden="true"></span>
         </button>
         <div class="brand">
-          <div class="brand-mark" aria-hidden="true">TL</div>
+          <div class="brand-mark" aria-hidden="true">AMY</div>
           <div class="brand-copy">
-            <span>Trading Library</span>
-            <h1>Manager</h1>
+            <span>Amy FX</span>
+            <h1>Jurnal Trading</h1>
           </div>
         </div>
         <div class="header-actions">
@@ -43,10 +47,10 @@
       <aside class="side-drawer" id="sideDrawer" aria-hidden="true" aria-label="Navigasi samping">
         <div class="side-drawer-head">
           <div class="side-drawer-brand">
-            <div class="brand-mark" aria-hidden="true">TL</div>
+            <div class="brand-mark" aria-hidden="true">AMY</div>
             <div>
               <span>Quick Menu</span>
-              <h2>Trading Library</h2>
+              <h2>Jurnal &amp; Library</h2>
             </div>
           </div>
           <button class="icon-button side-close-button" id="closeSidebarBtn" type="button" aria-label="Tutup navigasi">×</button>
@@ -591,7 +595,7 @@
         <div class="form-head">
           <div>
             <span id="documentTypeLabel">Dokumen</span>
-            <h2 id="documentTitle">Preview Dokumen</h2>
+            <h2 id="documentTitle">Dokumen</h2>
           </div>
           <button class="icon-button close-button" id="closeDocumentBtn" type="button" aria-label="Tutup">×</button>
         </div>
@@ -608,7 +612,7 @@
         <header class="fullscreen-bar">
           <button class="icon-button fullscreen-back" id="fullscreenBackBtn" type="button" aria-label="Kembali">‹</button>
           <div class="fullscreen-title-wrap">
-            <span id="fullscreenMeta">Preview</span>
+            <span id="fullscreenMeta">Media</span>
             <h2 id="fullscreenTitle">Viewer</h2>
           </div>
           <button class="icon-button fullscreen-close" id="fullscreenCloseBtn" type="button" aria-label="Tutup">×</button>
@@ -629,6 +633,7 @@
     <script src="./app.js?v=20260725-restore1" defer></script>
     <script src="./background-video.js?v=20260725-bg1" defer></script>
   <script src="amy-journal-final-fix.js"></script>
+  <script src="../shared/amyfx-loading.js" data-amyfx-loading="v1"></script>
 <script>
 /* AMYFX_NOTIFY_GUARD_START */
 (function(){

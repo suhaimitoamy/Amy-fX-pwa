@@ -14,6 +14,7 @@ import {
   analyzeActiveSetups
 } from './ui/ui-render.js';
 import {
+  saveConnect,
   toggleBg
 } from './bridge/android-bridge.js';
 
@@ -165,17 +166,27 @@ window.setTab = setTab;
 window.runAnalysis = runAnalysis;
 window.render = render;
 window.analyzeActiveSetups = analyzeActiveSetups;
+window.saveConnect = saveConnect;
 window.toggleBg = toggleBg;
 window.state = state;
 window.TF = TF;
+
+function effectiveLastWsTickAt() {
+  const displayTick = Number(window.__amyFxDisplayLastTickAt || 0);
+  const storedTick = Number(localStorage.getItem('last_ws_tick_at') || 0);
+  return Math.max(Number(lastWsTickAt || 0), displayTick, storedTick);
+}
 
 function autoConnectLivePrice() {
   if (!isLivePriceRunning()) connect();
 }
 
 function livePriceWatchdog() {
-  const stale = !lastWsTickAt || Date.now() - lastWsTickAt > 45000;
-  if (!isLivePriceRunning() || state.conn === 'Offline' || stale) connect();
+  const tickAt = effectiveLastWsTickAt();
+  const stale = !tickAt || Date.now() - tickAt > 45000;
+  if (!isLivePriceRunning() || state.conn === 'Offline' || stale) {
+    connect({ force: stale || state.conn === 'Offline' });
+  }
 }
 
 function syncAutomaticScannerUi() {
@@ -238,10 +249,15 @@ function initApp() {
 
   setTimeout(autoConnectLivePrice, 600);
   setInterval(livePriceWatchdog, 30000);
-  document.addEventListener(
-    'visibilitychange',
-    () => document.body.classList.toggle('webview-idle', document.hidden)
-  );
+  window.addEventListener('online', () => connect({ force: true }));
+  document.addEventListener('visibilitychange', () => {
+    document.body.classList.toggle('webview-idle', document.hidden);
+    if (!document.hidden) {
+      const tickAt = effectiveLastWsTickAt();
+      const stale = !tickAt || Date.now() - tickAt > 45000;
+      connect({ force: stale });
+    }
+  });
 }
 
 if (document.readyState === 'loading') {

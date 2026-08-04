@@ -2226,7 +2226,7 @@ function updatePreview(source, kind, item = {}) {
 
   if (mediaKind === "image") {
     media = document.createElement("img");
-    media.alt = dom.titleInput.value || "Preview gambar";
+    media.alt = dom.titleInput.value || "Gambar";
   } else if (mediaKind === "video") {
     media = document.createElement("video");
     media.controls = true;
@@ -2530,7 +2530,7 @@ async function showFullscreenViewer(item) {
   state.activeFullscreenItem = item;
   state.viewerStatusChanged = false;
   dom.fullscreenStage.classList.remove("is-reader-stage");
-  dom.fullscreenTitle.textContent = item.title || getDocumentName(item) || "Preview";
+  dom.fullscreenTitle.textContent = item.title || getDocumentName(item) || "Media";
   dom.fullscreenMeta.textContent = getFullscreenMeta(item);
   dom.fullscreenStage.replaceChildren(makeFullscreenLoading());
 
@@ -2622,7 +2622,7 @@ async function renderFullscreenContent(item) {
 
     const image = document.createElement("img");
     image.className = "fullscreen-image";
-    image.alt = item.title || "Preview gambar";
+    image.alt = item.title || "Gambar";
     image.src = source;
     dom.fullscreenStage.replaceChildren(image);
     setupImageCompletionTracking(item);
@@ -3057,7 +3057,7 @@ async function showAdjacentImage(direction) {
   const nextIndex = (currentIndex + direction + imageItems.length) % imageItems.length;
   const nextItem = imageItems[nextIndex];
   state.activeFullscreenItem = nextItem;
-  dom.fullscreenTitle.textContent = nextItem.title || "Preview gambar";
+  dom.fullscreenTitle.textContent = nextItem.title || "Gambar";
   dom.fullscreenMeta.textContent = getFullscreenMeta(nextItem);
   dom.fullscreenStage.replaceChildren(makeFullscreenLoading());
   await renderFullscreenContent(nextItem);
@@ -3272,7 +3272,7 @@ function renderFullscreenError(message) {
 function makeFullscreenLoading() {
   const loading = document.createElement("div");
   loading.className = "fullscreen-error";
-  loading.textContent = "Memuat preview...";
+  loading.textContent = "Memuat media...";
   return loading;
 }
 
@@ -3444,7 +3444,7 @@ function getFullscreenMeta(item) {
   if (mediaKind === "image") return "Gambar • Fullscreen";
   if (mediaKind === "video") return "Video • Fullscreen";
   if (isDocumentItem(item)) return `${getDocumentType(item)} • Fullscreen`;
-  return "Preview";
+  return "Media";
 }
 
 function isImageFile(file) {

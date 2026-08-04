@@ -49,6 +49,17 @@ function marketOutlookPlaceholder() {
   </details>`;
 }
 
+function livePriceKeyCard() {
+  if (state.conn !== 'Key Required') return '';
+  return `<section class="card" data-stability-key="live-price-websocket-key">
+    <div class="kicker">HARGA LIVE · TWELVE DATA WEBSOCKET</div>
+    <h2>Hubungkan harga XAU/USD</h2>
+    <p class="muted">Masukkan API key Twelve Data satu kali. Key disimpan terenkripsi oleh Android; harga memakai WebSocket, sedangkan candle Mapping tetap memakai jalur REST yang sudah ada.</p>
+    <input id="apiKey" type="password" autocomplete="off" placeholder="Twelve Data API Key">
+    <button class="action" onclick="window.saveConnect()" style="width:100%;margin-top:10px">Hubungkan Harga Live</button>
+  </section>`;
+}
+
 function asiaAnalyzePlaceholder() {
   return `<section class="card asia-liquidity-strip" data-asia-range-analyze data-dom-persistent="true" data-stability-key="asia-liquidity">
     <div class="asia-strip-head"><span>ASIA LIQUIDITY</span><small>-</small></div><div class="asia-range-empty">Data Asia Range belum tersedia.</div>
@@ -175,7 +186,7 @@ export function dashboard() {
     ? `<div class="setup-summary"><div><small>Entry Area</small><strong>${p2(se.entryLow)} – ${p2(se.entryHigh)}</strong></div><div><small>Invalidasi</small><strong>${p2(se.stopLoss)}</strong></div><div><small>Target</small><strong>${p2(se.target1)}</strong></div><div><small>Status</small><strong>${se.status}</strong></div></div><p class="summary-note">${se.invalidationReason || setupAuthorityNote}</p>`
     : `<p class="muted">${se?.invalidationReason || 'Klik Analisis Setup untuk membuat mapping angka.'}</p>`;
   const executionPlan = renderExecutionPlanCompact(executionPlanRuntimeInput(r, state));
-  return `<section class="card tf-card" data-stability-key="timeframe"><div class="section-row"><div><div class="kicker">TIMEFRAME</div><h2>Pilih mapping</h2></div><span class="muted">${state.tf}</span></div><div class="tf-grid compact-tf">${tfList.map(x => `<button class="${state.tf === x ? 'active' : ''}" onclick="window.runAnalysis('${x}')">${x}</button>`).join('')}</div></section>${killzonePanel()}${regimePlaceholder()}<section class="card setup-focus" data-stability-key="setup-focus"><div class="section-row"><div><div class="kicker">SETUP UTAMA</div><h2>${setupTitle}</h2></div>${se?.active ? `<span class="badge ${se.direction === 'BUY' ? 'buy' : 'sell'}">${se.direction}</span>` : ''}</div>${setupBody}<button class="action" onclick="setTab('Analyze')" style="width:100%;margin-top:12px">⚡ Buka Analisis Lengkap</button></section>${scalperShadowPlaceholder()}${executionPlan}`;
+  return `<section class="card tf-card" data-stability-key="timeframe"><div class="section-row"><div><div class="kicker">TIMEFRAME</div><h2>Pilih mapping</h2></div><span class="muted">${state.tf}</span></div><div class="tf-grid compact-tf">${tfList.map(x => `<button class="${state.tf === x ? 'active' : ''}" onclick="window.runAnalysis('${x}')">${x}</button>`).join('')}</div></section>${livePriceKeyCard()}${killzonePanel()}${regimePlaceholder()}<section class="card setup-focus" data-stability-key="setup-focus"><div class="section-row"><div><div class="kicker">SETUP UTAMA</div><h2>${setupTitle}</h2></div>${se?.active ? `<span class="badge ${se.direction === 'BUY' ? 'buy' : 'sell'}">${se.direction}</span>` : ''}</div>${setupBody}<button class="action" onclick="setTab('Analyze')" style="width:100%;margin-top:12px">⚡ Buka Analisis Lengkap</button></section>${scalperShadowPlaceholder()}${executionPlan}`;
 }
 
 export function lifecycleSetupCard(s, i = 0) {
@@ -235,7 +246,7 @@ export function analyzeView(){
 }
 export function setupsView(){let list=state.setups.slice(0,20);return`<section class="card"><h1>Riwayat Setup (HISTORY / TERMINAL)</h1>${list.map((s,i)=>historyCard(s,i)).join('')||'<p class="muted">Belum ada setup tersimpan.</p>'}</section>`}
 export function historyView(){return`<section class="card"><h1>Event Logs</h1><button class="action" onclick="window.downloadLogs()">⇩ Download TXT</button>${state.logs.map(x=>`<div class="log">${x}</div>`).join('')||'<p class="muted">Belum ada event.</p>'}</section>`}
-export function settingsView(){return`<section class="card settings"><h1>Settings & API</h1><label>Twelve Data API Key <span class="muted">(opsional untuk candle)</span></label><input id="apiKey" value="${state.key}" placeholder="Kosongkan jika key sudah di Vercel"><button class="action" onclick="window.saveConnect()" style="width:100%">🔑 Simpan & Hubungkan Live</button><p class="muted">Harga live, snapshot Mapping, scanner, dan notifikasi memakai kontrak setupExecution yang sama.</p><div class="warn"><b>Monitor Causal</b><br>Scanner hanya aktif ketika setup causal pada timeframe terpilih masih aktif dan belum terminal.</div><button data-scanner-status class="action" onclick="window.toggleBg()" style="width:100%;margin-top:14px">📡 Scanner mengikuti setup causal</button><button class="action" onclick="window.testNotif()" style="width:100%;margin-top:12px">🔔 Tes Notifikasi Setup</button><button class="action" onclick="window.AmyFXUpdate?.checkNow()" style="width:100%;margin-top:12px">🔄 Cek Pembaruan Versi</button></section>`}
+export function settingsView(){return`<section class="card settings"><h1>Settings & API</h1><label>Twelve Data API Key <span class="muted">(khusus harga WebSocket)</span></label><input id="apiKey" type="password" autocomplete="off" value="" placeholder="Twelve Data API Key"><button class="action" onclick="window.saveConnect()" style="width:100%">🔑 Simpan & Hubungkan Live</button><p class="muted">Key disimpan terenkripsi oleh Android. Harga memakai WebSocket Twelve Data; candle Mapping tetap memakai REST.</p><div class="warn"><b>Monitor Causal</b><br>Scanner hanya aktif ketika setup causal pada timeframe terpilih masih aktif dan belum terminal.</div><button data-scanner-status class="action" onclick="window.toggleBg()" style="width:100%;margin-top:14px">📡 Scanner mengikuti setup causal</button><button class="action" onclick="window.testNotif()" style="width:100%;margin-top:12px">🔔 Tes Notifikasi Setup</button><button class="action" onclick="window.AmyFXUpdate?.checkNow()" style="width:100%;margin-top:12px">🔄 Cek Pembaruan Versi</button></section>`}
 
 export function mappingRenderSignature() {
   const result = state.result;

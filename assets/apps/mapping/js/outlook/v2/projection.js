@@ -53,7 +53,7 @@ function chooseTargets(direction, levels, config, atrValue) {
 }
 
 function chooseInvalidation(direction, levels, context, price, atrValue, config) {
-  const minimumDistance = atrValue * (config.id === 'INTRADAY' ? 0.65 : config.id === 'SESSION' ? 0.9 : 1.15);
+  const minimumDistance = atrValue * (config.id === 'SCALPING' ? 0.45 : config.id === 'INTRADAY' ? 0.65 : config.id === 'SESSION' ? 0.9 : 1.15);
   if (direction === 'BULLISH' || direction === 'BEARISH') {
     const oppositeType = direction === 'BULLISH' ? 'SSL' : 'BSL';
     const candidates = levels
@@ -222,11 +222,12 @@ function riskFactors(direction, context, regime, newsRisk, freshnessInfo, votes)
 }
 
 function horizonAtr(config, candlesByTf) {
-  const tf = config.id === 'INTRADAY' ? 'M15' : config.id === 'SESSION' ? 'H1' : 'H4';
+  const tf = config.id === 'SCALPING' ? 'M5' : config.id === 'INTRADAY' ? 'M15' : config.id === 'SESSION' ? 'H1' : 'H4';
   return localAtr(candlesByTf?.[tf] || []) || atr(candlesByTf?.M15 || candlesByTf?.H1 || []) || 0;
 }
 
 function directionTolerance(config, price, atrValue) {
+  if (config.id === 'SCALPING') return Math.max(price * 0.0005, atrValue * 0.15, 0.3);
   if (config.id === 'INTRADAY') return Math.max(price * 0.0008, atrValue * 0.25, 0.5);
   if (config.id === 'SESSION') return Math.max(price * 0.001, atrValue * 0.3, 0.8);
   return Math.max(price * 0.0015, atrValue * 0.35, 1.2);
@@ -255,7 +256,10 @@ export function buildMarketOutlooks({
     const config = configuredHorizon(base, session, now);
     const context = contextResult(config, combinedAnalyses);
     const votes = collectVotes(combinedAnalyses, config.weights);
-    const direction = directionName(votes.normalized);
+    const m15Trend = confirmedTrend(combinedAnalyses.M15);
+    const direction = config.id === 'SCALPING' && m15Trend !== 0
+      ? (m15Trend > 0 ? 'BULLISH' : 'BEARISH')
+      : directionName(votes.normalized);
     const atrValue = Math.max(horizonAtr(config, candlesByTf), currentPrice * 0.0003);
     const levels = collectLevels(combinedAnalyses, config, currentPrice, atrValue);
     const targets = chooseTargets(direction, levels, config, atrValue);
@@ -307,7 +311,7 @@ export function buildMarketOutlooks({
   });
 
   const coreFreshness = ['M15', 'H1', 'H4'].map(tf => String(freshness?.[tf]?.state || 'CACHE'));
-  const trackable = outlooks.length === 3
+  const trackable = outlooks.length === OUTLOOK_HORIZONS.length
     && outlooks.every(item => item.contextTf)
     && coreFreshness.every(value => !value.includes('STALE') && !value.includes('CACHE'));
 

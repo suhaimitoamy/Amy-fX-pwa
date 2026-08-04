@@ -3,6 +3,14 @@ export const DAY = 24 * HOUR;
 
 export const OUTLOOK_HORIZONS = [
   {
+    id: 'SCALPING',
+    label: 'Scalping',
+    horizonMs: 2 * HOUR,
+    weights: { M15: 0.45, M5: 0.25, M1: 0.2, M30: 0.05, H1: 0.05 },
+    contextTfs: ['M15', 'M5', 'M1', 'M30', 'H1'],
+    levelTfs: ['M15', 'M5', 'M1']
+  },
+  {
     id: 'INTRADAY',
     label: '1–4 Jam',
     horizonMs: 4 * HOUR,

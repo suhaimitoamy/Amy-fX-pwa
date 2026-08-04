@@ -17,25 +17,11 @@
     '[data-execution-plan-card="compact"]'
   ]);
 
-  const ANALYZE_ORDER = Object.freeze([
-    { selector: '.mapping-hero' },
-    { selector: '[data-stability-key="market-outlook"]' },
-    { id: 'amy-regime-router-v3' },
-    { selector: '[data-execution-plan-card="detail"]' },
-    { summary: 'Penjelasan Mapping' },
-    { selector: '[data-asia-range-analyze]' },
-    { summary: 'Valid Break' },
-    { summary: 'Mapping Semua Timeframe' },
-    { summary: 'Setup Aktif' },
-    { id: 'amy-scalper-entry-watch' }
-  ]);
-
   const nativeInsertAdjacentHTML = Element.prototype.insertAdjacentHTML;
   let cleanupScheduled = false;
   let blockedInsertions = 0;
   let removedLegacyPanels = 0;
   let reorderedDashboard = 0;
-  let reorderedAnalyze = 0;
   let observer = null;
   let started = false;
 
@@ -54,19 +40,6 @@
       current = current.parentElement;
     }
     return current?.parentElement === app ? current : null;
-  }
-
-  function disclosureBySummary(app, label) {
-    const details = [...app.querySelectorAll('details.disclosure, details.amy-analysis-section')]
-      .find(node => String(node.querySelector(':scope > summary')?.textContent || '').trim().startsWith(label));
-    return topLevelNode(details, app);
-  }
-
-  function resolveAnalyzeNode(app, descriptor) {
-    if (descriptor.id) return topLevelNode(document.getElementById(descriptor.id), app);
-    if (descriptor.summary) return disclosureBySummary(app, descriptor.summary);
-    if (descriptor.selector) return topLevelNode(app.querySelector(descriptor.selector), app);
-    return null;
   }
 
   function reorderSelected(app, orderedNodes) {
@@ -104,11 +77,6 @@
     if (reorderSelected(app, ordered)) reorderedDashboard += 1;
   }
 
-  function reorderAnalyzePanels(app) {
-    const ordered = ANALYZE_ORDER.map(descriptor => resolveAnalyzeNode(app, descriptor));
-    if (reorderSelected(app, ordered)) reorderedAnalyze += 1;
-  }
-
   function syncCurrentView() {
     cleanupScheduled = false;
     const app = document.getElementById('app');
@@ -116,14 +84,8 @@
 
     LEGACY_PANEL_IDS.forEach(id => removeLegacyPanel(document.getElementById(id)));
 
-    if (currentView() === 'Dashboard') {
-      reorderDashboardPanels(app);
-      return;
-    }
-
-    if (currentView() === 'Analyze') {
-      reorderAnalyzePanels(app);
-    }
+    // Analyze is intentionally never reordered. Its DOM order is authoritative and static.
+    if (currentView() === 'Dashboard') reorderDashboardPanels(app);
   }
 
   function scheduleCleanup() {
@@ -132,27 +94,13 @@
     requestAnimationFrame(syncCurrentView);
   }
 
-  function needsCleanup(records, app) {
-    return records.some(record => {
-      if (record.target === app) return true;
-      return [...record.addedNodes, ...record.removedNodes].some(node =>
-        node instanceof Element && (
-          node.parentElement === app
-          || node.matches?.('#amy-scalper-entry-watch, #amy-regime-router-v3, [data-execution-plan-card]')
-        )
-      );
-    });
-  }
-
   Element.prototype.insertAdjacentHTML = function (position, markup) {
     if (isLegacyMarkup(markup)) {
       blockedInsertions += 1;
       scheduleCleanup();
       return;
     }
-    const result = nativeInsertAdjacentHTML.call(this, position, markup);
-    scheduleCleanup();
-    return result;
+    return nativeInsertAdjacentHTML.call(this, position, markup);
   };
 
   function start() {
@@ -161,32 +109,21 @@
     const app = document.getElementById('app');
     if (app && !observer) {
       observer = new MutationObserver(records => {
-        if (needsCleanup(records, app)) scheduleCleanup();
+        if (currentView() !== 'Dashboard') return;
+        if (records.some(record => record.target === app)) scheduleCleanup();
       });
-      observer.observe(app, {
-        childList: true,
-        subtree: true
-      });
+      observer.observe(app, { childList: true, subtree: false });
     }
-
-    document.addEventListener('click', scheduleCleanup, true);
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) scheduleCleanup();
-    });
-    window.addEventListener('amyfx:market-update', scheduleCleanup);
-    window.addEventListener('amyfx:entry-watch-updated', scheduleCleanup);
-    window.addEventListener('amyfx:scalper-state-change', scheduleCleanup);
-    window.addEventListener('amyfx:mapping-state-change', scheduleCleanup);
     scheduleCleanup();
   }
 
   window.AmyFXDashboardOnlyPanels = Object.freeze({
-    version: '1.2.0',
+    version: '1.3.0',
     stats: () => ({
       blockedInsertions,
       removedLegacyPanels,
       reorderedDashboard,
-      reorderedAnalyze,
+      reorderedAnalyze: 0,
       view: currentView()
     })
   });

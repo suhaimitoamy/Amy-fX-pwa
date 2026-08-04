@@ -1,0 +1,113 @@
+:root {
+  color-scheme: dark;
+
+  /* Amy Glass System - shared primitives. */
+  --amy-bg: #070b12;
+  --amy-bg-secondary: #0a111b;
+  --amy-surface: rgba(18, 29, 43, 0.72);
+  --amy-surface-strong: rgba(16, 25, 38, 0.86);
+  --amy-surface-solid: #111c29;
+  --amy-surface-soft: rgba(122, 174, 226, 0.07);
+  --amy-border: rgba(177, 214, 255, 0.16);
+  --amy-border-strong: rgba(177, 214, 255, 0.28);
+  --amy-highlight: rgba(255, 255, 255, 0.08);
+  --amy-text: #f5f8fc;
+  --amy-text-secondary: #a3afbf;
+  --amy-text-muted: #718095;
+  --amy-accent: #69b7ff;
+  --amy-accent-strong: #3d8cff;
+  --amy-cyan: #59d7ff;
+  --amy-buy: #32d583;
+  --amy-sell: #ff5c6c;
+  --amy-wait: #f5b942;
+  --amy-info: #69b7ff;
+  --amy-neutral: #a3afbf;
+
+  --amy-module-mapping: #6da6ff;
+  --amy-module-news: #65d38a;
+  --amy-module-journal: #a783ff;
+  --amy-module-academy: #f0a15c;
+  --amy-module-indicator: #5bd8d5;
+
+  --amy-font: Inter, Roboto, "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --amy-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --amy-leading: 1.5;
+
+  --amy-space-1: 4px;
+  --amy-space-2: 8px;
+  --amy-space-3: 12px;
+  --amy-space-4: 16px;
+  --amy-space-5: 20px;
+  --amy-space-6: 24px;
+  --amy-space-8: 32px;
+
+  --amy-radius-xs: 10px;
+  --amy-radius-sm: 14px;
+  --amy-radius-md: 16px;
+  --amy-radius-lg: 20px;
+  --amy-radius-xl: 24px;
+  --amy-radius-pill: 999px;
+
+  --amy-blur: 18px;
+  --amy-blur-strong: 24px;
+  --amy-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  --amy-shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.2);
+  --amy-focus-ring: 0 0 0 3px rgba(105, 183, 255, 0.26);
+  --amy-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --amy-safe-top: env(safe-area-inset-top, 0px);
+  --amy-page-padding: clamp(16px, 4vw, 20px);
+  --amy-nav-height: 74px;
+  --amy-motion-fast: 180ms;
+  --amy-motion: 220ms;
+
+  /* Compatibility aliases for legacy module styles. */
+  --bg-color: var(--amy-bg);
+  --surface-color: var(--amy-surface);
+  --surface: var(--amy-surface);
+  --surface-soft: var(--amy-surface-soft);
+  --primary-gold: var(--amy-accent);
+  --secondary-gold: var(--amy-cyan);
+  --text-main: var(--amy-text);
+  --text-muted: var(--amy-text-secondary);
+  --border-color: var(--amy-border);
+  --glow-gold: rgba(105, 183, 255, 0.22);
+  --bg: var(--amy-bg);
+  --card: var(--amy-surface);
+  --bg-card: var(--amy-surface);
+  --bg-card-hover: var(--amy-surface-strong);
+  --gold: var(--amy-accent);
+  --gold-dim: rgba(105, 183, 255, 0.12);
+  --gold-text: var(--amy-accent);
+  --accent: var(--amy-accent);
+  --accent-2: var(--amy-cyan);
+  --accent-soft: rgba(105, 183, 255, 0.12);
+  --text: var(--amy-text);
+  --heading: var(--amy-text);
+  --muted: var(--amy-text-secondary);
+  --border: var(--amy-border);
+  --green: var(--amy-buy);
+  --red: var(--amy-sell);
+  --warning: var(--amy-wait);
+  --accent-hover: var(--amy-accent-strong);
+  --button: var(--amy-accent);
+  --button-text: var(--amy-text);
+  --shadow-color: 7, 11, 18;
+  --topbar-bg: color-mix(in srgb, var(--amy-bg) 82%, transparent);
+  --font-body: var(--amy-font);
+  --font-heading: var(--amy-font);
+
+  --amy-os-bg: var(--amy-bg);
+  --amy-os-panel: var(--amy-surface-strong);
+  --amy-os-card: var(--amy-surface-solid);
+  --amy-os-line: var(--amy-border);
+  --amy-os-gold: var(--amy-accent);
+  --amy-os-text: var(--amy-text);
+  --amy-os-muted: var(--amy-text-secondary);
+  --amy-os-good: var(--amy-buy);
+  --amy-os-bad: var(--amy-sell);
+  --amy-os-warn: var(--amy-wait);
+}
+
+@media (min-width: 540px) {
+  :root { --amy-page-padding: 20px; }
+}

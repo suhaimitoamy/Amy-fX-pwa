@@ -66,8 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.AmyFXIntel?.mountBriefing(document.getElementById('intel-briefing'));
   setupTabs();
   setupNewsInteractions();
-  loadNews();
-  loadHeatmap();
+  window.AmyFXLoading?.start({
+    delay: 350,
+    timeout: 12000,
+    message: 'Memuat data market…',
+    retry: () => location.reload()
+  });
+  Promise.allSettled([loadNews(), loadHeatmap()])
+    .finally(() => window.AmyFXLoading?.stop());
 
   // Auto-refresh
   setInterval(() => {
@@ -146,7 +152,7 @@ function focusNewsItem(id) {
 async function loadNews(silent = false) {
   const status = document.getElementById('news-status');
   const list = document.getElementById('news-list');
-  if (!silent) status.textContent = '🔄 Memuat berita...';
+  if (!silent) status.textContent = 'Memuat berita...';
 
   try {
     const minuteKey = Math.floor(Date.now() / 60000);
@@ -158,8 +164,8 @@ async function loadNews(silent = false) {
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
     if (!data.news || data.news.length === 0) {
-      status.textContent = '📭 Tidak ada berita gold saat ini';
-      list.innerHTML = '<div class="empty-state">📭 Belum ada breaking news untuk XAU/USD.<br><small>Data dari SM_News_24h</small></div>';
+      status.textContent = 'Tidak ada berita gold saat ini';
+      list.innerHTML = '<div class="empty-state">Belum ada breaking news untuk XAU/USD.<br><small>Data dari SM_News_24h</small></div>';
       return;
     }
 
@@ -173,7 +179,7 @@ async function loadNews(silent = false) {
       const lastNewsId = localStorage.getItem('amy_last_news_id');
 
       if (lastNewsId && lastNewsId !== currentNewsId) {
-        const title = '📰 Breaking News XAU/USD';
+        const title = 'Breaking News XAU/USD';
         const msg = latestNews.text || 'Berita baru telah tiba.';
         if (window.Android?.showNotificationWithUrl) {
           window.Android.showNotificationWithUrl(title, msg, newsTargetUrl(currentNewsId));
@@ -191,7 +197,7 @@ async function loadNews(silent = false) {
       localStorage.setItem('amy_last_news_id', currentNewsId);
     }
 
-    status.textContent = `📰 ${data.news.length} berita relevan • ${formatTime(data.updated)}`;
+    status.textContent = `${data.news.length} berita relevan • ${formatTime(data.updated)}`;
     panelLoadedAt.news = Date.now();
     window.AmyFXIntel?.write('news', { updated: data.updated, capturedAt: data.updated, source: 'VERCEL_NEWS', items: sortedNews.slice(0, 10) });
     renderNews(sortedNews);
@@ -200,10 +206,10 @@ async function loadNews(silent = false) {
       if (!focusNewsItem(pendingNewsId)) {
         newsRouteRetries += 1;
         if (newsRouteRetries <= 3) {
-          status.textContent = '⏳ Berita dari notifikasi sedang disinkronkan...';
+          status.textContent = 'Berita dari notifikasi sedang disinkronkan...';
           setTimeout(() => loadNews(true), 1500);
         } else {
-          status.textContent = '⚠️ Berita tujuan belum tersedia pada feed terbaru';
+          status.textContent = 'Berita tujuan belum tersedia pada feed terbaru';
           pendingNewsId = '';
           newsRouteRetries = 0;
         }
@@ -211,8 +217,8 @@ async function loadNews(silent = false) {
     }
   } catch (e) {
     if (e.name === 'AbortError') return;
-    status.textContent = '⚠️ Gagal memuat berita';
-    list.innerHTML = '<div class="empty-state">⚠️ Gagal terhubung. Coba lagi nanti.</div>';
+    status.textContent = 'Gagal memuat berita';
+    list.innerHTML = '<div class="empty-state">Gagal terhubung. Coba lagi nanti.</div>';
   }
 }
 
@@ -230,7 +236,7 @@ function renderNews(sortedNews) {
 // ─── Heatmap Loader ──────────────────────────────────────
 async function loadHeatmap(silent = false) {
   const status = document.getElementById('heatmap-status');
-  if (!silent) status.textContent = '🔄 Menghitung heatmap...';
+  if (!silent) status.textContent = 'Menghitung heatmap...';
 
   try {
     const res = await fetch(`${API_BASE}/heatmap?interval=15min&outputsize=200`, { signal: beginRequest('heatmap') });
@@ -238,22 +244,22 @@ async function loadHeatmap(silent = false) {
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
     if (!data.zones || data.zones.length === 0) {
-      status.textContent = '⚠️ Data belum cukup untuk heatmap';
+      status.textContent = 'Data belum cukup untuk heatmap';
       clearHeatmapState();
       return;
     }
     if (!payloadIsFresh(data.updated)) throw new Error('Heatmap yang diterima sudah usang');
 
     document.getElementById('heatmap-price').textContent =
-      `💰 XAU/USD ${data.currentPrice?.toFixed(2) || '--'}`;
-    status.textContent = `🔥 ${data.zones.length} zona likuiditas • ${formatTime(data.updated)}`;
+      `XAU/USD ${data.currentPrice?.toFixed(2) || '--'}`;
+    status.textContent = `${data.zones.length} zona likuiditas • ${formatTime(data.updated)}`;
     panelLoadedAt.heatmap = Date.now();
     window.AmyFXIntel?.write('heatmap', { updated: data.updated, capturedAt: data.updated, source: 'SUPABASE_EDGE', currentPrice: data.currentPrice, zones: data.zones });
     renderHeatmap(data.zones, data.currentPrice);
   } catch (e) {
     if (e.name === 'AbortError') return;
     clearHeatmapState();
-    status.textContent = '⚠️ Gagal memuat heatmap';
+    status.textContent = 'Gagal memuat heatmap';
   }
 }
 
@@ -308,7 +314,7 @@ async function loadLiquidity(silent = false) {
   const status = document.getElementById('liquidity-status');
   const list = document.getElementById('liquidity-list');
   if (!status || !list) return;
-  if (!silent) status.textContent = '🔄 Melacak liquidity...';
+  if (!silent) status.textContent = 'Melacak likuiditas...';
 
   try {
     const res = await fetch(`${API_BASE}/liquidity?interval=15min&outputsize=200`, { signal: beginRequest('liquidity') });
@@ -316,21 +322,21 @@ async function loadLiquidity(silent = false) {
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
     if (!data.levels || data.levels.length === 0) {
-      status.textContent = '⚠️ Belum ada level liquidity terdeteksi';
-      list.innerHTML = '<div class="empty-state">📭 Belum ada swing level aktif.<br><small>Data dari TwelveData M15</small></div>';
+      status.textContent = 'Belum ada level likuiditas terdeteksi';
+      list.innerHTML = '<div class="empty-state">Belum ada swing level aktif.<br><small>Data dari TwelveData M15</small></div>';
       return;
     }
 
     const priceStr = data.currentPrice ? data.currentPrice.toFixed(2) : '--';
-    status.textContent = `💧 ${data.levels.length} level aktif • XAU/USD ${priceStr} • ${formatTime(data.updated)}`;
+    status.textContent = `${data.levels.length} level aktif • XAU/USD ${priceStr} • ${formatTime(data.updated)}`;
     panelLoadedAt.liquidity = Date.now();
     if (!payloadIsFresh(data.updated)) throw new Error('Liquidity yang diterima sudah usang');
     window.AmyFXIntel?.write('liquidity', { updated: data.updated, capturedAt: data.updated, source: 'SUPABASE_EDGE', currentPrice: data.currentPrice, levels: data.levels });
     renderLiquidity(data.levels, data.currentPrice);
   } catch (e) {
     if (e.name === 'AbortError') return;
-    status.textContent = '⚠️ Gagal memuat liquidity';
-    list.innerHTML = '<div class="empty-state">⚠️ Gagal terhubung. Coba lagi nanti.</div>';
+    status.textContent = 'Gagal memuat likuiditas';
+    list.innerHTML = '<div class="empty-state">Gagal terhubung. Coba lagi nanti.</div>';
   }
 }
 
@@ -429,6 +435,3 @@ function hideLoading() {
   const overlay = document.getElementById('loading-overlay');
   if (overlay) overlay.style.display = 'none';
 }
-
-// Sembunyikan loading setelah 2 detik (fallback)
-setTimeout(hideLoading, 2000);

@@ -2,10 +2,10 @@ export const MAPPING_CLAIM_ACCURACY = Object.freeze({
   marketStateM15: Object.freeze({
     label: 'Market State M15',
     value: 73.19,
-    metric: 'structural agreement',
-    period: '2022–Jun 2026',
+    metric: 'baseline structural agreement',
+    period: 'PRE-BT7.1 BASELINE · REVALIDATION REQUIRED',
     authority: 'VALIDATED_PINE',
-    claim: 'Kondisi struktur saat ini sesuai audit struktur independen; bukan prediksi harga.'
+    claim: 'Baseline sebelum koreksi BT7.1. Build ini memakai Concept Structure sebagai arah utama dan wajib divalidasi ulang; Market State bukan prediksi harga.'
   }),
   directionForecastM15: Object.freeze({
     label: 'Direction Forecast M15',

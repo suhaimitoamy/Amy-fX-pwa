@@ -228,7 +228,6 @@
     const directionConflict = directional(direction.dominant) && directional(direction.timeframe) && direction.dominant !== direction.timeframe;
     const conflicts = [
       ...(Array.isArray(snapshot?.conflicts) ? snapshot.conflicts : []),
-      ...(skew ? [{ code: "QUOTE_MAPPING_TIMESTAMP_SKEW", skewMs: skew.skewMs }] : []),
       ...(directionConflict ? [{ code: "DIRECTION_CONFLICT", dominant: direction.dominant, timeframe: direction.timeframe }] : [])
     ];
     return {
