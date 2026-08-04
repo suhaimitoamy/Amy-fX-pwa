@@ -122,7 +122,7 @@ const worker = read('service-worker.js');
 for (const eventName of ['install', 'activate', 'fetch', 'push', 'notificationclick']) {
   if (!worker.includes(`addEventListener('${eventName}'`)) fail(`service worker missing ${eventName}`);
 }
-for (const marker of ['-pwa-ws-price-v4-market-cache-v6', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))', "appUrl('pwa-live-price-bridge.js')", "appUrl('pwa-update-bridge.js')"]) {
+for (const marker of ['-preview-parity-v1-market-cache-v7', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))', "appUrl('pwa-live-price-bridge.js')", "appUrl('pwa-update-bridge.js')"]) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
@@ -141,4 +141,4 @@ for (const file of ['service-worker.js', 'platform-adapter.js', 'member-auth.js'
 }
 
 JSON.parse(read('vercel.json'));
-if (!process.exitCode) console.log(`PWA validation passed: ${required.length} files, closed-candle Mapping freshness, persistent candle cache, authenticated backend WebSocket relay v4, market-cache v6, offline cache, and Web Push.`);
+if (!process.exitCode) console.log(`PWA validation passed: ${required.length} files, Amy FX Preview engine parity, closed-candle Mapping freshness, persistent candle cache, authenticated backend WebSocket relay v4, cache v7, offline cache, and Web Push.`);
