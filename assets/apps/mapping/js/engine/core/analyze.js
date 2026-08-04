@@ -251,10 +251,24 @@ export function analyze(
   }
   concepts.push(['Best Setup', bestSetup?.status || 'WAIT', bestSetup ? `${bestSetup.type} ${bestSetup.score}/100` : 'Belum ada setup valid']);
 
+  const sourceCandleClose = Number(cs.at(-1)?.close);
+  const structureSwings = {
+    highs: sw.highs.slice(-8).map(item => ({ index: item.index, high: item.high })),
+    lows: sw.lows.slice(-8).map(item => ({ index: item.index, low: item.low }))
+  };
+
   return {
     tf,
     price,
     final: bias.direction,
+    mappingBias: {
+      direction: bias.direction,
+      normalized: bias.normalized,
+      source: 'WEIGHTED_MAPPING_BIAS',
+      sourceCandleClose
+    },
+    sourceCandleClose,
+    structureSwings,
     biasScore: bias.normalized,
     score,
     signal,

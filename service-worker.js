@@ -1,7 +1,7 @@
 /* Amy FX PWA service worker */
 'use strict';
 
-const VERSION = 'amyfx-b58727965796-preview-parity-v1-pwa-ws-price-v4-market-cache-v7';
+const VERSION = 'amyfx-9e160f65e4e1-preview-parity-v1-pwa-ws-price-v4-market-cache-v7';
 const SHELL_CACHE = `amyfx-pwa-shell-${VERSION}`;
 const STATIC_CACHE = `amyfx-pwa-static-${VERSION}`;
 const DATA_CACHE = `amyfx-pwa-data-${VERSION}`;

@@ -1,9 +1,18 @@
 (function(){
-  if(typeof window === 'undefined' || window.__amyfxNotifyGuardLoaded)return;
+  if(typeof window==='undefined'||window.__amyfxNotifyGuardLoaded)return;
+
+  const hasBrowserLifecycle=
+    typeof window.setInterval==='function'&&
+    typeof window.clearInterval==='function'&&
+    typeof window.addEventListener==='function';
+  if(!hasBrowserLifecycle)return;
+
   window.__amyfxNotifyGuardLoaded=true;
 
   const STORE='amyfx.notify.last.sent';
   const MAX_ITEMS=120;
+  let bridgeScanTimer=0;
+  let stopped=false;
 
   function now(){return Date.now()}
   function norm(x){
@@ -44,8 +53,8 @@
   function openRoute(t,b){
     const r=route(t,b);
     try{localStorage.setItem('amyfx.notification.route',r)}catch(e){}
-    try{if(typeof setTab==='function')setTab(r)}catch(e){}
-    try{window.focus()}catch(e){}
+    try{if(typeof window.setTab==='function')window.setTab(r)}catch(e){}
+    try{window.focus?.()}catch(e){}
   }
   function allow(t,b){
     const n=now(),knd=kind(t,b),kk=key(t,b),last=read(),prev=last[kk]||0;
@@ -56,7 +65,7 @@
   }
 
   try{
-    if('Notification' in window && !window.Notification.__amyfxWrapped){
+    if('Notification' in window&&!window.Notification.__amyfxWrapped){
       const OriginalNotification=window.Notification;
       const WrappedNotification=function(title,opts){
         opts=opts||{};
@@ -91,13 +100,34 @@
     });
     obj.__amyfxNotifyBridgeWrapped=true;
   }
+
   function wrapAll(){
+    if(stopped)return;
     ['Android','AndroidBridge','AmyFX','AmyFx','Native','NotificationBridge','AppBridge'].forEach(function(n){
       try{wrapBridge(window[n])}catch(e){}
     });
   }
+
+  function stop(){
+    if(stopped)return false;
+    stopped=true;
+    if(bridgeScanTimer){
+      window.clearInterval(bridgeScanTimer);
+      bridgeScanTimer=0;
+    }
+    window.removeEventListener('pagehide',stop);
+    return true;
+  }
+
   wrapAll();
-  setInterval(wrapAll,1500);
+  bridgeScanTimer=window.setInterval(wrapAll,1500);
+  window.addEventListener('pagehide',stop,{once:true});
   window.__amyfxNotifyAllow=allow;
   window.__amyfxNotifyOpenRoute=openRoute;
+  window.AmyFXNotifyGuardLifecycle=Object.freeze({
+    version:'2.0.0',
+    stop,
+    isStopped:()=>stopped,
+    scanRunning:()=>bridgeScanTimer!==0
+  });
 })();

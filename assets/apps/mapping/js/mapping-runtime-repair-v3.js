@@ -1,11 +1,18 @@
 import { state } from './main.js';
-import { runAnalysis as runEngineAnalysis, setCandleFetchedAt } from './api/market-data.js';
+import {
+  runAnalysis as runEngineAnalysis,
+  getCandleFetchedAt,
+  isCandleStale
+} from './api/market-data.js';
 import {
   SUPPORTED_MAPPING_TIMEFRAMES,
   timeframeDurationMs
 } from './engine/mapping-timeframes.js';
 
 const REQUIRED_TFS = SUPPORTED_MAPPING_TIMEFRAMES;
+const PROVIDER_DELAYED_STATUS = 'WAIT — PEMBARUAN CANDLE TERTUNDA';
+const PROVIDER_DELAYED_REASON = 'Analisis closed-candle terakhir tetap ditampilkan, tetapi entry diblokir sampai provider berhasil memperbarui candle.';
+
 let refreshInFlight = null;
 let watchRepairQueued = false;
 const lastAnalyzedSignature = new Map();
@@ -49,16 +56,76 @@ function sourceSignature(tf = state.tf) {
   });
 }
 
-function markCachedSeriesUsable(nowMs = Date.now()) {
+function inspectCachedSeries() {
   const status = {};
   for (const tf of REQUIRED_TFS) {
     const hasClosedData = closedCandles(tf).length > 0;
-    status[tf] = hasClosedData;
-    // The fetch TTL is not an analysis validity gate. A valid historical closed
-    // candle remains analyzable even when the provider has not produced a newer bar.
-    if (hasClosedData) setCandleFetchedAt(tf, nowMs);
+    const lastSuccessfulFetchAt = Number(getCandleFetchedAt(tf) || 0);
+    const providerFresh = Boolean(
+      hasClosedData
+      && lastSuccessfulFetchAt > 0
+      && !isCandleStale(tf)
+    );
+    status[tf] = {
+      hasClosedData,
+      analysisAvailable: hasClosedData,
+      providerFresh,
+      providerDelayed: hasClosedData && !providerFresh,
+      lastSuccessfulFetchAt
+    };
   }
   return status;
+}
+
+function executionStateSignature(result) {
+  return JSON.stringify({
+    active: Boolean(result?.setupExecution?.active),
+    status: result?.setupExecution?.status || '',
+    lifecycleStage: result?.setupExecution?.lifecycleStage || '',
+    freshnessBlocked: Boolean(result?.setupExecution?.freshnessBlocked),
+    providerFresh: Boolean(result?.executionFreshness?.providerFresh)
+  });
+}
+
+function applyExecutionFreshnessGuard(result, freshness) {
+  if (!result || !freshness) return false;
+  const before = executionStateSignature(result);
+
+  result.executionFreshness = {
+    analysisAvailable: Boolean(freshness.analysisAvailable),
+    providerFresh: Boolean(freshness.providerFresh),
+    providerDelayed: Boolean(freshness.providerDelayed),
+    executionFresh: Boolean(freshness.providerFresh),
+    lastSuccessfulFetchAt: Number(freshness.lastSuccessfulFetchAt || 0),
+    checkedAt: Date.now()
+  };
+
+  if (freshness.providerFresh) {
+    if (result.__amyFxFreshSetupExecution) {
+      result.setupExecution = result.__amyFxFreshSetupExecution;
+      delete result.__amyFxFreshSetupExecution;
+    }
+  } else if (freshness.analysisAvailable) {
+    const execution = result.setupExecution;
+    if (execution?.active && !execution?.terminal) {
+      if (!result.__amyFxFreshSetupExecution) {
+        result.__amyFxFreshSetupExecution = execution;
+      }
+      result.setupExecution = {
+        ...execution,
+        active: false,
+        terminal: false,
+        invalidated: false,
+        executionBlocked: true,
+        freshnessBlocked: true,
+        status: PROVIDER_DELAYED_STATUS,
+        lifecycleStage: 'DATA_DELAYED',
+        invalidationReason: PROVIDER_DELAYED_REASON
+      };
+    }
+  }
+
+  return before !== executionStateSignature(result);
 }
 
 function latestClosedCandleClose(tf = state.tf) {
@@ -73,10 +140,19 @@ function publishFreshMappingClock() {
   if (!intel?.write || !intel?.read) return false;
   const result = state.result;
   if (!result) return false;
+
   const snapshot = result.mappingSnapshot;
-  const snapshotTf = snapshot?.timeframe || result.tf || state.tf;
+  const snapshotTf = String(snapshot?.timeframe || result.tf || state.tf || 'M15').toUpperCase();
   const sourceCandleTime = latestClosedCandleClose(snapshotTf);
   if (!sourceCandleTime) return false;
+
+  const freshness = inspectCachedSeries()[snapshotTf] || {
+    analysisAvailable: true,
+    providerFresh: false,
+    providerDelayed: true,
+    lastSuccessfulFetchAt: 0
+  };
+  const guardChanged = applyExecutionFreshnessGuard(result, freshness);
   const previous = intel.read()?.mapping || {};
   const next = {
     ...previous,
@@ -85,25 +161,48 @@ function publishFreshMappingClock() {
     sourceCandleAt: sourceCandleTime,
     capturedAt: snapshot?.capturedAt || previous.capturedAt,
     analyzedAt: snapshot?.freshness?.analyzedAt || sourceCandleTime,
-    dataStale: false,
+    analysisAvailable: Boolean(freshness.analysisAvailable),
+    providerFresh: Boolean(freshness.providerFresh),
+    providerDelayed: Boolean(freshness.providerDelayed),
+    executionFresh: Boolean(freshness.providerFresh),
+    lastSuccessfulFetchAt: Number(freshness.lastSuccessfulFetchAt || 0),
+    dataStale: !freshness.analysisAvailable,
+    dataStatus: freshness.providerFresh
+      ? 'CURRENT'
+      : freshness.analysisAvailable
+        ? 'CACHED_PROVIDER_DELAYED'
+        : 'UNAVAILABLE',
+    setupExecution: result.setupExecution || previous.setupExecution || null,
+    executionFreshness: result.executionFreshness || null,
     source: snapshot?.source || previous.source || 'AMY_MAPPING_CLOSED_CANDLE_AUTHORITY_V4'
   };
   const previousSignature = JSON.stringify({
     timeframe: previous.timeframe,
     sourceCandleTime: previous.sourceCandleTime,
     analyzedAt: previous.analyzedAt,
-    source: previous.source
+    source: previous.source,
+    providerFresh: previous.providerFresh,
+    providerDelayed: previous.providerDelayed,
+    executionFresh: previous.executionFresh,
+    status: previous.setupExecution?.status
   });
   const nextSignature = JSON.stringify({
     timeframe: next.timeframe,
     sourceCandleTime: next.sourceCandleTime,
     analyzedAt: next.analyzedAt,
-    source: next.source
+    source: next.source,
+    providerFresh: next.providerFresh,
+    providerDelayed: next.providerDelayed,
+    executionFresh: next.executionFresh,
+    status: next.setupExecution?.status
   });
-  if (previousSignature === nextSignature) return false;
-  intel.write('mapping', next);
-  window.AmyFXMappingConsistency?.sync?.();
-  return true;
+
+  if (previousSignature !== nextSignature) {
+    intel.write('mapping', next);
+    window.AmyFXMappingConsistency?.sync?.();
+  }
+  if (guardChanged) window.render?.();
+  return previousSignature !== nextSignature || guardChanged;
 }
 
 function repairEntryWatchVisibility() {
@@ -122,7 +221,6 @@ async function refreshMapping(reason = 'manual', force = false, requestedTf = st
   const tf = String(requestedTf || state.tf || 'M15').toUpperCase();
   if (refreshInFlight?.tf === tf) return refreshInFlight.promise;
 
-  markCachedSeriesUsable();
   const beforeSignature = sourceSignature(tf);
   const previousResult = state.result;
   const previousTf = previousResult?.tf || state.tf;
@@ -168,6 +266,7 @@ async function refreshMapping(reason = 'manual', force = false, requestedTf = st
       state.tf = previousTf;
       window.render?.();
     }
+    publishFreshMappingClock();
     scheduleWatchRepair();
     return false;
   }).finally(() => {
@@ -183,15 +282,22 @@ function onCandlesUpdated(event) {
     ? event.detail.timeframes.map(value => String(value).toUpperCase())
     : [];
   const selectedTf = String(state.tf || 'M15').toUpperCase();
-  if (timeframes.length && !timeframes.includes(selectedTf)) return;
+  if (timeframes.length && !timeframes.includes(selectedTf)) {
+    publishFreshMappingClock();
+    return;
+  }
   const nextSignature = sourceSignature(selectedTf);
-  if (lastAnalyzedSignature.get(selectedTf) === nextSignature) return;
+  if (lastAnalyzedSignature.get(selectedTf) === nextSignature) {
+    publishFreshMappingClock();
+    return;
+  }
   refreshMapping('closed-candle-update', false, selectedTf);
 }
 
 function boot() {
   // Inline timeframe buttons call window.runAnalysis. Route them through the
-  // closed-candle authority so old-but-valid candles never become DATA USANG.
+  // closed-candle authority so old-but-valid candles remain visible while
+  // execution is independently blocked when the provider is delayed.
   window.runAnalysis = tf => refreshMapping('user-timeframe', true, tf);
   window.addEventListener('amyfx:candles-updated', onCandlesUpdated);
   window.addEventListener('amyfx:mapping-refresh-request', event => {
@@ -208,13 +314,15 @@ function boot() {
 }
 
 window.AmyFXMappingRuntimeRepair = Object.freeze({
-  version: '5.0.0',
+  version: '6.0.0',
   refresh: refreshMapping,
   publishFreshMappingClock,
   repairEntryWatchVisibility,
   latestClosedCandleClose,
   sourceSignature,
-  markCachedSeriesUsable
+  inspectCachedSeries,
+  markCachedSeriesUsable: inspectCachedSeries,
+  applyExecutionFreshnessGuard
 });
 
 if (document.readyState === 'loading') {

@@ -5,6 +5,8 @@
   window.__amyFxLivePriceDisplayOnlyInstalled = true;
 
   const HARD_TTL_MS = 180000;
+  const LIVE_LABEL_PATTERN = /^harga\s+(?:saat\s+ini|live)$/i;
+  let lifecycleController = null;
 
   function number(value) {
     const parsed = Number(value);
@@ -42,7 +44,31 @@
     return Number(price).toFixed(2);
   }
 
-  function updatePriceNodes(price) {
+  function markSemanticLivePriceNodes(root = document) {
+    root.querySelectorAll?.(
+      '[data-execution-plan-card] .execution-detail-grid > div, .break-box, .num'
+    ).forEach(container => {
+      const label = String(container.querySelector('small')?.textContent || '').trim();
+      if (!LIVE_LABEL_PATTERN.test(label)) return;
+      const value = container.querySelector('strong');
+      if (value) value.setAttribute('data-live-price', '');
+    });
+  }
+
+  function currentPrice() {
+    const runtime = Number(window.state?.price || 0);
+    if (Number.isFinite(runtime) && runtime > 0) return runtime;
+    try {
+      const stored = Number(localStorage.getItem('last_price') || 0);
+      return Number.isFinite(stored) && stored > 0 ? stored : NaN;
+    } catch (_) {
+      return NaN;
+    }
+  }
+
+  function updatePriceNodes(price = currentPrice()) {
+    if (!Number.isFinite(Number(price)) || Number(price) <= 0) return false;
+    markSemanticLivePriceNodes();
     const formatted = priceText(price);
     document.querySelectorAll('.price, [data-live-price]').forEach(node => {
       const prefix = node.classList.contains('price') ? '$' : '';
@@ -53,16 +79,20 @@
       const next = `$${formatted}`;
       if (node.textContent !== next) node.textContent = next;
     });
+    return true;
+  }
+
+  function syncAfterRender() {
+    markSemanticLivePriceNodes();
+    updatePriceNodes();
   }
 
   function handlePrice(event) {
     const tick = validTick(event?.detail || {});
     if (!tick) return;
 
-    // Closed-candle Mapping must not consume live ticks. Handle the visual price
-    // here and stop the older runtime listener from rebuilding Mapping state.
-    event.stopImmediatePropagation();
-
+    // Paint only display fields. Mapping, levels, lifecycle, and execution
+    // authority remain bound to closed candles and are never recomputed here.
     window.__amyFxDisplayLastTickAt = tick.capturedAt;
     try {
       localStorage.setItem('last_ws_tick_at', String(tick.capturedAt));
@@ -86,11 +116,42 @@
     }));
   }
 
-  window.addEventListener('amyfx:twelvedata-price', handlePrice, true);
+  function stop() {
+    lifecycleController?.abort();
+    lifecycleController = null;
+  }
+
+  function start() {
+    if (lifecycleController) return;
+    lifecycleController = new AbortController();
+    const signal = lifecycleController.signal;
+    window.addEventListener('amyfx:twelvedata-price', handlePrice, { capture: true, signal });
+    [
+      'amyfx:mapping-ui-rendered',
+      'amyfx:market-intent-rendered',
+      'amyfx:mapping-state-change',
+      'amyfx:entry-watch-updated'
+    ].forEach(name => window.addEventListener(name, syncAfterRender, { signal }));
+    window.addEventListener('pagehide', stop, { once: true, signal });
+    syncAfterRender();
+  }
+
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) start();
+  });
 
   window.AmyFXLivePriceDisplayOnly = Object.freeze({
-    version: '1.0.0',
+    version: '3.0.0',
     lastTickAt: () => Number(window.__amyFxDisplayLastTickAt || 0),
-    updatePriceNodes
+    markSemanticLivePriceNodes,
+    updatePriceNodes,
+    start,
+    stop
   });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
+  }
 })();

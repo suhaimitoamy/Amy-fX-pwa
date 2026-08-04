@@ -8,6 +8,7 @@
   let scheduled = false;
   let applying = false;
   let observer = null;
+  let lifecycleController = null;
 
   function currentTab() {
     return window.state?.tab || localStorage.getItem('amy_mapping_tab') || '';
@@ -59,20 +60,11 @@
     details.addEventListener('toggle', () => {
       if (!details.open) details.open = true;
     });
-
     summary?.addEventListener('click', event => {
       event.preventDefault();
       event.stopPropagation();
       details.open = true;
     }, true);
-  }
-
-  function removeDashboardDuplicates() {
-    if (currentTab() !== 'Dashboard') return;
-    document.querySelector('.mapping-hero')?.remove();
-    document.querySelectorAll('#app > section.card').forEach(section => {
-      if ((section.textContent || '').includes('AMY FX v1.5 PREVIEW AKTIF')) section.remove();
-    });
   }
 
   function latestClosedCandle() {
@@ -89,33 +81,23 @@
     const badge = card?.querySelector('.regime-badge');
     if (!badge) return;
     const source = latestClosedCandle();
+    const freshness = window.state?.result?.executionFreshness || {};
     const available = Boolean(source);
-    const text = available ? `${source.timeframe} CANDLE TERTUTUP` : 'MENUNGGU DATA';
+    const providerDelayed = Boolean(available && freshness.providerDelayed);
+    const text = providerDelayed
+      ? `${source.timeframe} CACHE · PROVIDER TERTUNDA`
+      : available
+        ? `${source.timeframe} CANDLE TERTUTUP`
+        : 'MENUNGGU DATA';
     if (badge.textContent !== text) badge.textContent = text;
-    badge.classList.remove('stale');
-    badge.classList.toggle('live', available);
-    badge.classList.toggle('waiting', !available);
-    badge.setAttribute('aria-label', available
-      ? `Analisis memakai candle ${source.timeframe} terakhir yang sudah close`
-      : 'Belum ada candle tertutup yang dapat dianalisis');
-  }
-
-  function removeHistoricalReliability(card) {
-    if (!card) return;
-
-    card.querySelectorAll('.amy-reliability-disclosure').forEach(node => node.remove());
-
-    [...card.querySelectorAll('.market-health-title')].forEach(title => {
-      if (title.querySelector('span')?.textContent?.trim() !== 'RELIABILITAS HISTORIS') return;
-      const grid = title.nextElementSibling;
-      if (grid?.classList.contains('reliability-grid')) grid.remove();
-      title.remove();
-    });
-
-    card.querySelectorAll('details.professional-disclosure').forEach(details => {
-      const summary = details.querySelector(':scope > summary')?.textContent || '';
-      if (summary.includes('Performa Historis Model')) details.remove();
-    });
+    badge.classList.toggle('stale', providerDelayed);
+    badge.classList.toggle('live', available && !providerDelayed);
+    badge.classList.toggle('waiting', !available || providerDelayed);
+    badge.setAttribute('aria-label', providerDelayed
+      ? `Analisis memakai candle ${source.timeframe} terakhir; entry diblokir sampai provider diperbarui`
+      : available
+        ? `Analisis memakai candle ${source.timeframe} terakhir yang sudah close`
+        : 'Belum ada candle tertutup yang dapat dianalisis');
   }
 
   function ensureMarketContextDisclosure(card) {
@@ -132,7 +114,7 @@
     details.className = 'card amy-analysis-section';
     details.dataset.stabilityKey = MARKET_CONTEXT_KEY;
     details.open = true;
-    details.innerHTML = '<summary><span>Ringkasan Market</span></summary>';
+    details.innerHTML = '<summary><span>Ringkasan Market</span><small>Struktur, arah, dan skenario</small></summary>';
     card.before(details);
     details.appendChild(card);
     forceStaticDisclosure(details);
@@ -152,7 +134,6 @@
   function makeAnalyzeStatic(app) {
     if (!app || currentTab() !== 'Analyze') return;
     app.dataset.analysisStatic = 'true';
-
     app.querySelectorAll('details').forEach(details => {
       if (!details.dataset.stabilityKey) {
         const key = stableKeyForSummary(details.querySelector(':scope > summary')?.textContent);
@@ -162,30 +143,19 @@
     });
   }
 
-  function removeHistoricalOutlookStats() {
-    document.querySelectorAll('.amy-outlook-backtest-note, .amy-outlook-historical-rate').forEach(node => node.remove());
-  }
-
   function applyFixes() {
     scheduled = false;
     if (applying) return;
     applying = true;
     try {
       installStaticStyle();
-      removeDashboardDuplicates();
-
       const app = document.getElementById('app');
       if (!app) return;
 
       if (currentTab() === 'Analyze') {
         const card = document.getElementById('amy-regime-router-v3');
-        if (card) {
-          removeHistoricalReliability(card);
-          ensureMarketContextDisclosure(card);
-          updateAnalysisBadge(card);
-        }
+        if (card) ensureMarketContextDisclosure(card);
         makeAnalyzeStatic(app);
-        removeHistoricalOutlookStats();
       } else {
         delete app.dataset.analysisStatic;
       }
@@ -197,23 +167,50 @@
   function schedule() {
     if (scheduled) return;
     scheduled = true;
-    requestAnimationFrame(applyFixes);
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(applyFixes);
+    else setTimeout(applyFixes, 0);
+  }
+
+  function stop() {
+    observer?.disconnect();
+    observer = null;
+    lifecycleController?.abort();
+    lifecycleController = null;
+    scheduled = false;
   }
 
   function start() {
     const app = document.getElementById('app');
-    if (!app) return;
+    if (!app || lifecycleController) return;
+    lifecycleController = new AbortController();
+    const signal = lifecycleController.signal;
 
     observer = new MutationObserver(records => {
       if (applying) return;
-      const topLevelChanged = records.some(record => record.target === app);
-      if (topLevelChanged) schedule();
+      if (records.some(record => record.target === app)) schedule();
     });
     observer.observe(app, { childList: true, subtree: false });
 
-    window.addEventListener('amyfx:mapping-state-change', schedule);
+    [
+      'amyfx:mapping-state-change',
+      'amyfx:mapping-ui-rendered',
+      'amyfx:market-intent-rendered',
+      'amyfx:entry-watch-updated'
+    ].forEach(name => window.addEventListener(name, schedule, { signal }));
+    window.addEventListener('pagehide', stop, { once: true, signal });
     schedule();
   }
+
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) start();
+  });
+
+  window.AmyFXAnalysisUiStability = Object.freeze({
+    version: '6.0.0',
+    start,
+    stop,
+    schedule
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', start, { once: true });

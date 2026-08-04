@@ -1,7 +1,7 @@
 "use strict";
 
 import { state, nowTime } from "./main.js";
-import { runAnalysis, isCandleStale } from "./api/market-data.js";
+import { isCandleStale } from "./api/market-data.js";
 
 (function () {
   if (window.__amyFxMappingLiveConsistencyV2) return;
@@ -11,6 +11,7 @@ import { runAnalysis, isCandleStale } from "./api/market-data.js";
   let refreshInFlight = false;
   let lastRefreshAttemptAt = 0;
   let syncScheduled = false;
+  let lifecycleController = null;
 
   function canonical() {
     const contract = window.AmyFXMarketContract;
@@ -18,15 +19,19 @@ import { runAnalysis, isCandleStale } from "./api/market-data.js";
     const shared = contract?.read?.() || intel?.read?.() || {};
     const quote = shared.quote || {};
     const mapping = shared.mapping || {};
-    const quoteFreshness = contract?.assess?.("quote", quote) || intel?.freshness?.(shared) || { state: "EXPIRED", label: "EXPIRED" };
-    const mappingFreshness = contract?.assess?.("mapping", mapping) || { state: mapping?.dataStale ? "EXPIRED" : "STALE" };
+    const quoteFreshness = contract?.assess?.("quote", quote)
+      || intel?.freshness?.(shared)
+      || { state: "EXPIRED", label: "EXPIRED" };
+    const mappingFreshness = contract?.assess?.("mapping", mapping)
+      || { state: mapping?.dataStale ? "EXPIRED" : "STALE" };
     return { shared, quote, mapping, quoteFreshness, mappingFreshness };
   }
 
   function mappingIsFresh(mapping = canonical().mapping) {
     const contract = window.AmyFXMarketContract;
     const fresh = contract?.assess?.("mapping", mapping) || { state: "STALE" };
-    const sameTimeframe = !mapping?.timeframe || String(mapping.timeframe).toUpperCase() === String(state.tf).toUpperCase();
+    const sameTimeframe = !mapping?.timeframe
+      || String(mapping.timeframe).toUpperCase() === String(state.tf).toUpperCase();
     return Boolean(sameTimeframe && fresh.state === "FRESH" && !mapping?.dataStale);
   }
 
@@ -77,7 +82,7 @@ import { runAnalysis, isCandleStale } from "./api/market-data.js";
 
     if (conn) {
       const accessibleStatus = refreshInFlight && quoteState === "LIVE"
-        ? `Harga live, Mapping ${state.tf} sedang diperbarui`
+        ? `Harga live, Mapping ${state.tf} sedang menunggu candle terbaru`
         : quoteState === "LIVE" && mappingState === "FRESH"
           ? `Harga dan Mapping ${state.tf} fresh`
           : quoteState === "LIVE"
@@ -121,53 +126,82 @@ import { runAnalysis, isCandleStale } from "./api/market-data.js";
   function analysisNeedsRefresh() {
     if (document.hidden || state.conn !== "Connected") return false;
     const { quoteFreshness, mappingFreshness } = canonical();
-    return quoteFreshness.state === "LIVE" && (mappingFreshness.state !== "FRESH" || isCandleStale(state.tf));
+    return quoteFreshness.state === "LIVE"
+      && (mappingFreshness.state !== "FRESH" || isCandleStale(state.tf));
   }
 
-  async function refreshExpiredAnalysis(reason = "mapping-expired") {
-    if (!analysisNeedsRefresh() || refreshInFlight) return;
-    if (Date.now() - lastRefreshAttemptAt < REFRESH_COOLDOWN_MS) return;
+  function requestClosedCandleRefresh(reason = "mapping-expired") {
+    if (!analysisNeedsRefresh() || refreshInFlight) return false;
+    if (Date.now() - lastRefreshAttemptAt < REFRESH_COOLDOWN_MS) return false;
     lastRefreshAttemptAt = Date.now();
     refreshInFlight = true;
     scheduleSync();
-    try {
-      await runAnalysis(state.tf);
-      window.dispatchEvent(new CustomEvent("amyfx:mapping-consistency-refresh", {
-        detail: { reason, timeframe: state.tf, refreshedAt: Date.now() }
-      }));
-    } finally {
+
+    window.dispatchEvent(new CustomEvent("amyfx:candle-refresh-request", {
+      detail: {
+        reason,
+        timeframe: state.tf,
+        requestedAt: Date.now(),
+        source: "MAPPING_CONSISTENCY_EVENT_DRIVEN"
+      }
+    }));
+
+    window.setTimeout(() => {
       refreshInFlight = false;
       scheduleSync();
-    }
+    }, 1500);
+    return true;
   }
 
-  function reconcile(reason) {
+  function reconcile(reason, { refresh = false } = {}) {
     scheduleSync();
-    window.setTimeout(() => refreshExpiredAnalysis(reason), 50);
+    window.AmyFXMappingRuntimeRepair?.publishFreshMappingClock?.();
+    if (refresh) requestClosedCandleRefresh(reason);
   }
 
-  function boot() {
-    reconcile("startup");
-    window.addEventListener("amyfx:market-update", () => reconcile("market-update"));
-    window.addEventListener("online", () => reconcile("online"));
-    window.addEventListener("offline", scheduleSync);
-    window.addEventListener("focus", () => reconcile("focus"));
+  function stop() {
+    lifecycleController?.abort();
+    lifecycleController = null;
+    refreshInFlight = false;
+    syncScheduled = false;
+  }
+
+  function start() {
+    if (lifecycleController) return;
+    lifecycleController = new AbortController();
+    const signal = lifecycleController.signal;
+
+    window.addEventListener("amyfx:live-price-display", scheduleSync, { signal });
+    window.addEventListener("amyfx:market-update", scheduleSync, { signal });
+    window.addEventListener("amyfx:mapping-state-change", scheduleSync, { signal });
+    window.addEventListener("amyfx:candles-updated", scheduleSync, { signal });
+    window.addEventListener("online", () => reconcile("online", { refresh: true }), { signal });
+    window.addEventListener("offline", scheduleSync, { signal });
+    window.addEventListener("focus", () => reconcile("focus", { refresh: true }), { signal });
     document.addEventListener("visibilitychange", () => {
-      if (!document.hidden) reconcile("visible");
-    });
-    document.querySelector(".nav")?.addEventListener("click", scheduleSync);
-    window.setInterval(() => {
-      if (!document.hidden) reconcile("periodic-check");
-    }, 60_000);
+      if (!document.hidden) reconcile("visible", { refresh: true });
+    }, { signal });
+    document.querySelector(".nav")?.addEventListener("click", scheduleSync, { signal });
+    window.addEventListener("pagehide", stop, { once: true, signal });
+    reconcile("startup", { refresh: true });
   }
 
-  window.AmyFXMappingConsistency = Object.freeze({
-    version: "2.0.0",
-    mappingIsFresh,
-    refresh: refreshExpiredAnalysis,
-    sync: syncConnectionLabel
+  window.addEventListener("pageshow", event => {
+    if (event.persisted) start();
   });
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
-  else boot();
+  window.AmyFXMappingConsistency = Object.freeze({
+    version: "3.0.0",
+    mappingIsFresh,
+    refresh: requestClosedCandleRefresh,
+    sync: syncConnectionLabel,
+    start,
+    stop
+  });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
 })();

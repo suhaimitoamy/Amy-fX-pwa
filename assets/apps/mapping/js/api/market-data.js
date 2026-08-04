@@ -10,6 +10,7 @@ import {
 import { aggregateClosedCandles } from './closed-candle-aggregation.js';
 import { causalEntryLifecycleContract } from '../engine/concept-entry-map-v3.js';
 import { buildMappingSnapshot } from '../engine/mapping-snapshot.js';
+import { resolveMappingBias } from '../engine/structural-bias.js';
 import { render, renderSoft, renderAnalyzeLive } from '../ui/ui-render.js';
 import { sendTargetsToNative, notifyImportant } from '../bridge/android-bridge.js';
 
@@ -113,6 +114,39 @@ function analysisRefreshDelay(tf) {
   return 3_600_000;
 }
 
+const STRUCTURAL_BIAS_STORAGE_KEY = 'amy_mapping_structural_bias_v1';
+
+function readStructuralBiasState() {
+  if (typeof localStorage === 'undefined') return {};
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STRUCTURAL_BIAS_STORAGE_KEY) || '{}');
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch (_) {
+    return {};
+  }
+}
+
+function persistStructuralBias(tf, decision) {
+  if (typeof localStorage === 'undefined' || !decision || !['BUY', 'SELL'].includes(decision.bias)) return;
+  const all = readStructuralBiasState();
+  all[String(tf || 'M15').toUpperCase()] = {
+    bias: decision.bias,
+    source: decision.source,
+    invalidationLevel: decision.invalidationLevel,
+    structure: decision.structure,
+    updatedAt: Date.now()
+  };
+  try { localStorage.setItem(STRUCTURAL_BIAS_STORAGE_KEY, JSON.stringify(all)); } catch (_) {}
+}
+
+function structuralBiasDecision(result) {
+  const tf = String(result?.tf || state.tf || 'M15').toUpperCase();
+  const previous = readStructuralBiasState()[tf] || null;
+  const decision = resolveMappingBias(result, previous);
+  persistStructuralBias(tf, decision);
+  return decision;
+}
+
 function validatedDirection(result) {
   const forecast = result?.validatedMarketContext?.directionForecast;
   if (!forecast?.active) return null;
@@ -120,9 +154,19 @@ function validatedDirection(result) {
 }
 
 export function buildDirectionDecision(result) {
+  const biasDecision = structuralBiasDecision(result);
+  const biasFields = {
+    bias: biasDecision.bias,
+    biasSource: biasDecision.source,
+    biasReason: biasDecision.reason,
+    biasInvalidationLevel: biasDecision.invalidationLevel,
+    biasStructure: biasDecision.structure,
+    biasPreviousInvalidated: biasDecision.previousInvalidated
+  };
+
   if (!result) {
     return {
-      bias: 'WAIT',
+      ...biasFields,
       signal: 'WAIT',
       source: 'NO_CLEAR_DIRECTION',
       status: 'WAIT — DATA ANALISIS BELUM TERSEDIA',
@@ -133,6 +177,7 @@ export function buildDirectionDecision(result) {
 
   if (result.dataStale && !result.st && !result.validatedMarketContext?.marketState) {
     return {
+      ...biasFields,
       bias: 'DATA USANG',
       signal: 'WAIT',
       source: 'DATA_STALE',
@@ -145,15 +190,16 @@ export function buildDirectionDecision(result) {
   const validated = result.validatedMarketContext;
   const forecast = validated?.directionForecast;
   const marketState = validated?.marketState;
+  const biasLabel = ['BUY', 'SELL'].includes(biasDecision.bias) ? `BIAS ${biasDecision.bias}` : 'BIAS BELUM TERBENTUK';
 
   if (forecast && (forecast.invalidated || forecast.expired) && !forecast.active) {
     const reason = forecast.invalidationReason
       || (forecast.invalidated ? 'Direction Forecast dihentikan oleh structural break berlawanan.' : 'Direction Forecast telah melewati batas horizon.');
     return {
-      bias: 'WAIT',
+      ...biasFields,
       signal: 'WAIT',
       source: 'VALIDATED_DIRECTION_FORECAST',
-      status: `WAIT — ${reason}`,
+      status: `${biasLabel} · SETUP WAIT — ${reason}`,
       invalidated: true,
       invalidationReason: reason
     };
@@ -161,7 +207,7 @@ export function buildDirectionDecision(result) {
 
   if (forecast?.active) {
     const forecastDir = forecast.direction;
-    const bias = forecastDir === 'BULLISH' ? 'BUY' : forecastDir === 'BEARISH' ? 'SELL' : 'WAIT';
+    const executionDirection = forecastDir === 'BULLISH' ? 'BUY' : forecastDir === 'BEARISH' ? 'SELL' : 'WAIT';
     const rawSetup = result.experimentalBestSetup || result.bestSetup || result.entryMap?.setup;
     const setupVal = setupDirection(rawSetup);
     const forecastVal = forecast.directionValue > 0 ? 1 : forecast.directionValue < 0 ? -1 : 0;
@@ -170,20 +216,20 @@ export function buildDirectionDecision(result) {
     if (conflict) {
       const reason = `Setup Entry Map (${rawSetup?.dir || 'Entry Map'}) bertentangan dengan Validated Direction Forecast (${forecastDir}).`;
       return {
-        bias,
+        ...biasFields,
         signal: 'WAIT',
         source: 'VALIDATED_DIRECTION_FORECAST',
-        status: `WAIT — ${reason}`,
+        status: `${biasLabel} · SETUP WAIT — ${reason}`,
         invalidated: true,
         invalidationReason: reason
       };
     }
 
     return {
-      bias,
-      signal: bias,
+      ...biasFields,
+      signal: executionDirection,
       source: 'VALIDATED_DIRECTION_FORECAST',
-      status: `${forecastDir} · ${forecast.confidenceLabel || (Number.isFinite(forecast.confidence) ? `${forecast.confidence}%` : 'RULE-BASED')}`,
+      status: `${biasLabel} · ${forecastDir} · ${forecast.confidenceLabel || (Number.isFinite(forecast.confidence) ? `${forecast.confidence}%` : 'RULE-BASED')}`,
       invalidated: false,
       invalidationReason: ''
     };
@@ -191,20 +237,20 @@ export function buildDirectionDecision(result) {
 
   if (marketState?.state && marketState.state !== 'DATA BELUM CUKUP') {
     return {
-      bias: 'WAIT',
+      ...biasFields,
       signal: 'WAIT',
       source: 'VALIDATED_MARKET_STATE',
-      status: `WAIT — Market State: ${marketState.state} (Konteks saja, sinyal WAIT)`,
+      status: `${biasLabel} · SETUP WAIT — Market State: ${marketState.state}`,
       invalidated: false,
       invalidationReason: ''
     };
   }
 
   return {
-    bias: 'WAIT',
+    ...biasFields,
     signal: 'WAIT',
     source: 'NO_CLEAR_DIRECTION',
-    status: 'WAIT — NO CLEAR DIRECTION',
+    status: `${biasLabel} · SETUP WAIT — belum ada setup tervalidasi`,
     invalidated: false,
     invalidationReason: ''
   };
@@ -791,7 +837,21 @@ export function buildMappingExplanation(result) {
   }
 
   const stateText = marketState?.state || 'RANGE / TRANSITION';
-  return { headline: 'Belum ada arah market yang tervalidasi', action: 'Tunggu konfirmasi arah baru.', reason: `Kondisi market saat ini adalah ${stateText}. Kondisi ini merupakan konteks perilaku harga, bukan sinyal BUY atau SELL.`, confirmationNeeded: 'Membutuhkan structural break terkonfirmasi dan Direction Forecast aktif.', invalidation: '-', marketContext: stateText, dataStatus: 'AKTIF' };
+  if (dd.bias === 'BUY' || dd.bias === 'SELL') {
+    const invalidation = Number.isFinite(Number(dd.biasInvalidationLevel))
+      ? `Bias ${dd.bias} batal jika candle close ${dd.bias === 'BUY' ? 'di bawah' : 'di atas'} ${p2(dd.biasInvalidationLevel)}.`
+      : 'Bias berubah setelah invalidasi struktur dan konfirmasi struktur lawan.';
+    return {
+      headline: `Bias struktur ${dd.bias} aktif, setup belum tersedia`,
+      action: `Gunakan ${dd.bias} sebagai arah analisis manual; tunggu konfirmasi entry sendiri.`,
+      reason: dd.biasReason || `Bias dibentuk dari struktur market ${dd.biasStructure?.highShape || '-'} / ${dd.biasStructure?.lowShape || '-'}.`,
+      confirmationNeeded: 'Setup Scalper Engine dan setup Mapping tetap terpisah dari bias.',
+      invalidation,
+      marketContext: `${stateText} · BIAS ${dd.bias}`,
+      dataStatus: 'AKTIF'
+    };
+  }
+  return { headline: 'Bias struktur belum terbentuk', action: 'Tunggu struktur HH/HL atau LH/LL yang valid.', reason: `Kondisi market saat ini adalah ${stateText}. Candle dan struktur belum cukup untuk membentuk bias yang dapat dipertahankan.`, confirmationNeeded: 'Membutuhkan struktur swing dan invalidasi yang jelas.', invalidation: '-', marketContext: stateText, dataStatus: 'AKTIF' };
 }
 
 function publishMappingSnapshot(result = state.result) {
