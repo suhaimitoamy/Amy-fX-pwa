@@ -1,6 +1,6 @@
-// Amy FX PWA release identity — Preview engine parity 310.
+// Amy FX PWA release identity — Amy FX 2.4.0 / Pro 326 feature parity.
 (function () {
-  const VERSION = Object.freeze({ name: '2.3.0', code: 58 });
+  const VERSION = Object.freeze({ name: '2.4.0', code: 60 });
   window.AmyFXAppVersion = VERSION;
   window.AmyFXUpdateManifestUrl = 'https://raw.githubusercontent.com/suhaimitoamy/Amy-fx/main/update.json';
 
