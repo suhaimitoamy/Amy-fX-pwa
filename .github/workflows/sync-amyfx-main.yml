@@ -1,4 +1,4 @@
-name: Sync Amy FX Preview parity assets
+name: Sync Amy FX 2.4.0 production parity assets
 
 on:
   workflow_dispatch:
@@ -24,30 +24,31 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: amyfx-pwa-preview-parity-${{ github.head_ref || github.ref_name }}
+  group: amyfx-pwa-production-parity-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
-  sync-preview-parity-assets:
+  sync-production-parity-assets:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
-      AMYFX_SOURCE_BRANCH: personal/amyfx-private
+      AMYFX_SOURCE_BRANCH: main
+      EXPECTED_PRO_SHA: 50c80c9ceb0c34dccc91d9d4da48e26d22455ba2
 
     steps:
-      - name: Checkout PWA migration branch
+      - name: Checkout PWA release branch
         uses: actions/checkout@v4
         with:
           ref: ${{ env.TARGET_BRANCH }}
           fetch-depth: 0
           path: pwa
 
-      - name: Checkout Amy FX Preview source
+      - name: Checkout Amy FX production main
         uses: actions/checkout@v4
         with:
           repository: suhaimitoamy/Amy-fx
-          ref: personal/amyfx-private
+          ref: main
           fetch-depth: 1
           path: amyfx-source
           persist-credentials: false
@@ -57,11 +58,20 @@ jobs:
         with:
           node-version: 22
 
-      - name: Record Amy FX Preview source revision
+      - name: Verify Amy FX 2.4.0 source and record revision
         shell: bash
-        run: echo "AMYFX_SOURCE_SHA=$(git -C amyfx-source rev-parse HEAD)" >> "$GITHUB_ENV"
+        run: |
+          set -euo pipefail
+          source_sha="$(git -C amyfx-source rev-parse HEAD)"
+          echo "AMYFX_SOURCE_SHA=$source_sha" >> "$GITHUB_ENV"
+          grep -Fq "name: '2.4.0', code: 60" amyfx-source/app/src/main/assets/app-version.js
+          grep -Fq 'suhaimitoamy/Amy-fx/main/update.json' amyfx-source/app/src/main/assets/app-version.js
+          grep -Fq "$EXPECTED_PRO_SHA" amyfx-source/docs/amyfx-production-pro-parity.json
+          test -f amyfx-source/app/src/main/assets/apps/academy/trading-practice/assets/js/chart-engine.js
+          test -f amyfx-source/app/src/main/assets/apps/academy/trading-practice/assets/js/replay-engine.js
+          test -f amyfx-source/app/src/main/assets/apps/academy/trading-practice/assets/js/zip-reader.js
 
-      - name: Synchronize Preview-parity web assets
+      - name: Synchronize Amy FX 2.4.0 web assets
         working-directory: pwa
         run: npm run sync:amyfx-main
 
@@ -69,7 +79,7 @@ jobs:
         working-directory: pwa
         run: node scripts/normalize-amyfx-export.mjs assets/apps
 
-      - name: Validate zero-drift Mapping engine parity
+      - name: Validate zero-drift production engine parity
         working-directory: pwa
         env:
           AMYFX_SOURCE_ROOT: ../amyfx-source/app/src/main/assets
@@ -79,7 +89,7 @@ jobs:
         working-directory: pwa
         run: npm test
 
-      - name: Validate Amy FX Preview engine parity
+      - name: Validate Amy FX 2.4.0 PWA parity
         working-directory: pwa
         run: npm run test:sync
 
@@ -91,14 +101,15 @@ jobs:
         working-directory: pwa
         shell: bash
         run: |
+          set -euo pipefail
           if git diff --quiet && git diff --cached --quiet; then
-            echo "Amy FX PWA is already synchronized with Preview."
+            echo "Amy FX PWA is already synchronized with Amy FX 2.4.0 main."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
-          git commit -m "sync: align PWA engine with Amy FX Preview ${AMYFX_SOURCE_SHA:0:12}"
+          git commit -m "sync: align PWA with Amy FX 2.4.0 ${AMYFX_SOURCE_SHA:0:12}"
           git fetch origin "${TARGET_BRANCH}"
           git rebase "origin/${TARGET_BRANCH}"
           git push origin "HEAD:${TARGET_BRANCH}"
