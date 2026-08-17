@@ -6,10 +6,10 @@ const targetRoot = path.resolve(process.argv[3] || process.cwd());
 const targetAssetsRoot = path.join(targetRoot, 'assets');
 const sourceAppsRoot = path.join(sourceAssetsRoot, 'apps');
 const targetAppsRoot = path.join(targetAssetsRoot, 'apps');
-const sourceBranch = String(process.env.AMYFX_SOURCE_BRANCH || 'personal/amyfx-private');
+const sourceBranch = String(process.env.AMYFX_SOURCE_BRANCH || 'main');
 
 function fail(message) {
-  throw new Error(`[sync-from-amyfx-preview] ${message}`);
+  throw new Error(`[sync-from-amyfx-main] ${message}`);
 }
 
 function exists(file) {
@@ -28,9 +28,8 @@ function write(file, content) {
 
 function copyEntry(source, target) {
   const stat = fs.statSync(source);
-  if (stat.isDirectory()) {
-    fs.cpSync(source, target, { recursive: true, force: true });
-  } else {
+  if (stat.isDirectory()) fs.cpSync(source, target, { recursive: true, force: true });
+  else {
     fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.copyFileSync(source, target);
   }
@@ -62,16 +61,13 @@ function injectPwaRuntime(html, file) {
     'pwa-bootstrap.js',
     'pwa-update-bridge.js'
   ];
-
   const missing = scripts.filter(name => !html.includes(name));
   if (!missing.length) return html;
-
   const block = [
     '<!-- Amy FX PWA runtime overlay -->',
     ...missing.map(name => `<script src="${prefix}${name}"></script>`),
     '<!-- /Amy FX PWA runtime overlay -->'
   ].join('\n');
-
   if (html.includes('</head>')) return html.replace('</head>', `${block}\n</head>`);
   return `${block}\n${html}`;
 }
@@ -82,33 +78,21 @@ function normalizeWebText(content) {
     .replace(/\bWIB\b/g, 'WITA');
 }
 
-if (!exists(sourceAppsRoot)) fail(`Amy FX Preview source apps not found: ${sourceAppsRoot}`);
+if (!exists(sourceAppsRoot)) fail(`Amy FX main source apps not found: ${sourceAppsRoot}`);
 if (!exists(targetAssetsRoot)) fail(`PWA assets root not found: ${targetAssetsRoot}`);
 
 const pwaJournalLoader = read(path.join(targetAppsRoot, 'journal/app.js'));
 const pwaJournalEnhancementLoader = read(path.join(targetAppsRoot, 'journal/amy-journal-final-fix.js'));
 const pwaAcademyAuth = read(path.join(targetAppsRoot, 'academy/assets/js/auth.js'));
-
 const sourceJournalApp = read(path.join(sourceAppsRoot, 'journal/app.js'));
 const sourceJournalEnhancementPath = path.join(sourceAppsRoot, 'journal/amy-journal-final-fix.js');
-const sourceJournalEnhancement = exists(sourceJournalEnhancementPath)
-  ? read(sourceJournalEnhancementPath)
-  : '';
+const sourceJournalEnhancement = exists(sourceJournalEnhancementPath) ? read(sourceJournalEnhancementPath) : '';
 
 fs.rmSync(targetAppsRoot, { recursive: true, force: true });
 copyEntry(sourceAppsRoot, targetAppsRoot);
 
-const protectedTargetAssetEntries = new Set([
-  'app.js',
-  'app-version.js',
-  'styles.css',
-  'apps'
-]);
-const skippedNativeEntries = new Set([
-  'index.html',
-  'update-checker.js'
-]);
-
+const protectedTargetAssetEntries = new Set(['app.js', 'app-version.js', 'styles.css', 'apps']);
+const skippedNativeEntries = new Set(['index.html', 'update-checker.js']);
 for (const entry of fs.readdirSync(sourceAssetsRoot, { withFileTypes: true })) {
   if (protectedTargetAssetEntries.has(entry.name) || skippedNativeEntries.has(entry.name)) continue;
   copyEntry(path.join(sourceAssetsRoot, entry.name), path.join(targetAssetsRoot, entry.name));
@@ -116,9 +100,7 @@ for (const entry of fs.readdirSync(sourceAssetsRoot, { withFileTypes: true })) {
 
 write(path.join(targetAppsRoot, 'journal/app-core.js'), normalizeWebText(sourceJournalApp));
 write(path.join(targetAppsRoot, 'journal/app.js'), pwaJournalLoader);
-if (sourceJournalEnhancement) {
-  write(path.join(targetAppsRoot, 'journal/amy-journal-core.js'), normalizeWebText(sourceJournalEnhancement));
-}
+if (sourceJournalEnhancement) write(path.join(targetAppsRoot, 'journal/amy-journal-core.js'), normalizeWebText(sourceJournalEnhancement));
 write(path.join(targetAppsRoot, 'journal/amy-journal-final-fix.js'), pwaJournalEnhancementLoader);
 write(path.join(targetAppsRoot, 'academy/assets/js/auth.js'), pwaAcademyAuth);
 
@@ -136,22 +118,14 @@ for (const file of walk(targetAppsRoot)) {
 const sourceSha = String(process.env.AMYFX_SOURCE_SHA || 'unknown');
 const serviceWorkerPath = path.join(targetRoot, 'service-worker.js');
 if (exists(serviceWorkerPath)) {
-  const version = `amyfx-${sourceSha.slice(0, 12) || 'manual'}-preview-parity-v1-market-cache-v7`;
-  let worker = read(serviceWorkerPath).replace(
-    /const VERSION = ['"][^'"]+['"];?/,
-    `const VERSION = '${version}';`
-  );
+  const version = `amyfx-${sourceSha.slice(0, 12) || 'manual'}-production-parity-v2-pwa-ws-price-v4-market-cache-v7`;
+  let worker = read(serviceWorkerPath).replace(/const VERSION = ['"][^'"]+['"];?/, `const VERSION = '${version}';`);
   const shellAnchor = "  appUrl('pwa-bootstrap.js'),";
-  const missingShellAssets = [
-    'pwa-live-price-bridge.js',
-    'pwa-update-bridge.js'
-  ].filter(asset => !worker.includes(`appUrl('${asset}')`));
+  const missingShellAssets = ['pwa-live-price-bridge.js', 'pwa-update-bridge.js']
+    .filter(asset => !worker.includes(`appUrl('${asset}')`));
   if (missingShellAssets.length) {
     if (!worker.includes(shellAnchor)) fail('service worker shell anchor is missing');
-    worker = worker.replace(
-      shellAnchor,
-      [shellAnchor, ...missingShellAssets.map(asset => `  appUrl('${asset}'),`)].join('\n')
-    );
+    worker = worker.replace(shellAnchor, [shellAnchor, ...missingShellAssets.map(asset => `  appUrl('${asset}'),`)].join('\n'));
   }
   write(serviceWorkerPath, worker);
 }
@@ -160,7 +134,10 @@ write(path.join(targetAssetsRoot, 'amyfx-source.json'), `${JSON.stringify({
   repository: 'suhaimitoamy/Amy-fx',
   branch: sourceBranch,
   commit: sourceSha,
-  strategy: 'preview-parity-with-pwa-runtime-overlay'
+  source_version: '2.4.0',
+  source_version_code: 60,
+  pro_source_commit: '50c80c9ceb0c34dccc91d9d4da48e26d22455ba2',
+  strategy: 'production-main-parity-with-pwa-runtime-overlay'
 }, null, 2)}\n`);
 
 const requiredParityFiles = [
@@ -174,10 +151,15 @@ const requiredParityFiles = [
   'apps/mapping/js/engine/bt71-market-state-reconciliation.js',
   'apps/mapping/js/mapping-v2.js',
   'apps/mapping/css/execution-plan.css',
-  'apps/mapping/css/scalper-entry-watch.css'
+  'apps/mapping/css/scalper-entry-watch.css',
+  'apps/academy/trading-practice/index.html',
+  'apps/academy/trading-practice/assets/js/chart-engine.js',
+  'apps/academy/trading-practice/assets/js/replay-engine.js',
+  'apps/academy/trading-practice/assets/js/zip-reader.js',
+  'apps/academy/backtest-learning/index.html'
 ];
 for (const relative of requiredParityFiles) {
-  if (!exists(path.join(targetAssetsRoot, relative))) fail(`Preview parity module was not copied: ${relative}`);
+  if (!exists(path.join(targetAssetsRoot, relative))) fail(`Amy FX 2.4.0 parity module was not copied: ${relative}`);
 }
 
 for (const file of walk(targetAppsRoot)) {
@@ -185,8 +167,8 @@ for (const file of walk(targetAppsRoot)) {
   const content = fs.readFileSync(file, 'utf8');
   if (content.includes('Asia/Jakarta')) fail(`WIB timezone remains in ${path.relative(targetRoot, file)}`);
   if (/update-checker\.js/i.test(content)) fail(`Android updater remains in ${path.relative(targetRoot, file)}`);
-  if (!path.extname(file).toLowerCase().includes('html')) continue;
+  if (path.extname(file).toLowerCase() !== '.html') continue;
   if (!content.includes('pwa-update-bridge.js')) fail(`PWA update bridge missing in ${path.relative(targetRoot, file)}`);
 }
 
-console.log(`Amy FX Preview assets synchronized from ${sourceBranch}@${sourceSha.slice(0, 12) || 'unknown'} with PWA overlays preserved.`);
+console.log(`Amy FX 2.4.0 assets synchronized from ${sourceBranch}@${sourceSha.slice(0, 12) || 'unknown'} with PWA overlays preserved.`);
