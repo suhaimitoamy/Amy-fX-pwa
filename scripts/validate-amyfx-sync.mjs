@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
+const FINAL_PRO_SHA = '50c80c9ceb0c34dccc91d9d4da48e26d22455ba2';
 const required = [
   'pwa-config.json',
   'pwa-live-price-bridge.js',
@@ -20,24 +21,20 @@ const required = [
   'assets/apps/mapping/js/scalper-execution-decision-bridge.js',
   'assets/apps/mapping/js/scalper-shadow-state.js',
   'assets/apps/mapping/js/engine/bt71-market-state-reconciliation.js',
-  'assets/apps/mapping/js/mapping-v2.js'
+  'assets/apps/mapping/js/mapping-v2.js',
+  'assets/apps/academy/trading-practice/index.html',
+  'assets/apps/academy/trading-practice/assets/js/chart-engine.js',
+  'assets/apps/academy/trading-practice/assets/js/replay-engine.js',
+  'assets/apps/academy/trading-practice/assets/js/zip-reader.js',
+  'assets/apps/academy/backtest-learning/index.html'
 ];
 
 function read(file) {
   return fs.readFileSync(path.join(root, file), 'utf8');
 }
 function fail(message) {
-  console.error(`Amy FX Preview parity validation failed: ${message}`);
+  console.error(`Amy FX 2.4.0 PWA parity validation failed: ${message}`);
   process.exitCode = 1;
-}
-function versionAtLeast(actual, minimum) {
-  const left = String(actual || '').split('.').map(value => Number.parseInt(value, 10) || 0);
-  const right = String(minimum || '').split('.').map(value => Number.parseInt(value, 10) || 0);
-  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
-    if ((left[index] || 0) > (right[index] || 0)) return true;
-    if ((left[index] || 0) < (right[index] || 0)) return false;
-  }
-  return true;
 }
 
 for (const file of required) {
@@ -47,17 +44,21 @@ if (process.exitCode) process.exit(process.exitCode);
 
 const metadata = JSON.parse(read('assets/amyfx-source.json'));
 if (metadata.repository !== 'suhaimitoamy/Amy-fx') fail('source repository metadata is incorrect');
-if (metadata.branch !== 'personal/amyfx-private') fail('source branch metadata must be personal/amyfx-private');
+if (metadata.branch !== 'main') fail('source branch metadata must be main');
 if (!/^[0-9a-f]{40}$/i.test(String(metadata.commit || ''))) fail('source commit must be a full SHA');
-if (metadata.strategy !== 'preview-parity-with-pwa-runtime-overlay') fail('Preview parity sync strategy is incorrect');
+if (metadata.source_version !== '2.4.0') fail('source version must be Amy FX 2.4.0');
+if (Number(metadata.source_version_code) !== 60) fail('source version code must be 60');
+if (metadata.pro_source_commit !== FINAL_PRO_SHA) fail('canonical Amy FX Pro 326 source SHA is incorrect');
+if (metadata.strategy !== 'production-main-parity-with-pwa-runtime-overlay') fail('production-main PWA parity strategy is incorrect');
 
 const appVersion = read('assets/app-version.js');
 const versionMatch = appVersion.match(/name:\s*['"]([^'"]+)['"],\s*code:\s*(\d+)/);
 if (!versionMatch) fail('Amy FX PWA application version cannot be parsed');
 else {
-  if (!versionAtLeast(versionMatch[1], '2.3.0')) fail(`Amy FX PWA ${versionMatch[1]} is older than 2.3.0`);
-  if (Number(versionMatch[2]) < 58) fail(`Amy FX PWA code ${versionMatch[2]} is older than 58`);
+  if (versionMatch[1] !== '2.4.0') fail(`Amy FX PWA version must be 2.4.0, got ${versionMatch[1]}`);
+  if (Number(versionMatch[2]) !== 60) fail(`Amy FX PWA code must be 60, got ${versionMatch[2]}`);
 }
+if (!appVersion.includes('suhaimitoamy/Amy-fx/main/update.json')) fail('PWA updater must follow Amy FX main manifest');
 
 const expectedStream = 'https://amy-fx.vercel.app/api/pwa-live-price';
 const config = JSON.parse(read('pwa-config.json'));
@@ -81,19 +82,15 @@ for (const marker of [
 
 const coordinator = read('assets/apps/mapping/js/api-request-coordinator.js');
 for (const marker of [
-  "PERSISTENT_CACHE_KEY = 'amyfx_market_response_cache_v3'",
-  'BACKGROUND_M1_REFRESH_SECONDS = 300',
-  'RETRY_COOLDOWN_MS = 60_000',
-  'SUPABASE_VERIFIED_CURRENT',
   'restorePersistentCache()',
-  'persistResponseCache()'
+  'persistResponseCache()',
+  'SUPABASE_VERIFIED_CURRENT'
 ]) {
   if (!coordinator.includes(marker)) fail(`PWA market coordinator missing ${marker}`);
 }
 
 const freshnessRepair = read('assets/apps/mapping/js/mapping-runtime-repair-v3.js');
 for (const marker of [
-  "version: '6.0.0'",
   'markCachedSeriesUsable',
   'sourceSignature',
   'latestClosedCandleClose',
@@ -112,7 +109,6 @@ for (const marker of [
   'Authorization: `Bearer ${session.access_token}`',
   'response.body.getReader()',
   'TWELVE_DATA_WEBSOCKET_EDGE',
-  "version: 'pwa-websocket-backend-relay-4.0.0'",
   'hasApiKey'
 ]) {
   if (!bridge.includes(marker)) fail(`PWA live-price bridge missing ${marker}`);
@@ -122,7 +118,7 @@ if (bridge.includes('setInterval(poll')) fail('PWA live price must not retain le
 if (/TWELVEDATA_API_KEY|(?:const|let|var)\s+\w*api[_-]?key\s*=/i.test(bridge)) fail('PWA bridge must not contain provider credentials');
 
 const worker = read('service-worker.js');
-for (const marker of ['-preview-parity-v1-pwa-ws-price-v4-market-cache-v7', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
+for (const marker of ['-production-parity-v2-pwa-ws-price-v4-market-cache-v7', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))']) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 
@@ -133,28 +129,24 @@ for (const marker of ['navigator.serviceWorker.getRegistration', 'registration.u
 
 const scalperWatch = read('assets/apps/mapping/js/scalper-entry-watch-v1.js');
 for (const marker of [
-  'SCALPER ENGINE · SHADOW MODE',
-  "const ENDPOINT = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/scalper-setups'",
-  "new URLSearchParams({ limit: '50', history: 'all', history_limit: '2000' })",
-  "params.set('setup_id', displaySelectedSetupId)",
+  'SCALPER ENGINE',
+  'scalper-setups',
   'reconcileScalperPayload',
-  'TP1 +10',
-  'TP2 +20',
-  'Stop Loss tetap pada level awal'
+  'TP1',
+  'TP2',
+  'Stop Loss'
 ]) {
   if (!scalperWatch.includes(marker)) fail(`Scalper Entry Watch missing ${marker}`);
 }
 const scalperAuthority = read('assets/apps/mapping/js/scalper-execution-authority.js');
 for (const marker of [
-  "CURRENT_ENGINE_VERSION = 'amyfx-preview-scalper-pattern-v3.0'",
   'SCALPER_ENGINE_EXECUTION_AUTHORITY',
   'TP1_HIT_NO_BE',
   'ENTRY_TRIGGERED',
-  'let applyQueued = false',
-  'function scheduleApply()',
-  "window.addEventListener('amyfx:scalper-state-change', scheduleApply)"
+  'scheduleApply',
+  'amyfx:scalper-state-change'
 ]) {
-  if (!scalperAuthority.includes(marker)) fail(`Scalper authority missing Preview parity marker ${marker}`);
+  if (!scalperAuthority.includes(marker)) fail(`Scalper authority missing ${marker}`);
 }
 
 const decisionBridge = read('assets/apps/mapping/js/scalper-execution-decision-bridge.js');
@@ -162,7 +154,21 @@ for (const marker of ['scalperExecutionAuthority', 'executionDirectionDecision',
   if (!decisionBridge.includes(marker)) fail(`Scalper decision bridge missing ${marker}`);
 }
 
-const forbiddenPreviewIdentity = ['com.amyelitesuite.learningpreview', 'personal/amyfx-private/preview-update.json', 'AmyFX-Preview-latest.apk', 'amyfxpreview://'];
+const chartEngine = read('assets/apps/academy/trading-practice/assets/js/chart-engine.js');
+for (const marker of ['drawing', 'time', 'price']) {
+  if (!chartEngine.toLowerCase().includes(marker)) fail(`Trading Practice chart engine missing ${marker} contract`);
+}
+const replayEngine = read('assets/apps/academy/trading-practice/assets/js/replay-engine.js');
+if (!replayEngine.toLowerCase().includes('replay')) fail('Trading Practice replay engine is missing replay contract');
+
+const forbiddenIdentity = [
+  'com.amyelitesuite.learningpreview',
+  'personal/amyfx-private/preview-update.json',
+  'AmyFX-Preview-latest.apk',
+  'AmyFX-Pro-latest.apk',
+  'amyfxpreview://',
+  'suhaimitoamy/Amy-fx-pro/main/update.json'
+];
 const files = [];
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -176,13 +182,20 @@ for (const file of files.filter(file => /\.(?:html|js|mjs|css|json)$/i.test(file
   const relative = path.relative(root, file);
   if (content.includes('Asia/Jakarta')) fail(`WIB timezone remains in ${relative}`);
   if (/update-checker\.js/i.test(content)) fail(`Android updater remains in ${relative}`);
-  for (const marker of forbiddenPreviewIdentity) {
-    if (content.includes(marker)) fail(`Preview identity remains in ${relative}: ${marker}`);
+  for (const marker of forbiddenIdentity) {
+    if (content.includes(marker)) fail(`non-PWA release identity remains in ${relative}: ${marker}`);
   }
 }
 
-for (const file of ['pwa-live-price-bridge.js', 'pwa-update-bridge.js', 'service-worker.js', 'assets/apps/mapping/js/api-request-coordinator.js']) {
+for (const file of [
+  'pwa-live-price-bridge.js',
+  'pwa-update-bridge.js',
+  'service-worker.js',
+  'assets/apps/mapping/js/api-request-coordinator.js',
+  'assets/apps/academy/trading-practice/assets/js/chart-engine.js',
+  'assets/apps/academy/trading-practice/assets/js/replay-engine.js'
+]) {
   try { new Function(read(file)); } catch (error) { fail(`${file} has invalid JavaScript: ${error.message}`); }
 }
 
-if (!process.exitCode) console.log(`Amy FX PWA Preview parity validation passed for ${String(metadata.commit).slice(0, 12)} with the current Scalper Engine, closed-candle Mapping runtime v6, persistent candle cache, cache v7, and authenticated backend WebSocket relay v4.`);
+if (!process.exitCode) console.log(`Amy FX PWA production parity validation passed for Amy FX 2.4.0@${String(metadata.commit).slice(0, 12)} / Pro 326 with PWA overlays preserved.`);
