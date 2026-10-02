@@ -13,6 +13,9 @@
   <link rel="stylesheet" href="../shared/amyfx-ui-tokens.css" data-amyfx-ui-tokens="v1">
   <link rel="stylesheet" href="../shared/amyfx-theme.css" data-amyfx-theme="v1">
   <link rel="stylesheet" href="../shared/amyfx-components.css" data-amyfx-components="v1">
+  <link rel="stylesheet" href="../shared/amyfx-ui-polish-pro348.css" data-amyfx-ui-polish="pro348">
+  <link rel="stylesheet" href="../shared/amyfx-natural-ui-pro355.css" data-amyfx-natural-ui="pro355">
+  <link rel="stylesheet" href="../shared/amyfx-obsidian-glass.css" data-amyfx-obsidian-glass="v1">
 <!-- Amy FX PWA runtime overlay -->
 <script src="../../../platform-adapter.js"></script>
 <script src="../../../pwa-live-price-bridge.js"></script>
@@ -23,51 +26,61 @@
 </head>
 <body class="amyfx-module amyfx-module--intel">
   <div class="intel-container">
-    <section id="market-command-strip" class="amy-command-strip" aria-label="Market command strip"></section>
-    <header class="intel-header">
-      <a class="intel-back" href="../../index.html" aria-label="Kembali ke Amy FX"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></a>
-      <div class="intel-header__copy"><h1>Berita</h1><p class="subtitle">Berita, heatmap, dan likuiditas market</p></div>
+    <header class="intel-header" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <button type="button" class="nav-arrow-btn nav-arrow-left" id="amyfxNavBack" data-amyfx-nav="back" aria-label="Kembali ke Menu Utama">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+      <div class="intel-header__copy" style="flex:1; text-align:center;">
+        <small style="display:block; letter-spacing:0.14em; color:var(--muted); font-size:10px; font-weight:700;">AMY FX PRO · REAL-TIME</small>
+        <h1 style="margin:2px 0 0; font-size:1.15rem; line-height:1.2; font-weight:800; color:#fff; letter-spacing:0.02em;">Market Intelligence Feed</h1>
+      </div>
+      <button type="button" class="nav-arrow-btn nav-arrow-right" id="amyfxNavForward" data-amyfx-nav="forward" aria-label="Maju">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
     </header>
     <nav class="intel-tabs">
-      <button class="intel-tab active" data-tab="news">Berita</button>
-      <button class="intel-tab" data-tab="heatmap">Heatmap</button>
-      <button class="intel-tab" data-tab="liquidity">Likuiditas</button>
+      <button class="intel-tab active" data-tab="sentiment">Kompas Fundamental</button>
+      <button class="intel-tab" data-tab="news">Berita</button>
+      <button class="intel-tab" data-tab="calendar">Kalender</button>
     </nav>
     <section id="intel-briefing" class="amy-briefing" aria-live="polite"></section>
-    <section id="panel-news" class="intel-panel active">
+    <section id="panel-sentiment" class="intel-panel active">
+      <div class="status-bar" id="sentiment-status">Memuat kompas fundamental &amp; sentimen makro...</div>
+      <div id="sentiment-content" class="sentiment-wrap"></div>
+    </section>
+    <section id="panel-news" class="intel-panel">
       <div class="status-bar" id="news-status">Memuat berita...</div>
       <div id="news-list" class="news-list"></div>
     </section>
-    <section id="panel-heatmap" class="intel-panel">
-      <div class="status-bar" id="heatmap-status">Menghitung heatmap...</div>
-      <div class="heatmap-info">
-        <span class="current-price" id="heatmap-price">--</span>
-        <span class="timeframe">M15 · Dynamic</span>
+    <section id="panel-calendar" class="intel-panel">
+      <div class="calendar-filters">
+        <button class="cal-filter active" data-filter="gold">Fokus Gold (USD) 🇺🇸</button>
+        <button class="cal-filter" data-filter="high">High Impact 🔴</button>
+        <button class="cal-filter" data-filter="medium">Medium 🟠</button>
+        <button class="cal-filter" data-filter="all">Semua Rilis 🌐</button>
       </div>
-      <div id="heatmap-canvas" class="heatmap-canvas"></div>
-      <div class="heatmap-legend">
-        <span class="legend-item"><span class="dot res"></span> Resistance / BSL</span>
-        <span class="legend-item"><span class="dot sup"></span> Support / SSL</span>
-        <span class="legend-item"><span class="dot cur"></span> Harga Berjalan</span>
-      </div>
-    </section>
-    <section id="panel-liquidity" class="intel-panel">
-      <div class="status-bar" id="liquidity-status">Melacak likuiditas...</div>
-      <div id="liquidity-list" class="liquidity-list"></div>
+      <div class="status-bar" id="calendar-status">Memuat jadwal kalender ekonomi...</div>
+      <div id="calendar-list" class="calendar-list"></div>
     </section>
     <div id="loading-overlay" class="loading-overlay" hidden>
       <div class="spinner"></div>
-      <p>Memuat Berita...</p>
+      <p>Memuat Data...</p>
     </div>
   </div>
   <script src="../shared/amyfx-loading.js" data-amyfx-loading="v1"></script>
   <script src="../shared/amyfx-market-state-contract-v1.js" data-amyfx-market-contract="v2"></script>
   <script src="../shared/market-intelligence.js"></script>
-  <script src="private-market-api-router.js"></script>
   <script src="app.js"></script>
-  <script src="heatmap-v2.js"></script>
+  <script type="module" src="ict-intel.js"></script>
   <script src="../shared/amyfx-blueprint-hotfix-v1.js" data-amyfx-blueprint-hotfix="v1"></script>
   <script src="../shared/amyfx-blueprint-v1.js" data-amyfx-blueprint-js="v1"></script>
-  <script src="../shared/amyfx-provider-detection-v1.js" data-amyfx-provider-detection="v1"></script>
+  <script src="../shared/amyfx-universal-nav.js"></script>
+  <script src="../shared/amy-local-assistant.js" data-amy-local-assistant="v1"></script>
 </body>
 </html>

@@ -98,12 +98,6 @@ function patchClockLabels() {
 }
 
 function patchDecision(setup, display) {
-  const decision = document.querySelector('.decision-main');
-  if (decision) {
-    setText(decision, !setup || display.terminal
-      ? 'TUNGGU'
-      : `FOKUS ${String(setup.dir || '').includes('SELL') ? 'SELL' : 'BUY'}`);
-  }
   document.querySelectorAll('.decision-box').forEach(box => {
     const labelElement = box.querySelector('small');
     const label = labelElement?.textContent?.trim();

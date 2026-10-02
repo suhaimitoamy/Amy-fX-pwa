@@ -1,0 +1,54 @@
+/* Amy FX Pro · Scalper navigation separation
+   Dashboard/Analisis keep the live Scalper setup compact.
+   All-time statistics and permanent history live in scalper-stats.html. */
+
+/*
+ * Mapping still loads legacy/shared navigation adapters after this stylesheet.
+ * Lock the new canonical three-item navigation so later two-column/flex rules
+ * cannot push Riwayat onto a second row.
+ */
+body.amyfx-module--mapping > .nav,
+body.amyfx-module--mapping .stats-nav {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-flow: row !important;
+  grid-auto-columns: auto !important;
+  grid-auto-rows: 1fr !important;
+  flex-wrap: nowrap !important;
+}
+
+body.amyfx-module--mapping > .nav > button,
+body.amyfx-module--mapping > .nav > a,
+body.amyfx-module--mapping .stats-nav > a {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+.nav > a {
+  background: transparent;
+  border: 0;
+  color: #aaa;
+  font-weight: 800;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.nav > a.active {
+  color: var(--gold);
+}
+
+/* The Vault remains fully persisted; only its presentation moves out of Analysis. */
+#app .scalper-vault,
+#app .scalper-watch__recent {
+  display: none !important;
+}

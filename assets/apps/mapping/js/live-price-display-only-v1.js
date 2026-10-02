@@ -4,7 +4,7 @@
   if (window.__amyFxLivePriceDisplayOnlyInstalled) return;
   window.__amyFxLivePriceDisplayOnlyInstalled = true;
 
-  const HARD_TTL_MS = 180000;
+  const HARD_TTL_MS = 45000;
   const LIVE_LABEL_PATTERN = /^harga\s+(?:saat\s+ini|live)$/i;
   let lifecycleController = null;
 
@@ -89,7 +89,7 @@
 
   function handlePrice(event) {
     const tick = validTick(event?.detail || {});
-    if (!tick) return;
+    if (!tick || tick.capturedAt < Number(localStorage.getItem('last_ws_tick_at') || 0)) return;
 
     // Paint only display fields. Mapping, levels, lifecycle, and execution
     // authority remain bound to closed candles and are never recomputed here.

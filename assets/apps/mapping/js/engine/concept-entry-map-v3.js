@@ -8,6 +8,10 @@ import {
   normalizeMappingTimeframe,
   timeframeDurationMs
 } from './mapping-timeframes.js';
+import {
+  executionSessionAllowed,
+  executionSessionRequirement
+} from './market-session-clock.js';
 
 function timestampMs(value) {
   const numeric = conceptNumber(value);
@@ -15,23 +19,8 @@ function timestampMs(value) {
   return numeric > 10_000_000_000 ? numeric : numeric * 1000;
 }
 
-function witaMinute(value) {
-  const ms = timestampMs(value);
-  if (!ms) return -1;
-  const local = new Date(ms + 8 * 60 * 60 * 1000);
-  return local.getUTCHours() * 60 + local.getUTCMinutes();
-}
-
-function inSession(minute, start, end) {
-  return start < end ? minute >= start && minute < end : minute >= start || minute < end;
-}
-
 function validExecutionSession(candle, mode = 'NONE') {
-  if (mode === 'NONE') return true;
-  const minute = witaMinute(candle?.time);
-  const london = inSession(minute, 14 * 60, 18 * 60);
-  const newYork = inSession(minute, 19 * 60 + 30, 4 * 60);
-  return mode === 'NEW_YORK_ONLY' ? newYork : london || newYork;
+  return executionSessionAllowed(candle?.time, mode);
 }
 
 function normalizedDirection(value) {
@@ -948,11 +937,9 @@ export function detectTimeframeEntryMap(candles, {
     requirement(
       'SESSION',
       Boolean(mss && sessionOk),
-      profile.sessionMode === 'NEW_YORK_ONLY'
-        ? 'New York 19:30–04:00 WITA'
-        : profile.sessionRequired
-          ? 'London 14:00–18:00 / New York 19:30–04:00 WITA'
-          : 'Tidak menjadi hard gate'
+      profile.sessionRequired
+        ? executionSessionRequirement(profile.sessionMode, triggerCandle?.time)
+        : 'Tidak menjadi hard gate'
     ),
     requirement('DEALING LOCATION', Boolean(mss && locationOk), location.reason),
     requirement('CLOSE LOCATION', Boolean(mss && closeOk), closeOk ? 'Close mendukung arah' : 'Close belum kuat'),

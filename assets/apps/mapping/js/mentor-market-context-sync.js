@@ -104,10 +104,6 @@ import { state } from './main.js';
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) schedule();
   });
-  window.setInterval(() => {
-    if (!document.hidden) schedule();
-  }, 10_000);
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', schedule, { once: true });
   } else {

@@ -1,10 +1,598 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Bagian 14 — Backtesting dan Jurnal — Tutorial Trading</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script><!-- Amy FX PWA runtime overlay -->
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Pertemuan 14 — Backtesting dan Jurnal — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/glass.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+<!-- Amy FX PWA runtime overlay -->
 <script src="../../../../platform-adapter.js"></script>
 <script src="../../../../pwa-live-price-bridge.js"></script>
 <script src="../../../../member-auth.js"></script>
 <script src="../../../../pwa-bootstrap.js"></script>
 <script src="../../../../pwa-update-bridge.js"></script>
 <!-- /Amy FX PWA runtime overlay -->
-</head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a><button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button><div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a></div><div class="eyebrow">Bagian 14 — Backtesting dan Jurnal</div><h1>Backtesting dan Jurnal</h1><p>Pilih bab yang ingin dibaca. Setiap bab akan terbuka sebagai halaman sendiri.</p><div class="chapter-list"><a class="chapter-row" href="apa-itu-backtesting.html"><span><strong>Apa Itu Backtesting</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="kenapa-backtesting-wajib.html"><span><strong>Kenapa Backtesting Wajib</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="cara-backtest-manual.html"><span><strong>Cara Backtest Manual</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="template-backtesting.html"><span><strong>Template Backtesting</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="forward-testing.html"><span><strong>Forward Testing</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="demo-sebelum-live.html"><span><strong>Demo Sebelum Live</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="jurnal-trading.html"><span><strong>Jurnal Trading</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="review-mingguan.html"><span><strong>Review Mingguan</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="mengukur-winrate-rr-dan-drawdown.html"><span><strong>Mengukur Winrate, RR, dan Drawdown</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="menentukan-apakah-strategi-layak.html"><span><strong>Menentukan Apakah Strategi Layak</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a><a class="chapter-row" href="cara-memasukkan-screenshot-di-jurnal.html"><span><strong>Cara Memasukkan Screenshot di Jurnal</strong><br><small>Bagian 14 — Backtesting dan Jurnal</small></span><span>→</span></a></div><div class="quiz-container" data-module="backtesting-dan-jurnal"></div>
-<script src="../assets/js/quiz.js"></script>
-</section></main><footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer></body></html>
+</head>
+<body id="top">
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <div class="breadcrumb" style="margin-bottom:16px;">
+    <a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › Pertemuan 14
+  </div>
+
+  <div class="article-layout">
+    <article class="article" style="min-width:0;">
+      <div class="eyebrow" style="color:#3b82f6;font-weight:800;letter-spacing:1px;font-size:12px;margin-bottom:8px;">
+        SEMESTER 2 • MEDIUM • PERTEMUAN 14 (1 SKS)
+      </div>
+      <h1 style="margin-top:4px;font-size:clamp(26px, 3.5vw, 38px);">Backtesting dan Jurnal</h1>
+      <p style="font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:28px;">Pilih bab yang ingin dibaca. Setiap bab akan terbuka sebagai halaman sendiri.</p>
+
+      <details class="mobile-toc-drawer" style="display:none;margin-bottom:28px;padding:14px 18px;background:var(--surface-soft,#141416);border:1px solid var(--border);border-radius:12px;">
+        <summary style="font-weight:700;cursor:pointer;color:var(--gold,#d4a832);font-size:14px;">📑 Daftar Isi Bab (11 Bab Pembahasan)</summary>
+        <ul style="list-style:none;padding:12px 0 0;margin:0;display:grid;gap:8px;">
+          <li><a href="#apa-itu-backtesting" style="color:var(--text);font-size:13px;text-decoration:none;">1. Apa Itu Backtesting</a></li>
+<li><a href="#kenapa-backtesting-wajib" style="color:var(--text);font-size:13px;text-decoration:none;">2. Kenapa Backtesting Wajib</a></li>
+<li><a href="#cara-backtest-manual" style="color:var(--text);font-size:13px;text-decoration:none;">3. Cara Backtest Manual</a></li>
+<li><a href="#template-backtesting" style="color:var(--text);font-size:13px;text-decoration:none;">4. Template Backtesting</a></li>
+<li><a href="#forward-testing" style="color:var(--text);font-size:13px;text-decoration:none;">5. Forward Testing</a></li>
+<li><a href="#demo-sebelum-live" style="color:var(--text);font-size:13px;text-decoration:none;">6. Demo Sebelum Live</a></li>
+<li><a href="#jurnal-trading" style="color:var(--text);font-size:13px;text-decoration:none;">7. Jurnal Trading</a></li>
+<li><a href="#review-mingguan" style="color:var(--text);font-size:13px;text-decoration:none;">8. Review Mingguan</a></li>
+<li><a href="#mengukur-winrate-rr-dan-drawdown" style="color:var(--text);font-size:13px;text-decoration:none;">9. Mengukur Winrate, RR, dan Drawdown</a></li>
+<li><a href="#menentukan-apakah-strategi-layak" style="color:var(--text);font-size:13px;text-decoration:none;">10. Menentukan Apakah Strategi Layak</a></li>
+<li><a href="#cara-memasukkan-screenshot-di-jurnal" style="color:var(--text);font-size:13px;text-decoration:none;">11. Cara Memasukkan Screenshot di Jurnal</a></li>
+        </ul>
+      </details>
+
+      <div class="module-content">
+        
+      <section id="apa-itu-backtesting" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 1 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Apa Itu Backtesting</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Bayangkan kamu adalah seorang pelatih sepak bola yang sedang menyusun strategi untuk pertandingan final. Apakah kamu akan langsung menyuruh pemainmu turun ke lapangan tanpa pernah mencoba strategi tersebut saat latihan? Tentu saja tidak! Kamu pasti akan menguji strategi tersebut, melihat rekaman pertandingan lama, dan menganalisis apakah formasi yang kamu buat benar-benar efektif melawan pola serangan lawan.</p></div>
+<p>Dalam dunia trading, proses menguji strategi pada data masa lalu itulah yang disebut dengan <strong>Backtesting</strong>. Backtesting adalah jembatan antara sekadar belajar teori dan menjadi trader yang benar-benar berkembang serta mandiri. Tanpa melakukan backtesting, kamu seolah-olah sedang bermain tebak-tebakan di pasar finansial yang keras.</p>
+<h2>Memahami Konsep Dasar Backtesting</h2>
+<p>Secara sederhana, backtesting adalah proses pengujian sebuah sistem atau strategi trading menggunakan data historis (data harga di masa lalu) untuk melihat bagaimana performa strategi tersebut seandainya kamu menerapkannya di masa itu. Kita "memutar kembali waktu" pada chart, lalu menjalankan rule trading kita seolah-olah kita sedang trading secara langsung (live).</p>
+<p>Banyak trader pemula hanya mengandalkan ingatan atau sekadar "melihat sekilas" pada chart lalu menyimpulkan, <em>"Oh, kalau ada pola ini, harga pasti naik!"</em> Ini adalah kesalahan fatal. Memori trader itu sangat subjektif dan seringkali tidak jujur. Saat kita profit, kita merasa strategi kita paling hebat sedunia. Saat kita loss, kita merasa pasar sengaja memanipulasi kita (atau menyalahkan broker). Padahal, yang sebenarnya kita butuhkan adalah <strong>data objektif</strong>.</p>
+<div class="note"><strong>Note</strong><br/><p>Yang tidak dicatat akan sangat sulit diperbaiki. Yang tidak diukur akan mustahil untuk dikembangkan. Backtesting memberikan angka pasti, bukan sekadar perasaan.</p></div>
+<h2>Mengapa Backtesting Adalah "Cheat Code" dalam Trading?</h2>
+<p>Jika kamu bertanya kepada trader-trader profesional apa rahasia mereka bisa konsisten, hampir semuanya akan menjawab bahwa mereka sangat mengenal strategi yang mereka gunakan luar dan dalam. Bagaimana mereka bisa sangat mengenalnya? Jawabannya adalah ribuan jam melakukan backtesting.</p>
+<h3>1. Membangun Kepercayaan Diri (Confidence)</h3>
+<p>Ketika kamu mengalami tiga kali loss beruntun (losing streak), apa yang biasanya kamu rasakan? Panik? Ingin ganti strategi? Atau malah balas dendam ke pasar (revenge trading)? Hal ini terjadi karena kamu tidak tahu statistik strategi kamu.</p>
+<p>Jika kamu sudah melakukan backtesting pada 100 setup, dan data menunjukkan bahwa probabilitas menangnya (win rate) adalah 60% dan sangat wajar terjadi 4 kali loss beruntun sebelum akhirnya profit besar menutupi semua kerugian, maka saat kamu mengalami 3 kali loss beruntun di live account, kamu akan tetap tenang. Kamu tahu bahwa itu hanyalah bagian dari statistik. Kepercayaan diri ini hanya bisa didapat dari melihat data hasil backtesting.</p>
+<h3>2. Menemukan Kelemahan Strategi Tanpa Risiko Kehilangan Uang</h3>
+<p>Backtesting adalah tempat yang aman untuk salah. Kamu bisa menguji berbagai macam ide liar, mengubah aturan Stop Loss, menyesuaikan jam trading, tanpa harus kehilangan satu sen pun uang sungguhan. Kamu bisa tahu bahwa strategi A ternyata hancur lebur jika dipakai saat sesi Asia, dan sangat profitable jika dipakai di sesi New York. Informasi mahal ini kamu dapatkan secara gratis hanya dengan meluangkan waktu.</p>
+<h3>3. Melatih Mata dan Pengenalan Pola (Pattern Recognition)</h3>
+<p>Semakin sering kamu melihat setup strategi kamu terbentuk di chart masa lalu, semakin tajam mata kamu dalam mengenali setup tersebut secara real-time. Ini seperti <em>muscle memory</em>. Saat momen itu muncul di live market, kamu tidak lagi ragu-ragu atau berpikir terlalu panjang karena otakmu sudah melihat pola yang sama ratusan kali saat backtesting.</p>
+<h2>Cara Pandang yang Benar Saat Melakukan Backtesting</h2>
+<p>Banyak orang gagal melakukan backtesting dengan benar karena mereka bias. Mereka hanya memilih-milih (cherry-picking) contoh-contoh chart di mana strategi mereka bekerja dengan sempurna, dan secara sengaja mengabaikan momen di mana strategi mereka gagal atau terkena Stop Loss.</p>
+<div class="warning"><strong>Warning</strong><br/><p>Membohongi diri sendiri saat backtesting adalah cara tercepat untuk menghancurkan akun live kamu.</p></div>
+<p>Ketika kamu melakukan backtesting, kamu harus menjadi seorang ilmuwan yang objektif. Ambil data secara berurutan, dari bulan Januari sampai Desember misalnya. Jangan lompati hari-hari di mana pasar sedang jelek. Ikuti aturan (rules) strategimu dengan sangat kaku. Catat hasilnya apa adanya. Di situlah kamu baru bisa melihat apakah strategi tersebut benar-benar memiliki "edge" (keunggulan matematis) atau cuma kebetulan terlihat bagus pada tren tertentu saja.</p>
+<h2>Apa Saja yang Harus Dicatat Saat Backtesting?</h2>
+<p>Jangan hanya mencatat apakah setup itu "Win" atau "Loss". Catatan yang baik harus menceritakan keseluruhan kronologi. Berikut adalah beberapa elemen penting yang harus kamu catat:</p>
+<p>* <strong>Tanggal dan Jam:</strong> Kapan setup ini muncul? Ini berguna untuk mengetahui di sesi mana strategi ini paling efektif.</p>
+<p>* <strong>Timeframe dan Kondisi Market:</strong> Apakah pasar sedang trending, ranging, atau choppy? Apa bias di timeframe besar (HTF)?</p>
+<p>* <strong>Alasan Entry:</strong> Tuliskan dengan jelas kenapa kamu mengambil posisi tersebut. (Misal: Harga masuk ke zona Order Block M15 setelah mengambil liquidity, lalu ada konfirmasi perubahan karakter/CHoCH di M1).</p>
+<p>* <strong>Parameter Risiko:</strong> Berapa pips Stop Loss-nya? Berapa pips Take Profit-nya? Berapa rasio Risk:Reward (RR) yang didapat?</p>
+<p>* <strong>Hasil (Outcome):</strong> Apakah terkena TP penuh, terkena SL, atau ditutup manual (breakeven)?</p>
+<h2>Kesimpulan</h2>
+<p>Tujuan utama dari mempelajari Apa Itu Backtesting bukan untuk membuat kamu sibuk dengan tugas administrasi mencatat angka-angka. Tujuannya adalah untuk mengubahmu dari seorang penjudi yang hanya menebak arah pasar, menjadi seorang pengusaha trading yang mengambil keputusan berdasarkan data statistik yang solid.</p>
+<p>Jika data backtesting menunjukkan hasil yang bagus, kamu bisa melangkah ke tahap selanjutnya dengan yakin. Jika datanya buruk, kamu bisa memperbaiki rules tanpa harus kehilangan modal. Jadi, mulai sekarang, berhentilah berasumsi dan mulailah mengumpulkan datamu sendiri!</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="kenapa-backtesting-wajib" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 2 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Kenapa Backtesting Wajib</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Banyak trader yang merasa malas melakukan backtesting. Mereka berpikir, <em>"Buat apa lihat masa lalu? Yang penting kan cuan di masa depan!"</em> Padahal, mengabaikan backtesting ibarat seorang dokter bedah yang menolak belajar anatomi dari buku, tapi langsung ingin mengoperasi pasien.</p></div>
+<p>Dalam trading, tidak ada yang namanya kepastian. Yang ada hanyalah probabilitas. Lalu, bagaimana kamu bisa tahu probabilitas keberhasilan strategimu kalau kamu tidak pernah mengujinya secara matematis? Itulah alasan paling mendasar kenapa backtesting bukan sekadar opsi, melainkan <strong>kewajiban mutlak</strong> bagi siapapun yang ingin bertahan lama di market.</p>
+<h2>Alasan Utama Kenapa Kamu WAJIB Backtesting</h2>
+<h3>1. Menghindari Menjadi "Pendonor Dana" ke Market</h3>
+<p>Mayoritas trader pemula hanya menjadi penyumbang likuiditas bagi institusi besar atau trader profesional. Mereka sering mengganti strategi setiap kali mengalami kerugian (System Hopping). Hari ini pakai indikator RSI, besok pindah ke Bollinger Bands, lusa beralih ke Smart Money Concepts (SMC).</p>
+<p>Kenapa mereka terus berpindah-pindah? Karena mereka tidak punya keyakinan pada sistem mereka. Dan keyakinan itu tidak datang dari menonton video YouTube, melainkan dari pembuktian data lewat backtesting. Jika kamu tahu strategimu punya <em>edge</em>, kamu tidak akan mudah menyerah saat terkena <em>Drawdown</em> (penurunan modal) sementara.</p>
+<h3>2. Mengenal Karakter Market (Market Behavior)</h3>
+<p>Setiap aset atau pair (misal: XAUUSD, EURUSD, GBPJPY) memiliki "kepribadian" atau karakter yang berbeda-beda. XAUUSD (Gold) mungkin sangat fluktuatif dan sering membuat <em>fakeout</em> atau manipulasi sebelum bergerak sesuai tren, sedangkan EURUSD cenderung bergerak lebih mulus dan teknikal.</p>
+<p>Dengan backtesting, kamu jadi terbiasa dengan karakter pair yang kamu perdagangkan. Kamu mulai sadar bahwa, <em>"Oh, Gold ini sering ambil Liquidity (Stop Hunt) di sesi London sebelum akhirnya rally di sesi New York."</em> Pengamatan seperti ini sangat sulit kamu sadari jika kamu hanya trading sesekali dan tidak pernah melakukan riset mendalam pada data historis.</p>
+<strong>Fakta:</strong> Trader profesional biasanya sangat ahli di 1 atau 2 pair saja, karena mereka sudah mem-backtest pair tersebut ribuan kali dan sangat paham karakternya.
+
+<h3>3. Mendapatkan Harapan yang Realistis (Realistic Expectations)</h3>
+<p>Banyak yang masuk dunia trading dengan harapan bisa menang 90% dan menggandakan uang setiap bulan. Backtesting akan menamparmu dengan realita secara halus. Kamu akan melihat bahwa strategi terbaik di dunia pun masih bisa mengalami kekalahan berturut-turut.</p>
+<p>Ketika kamu melihat secara nyata dari data 100 <em>trades</em> bahwa kamu "hanya" menang 45 kali, tapi karena rasio Risk:Reward (RR) kamu adalah 1:3, kamu tetap berakhir dengan profit yang sangat besar. Kesadaran ini akan membunuh sifat serakah dan ketidaksabaranmu. Kamu mulai menerima <em>loss</em> sebagai biaya bisnis (cost of doing business), bukan sebagai kiamat.</p>
+<h3>4. Membantu Merancang Money Management yang Tepat</h3>
+<p>Apakah aman merisikokan 2% dari modal per trade? Atau sebaiknya 0.5% saja? Jawabannya <strong>tergantung dari data backtesting-mu</strong>.</p>
+<p>Jika dari hasil backtesting kamu menemukan bahwa strategimu memiliki kemungkinan <em>losing streak</em> (kalah berturut-turut) maksimal sebanyak 8 kali, maka kamu tahu merisikokan 5% per trade adalah bunuh diri (5% x 8 = 40% Drawdown!). Kamu mungkin akan memutuskan untuk hanya merisikokan 1% agar saat terpuruk sekalipun, kamu hanya kehilangan 8% dan mentalmu tetap stabil.</p>
+<h2>Bahaya Mengerikan Jika Tidak Melakukan Backtesting</h2>
+<p>Tanpa backtesting, setiap entry yang kamu lakukan didasari oleh harapan (hope) dan ketakutan (fear). Saat harga bergerak sedikit melawanmu, kamu langsung cut loss karena takut (meskipun belum kena SL). Saat harga mendekati TP, kamu buru-buru tutup posisi karena takut harganya berbalik (meskipun belum sampai target).</p>
+<strong>Ingat:</strong> Trading dengan tebak-tebakan tanpa data adalah judi. Backtesting adalah garis batas tegas yang memisahkan antara penjudi dan trader profesional.
+
+<h2>Kesimpulan: Bayar Harganya Sekarang</h2>
+<p>Ya, backtesting itu membosankan. Backtesting itu butuh waktu dan tenaga. Tidak ada sensasi adrenalin seperti saat live trading. Tetapi, keringat yang kamu keluarkan saat "latihan" (backtesting) akan mencegahmu berdarah-darah di medan "pertempuran" (live market).</p>
+<p>Jadikan backtesting sebagai ritual wajibmu. Jika kamu malas mem-backtest sebuah strategi sebanyak 100 kali, maka kamu sama sekali belum berhak menggunakan strategi tersebut dengan uang sungguhan.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="cara-backtest-manual" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 3 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Cara Backtest Manual</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Setelah kamu mengerti mengapa backtesting itu wajib, pertanyaan selanjutnya adalah: <em>"Lalu, bagaimana cara memulainya?"</em> Bagi pemula, tidak perlu langsung membeli perangkat lunak (software) backtesting yang mahal atau belajar coding untuk membuat robot. Cara paling efektif untuk belajar di awal adalah dengan <strong>Backtest Manual</strong>.</p></div>
+<p>Backtest manual berarti kamu sendiri yang menggeser chart ke masa lalu, mengamati pergerakan harga satu per satu (seolah-olah sedang <em>live</em>), mencari setup sesuai dengan strategi kamu, lalu mencatat hasilnya. Proses ini sedikit memakan waktu, tapi dampaknya terhadap "jam terbang" visualmu (screen time) sangatlah luar biasa.</p>
+<h2>Persiapan Sebelum Memulai</h2>
+<p>Sebelum kamu membuka chart, pastikan tiga hal ini sudah siap:</p>
+<ol>
+<li><strong>Platform Charting:</strong> Gunakan TradingView. Kamu bisa menggunakan fitur <em>Bar Replay</em> (memotong chart masa depan) jika kamu pengguna berbayar. Jika gratisan, kamu cukup menggeser chart ke kiri secara manual dan perlahan menggesernya ke kanan dengan tombol panah (Arrow Right) di keyboard.</li>
+<li><strong>SOP (Standard Operating Procedure) yang Jelas:</strong> Jangan backtest hanya berdasarkan insting (feeling). Kamu harus punya aturan tertulis: Bagaimana cara menentukan arah (bias)? Apa konfirmasi entry-nya? Di mana letak SL dan TP? Jika aturannya masih mengambang, hasil backtest-mu tidak akan valid.</li>
+<li><strong>Alat Pencatat (Jurnal):</strong> Siapkan Spreadsheet (Excel / Google Sheets) atau minimal buku catatan kosong.</li>
+</ol>
+<h2>Langkah-langkah Eksekusi Backtest Manual</h2>
+<h3>Langkah 1: Tentukan Batas Waktu Mundur</h3>
+<p>Pilih satu pair, misalnya EURUSD. Geser chart ke masa lalu (misal 3 bulan atau 6 bulan yang lalu). Jangan pilih-pilih bulan tertentu hanya karena grafiknya terlihat bagus. Turun di tanggal acak, lalu potong chart di area tersebut menggunakan <em>Bar Replay</em> (jika ada), atau sembunyikan sisi kanan layar dengan kertas agar matamu tidak "mencuri pandang" ke masa depan.</p>
+<div class="warning"><strong>Warning</strong><br/><p>Jika kamu sudah tahu bahwa harga akan naik (karena tidak sengaja melihat ujung chart), backtest kamu akan bias. Kamu akan tiba-tiba mencari alasan untuk "Buy" saja. Jujurlah pada diri sendiri.</p></div>
+<h3>Langkah 2: Lakukan Analisa Top-Down</h3>
+<p>Mulailah dari Timeframe Besar (misalnya Daily atau H4) untuk menentukan Bias Harian. Apakah harga sedang tren naik (bullish), turun (bearish), atau ranging? Tentukan di mana area Liquidity atau Order Block yang mungkin dituju harga.</p>
+<h3>Langkah 3: Geser Harga Candle Demi Candle</h3>
+<p>Turun ke Timeframe eksekusi kamu (misalnya M15 atau M5). Tekan panah kanan (Right Arrow) di keyboard perlahan untuk memunculkan satu per satu candle baru. Amati bagaimana harga bergerak. Perhatikan waktu (sesi trading). Ingat, jika strategi kamu hanya beroperasi di Sesi London dan New York, abaikan pergerakan di Sesi Asia.</p>
+<h3>Langkah 4: Temukan Setup dan Ambil Keputusan</h3>
+<p>Ketika harga membentuk kriteria entry sesuai dengan SOP kamu, berhentilah menggeser chart! Gunakan <em>Long Position</em> atau <em>Short Position tool</em> di TradingView. Letakkan level Entry, Stop Loss, dan Take Profit di chart secara presisi sesuai aturanmu.</p>
+<p>Setelah terpasang, barulah lanjutkan menggeser candle ke kanan untuk melihat apakah harga mengenai Entry kamu, lalu apakah berakhir menyentuh SL atau TP.</p>
+<h3>Langkah 5: Catat dan Evaluasi (Journaling)</h3>
+<p>Apapun hasilnya, <strong>catat di jurnalmu</strong>. Jangan abaikan trade yang rugi dengan alasan, <em>"Ah, yang ini nggak kehitung, aku salah lihat."</em> Masukkan ke data!</p>
+<p>Catat tanggal, jam, RR, hasil akhir, serta ambil <em>screenshot</em> sebelum entry dan sesudah hasilnya keluar. Kamu butuh data mentah ini untuk dievaluasi nantinya.</p>
+<div class="note"><strong>Tip</strong><br/><p>Saat manual backtest, sangat wajar jika kamu menemukan "kebingungan" di awal. "Ini masuk setup nggak ya?" Kalau kamu bingung, berarti SOP strategimu kurang spesifik. Perjelas lagi aturannya.</p></div>
+<h2>Target dari Latihan Ini</h2>
+<p>Lakukan proses ini secara berulang minimal untuk 100 kali setup (bukan 100 hari, tapi 100 kali mengambil peluang trading). Saat kamu sudah mencatat 100 <em>trades</em> dengan aturan yang persis sama, kamu baru bisa menilai apakah sistem trading tersebut layak dilanjutkan (profitable) atau harus dibuang.</p>
+<p>Melalui Cara Backtest Manual, matamu akan sangat terbiasa mengenali pola (pattern recognition). Nantinya, saat kamu melihat pergerakan harga di <em>live market</em>, otakmu secara otomatis akan merespons dengan cepat karena sudah melihat pola yang sama terbentuk berulang-ulang di masa lalu.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="template-backtesting" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 4 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Template Backtesting</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Salah satu kendala terbesar saat memulai backtesting adalah kebingungan mengenai apa saja yang harus dicatat. Jika kamu hanya mencatat "Profit $10" atau "Loss $5", data tersebut sama sekali tidak berguna untuk dianalisis di masa depan. Sebuah <strong>Template Backtesting</strong> yang baik harus bisa menceritakan "apa, mengapa, dan bagaimana" suatu trade dieksekusi.</p></div>
+<p>Dalam bab ini, kita akan membahas kolom-kolom esensial yang wajib ada di dalam <em>spreadsheet</em> backtesting kamu. Kamu tidak harus menggunakan <em>software</em> berbayar; cukup gunakan Google Sheets, Microsoft Excel, atau Notion. Yang terpenting adalah kedisiplinanmu dalam mengisi data tersebut.</p>
+<h2>Struktur Dasar Jurnal Backtesting</h2>
+<p>Sebuah tabel backtesting setidaknya harus dibagi menjadi tiga fase: <strong>Informasi Umum, Eksekusi, dan Hasil Akhir</strong>. Mari kita bedah satu per satu kolom yang dibutuhkan.</p>
+<h3>1. Kolom Informasi Umum</h3>
+<p>Bagian ini mencatat konteks <em>market</em> saat peluang tersebut muncul. Ini sangat berguna untuk melihat pola: di waktu kapan strategimu paling sering bekerja.</p>
+<p>* <strong>No / ID Trade:</strong> Angka urut (1, 2, 3...) untuk memudahkan perhitungan statistik.</p>
+<p>* <strong>Tanggal &amp; Jam (Waktu Broker):</strong> Kapan setup ini terjadi? Waktu ini penting untuk melihat sesi mana (Asia, London, New York) yang paling cocok dengan strategimu.</p>
+<p>* <strong>Pair / Aset:</strong> Aset apa yang sedang kamu tes? (Misal: XAUUSD, EURUSD, BTCUSD).</p>
+<p>* <strong>Sesi Trading:</strong> Tuliskan dengan jelas apakah itu Sesi London, Sesi New York, atau masa transisi (Overlap).</p>
+<h3>2. Kolom Eksekusi (Alasan Entry)</h3>
+<p>Bagian ini memaksa kamu untuk selalu patuh pada Standard Operating Procedure (SOP). Jika kolom ini tidak bisa diisi, berarti trade tersebut tidak valid dan tidak boleh diambil!</p>
+<p>* <strong>Arah (Direction):</strong> Apakah kamu mengambil posisi Long (Buy) atau Short (Sell)?</p>
+<p>* <strong>Timeframe HTF Bias:</strong> Apa bias dari Timeframe Besar? (Misal: H4 Bullish).</p>
+<p>* <strong>Timeframe LTF Entry:</strong> Di Timeframe berapa kamu mengeksekusi entry? (Misal: M15 atau M5).</p>
+<em> <strong>Kriteria Entry:</strong> Tuliskan alasan singkat namun spesifik. Contoh: </em>"Harga menyentuh Order Block M15 setelah mengambil Asian High Liquidity, lalu membentuk konfirmasi CHoCH di M5."*
+
+<div class="note"><strong>Tip</strong><br/><p>Jika kamu mengisi kolom "Kriteria Entry" hanya dengan kata "Feeling" atau "Kayaknya mau naik", itu tanda bahaya bahwa kamu sedang berjudi.</p></div>
+<h3>3. Kolom Parameter Risiko</h3>
+<p>Sebelum tahu apakah trade ini menang atau kalah, kamu harus mengukur risikonya.</p>
+<p>* <strong>Entry Price:</strong> Harga di mana kamu masuk pasar.</p>
+<p>* <strong>Stop Loss (Pips/Poin):</strong> Jarak antara Entry dan level Stop Loss. Ini berguna untuk melihat apakah rata-rata SL-mu terlalu sempit atau terlalu lebar.</p>
+<p>* <strong>Take Profit (Pips/Poin):</strong> Jarak target keuntunganmu.</p>
+<p>* <strong>Rasio Risk:Reward (RR):</strong> Berapa target perbandingannya? (Misal: 1:3, 1:2).</p>
+<h3>4. Kolom Hasil dan Visual</h3>
+<p>Inilah tempat kamu mencatat <em>outcome</em> secara jujur dan melampirkan "barang bukti".</p>
+<em> <strong>Hasil Akhir (Result):</strong> Isi dengan </em>Win<em> (Kena TP), </em>Loss<em> (Kena SL), atau </em>BE* (Break-Even / Balik Modal).
+<em> <strong>Catatan / Review:</strong> Tulis evaluasi singkat. Contoh: </em>"Kena SL karena entry terlalu cepat sebelum candle konfirmasi tertutup (close)."*
+<em> <strong>Link Screenshot (Wajib!):</strong> Gunakan fitur </em>Copy Link to Chart* di TradingView, atau gunakan aplikasi seperti Lightshot untuk menyimpan link gambar chart. Minimal simpan 2 gambar per trade: <strong>Sebelum Hasil Keluar</strong> dan <strong>Sesudah Hasil Keluar</strong>.
+
+<h2>Contoh Baris (Row) dalam Spreadsheet</h2>
+<p>| No | Tanggal/Jam | Pair | Sesi | Arah | Kriteria Entry | RR | Hasil | Link Gambar |</p>
+<p>| --- | --- | --- | --- | --- | --- | --- | --- | --- |</p>
+<p>| 1 | 12 Ags, 14:30 WITA | EURUSD | London | Short | Sweep London High + M5 CHoCH | 1:3 | Win | [Link TV](#) |</p>
+<p>| 2 | 12 Ags, 20:00 WITA | XAUUSD | New York | Long | M15 FVG + Liquidity Grab | 1:2 | Loss | [Link TV](#) |</p>
+<h2>Kekuatan Sebuah Catatan Visual</h2>
+<p>Mencatat angka itu penting untuk menghitung persentase menang (win rate). Namun, <strong>menyimpan Link Screenshot jauh lebih penting untuk melatih mata (Pattern Recognition)</strong>.</p>
+<p>Bayangkan jika kamu punya 100 gambar dari setup yang Win, dan 100 gambar dari setup yang Loss. Saat akhir minggu, kamu bisa menjejerkan semua gambar yang Win. Otakmu akan secara otomatis mencari kesamaan dari gambar-gambar tersebut. <em>"Oh, ternyata semua trade Win saya terjadi saat harga sudah mengambil liquidity besar."</em> Hal semacam ini tidak akan kamu temukan hanya dengan melihat tabel berisi angka.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="forward-testing" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 5 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Forward Testing</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Jika <em>Backtesting</em> adalah simulasi penerbangan di ruang kelas, maka <strong>Forward Testing</strong> adalah menerbangkan pesawat sungguhan di kondisi cuaca nyata, meskipun masih menggunakan simulator (akun demo) atau pesawat ringan (lot sangat kecil). Banyak trader merasa strategi mereka sudah sempurna saat backtesting, namun hancur berantakan saat dibawa ke dunia nyata. Mengapa? Karena ada satu variabel besar yang tidak ada di backtesting: <strong>Waktu Tunggu (Patience)</strong>.</p></div>
+<p>Saat backtesting manual, kamu bisa mempercepat waktu (fast forward) jika pasar sedang sepi. Kamu tidak merasakan kebosanan menunggu harga bergerak selama 4 jam. Namun di <em>live market</em>, satu candle H4 benar-benar butuh 4 jam untuk terbentuk! Di sinilah Forward Testing mengambil peran krusial.</p>
+<h2>Apa Itu Forward Testing?</h2>
+<p>Forward Testing adalah proses menguji strategi trading kamu di kondisi pasar saat ini (real-time). Kamu melihat chart yang sedang berjalan (live data), menunggu setup muncul sesuai aturanmu, dan mencatat hasilnya. Forward Testing biasanya dilakukan di Akun Demo (Demo Account) atau di Akun Live namun dengan risiko paling minimal (Micro Lot / 0.01 lot).</p>
+<strong>Aturan Emas:</strong> Jangan pernah mempertaruhkan uang dalam jumlah besar pada strategi yang belum melewati tahap Forward Testing minimal 1-2 bulan.
+
+<h2>Perbedaan Mencolok Backtesting vs Forward Testing</h2>
+<p>Kenapa hasil backtesting seringkali jauh lebih bagus daripada Forward Testing? Ini adalah fenomena umum. Berikut alasannya:</p>
+<p>* <strong>Sisi Emosional (Psikologi):</strong> Saat backtesting, kamu tidak takut untuk klik "Buy" setelah kalah 3 kali karena kamu tahu tidak ada uang sungguhan yang hilang. Saat Forward Testing (terutama jika menggunakan uang kecil), tekanan emosional mulai muncul. Kamu mulai ragu, tanganmu gemetar untuk klik "Buy", atau kamu menutup posisi terlalu cepat karena takut harga berbalik.</p>
+<em> <strong>FOMO dan Kebosanan:</strong> Forward Testing menguji kesabaranmu. Saat tidak ada setup, kamu dipaksa untuk </em>"sit on your hands"<em> (tidak melakukan apa-apa). Banyak pemula akhirnya memaksakan </em>entry* karena bosan.
+<em> <strong>Slippage dan Spread:</strong> Di backtesting (terutama TradingView), harga selalu tereksekusi dengan sempurna di garis yang kamu tarik. Di </em>live market<em>, ada yang namanya </em>Spread<em> (selisih harga jual/beli) dan </em>Slippage* (loncatan harga saat berita besar). Forward Testing akan menunjukkan apakah strategimu bisa bertahan menghadapi biaya transaksi nyata ini.
+
+<h2>Langkah-langkah Melakukan Forward Testing</h2>
+<p>Bagaimana cara Forward Testing yang benar agar datanya seakurat backtesting?</p>
+<h3>1. Gunakan Akun Demo atau Cent/Micro Account</h3>
+<p>Banyak profesional menyarankan menggunakan akun <em>Micro/Cent</em> dengan modal kecil (misal $10-$50) daripada akun Demo. Kenapa? Karena kehilangan $1 sungguhan memberikan efek psikologis yang lebih nyata daripada kehilangan $10,000 uang monopoli di akun Demo. Namun jika kamu benar-benar belum punya dana, akun Demo jauh lebih baik daripada nekat langsung menggunakan modal besar.</p>
+<h3>2. Tetapkan Jadwal Trading yang Realistis</h3>
+<p>Saat backtesting, kamu mungkin menguji Sesi Asia, London, dan New York sekaligus. Di dunia nyata, kamu tidak bisa begadang 24 jam. Tentukan jam kerjamu. Misalnya, kamu hanya akan Forward Testing dari jam 19.00 - 22.00 WITA (Sesi New York). Jika ada setup bagus di luar jam itu, abaikan. Ini melatih kedisiplinan hidupmu.</p>
+<h3>3. Catat di Jurnal yang Sama</h3>
+<p>Gunakan <em>template spreadsheet</em> yang sudah kamu buat dari bab sebelumnya. Catat setiap setup yang kamu ambil secara <em>real-time</em>. Jangan menunda pencatatan hingga akhir minggu, karena kamu akan lupa apa yang kamu rasakan saat mengeksekusi <em>trade</em> tersebut.</p>
+<h2>Berapa Lama Harus Forward Testing?</h2>
+<p>Tidak ada angka pasti, namun patokan yang wajar adalah <strong>minimal 20 hingga 50 kali trade</strong>, atau sekitar <strong>1 hingga 2 bulan</strong>. Jika dalam 1 bulan kamu mengambil 30 trade secara real-time dan hasilnya masih konsisten (meskipun profitnya tidak sebesar saat backtesting), maka strategimu siap dinaikkan "pangkatnya" ke akun Live sesungguhnya.</p>
+<h2>Kesimpulan</h2>
+<p>Forward Testing adalah filter terakhir sebelum kamu terjun ke medan perang sesungguhnya. Proses ini akan menelanjangi semua kelemahanmu: apakah kamu kurang sabar, apakah kamu sering balas dendam, atau apakah kamu sering mengubah aturan di tengah jalan. Jangan buru-buru. <em>Market</em> tidak akan lari kemana-mana. Persiapkan senjatamu dengan matang melalui Forward Testing.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="demo-sebelum-live" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 6 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Demo Sebelum Live</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Banyak trader pemula menganggap akun Demo (uang virtual) hanyalah mainan untuk anak-anak atau orang yang penakut. Mereka berpikir, <em>"Saya tidak akan serius kalau pakai uang bohong. Langsung deposit saja supaya mental saya terbentuk!"</em> Ini adalah salah satu kebohongan terbesar yang sering diyakini di dunia trading, dan biasanya berujung pada kebangkrutan akun (Margin Call) dalam hitungan minggu.</p></div>
+<p>Kenyataannya, <strong>Demo Sebelum Live</strong> adalah tahapan krusial yang digunakan bahkan oleh trader institusional (bank atau <em>hedge fund</em>) sebelum mereka menerapkan algoritma atau strategi baru. Menggunakan akun demo bukanlah tanda kelemahan, melainkan tanda kedewasaan dan kecerdasan dalam mengelola risiko bisnis.</p>
+<h2>Mengapa Harus Demo Dulu?</h2>
+<p>Bayangkan kamu sedang belajar mengendarai mobil balap. Apakah kamu akan langsung turun ke sirkuit Formula 1 bersama pembalap profesional lainnya di hari pertamamu? Pasti kamu akan masuk ke simulator dulu. Trading adalah profesi <em>high-performance</em>. Pasar (Market) adalah tempat yang kejam dan tidak kenal ampun. Berikut alasan mengapa kamu wajib pakai demo dulu:</p>
+<h3>1. Menguasai Platform Trading Tanpa "Biaya Bodoh"</h3>
+<p>Banyak trader kehilangan uang bukan karena analisa mereka salah, tapi karena mereka <strong>salah pencet</strong>. Mereka ingin Buy, malah pencet Sell. Mereka ingin pasang Stop Loss di angka tertentu, tapi salah hitung desimal (Lot/Pipette) sehingga SL-nya jadi 10 kali lebih besar. Menggunakan akun demo (misalnya di MetaTrader 4/5 atau platform <em>Prop Firm</em>) memastikan jari dan matamu terbiasa dengan <em>interface</em> aplikasi, cara mengatur lot, dan cara memodifikasi order tanpa risiko kehilangan uang jajanmu.</p>
+<h3>2. Memisahkan Proses Belajar dari Tekanan Uang</h3>
+<p>Saat kamu masih tahap belajar membaca <em>Order Block</em>, <em>Fair Value Gap (FVG)</em>, atau <em>Liquidity</em>, otakmu membutuhkan ketenangan untuk mencerna informasi. Jika kamu belajar menggunakan uang sungguhan, fokusmu tidak lagi pada <em>"Apakah setup ini valid?"</em>, melainkan berubah menjadi kepanikan <em>"Duh, uangku minus $10, minus $20, aduh bagaimana ini!"</em> Rasa takut kehilangan uang akan membuatmu buta terhadap chart.</p>
+<strong>Fakta Psikologis:</strong> Emosi (serakah dan takut) akan mematikan logika. Akun demo membantumu fokus 100% pada logika dan eksekusi strategi.
+
+<h3>3. Membuktikan Diri Sendiri (Self-Validation)</h3>
+<p>Jika kamu tidak bisa menghasilkan profit di akun demo di mana tidak ada tekanan emosional, <strong>apa yang membuatmu berpikir kamu bisa profit di akun live?</strong> Akun live jauh lebih berat karena ada tekanan psikologis. Akun demo adalah syarat kelulusan minimum.</p>
+<h2>Cara Menggunakan Akun Demo dengan Benar</h2>
+<p>Banyak yang gagal di akun live padahal di akun demo mereka profit ribuan dolar. Masalahnya bukan pada akun demonya, tapi <em>cara</em> mereka menggunakannya. Agar latihanmu di akun demo efektif, ikuti aturan ini:</p>
+<em> <strong>Samakan Modal Demo dengan Modal Live Kamu Nanti:</strong> Jika kamu berencana deposit $100 nantinya, jangan buka akun demo dengan modal $100,000! Buka akun demo senilai $100. Mentalitas </em>"Ah, akun $100,000 ini, lot 1.0 saja nggak kerasa"* akan merusak sistem Money Management-mu.
+<p>* <strong>Gunakan Lot Sesuai Rencana:</strong> Jangan gunakan lot sembarangan karena "uang virtual". Jika rencanamu adalah merisikokan 1% per trade, hitung lot-nya persis seperti kamu akan trading di akun live.</p>
+<p>* <strong>Catat Jurnalnya:</strong> Perlakukan trade di akun demo layaknya akun live. Catat alasannya, ambil screenshot-nya, dan hitung persentase pertumbuhannya.</p>
+<h2>Kapan Harus Pindah ke Akun Live?</h2>
+<p>Jangan berdiam di akun demo selamanya, karena akun demo tidak melatih emosimu secara maksimal. Kamu harus pindah ke akun live (atau akun Prop Firm kecil) <strong>KETIKA</strong> kamu sudah membuktikan 3 hal ini di akun demo:</p>
+<ol>
+<li>Kamu sudah melakukan minimal 30 - 50 trade di akun demo.</li>
+<li>Persentase kemenangan (Win Rate) dan Risk:Reward (RR) kamu menunjukkan hasil yang positif (kamu <em>profitable</em> di akhir bulan).</li>
+<li>Kamu merasa bosan. Ya, bosan! Saat eksekusi trading terasa membosankan karena kamu hanya melakukan rutinitas <em>"Tunggu setup -&gt; Entry -&gt; Pasang SL -&gt; Tinggalkan"</em> tanpa rasa deg-degan, itu artinya kamu sudah siap mental.</li>
+</ol>
+<h2>Kesimpulan</h2>
+<p>Akun demo adalah laboratorium tempat kamu meracik dan menyempurnakan strategimu. Jangan biarkan ego membuatmu melompati fase ini. Trader yang bijak akan menghabiskan waktu berbulan-bulan di akun demo untuk mengamankan uangnya, sedangkan trader amatir akan langsung deposit dan menghabiskan uangnya dalam beberapa hari. Pilih kamu mau jadi yang mana.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="jurnal-trading" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 7 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Jurnal Trading</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Jika kamu pernah berolahraga dan mencoba menurunkan berat badan, kamu pasti tahu pentingnya mencatat apa saja yang kamu makan setiap hari. Di dunia trading, <strong>Jurnal Trading</strong> memiliki fungsi yang sama persis. Ini bukan sekadar buku catatan profit dan loss, melainkan cermin paling jujur yang akan merekam semua kebiasaan, emosi, dan kesalahanmu di depan chart.</p></div>
+<p>Banyak trader menghindari membuat jurnal karena mereka tidak siap menghadapi kenyataan bahwa mereka sering melanggar aturan (rules) mereka sendiri. Padahal, rahasia untuk berhenti mengulangi kesalahan yang sama adalah dengan menuliskannya dan mengevaluasinya.</p>
+<h2>Apa Beda Jurnal Trading dengan Jurnal Backtesting?</h2>
+<p>Format Jurnal Trading (saat live atau demo) hampir mirip dengan <em>Template Backtesting</em>, tetapi dengan satu tambahan besar: <strong>Faktor Psikologis dan Emosi</strong>.</p>
+<p>Saat backtesting, kamu tidak merasakan <em>Fear of Missing Out (FOMO)</em> karena chart bisa kamu hentikan kapan saja. Di live trading, kamu mungkin <em>entry</em> terlalu cepat karena panik melihat candle besar, atau menutup posisi sebelum sampai <em>Take Profit (TP)</em> karena takut harganya berbalik. Hal-hal seperti inilah yang harus masuk ke dalam Jurnal Trading.</p>
+<h2>Elemen Wajib dalam Jurnal Trading (Live/Demo)</h2>
+<h3>1. Kondisi Psikologis Sebelum Entry</h3>
+<p>Sebelum kamu klik <em>Buy</em> atau <em>Sell</em>, jujurlah pada diri sendiri. Catat skala emosimu (1-10) atau tuliskan secara singkat apa yang kamu rasakan.</p>
+<p>Contoh: <em>"Merasa agak FOMO karena melihat emas naik tajam di M5, jadi nekat masuk walaupun belum ada konfirmasi Order Block."</em></p>
+<h3>2. Kepatuhan pada SOP (Trading Plan)</h3>
+<p>Buat kolom khusus berupa <em>Checklist</em> (Ya/Tidak) apakah <em>trade</em> ini 100% mengikuti aturan yang sudah kamu tetapkan di Backtesting.</p>
+<p>Jika jawabannya "Tidak", tetapi kamu tetap <em>entry</em>, maka meskipun <em>trade</em> itu profit, secara sistematis itu adalah "Bad Trade" (Trade yang buruk). Profit karena melanggar aturan hanya akan memperkuat kebiasaan buruk di masa depan.</p>
+<h3>3. Manajemen Posisi Saat Sedang Berjalan (Trade Management)</h3>
+<p>Catat apa yang kamu lakukan setelah posisi terbuka. Apakah kamu menggeser Stop Loss (SL) menjadi lebih lebar karena tidak rela rugi? Apakah kamu menutup posisi di tengah jalan karena panik?</p>
+<p>Contoh: <em>"Harga hampir kena SL, saya geser SL lebih jauh sedikit. Akhirnya malah kena SL yang lebih besar. Harusnya saya biarkan saja sesuai rencana awal."</em></p>
+<div class="warning"><strong>Warning</strong><br/><p>Mengubah rencana (SL/TP) setelah posisi terbuka biasanya didorong oleh kepanikan, bukan logika analisa.</p></div>
+<h3>4. Jurnal Gambar (Screenshot) yang Lengkap</h3>
+<p>Di jurnal live trading, pastikan kamu menyimpan setidaknya tiga gambar untuk setiap posisi:</p>
+<ol>
+<li><strong>Gambar HTF (Higher Timeframe):</strong> Untuk menunjukkan dari mana asal Bias atau arahmu.</li>
+<li><strong>Gambar Saat Entry (LTF):</strong> Untuk membuktikan bahwa memang ada konfirmasi (misal CHoCH atau FVG) saat kamu masuk pasar.</li>
+<li><strong>Gambar Hasil Akhir:</strong> Menunjukkan di mana posisi tertutup, apakah kena TP, kena SL, atau Break-Even.</li>
+</ol>
+<h2>Cara Membaca Data dari Jurnalmu</h2>
+<p>Jurnal hanya akan menjadi tumpukan teks jika tidak dianalisis. Cobalah baca ulang jurnalmu setiap akhir pekan (<em>Weekend Review</em>). Kamu akan mulai menyadari pola kelemahanmu sendiri. Misalnya:</p>
+<em> </em>"Ternyata 80% loss saya terjadi di hari Jumat sore. Berarti sebaiknya saya tidak trading di hari Jumat."*
+<em> </em>"Saya sering profit, tapi karena sering tutup posisi terlalu cepat, profit saya jadi kecil dan tidak bisa menutupi loss saya sebelumnya. Saya harus melatih kesabaran untuk hold sampai target."*
+
+<h2>Kesimpulan</h2>
+<p>Memiliki Jurnal Trading adalah tanda bahwa kamu menganggap trading sebagai sebuah bisnis serius, bukan sekadar hobi membuang-buang uang. Bisnis yang baik selalu memiliki pembukuan yang jelas. Jurnal Trading adalah "pembukuan" emosi, logika, dan uangmu. Jika kamu malas mencatat, maka bersiaplah untuk selalu berjalan di tempat dalam karir tradingmu.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="review-mingguan" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 8 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Review Mingguan</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Banyak trader yang rajin mencatat jurnal dari Senin sampai Jumat, namun ketika hari Sabtu tiba, mereka menutup laptop dan melupakan semuanya. Baru di hari Senin berikutnya, mereka kembali ke market dan mengulangi kesalahan yang sama. Membuat jurnal tanpa melakukan <strong>Review Mingguan (Weekly Review)</strong> ibarat merekam pertandingan sepak bola tapi tidak pernah menonton ulang rekamannya untuk mengevaluasi strategi.</p></div>
+<p>Pasar forex, crypto, maupun saham tutup di akhir pekan (kecuali crypto). Waktu luang di hari Sabtu atau Minggu adalah saat yang paling krusial bagi seorang trader profesional. Di sinilah proses pendewasaan (growth) benar-benar terjadi.</p>
+<h2>Mengapa Harus Akhir Pekan (Weekend)?</h2>
+<p>Saat market sedang bergerak (Senin-Jumat), otakmu dipenuhi oleh emosi: antisipasi, ketakutan, keserakahan, dan <em>adrenaline rush</em>. Sangat sulit untuk menilai kinerjamu sendiri secara objektif dalam kondisi tersebut. Di akhir pekan, saat market berhenti bergerak (chart membeku), otak logismu kembali mengambil alih. Kamu bisa melihat <em>chart</em> tanpa tekanan emosional.</p>
+<strong>Mentalitas Pro:</strong> Trader amatir beristirahat di akhir pekan untuk melupakan kekalahan mereka. Trader profesional bekerja di akhir pekan untuk memastikan mereka tidak kalah lagi dengan cara yang sama di minggu depan.
+
+<h2>Apa Saja yang Harus Dilakukan Saat Review Mingguan?</h2>
+<p>Proses Review Mingguan tidak harus memakan waktu seharian. Luangkan waktu 1-2 jam saja, dan ikuti langkah-langkah berikut:</p>
+<h3>1. Mengelompokkan Trade (Win, Loss, Break-Even)</h3>
+<p>Buka Jurnal Trading yang sudah kamu isi selama seminggu. Kelompokkan trade kamu. Berapa banyak yang <em>Win</em>? Berapa yang <em>Loss</em>?</p>
+<p>Jangan hanya melihat hasil akhir, tapi tanyakan: <strong>"Apakah trade ini mengikuti aturan (SOP)?"</strong></p>
+<p>* <strong>Good Win:</strong> Profit dan mengikuti aturan. (Bagus!)</p>
+<p>* <strong>Good Loss:</strong> Kena SL, tapi sudah 100% mengikuti aturan. (Ini adalah bagian dari bisnis, jangan disesali).</p>
+<em> <strong>Bad Win:</strong> Profit, tapi karena </em>feeling* atau melanggar aturan. (Ini berbahaya, karena akan memupuk kebiasaan judi).
+<p>* <strong>Bad Loss:</strong> Kena SL, dan melanggar aturan (misal: FOMO, lot terlalu besar). (Ini yang harus segera dihentikan!).</p>
+<h3>2. Analisa Visual (Membandingkan Screenshot)</h3>
+<p>Buka semua <em>screenshot</em> dari trade yang <em>Win</em> dan jejerkan di layarmu. Carilah kesamaan dari setup-setup yang berhasil tersebut. Apakah semuanya terjadi setelah mengambil likuiditas utama? Apakah semuanya terjadi di Sesi London?</p>
+<p>Lalu, lakukan hal yang sama pada <em>screenshot</em> trade yang <em>Loss</em>. Biasanya, kamu akan menemukan pola yang sangat jelas. Mungkin kamu sering kalah jika memaksakan trading saat market sedang <em>choppy</em> (sideways kecil) atau saat mencoba melawan tren besar.</p>
+<h3>3. Review Emosi dan Perilaku</h3>
+<p>Baca kembali catatan psikologimu. Apakah minggu ini kamu sering merasa marah? Apakah kamu melakukan <em>Overtrading</em> (masuk posisi berkali-kali dalam sehari) karena ingin balas dendam (Revenge Trading)? Kesadaran (awareness) adalah langkah pertama untuk menyembuhkan kebiasaan buruk ini.</p>
+<h2>Membuat Rencana untuk Minggu Depan (Playbook)</h2>
+<p>Review Mingguan tidak hanya soal melihat ke belakang, tapi juga mempersiapkan diri ke depan. Setelah mengevaluasi minggu lalu, buatlah <strong>1 atau 2 aturan baru</strong> untuk memperbaiki kesalahanmu di minggu depan.</p>
+<p>Misalnya, dari review minggu ini kamu menyadari bahwa kamu rugi besar karena nekat trading 15 menit sebelum berita <em>Non-Farm Payroll (NFP)</em> rilis. Maka, <em>Action Plan</em> kamu untuk minggu depan adalah: <em>"Saya tidak akan membuka posisi baru 1 jam sebelum berita warna merah (High Impact) rilis."</em> Tulis aturan ini besar-besar dan tempel di dekat monitormu!</p>
+<h2>Kesimpulan</h2>
+<p>Tidak ada strategi yang sempurna, dan tidak ada trader yang tidak pernah melakukan kesalahan. Pembeda antara trader yang sukses bertahan 10 tahun dan yang hancur dalam 1 bulan adalah kemampuan mereka untuk mengevaluasi diri. Review Mingguan adalah <em>feedback loop</em> (putaran umpan balik) yang akan terus menyempurnakan strategi dan psikologimu seiring berjalannya waktu. Jadikan ini sebagai rutinitas suci setiap akhir pekan.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="mengukur-winrate-rr-dan-drawdown" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 9 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Mengukur Winrate, RR, dan Drawdown</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Setelah kamu memiliki 100 data <em>trade</em> dari hasil backtesting atau Forward Testing, apa yang harus dilakukan dengan data tersebut? Angka-angka mentah itu tidak akan berarti apa-apa sampai kamu menerjemahkannya menjadi tiga indikator kesehatan sistem trading: <strong>Winrate, Risk-to-Reward (RR), dan Drawdown</strong>. Ketiga elemen ini adalah "rapor" dari strategimu.</p></div>
+<p>Sebagian besar pemula biasanya hanya peduli pada "Winrate" (seberapa sering mereka menang), lalu membuang strategi tersebut jika sering loss. Ini adalah pemikiran yang salah kaprah. Mari kita bongkar satu per satu cara mengukurnya dan mengapa ketiganya saling berhubungan erat.</p>
+<h2>1. Winrate (Tingkat Kemenangan)</h2>
+<strong>Winrate</strong> adalah persentase jumlah trade yang profit dibandingkan total trade. Cara menghitungnya sangat mudah:
+
+<em>(Jumlah Trade Profit / Total Trade) x 100%</em>
+<p>Misalnya, dari 100 kali trade, kamu menang 40 kali dan kalah 60 kali. Maka Winrate kamu adalah <strong>40%</strong>.</p>
+<strong>Mitos Terbesar:</strong> "Saya butuh winrate 80%-90% untuk bisa untung." Ini SALAH BESAR! Banyak trader institusional sangat sukses hanya dengan winrate 35% - 45%. Mengapa? Jawabannya ada pada elemen kedua, yaitu RR.
+
+<h2>2. Risk-to-Reward Ratio (RR)</h2>
+<strong>Risk-to-Reward Ratio (RR)</strong> adalah perbandingan antara jumlah uang yang kamu pertaruhkan (Risk) dengan jumlah uang yang kamu targetkan untuk dimenangkan (Reward).
+
+<p>Jika kamu merisikokan $10 (Stop Loss) untuk mendapatkan $30 (Take Profit), maka RR kamu adalah <strong>1:3</strong>. Artinya, satu kali kemenangan bisa menutupi tiga kali kekalahan berturut-turut!</p>
+<p>Di sinilah keajaiban matematika trading terjadi (<em>Edge</em>). Mari kita kombinasikan Winrate dan RR dalam sebuah contoh simulasi dari 100 trade:</p>
+<p>* <strong>Skenario A (Trader Winrate Tinggi, RR Rendah):</strong> Winrate 80%, RR 1:0.5 (Risk $10, Reward $5).  </p>
+<p>  Menang: 80 trade x $5 = $400  </p>
+<p>  Kalah: 20 trade x $10 = -$200  </p>
+<strong>Hasil: Untung $200.</strong> (Meski menangnya sering, untungnya lambat).
+<p>* <strong>Skenario B (Trader Winrate Rendah, RR Tinggi):</strong> Winrate 40%, RR 1:3 (Risk $10, Reward $30).  </p>
+<p>  Menang: 40 trade x $30 = $1,200  </p>
+<p>  Kalah: 60 trade x $10 = -$600  </p>
+<strong>Hasil: Untung $600!</strong> (Menangnya sedikit, tapi sekali menang panen besar).
+
+<div class="warning"><strong>Warning</strong><br/><p>Mengetahui hubungan Winrate dan RR membebaskanmu dari tekanan emosional "harus selalu benar". Kamu bisa salah lebih sering daripada benar, namun tetap berakhir dengan profit besar.</p></div>
+<h2>3. Drawdown (Penurunan Modal Maksimal)</h2>
+<p>Ini adalah metrik yang paling sering diabaikan pemula, padahal ini yang menentukan apakah kamu akan stres atau santai saat trading. <strong>Drawdown (DD)</strong> adalah penurunan terdalam dari titik puncak saldo (balance) tertinggimu sebelum akhirnya naik kembali. Drawdown biasanya dinyatakan dalam persentase.</p>
+<p>Misal, kamu mulai dengan saldo $1,000. Lalu kamu profit hingga $1,200. Tiba-tiba kamu mengalami kekalahan beruntun (<em>losing streak</em>) dan saldo turun menjadi $1,050, sebelum akhirnya profit lagi menjadi $1,300.</p>
+<p>Penurunan dari $1,200 ke $1,050 adalah sebesar $150.</p>
+<p>Drawdown = ($150 / $1,200) x 100% = <strong>12.5%</strong>.</p>
+<strong>Mengapa Drawdown Penting?</strong>
+<p>Untuk mengatur ekspektasi emosimu! Dari 100 trade hasil backtest, kamu harus melihat, <em>"Berapa kali sih sistem saya ini mengalami SL berturut-turut yang paling parah?"</em></p>
+<p>Jika dari data sejarah sistemmu pernah mengalami 8 kali SL berturut-turut, kamu <strong>TIDAK BOLEH</strong> merisikokan 5% per trade. Karena jika fase 8x SL itu datang (dan pasti akan datang), Drawdown kamu akan mencapai 40% (8 x 5%). Mayoritas orang akan hancur mentalnya jika melihat modalnya hilang 40% dan akhirnya menyerah atau balas dendam.</p>
+<p>Tetapi jika kamu merisikokan 1% per trade, fase terburuk itu hanya akan memberimu 8% Drawdown. Kamu akan tetap tenang, dan membiarkan sisi probabilitas menangmu (Edge) bekerja di trade-trade selanjutnya.</p>
+<h2>Kesimpulan</h2>
+<p>Jangan pernah menilai sebuah strategi hanya dari seberapa sering dia menebak harga dengan benar (Winrate). Nilailah dari seberapa banyak uang yang dihasilkan saat benar dibandingkan saat salah (RR), dan seberapa dalam sistem itu bisa menjatuhkan modalmu di masa-masa sulit (Drawdown). Jika ketiga pilar ini sudah kamu kuasai secara matematis, kamu secara resmi telah lulus dari fase "berjudi" dan masuk ke fase "berbisnis".</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="menentukan-apakah-strategi-layak" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 10 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Menentukan Apakah Strategi Layak</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Setelah melakukan backtesting ratusan kali, mencatat di jurnal, dan menghitung Winrate serta RR, tiba saatnya untuk mengambil keputusan final: <strong>Apakah strategi ini layak dipakai untuk mempertaruhkan uang sungguhan?</strong></p></div>
+<p>Banyak trader yang ragu-ragu di tahap ini. Mereka terus mencari "kesempurnaan" dan merevisi strategi setiap kali menemukan kelemahan kecil, hingga akhirnya mengalami <em>Analysis Paralysis</em> (kelumpuhan analisa). Padahal, tidak ada strategi yang 100% sempurna. Yang ada hanyalah strategi yang memiliki <em>Positive Expectancy</em> (Harapan Keuntungan Positif).</p>
+<h2>Apa Itu Positive Expectancy (Ekspektasi Positif)?</h2>
+<p>Sebuah strategi dikatakan layak <strong>BUKAN</strong> karena dia tidak pernah loss, melainkan karena secara matematis, jika diulang ratusan kali, sistem tersebut akan menghasilkan uang lebih banyak daripada uang yang hilang. Inilah yang disebut <em>Positive Expectancy</em>.</p>
+<p>Ada rumus sederhana untuk menghitung kelayakan sistemmu:</p>
+<strong>Rumus Expectancy:</strong>
+<p>(Winrate x Rata-rata Profit) - (Loss Rate x Rata-rata Loss)</p>
+<p>Misalnya, dari data backtest 100 trade, kamu merisikokan rata-rata $100 per trade (SL) dan target profit rata-rata $200 (TP). Winrate kamu adalah 40%. Maka hitungannya:</p>
+<p>* Winrate: 40% (0.4)</p>
+<p>* Loss Rate: 60% (0.6)</p>
+<p>* Rata-rata Profit: $200</p>
+<p>* Rata-rata Loss: $100</p>
+<p>Expectancy = (0.4 x 200) - (0.6 x 100)  </p>
+<p>Expectancy = (80) - (60) = <strong>+$20 per trade</strong>.</p>
+<p>Artinya, secara matematis, <strong>setiap kali kamu klik entry, kamu "dibayar" $20</strong>, terlepas dari apakah trade spesifik itu nantinya menang atau kalah. Sistem ini memiliki <em>Positive Expectancy</em> dan <strong>sangat layak digunakan!</strong></p>
+<h2>Tanda-tanda Strategi Harus Dibuang (Atau Direvisi)</h2>
+<p>Lalu, kapan kita harus membuang sebuah strategi? Jika perhitungan <em>Expectancy</em>-mu menghasilkan angka negatif (misal -$5 per trade), maka sistem itu akan menghancurkan akunmu secara perlahan. Selain itu, perhatikan tanda-tanda "Red Flag" berikut:</p>
+<h3>1. Drawdown Terlalu Besar untuk Mentalmu</h3>
+<p>Secara matematika, sistemmu mungkin profitable. Tapi jika <em>Historical Drawdown</em> (penurunan modal terparah di masa lalu) mencapai 30% - 40%, tanyakan pada dirimu sendiri: <em>"Apakah saya sanggup melihat uang saya berkurang 40% tanpa panik dan menutup akun?"</em> Jika jawabannya "Tidak", maka strategi itu tidak layak untuk <strong>profil risikomu</strong>, meskipun strateginya bagus. Kamu harus menurunkan lot, atau mencari strategi dengan <em>winrate</em> lebih tinggi.</p>
+<h3>2. Frekuensi Trade Terlalu Sedikit atau Terlalu Banyak</h3>
+<p>Jika dari backtest selama 1 tahun penuh strategi kamu hanya muncul 5 kali, maka <em>sample size</em>-nya terlalu kecil. Menunggu berbulan-bulan untuk 1 kali entry sangat tidak realistis secara psikologis. Sebaliknya, jika dalam sehari ada 20 sinyal entry, kamu berisiko tinggi terkena <em>overtrading</em> dan kelelahan mental.</p>
+<h3>3. Aturan Entry Terlalu Subjektif</h3>
+<p>Jika saat membaca jurnal, kamu sering berkata, <em>"Di sini aku buy karena perasaanku harganya sudah terlalu murah,"</em> maka kamu tidak punya strategi. Strategi yang layak harus <strong>mekanis</strong>. Maksudnya, jika kamu memberikan catatan rulismu ke orang lain, orang itu akan mengambil entry persis di titik yang sama denganmu. Jika aturannya masih "abu-abu", perbaiki SOP-nya.</p>
+<h2>Jangan Terjebak dalam "Curve Fitting"</h2>
+<p>Satu kesalahan besar saat merevisi strategi adalah <strong>Curve Fitting</strong> (mencocok-cocokkan data). Saat kamu melihat hasil backtest-mu jelek di bulan Maret, kamu tiba-tiba menambahkan aturan: <em>"Oke, jangan trading di hari Selasa minggu ketiga."</em></p>
+<p>Ini adalah kebohongan statistik! Kamu mengubah aturan hanya untuk menghindari loss di masa lalu yang sudah terjadi. Padahal di masa depan, kondisi market akan selalu berbeda. Strategi yang baik harus cukup fleksibel untuk bertahan di berbagai kondisi market, bukan strategi yang diedit secara paksa agar terlihat sempurna di masa lalu.</p>
+<h2>Kesimpulan Akhir</h2>
+<p>Menentukan kelayakan strategi adalah tentang menemukan keseimbangan antara <strong>Angka (Matematika) dan Kenyamanan Diri (Psikologi)</strong>. Jika angkanya positif, drawdown-nya bisa kamu terima tanpa kehilangan tidur di malam hari, dan aturan entry-nya jelas (mekanis), maka selamat: <strong>Kamu sudah memiliki "Mesin Uang" (Edge) milikmu sendiri!</strong> Langkah selanjutnya hanyalah disiplin mengeksekusinya tanpa ragu.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="cara-memasukkan-screenshot-di-jurnal" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 11 DARI 11</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Cara Memasukkan Screenshot di Jurnal</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Sebagai seorang trader, menyimpan screenshot dari chart (TradingView/MT4) adalah kewajiban mutlak. Untungnya, Obsidian dirancang sangat ramah untuk hal ini.</p></div>
+<h2>⚠️ PENTING: Atur Agar Gambar Masuk ke Folder 'images' Dulu!</h2>
+<p>Sebelum mulai <em>paste</em> gambar, Anda harus memastikan Obsidian secara otomatis melempar gambar baru ke folder `images` agar Vault Anda tidak berantakan.</p>
+<strong>Cara Setting-nya (Cukup Lakukan Sekali):</strong>
+<ol>
+<li>Buka <strong>Settings</strong> (Pengaturan ⚙️) di Obsidian.</li>
+<li>Pilih menu <strong>Files and links</strong> (File dan tautan).</li>
+<li>Cari opsi <strong>Default location for new attachments</strong> (Lokasi default untuk lampiran baru).</li>
+<li>Ubah opsinya menjadi <strong>"In the folder specified below"</strong> (Di dalam folder yang ditentukan di bawah ini).</li>
+<li>Pada kolom <em>Attachment folder path</em> yang muncul di bawahnya, ketik: <strong>`images`</strong> atau <strong>`images/materi`</strong>.</li>
+</ol>
+<em>Selesai! Sekarang semua gambar yang Anda masukkan akan otomatis meluncur ke folder tersebut tanpa mengotori halaman utama.</em>
+<p>---</p>
+<h2>Cara Memasukkan Gambarnya</h2>
+<h3>Cara 1: Copy-Paste Langsung (Paling Cepat! ⚡)</h3>
+<p>Ini adalah cara yang paling sering digunakan para trader.</p>
+<ol>
+<li>Lakukan <em>Screenshot</em> atau klik tombol "Copy Chart Image" di TradingView.</li>
+<li>Buka catatan Obsidian Anda.</li>
+<li>Sentuh (atau klik kanan) di mana Anda ingin menaruh gambarnya, lalu pilih <strong>Paste</strong> (Tempel).</li>
+</ol>
+<h3>Cara 2: Pilih dari Galeri HP / Komputer (Insert Attachment)</h3>
+<p>Jika gambar sudah tersimpan di galeri HP Anda:</p>
+<ol>
+<li>Saat sedang mengedit catatan di Obsidian, perhatikan barisan tombol (menu) di atas keyboard Anda.</li>
+<li>Cari ikon <strong>Klip Kertas (Paperclip)</strong> 📎 atau ikon <strong>Gambar</strong> 🖼️. </li>
+<li>Klik ikon tersebut, lalu pilih gambar dari galeri HP Anda.</li>
+<li>Obsidian akan memasukkan kode seperti ini: ``. Saat Anda beralih ke mode baca, kode ini berubah jadi gambar asli.</li>
+</ol>
+<p>---</p>
+<div class="note"><strong>Cara Mengatur Ukuran Gambar</strong><br/><p>Terkadang gambar yang dimasukkan terlalu besar hingga memenuhi layar. Anda bisa mengecilkan ukurannya dengan menambahkan garis tegak lurus `|` dan angka di dalam kurungnya.
+<strong>Contoh:</strong>
+<p>Awalnya: ``</p>
+<p>Diubah jadi: `` <em>(Ini akan membuat lebarnya menjadi 300 pixel, sehingga lebih rapi)</em>.</p></p></div>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+      </div>
+
+      <div style="margin-top:48px;padding-top:32px;border-top:2px solid var(--border);">
+        <div class="quiz-container" data-module="backtesting-dan-jurnal"></div>
+    <script src="../assets/js/quiz.js"></script>
+      </div>
+
+      <div class="page-nav" style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <a class="btn ghost" href="../bagian-13-psikologi-trading/index.html">← Pertemuan 13</a>
+        <a class="btn primary" href="../bagian-15-menjadi-trader-mandiri/index.html">Selesai & Lanjut Pertemuan 15 →</a>
+      </div>
+    </article>
+
+    <aside class="toc-card">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#3b82f6;text-transform:uppercase;margin-bottom:6px;">PERTEMUAN 14</div>
+      <h3 style="margin-bottom:12px;font-size:16px;">Daftar Isi Modul</h3>
+      <ul style="max-height: calc(100vh - 280px); overflow-y: auto;">
+        <li><a href="#apa-itu-backtesting" class="toc-link" data-target="apa-itu-backtesting">1. Apa Itu Backtesting</a></li>
+<li><a href="#kenapa-backtesting-wajib" class="toc-link" data-target="kenapa-backtesting-wajib">2. Kenapa Backtesting Wajib</a></li>
+<li><a href="#cara-backtest-manual" class="toc-link" data-target="cara-backtest-manual">3. Cara Backtest Manual</a></li>
+<li><a href="#template-backtesting" class="toc-link" data-target="template-backtesting">4. Template Backtesting</a></li>
+<li><a href="#forward-testing" class="toc-link" data-target="forward-testing">5. Forward Testing</a></li>
+<li><a href="#demo-sebelum-live" class="toc-link" data-target="demo-sebelum-live">6. Demo Sebelum Live</a></li>
+<li><a href="#jurnal-trading" class="toc-link" data-target="jurnal-trading">7. Jurnal Trading</a></li>
+<li><a href="#review-mingguan" class="toc-link" data-target="review-mingguan">8. Review Mingguan</a></li>
+<li><a href="#mengukur-winrate-rr-dan-drawdown" class="toc-link" data-target="mengukur-winrate-rr-dan-drawdown">9. Mengukur Winrate, RR, dan Drawdown</a></li>
+<li><a href="#menentukan-apakah-strategi-layak" class="toc-link" data-target="menentukan-apakah-strategi-layak">10. Menentukan Apakah Strategi Layak</a></li>
+<li><a href="#cara-memasukkan-screenshot-di-jurnal" class="toc-link" data-target="cara-memasukkan-screenshot-di-jurnal">11. Cara Memasukkan Screenshot di Jurnal</a></li>
+      </ul>
+      <hr style="margin:16px 0;border:none;border-top:1px solid var(--border);">
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+        ⏱️ Estimasi: ~45–60 Menit<br>
+        📚 11 Bab Lengkap<br>
+        🎓 Semester 2 • Medium
+      </div>
+    </aside>
+  </div>
+</main>
+
+<style>
+@media (max-width: 900px) {
+  .mobile-toc-drawer { display: block !important; }
+  .toc-card { display: none !important; }
+}
+.module-chapter { scroll-margin-top: 100px; }
+.toc-card a.active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var links = document.querySelectorAll('.toc-card .toc-link');
+  var sections = document.querySelectorAll('.module-chapter');
+  if (!links.length || !sections.length) return;
+
+  function onScroll() {
+    var scrollPos = window.scrollY + 140;
+    var currentId = '';
+    sections.forEach(function(sec) {
+      if (sec.offsetTop <= scrollPos) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+    links.forEach(function(link) {
+      if (link.getAttribute('data-target') === currentId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive: true});
+  onScroll();
+});
+</script>
+
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Sistem Kuliah Trading dari Nol sampai Mandiri.</footer>
+<script>
+
+</script>
+</body>
+</html>

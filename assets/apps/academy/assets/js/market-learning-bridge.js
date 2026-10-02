@@ -8,7 +8,8 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (root) {
   'use strict';
 
-  const REGISTRY_URL = '../assets/data/market-learning-map.json';
+  const rootPath = (typeof root.ROOT_PATH !== 'undefined' ? root.ROOT_PATH : (typeof ROOT_PATH !== 'undefined' ? ROOT_PATH : '../'));
+  const REGISTRY_URL = rootPath + 'assets/data/market-learning-map.json';
   const DEFAULT_API_URL = 'https://amy-fx.vercel.app/api/learning-live-example';
   const API_ATTEMPT_TIMEOUT_MS = 6000;
 
@@ -317,7 +318,12 @@
 
   function cleanTitle(path) {
     if (!path) return '';
-    const filename = path.split('/').pop().replace(/\.html$/, '');
+    const parts = path.split('/');
+    const folder = parts.length > 1 ? parts[0] : '';
+    const filename = parts.pop().replace(/\.html$/, '');
+    if (filename === 'index' && folder) {
+      return topicLabel(folder.replace(/^bagian-\d+-?/, ''));
+    }
     return topicLabel(filename);
   }
 
@@ -336,11 +342,11 @@
     if (document.querySelector('.chapter-nav-box')) return;
 
     const currentPath = getCurrentPath();
-    if (!currentPath || currentPath.endsWith('/index.html')) return;
+    if (!currentPath) return;
 
     const lessonKeys = Object.keys(registry?.lessons || {}).filter(k => {
       const cfg = registry.lessons[k];
-      return cfg && cfg.enabled && cfg.topic !== 'index' && !k.endsWith('/index.html');
+      return cfg && cfg.enabled && cfg.topic !== 'index';
     });
 
     const currentIndex = lessonKeys.indexOf(currentPath);

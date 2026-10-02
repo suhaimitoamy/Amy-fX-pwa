@@ -166,19 +166,132 @@ export function sanitizeCandleValues(values, interval = '15min') {
   };
 }
 
-export function classifyBreak(breakInfo, confirmedTrend = 'NEUTRAL') {
-  if (!breakInfo) {
-    return { state: 'WAIT', title: 'BELUM ADA BREAK VALID', attempt: 'NONE', confirmedTrend, isConfirmed: false, explanation: 'Belum ada candle close yang mengonfirmasi BOS atau CHOCH.' };
+function normalizedBreakInfo(breakInfo) {
+  if (!breakInfo || typeof breakInfo !== 'object') return null;
+  const status = String(breakInfo.status || breakInfo.liveStatus || '').toUpperCase();
+  const rawKind = String(breakInfo.kind || '').toUpperCase();
+  const concept = String(
+    breakInfo.concept || breakInfo.kind || 'STRUCTURE BREAK'
+  ).toUpperCase();
+  const direction = String(
+    breakInfo.dir || breakInfo.direction || breakInfo.brokenSide || ''
+  ).toUpperCase();
+  const failed = Boolean(
+    breakInfo.failed
+    || breakInfo.breakType === 'BREAK_FAILED'
+    || status === 'FAILED'
+  );
+  const sweepOnly = Boolean(
+    breakInfo.sweepOnly
+    || breakInfo.breakType === 'SWEEP_ONLY'
+    || rawKind === 'LIQUIDITY_SWEEP'
+    || rawKind === 'SWEEP'
+  );
+  const valid = Boolean(
+    !failed
+    && !sweepOnly
+    && (
+      breakInfo.breakType === 'VALID_BREAK'
+      || (breakInfo.valid === true && status === 'CONFIRMED_BREAK')
+    )
+  );
+  return {
+    ...breakInfo,
+    kind: sweepOnly ? 'SWEEP' : concept,
+    dir: direction,
+    price: number(breakInfo.price ?? breakInfo.level),
+    failed,
+    sweepOnly,
+    valid,
+    breakType: failed
+      ? 'BREAK_FAILED'
+      : sweepOnly
+        ? 'SWEEP_ONLY'
+        : valid
+          ? 'VALID_BREAK'
+          : 'BREAK_CANDIDATE'
+  };
+}
+
+export function resolveBreakInfo(result) {
+  const structure = result?.st || result?.marketConcepts?.structure || {};
+  const snapshot = result?.marketConcepts?.structureSnapshot || {};
+  const candidates = [
+    structure.lastEvent,
+    structure.last,
+    result?.marketConcepts?.structure?.lastEvent,
+    result?.marketConcepts?.structure?.last,
+    snapshot.latestStructure,
+    structure.lastConfirmedBreak,
+    result?.marketConcepts?.structure?.lastConfirmedBreak
+  ];
+  for (const candidate of candidates) {
+    const normalized = normalizedBreakInfo(candidate);
+    if (normalized) return normalized;
   }
-  const failed = breakInfo.breakType === 'BREAK_FAILED' || breakInfo.failed;
-  const sweep = breakInfo.breakType === 'SWEEP_ONLY' || breakInfo.sweepOnly;
-  const valid = breakInfo.breakType === 'VALID_BREAK' && breakInfo.valid;
-  const attempt = breakInfo.dir === 'BEARISH' ? 'BEARISH' : breakInfo.dir === 'BULLISH' ? 'BULLISH' : 'NONE';
-  const liquidity = attempt === 'BEARISH' ? 'SSL' : attempt === 'BULLISH' ? 'BSL' : 'LIQUIDITY';
-  if (failed) return { state: 'FAILED', title: 'BREAK GAGAL DIPERTAHANKAN', attempt, confirmedTrend, isConfirmed: false, explanation: 'Break sebelumnya gagal dipertahankan karena harga kembali close melewati level konfirmasi.' };
-  if (sweep) return { state: 'SWEEP', title: `${liquidity} SWEEP — BELUM ADA BOS`, attempt, confirmedTrend, isConfirmed: false, explanation: `Harga menyapu ${liquidity} dengan wick, tetapi candle close kembali ke dalam struktur sehingga sweep tidak mengesahkan BOS.` };
-  if (valid) return { state: 'CONFIRMED', title: `VALID ${breakInfo.kind || 'STRUCTURE BREAK'} ${attempt}`, attempt, confirmedTrend: attempt, isConfirmed: true, explanation: `Candle sudah close melewati level struktur${breakInfo.hasDisplacement ? ' dan didukung displacement' : ''}.` };
-  return { state: 'WAIT', title: 'BELUM ADA BREAK VALID', attempt, confirmedTrend, isConfirmed: false, explanation: 'Belum ada BOS atau CHOCH yang memenuhi syarat body close.' };
+  return null;
+}
+
+export function classifyBreak(breakInfo, confirmedTrend = 'NEUTRAL') {
+  const info = normalizedBreakInfo(breakInfo);
+  if (!info) {
+    return {
+      state: 'WAIT',
+      title: 'BELUM ADA BREAK TERKONFIRMASI',
+      attempt: 'NONE',
+      confirmedTrend,
+      isConfirmed: false,
+      explanation: 'Belum ada event BOS/MSS yang lolos pivot terkonfirmasi, candle close, penetrasi ATR, dan displacement.'
+    };
+  }
+  const attempt = info.dir === 'BEARISH'
+    ? 'BEARISH'
+    : info.dir === 'BULLISH'
+      ? 'BULLISH'
+      : 'NONE';
+  const liquidity = attempt === 'BEARISH'
+    ? 'SSL'
+    : attempt === 'BULLISH'
+      ? 'BSL'
+      : 'LIQUIDITY';
+  if (info.failed) {
+    return {
+      state: 'FAILED',
+      title: 'BREAK GAGAL DIPERTAHANKAN',
+      attempt,
+      confirmedTrend,
+      isConfirmed: false,
+      explanation: 'Break sebelumnya gagal dipertahankan karena harga kembali close melewati level konfirmasi.'
+    };
+  }
+  if (info.sweepOnly) {
+    return {
+      state: 'SWEEP',
+      title: `${liquidity} SWEEP — BELUM ADA BOS`,
+      attempt,
+      confirmedTrend,
+      isConfirmed: false,
+      explanation: `Harga menyapu ${liquidity} dengan wick, tetapi candle close kembali ke dalam struktur sehingga sweep tidak mengesahkan BOS.`
+    };
+  }
+  if (info.valid) {
+    return {
+      state: 'CONFIRMED',
+      title: `VALID ${info.kind || 'STRUCTURE BREAK'} ${attempt}`,
+      attempt,
+      confirmedTrend: attempt,
+      isConfirmed: true,
+      explanation: `Candle sudah close melewati level struktur${info.hasDisplacement ? ' dan didukung displacement' : ''}.`
+    };
+  }
+  return {
+    state: 'CANDIDATE',
+    title: `BREAK CANDIDATE ${attempt}`,
+    attempt,
+    confirmedTrend,
+    isConfirmed: false,
+    explanation: 'Candle telah menguji atau melewati level, tetapi penetrasi ATR atau displacement belum memenuhi syarat break valid.'
+  };
 }
 
 function setupRr(setup) {

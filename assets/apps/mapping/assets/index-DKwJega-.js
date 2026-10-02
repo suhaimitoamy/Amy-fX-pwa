@@ -140,3 +140,4 @@ Harga: ${R(e)}`.replace(/<[^>]*>?/gm,``)),P(e=>[{id:Date.now(),type:r?`BUY`:`SEL
   window.__amyfxNotifyOpenRoute=openRoute;
 })();
 /* AMYFX_NOTIFY_GUARD_END */
+

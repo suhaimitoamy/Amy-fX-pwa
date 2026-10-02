@@ -3,30 +3,58 @@ document.addEventListener('DOMContentLoaded', () => {
   const navBtns = document.querySelectorAll('.nav-btn');
 
   const projects = [
-    { id: 'indikator', title: 'Indikator TradingView', badge: 'Library', icon: 'chart', desc: 'Library indikator & file Pine Script', target: 'internal' },
-    { id: 'jurnal', title: 'Jurnal Trading', badge: 'Jurnal', icon: 'journal', desc: 'Catat jurnal, evaluasi performa, dan riwayat trading', target: 'apps/journal/index.html' },
-    { id: 'academy', title: 'Tutorial Trading', badge: 'Learning', icon: 'academy', desc: 'Materi belajar trading dalam aplikasi', target: 'apps/academy/index.html' },
-    { id: 'mapping', title: 'Mapping', badge: 'Mapping', icon: 'mapping', desc: 'Mapping market & chart untuk analisis peluang', target: 'apps/mapping/index.html' },
-    { id: 'intel', title: 'Berita', badge: 'News', icon: 'chart', desc: 'Breaking News & Liquidity Heatmap XAU/USD', target: 'apps/market-intel/index.html' }
+    { id: 'mapping', title: 'Mapping', badge: 'Mapping', icon: 'mapping', desc: '', target: 'apps/mapping/index.html' },
+    { id: 'intel', title: 'Berita', badge: 'News', icon: 'intel', desc: '', target: 'apps/market-intel/index.html' },
+    { id: 'jurnal', title: 'Jurnal Trading', badge: 'Jurnal', icon: 'journal', desc: '', target: 'apps/journal/index.html' },
+    { id: 'academy', title: 'Tutorial Trading', badge: 'Learning', icon: 'academy', desc: '', target: 'apps/academy/index.html' },
+  ];
+
+  const practiceItems = [
+    {
+      id: 'chart-analysis',
+      title: 'Chart Analysis',
+      badge: 'Praktik',
+      icon: 'indicator',
+      desc: 'Analisis chart, gambar level, dan impor data historis candle.',
+      target: 'apps/academy/trading-practice/chart-analysis.html'
+    },
+    {
+      id: 'candle-replay',
+      title: 'Candle Replay',
+      badge: 'Replay',
+      icon: 'mapping',
+      desc: 'Latihan membaca candle satu per satu dan catat keputusan trading.',
+      target: 'apps/academy/trading-practice/candle-replay.html'
+    },
+    {
+      id: 'guided-practice',
+      title: 'Guided Practice',
+      badge: 'Latihan',
+      icon: 'academy',
+      desc: '60 soal acak ICT dengan chart ilustratif & evaluasi terpandu.',
+      target: 'apps/academy/trading-practice/guided-practice.html'
+    },
+    {
+      id: 'backtest-history',
+      title: 'Riwayat Backtest Lokal',
+      badge: 'Riwayat',
+      icon: 'journal',
+      desc: 'Tinjau setup manual, hasil forward candle, dan jurnal latihan.',
+      target: 'apps/academy/trading-practice/backtest-history.html'
+    }
   ];
 
   function showLoadingOverlay() {
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100vw';
-    overlay.style.height = '100vh';
-    overlay.style.backgroundColor = 'var(--bg-color)';
-    overlay.style.zIndex = '9999';
-    overlay.style.display = 'flex';
-    overlay.style.flexDirection = 'column';
-    overlay.style.alignItems = 'center';
-    overlay.style.justifyContent = 'center';
-    overlay.style.color = 'var(--primary-gold)';
-    overlay.style.fontFamily = 'sans-serif';
-    overlay.innerHTML = `<div style="width: 40px; height: 40px; border: 3px solid rgba(255,193,7,0.2); border-top-color: var(--primary-gold); border-radius: 50%; animation: spin 1s linear infinite;"></div><p style="margin-top: 16px; font-weight: bold; font-size: 14px;">Memuat Aplikasi...</p><style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>`;
-    document.body.appendChild(overlay);
+    if (window.AmyFXLoading?.start) {
+      window.AmyFXLoading.start({
+        delay: 350,
+        message: 'Memuat modul…',
+        timeout: 12000,
+        retry: () => location.reload()
+      });
+      return;
+    }
+    document.documentElement.classList.add('is-loading');
   }
 
   let indicators = [
@@ -38,6 +66,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>'\"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;' }[ch]));
+  }
+
+  function readJsonSafe(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw == null || raw === '') return fallback;
+      return JSON.parse(raw);
+    } catch (_) {
+      try { localStorage.removeItem(key); } catch (_) {}
+      return fallback;
+    }
+  }
+
+  function readJsonArray(key) {
+    const value = readJsonSafe(key, []);
+    return Array.isArray(value) ? value : [];
+  }
+
+  function deleteIndexedDatabase(name) {
+    return new Promise(resolve => {
+      if (!('indexedDB' in window)) return resolve(false);
+      let settled = false;
+      const finish = value => { if (!settled) { settled = true; resolve(value); } };
+      try {
+        const request = indexedDB.deleteDatabase(name);
+        request.onsuccess = () => finish(true);
+        request.onerror = () => finish(false);
+        request.onblocked = () => finish(false);
+        setTimeout(() => finish(false), 2500);
+      } catch (_) { finish(false); }
+    });
+  }
+
+  async function clearPersonalLocalData() {
+    const keys = [
+      'amy_mapping_logs', 'amy_mapping_analyses', 'amy_mapping_setups',
+      'amy_mapping_lifecycle_v4', 'amy_mapping_active_pointer_v4',
+      'amy_entry_watch_state_v3', 'amy_recent_projects', 'amy_saved_code',
+      'amy_journal_entries', 'amy_mapping_notified'
+    ];
+    keys.forEach(key => { try { localStorage.removeItem(key); } catch (_) {} });
+    return deleteIndexedDatabase('tradingLibraryManager.files');
   }
 
   async function loadRepoIndicators() {
@@ -93,11 +163,12 @@ document.addEventListener('DOMContentLoaded', () => {
   loadRepoIndicators();
 
   const svgs = {
-    chart: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"></path><path d="M16 14h4v-2h-4zM10 8h4V6h-4zM4 16h4v-2H4z"></path><polyline points="4 14 10 8 16 14 22 4"></polyline></svg>`,
-    journal: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><path d="M17.5 7.5L12 13l-2.5-1.5L11 9l6.5-1.5z"></path></svg>`,
-    academy: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="academyGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a2211"/><stop offset="100%" stop-color="#050505"/></linearGradient></defs><rect x="1" y="1" width="22" height="22" rx="5" fill="url(#academyGrad)" stroke="var(--primary-gold)" stroke-width="0.8"/><line x1="5" y1="12" x2="5" y2="19" stroke="var(--primary-gold)" opacity="0.3" stroke-width="1"/><rect x="4" y="14" width="2" height="3" fill="var(--primary-gold)" stroke="none" opacity="0.4"/><line x1="19" y1="5" x2="19" y2="12" stroke="var(--primary-gold)" opacity="0.3" stroke-width="1"/><rect x="18" y="7" width="2" height="3" fill="var(--primary-gold)" stroke="none" opacity="0.4"/><path d="M1 18 L6 15 L10 16 L23 7" stroke="var(--primary-gold)" opacity="0.2" stroke-width="1"/><path d="M12 5.5 L7.5 7.5 V12.5 C7.5 15.5 9.5 18 12 19.5 C14.5 18 16.5 15.5 16.5 12.5 V7.5 L12 5.5 Z" fill="#0b0b0b" stroke="var(--primary-gold)" stroke-width="1"/><text x="12" y="14.8" font-family="Georgia, serif" font-size="6.5" font-weight="900" fill="var(--primary-gold)" stroke="none" text-anchor="middle" letter-spacing="0.5">AM</text><path d="M12 3 L7 5 L12 7 L17 5 Z" fill="var(--primary-gold)" stroke="none"/><path d="M16 5.5 V8" stroke="var(--primary-gold)" stroke-width="0.8"/><circle cx="16" cy="8.5" r="0.8" fill="var(--primary-gold)" stroke="none"/></svg>`,
-    mapping: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line><circle cx="12" cy="8" r="2"></circle><path d="M12 10v5"></path></svg>`,
-    code: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
+    mapping: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>`,
+    intel: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h5M8 17h8"></path></svg>`,
+    journal: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>`,
+    academy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-5 9 5-9 5z"></path><path d="M7 12.5V17c2.7 2 7.3 2 10 0v-4.5M21 10v6"></path></svg>`,
+    indicator: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"></path><path d="m3 12 6-5 6 4 6-7"></path></svg>`,
+    code: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
   };
 
   const badgeSvgs = {
@@ -105,53 +176,440 @@ document.addEventListener('DOMContentLoaded', () => {
     Jurnal: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
     Learning: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
     Mapping: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`,
-    News: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>`
+    News: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>`,
+    Praktik: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"></path></svg>`,
+    Replay: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`,
+    Latihan: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>`,
+    Riwayat: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>`,
+    'Jalur 03': `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
   };
 
   function icon(type) {
     return `<span class="app-icon ${type}">${svgs[type] || ''}</span>`;
   }
 
+  let disposeHomeChart=null;
   function setActive(target) {
+    disposeHomeChart?.();disposeHomeChart=null;
     navBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.target === target));
-    localStorage.setItem('amy_root_tab', target);
+    try { localStorage.setItem('amy_root_tab', target); } catch (_) {}
   }
 
   function projectCard(item) {
     const badgeIcon = badgeSvgs[item.badge] || '';
-    return `<button class="card project-card" data-open="${item.id}">${icon(item.icon)}<span class="card-content"><h3>${item.title}</h3><p>${item.desc}</p><span class="badge">${badgeIcon} ${item.badge}</span></span><span class="chevron">›</span></button>`;
+    const descMarkup = item.desc ? `<p>${item.desc}</p>` : '';
+    return `<button class="card project-card" data-open="${item.id}" data-module="${item.id}">${icon(item.icon)}<span class="card-content"><h3>${item.title}</h3>${descMarkup}<span class="badge">${badgeIcon} ${item.badge}</span></span><span class="chevron" aria-hidden="true">›</span></button>`;
   }
 
-  function quickCard(item) {
+  function quickCard(item, wide = false) {
     const badgeIcon = badgeSvgs[item.badge] || '';
-    return `<button class="quick-card" data-open="${item.id}">${icon(item.icon)}<span><strong>${item.title}</strong><small>${badgeIcon} ${item.badge}</small></span><span class="chevron">›</span></button>`;
+    const descMarkup = item.desc ? `<small>${item.desc}</small>` : '';
+    return `<button class="quick-card${wide ? ' quick-card--wide' : ''}" data-open="${item.id}" data-module="${item.id}">${icon(item.icon)}<span><strong>${item.title}</strong>${descMarkup}</span><span class="chevron" aria-hidden="true">›</span></button>`;
   }
 
   function renderHome() {
     setActive('beranda');
-    const quick = [projects[3], projects[4], projects[1], projects[2]].filter(Boolean);
-    mainContent.innerHTML = `<section class="home-hero slide-up"><div class="eyebrow">AMY FX <span>•</span> VIP FACILITY</div><h2>Selamat datang di Amy FX</h2><p>Ruang kerja trading untuk membaca market, mencatat keputusan, dan belajar dengan lebih terarah.</p><div class="hero-status"><span class="status-dot"></span><span>Sistem siap digunakan</span><span class="hero-divider"></span><span>VIP Member</span></div></section><div class="section-heading"><div><span class="section-kicker">MODUL UTAMA</span><h2>Ruang kerja trading</h2></div><span class="section-count">${projects.length} modul</span></div><div class="quick-grid slide-up">${quick.map(quickCard).join('')}</div><div class="section-heading"><div><span class="section-kicker">TERBARU</span><h2>Akses cepat</h2></div><button class="text-button" data-nav="proyek">Lihat semua</button></div><div class="project-grid compact slide-up">${projects.slice(0, 3).map(projectCard).join('')}</div>`;
+    mainContent.innerHTML = `<section class="home-price-panel" aria-label="Peta harga XAU/USD">
+      <div class="section-heading"><h2>Peta harga · XAU/USD</h2><strong id="home-chart-price">—</strong></div>
+      <div class="home-chart-controls"><label>Timeframe <select id="home-chart-tf"><option value="M15">M15</option><option value="M5">M5</option></select></label><button type="button" id="home-chart-refresh">Perbarui</button></div>
+      <p id="home-chart-source" role="status">Memuat candle tertutup…</p><p id="home-chart-error" role="alert"></p>
+      <div id="home-price-chart" aria-label="Chart candlestick XAU/USD dengan level model ICT"></div>
+      <p id="home-chart-note"></p>
+    </section><div class="section-heading"><h2>Menu Utama</h2></div><div class="quick-grid slide-up">${projects.map(item => quickCard(item)).join('')}</div>`;
+    if(window.AmyHomeChart)disposeHomeChart=window.AmyHomeChart.mount(mainContent.querySelector('.home-price-panel'));
   }
 
   function renderProjectList(title) {
     setActive('proyek');
-    mainContent.innerHTML = `<div class="page-header"><div><span class="section-kicker">WORKSPACE</span><h2>${title}</h2><p>Pilih modul Amy FX yang ingin dibuka.</p></div></div><div class="project-grid slide-up">${projects.map(projectCard).join('')}</div>`;
+    mainContent.innerHTML = `<div class="page-header"><div><span class="section-kicker">JALUR 03</span><h2>${title || 'Backtest'}</h2></div></div><div class="project-grid slide-up">${practiceItems.map(projectCard).join('')}</div>`;
   }
 
   function renderKoleksi() {
     setActive('koleksi');
-    const recentIds = JSON.parse(localStorage.getItem('amy_recent_projects') || '[]');
-    const recent = recentIds.map(id => projects.find(item => item.id === id)).filter(Boolean).slice(0, 3);
-    const favorites = [projects.find(item => item.id === 'mapping'), projects.find(item => item.id === 'jurnal'), projects.find(item => item.id === 'intel')].filter(Boolean);
-    mainContent.innerHTML = `<div class="page-header"><div><span class="section-kicker">SIMPANAN &amp; AKSES</span><h2>Koleksi</h2><p>Jaga modul dan catatan penting tetap mudah ditemukan.</p></div></div><section class="collection-section"><div class="section-heading"><div><span class="section-kicker">FAVORIT</span><h2>Modul pilihan</h2></div><span class="section-count">${favorites.length}</span></div><div class="collection-grid">${favorites.map(projectCard).join('')}</div></section><section class="collection-section"><div class="section-heading"><div><span class="section-kicker">RIWAYAT DIBUKA</span><h2>Aktivitas terbaru</h2></div></div>${recent.length ? `<div class="collection-grid">${recent.map(projectCard).join('')}</div>` : '<div class="empty collection-empty">Belum ada modul yang dibuka dari sesi ini.</div>'}</section><section class="collection-tools"><button class="collection-tool" data-koleksi="kode"><span class="tool-icon">⌘</span><span><strong>Kode tersimpan</strong><small>${localStorage.getItem('amy_saved_code') ? 'Ada kode yang tersimpan' : 'Belum ada kode tersimpan'}</small></span><span class="chevron">›</span></button><button class="collection-tool" data-koleksi="update"><span class="tool-icon">↻</span><span><strong>Status aplikasi</strong><small>Versi terbaru aktif</small></span><span class="chevron">›</span></button></section>`;
+    const hasSavedCode = Boolean(localStorage.getItem('amy_saved_code'));
+    const favoriteIndicators = readJsonArray('amy_indicator_favorites');
+    const items = [];
+    if (hasSavedCode) {
+      items.push(`<button class="collection-item" data-koleksi="kode"><span class="app-icon code">${svgs.code}</span><span><strong>Kode indikator tersimpan</strong><small>Buka kembali Pine Script yang disimpan di perangkat ini.</small></span><span class="chevron" aria-hidden="true">›</span></button>`);
+    }
+    if (favoriteIndicators.length) {
+      items.push(`<button class="collection-item" data-open="indikator"><span class="app-icon indicator">${svgs.indicator}</span><span><strong>${favoriteIndicators.length} indikator favorit</strong><small>Favorit aktual dari library indikator perangkat ini.</small></span><span class="chevron" aria-hidden="true">›</span></button>`);
+    }
+    const content = items.length
+      ? `<div class="collection-list">${items.join('')}</div>`
+      : `<div class="empty-state-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 4h14v16l-7-4-7 4z"></path></svg><strong>Belum ada item tersimpan</strong><span>Simpan kode atau tandai indikator favorit agar muncul di sini.</span></div>`;
+    mainContent.innerHTML = `<div class="page-header"><div><span class="section-kicker">DATA PERANGKAT</span><h2>Koleksi</h2></div></div>${content}`;
   }
 
   function renderProfile() {
     setActive('profil');
-    const savedCode = Boolean(localStorage.getItem('amy_saved_code'));
-    const analyses = JSON.parse(localStorage.getItem('amy_mapping_analyses') || '[]').length;
-    const journal = JSON.parse(localStorage.getItem('amy_journal_entries') || '[]').length;
-    mainContent.innerHTML = `<div class="page-header"><div><span class="section-kicker">PENGATURAN</span><h2>Profil</h2><p>Pengaturan ringan untuk perangkat ini.</p></div></div><section class="profile-card slide-up"><div class="profile-avatar">AMY</div><div><h3>Trader Amy FX</h3><p>VIP Member • Lifetime Access</p></div><span class="status-badge">AKTIF</span></section><section class="stats-grid"><div class="stat-card"><strong>${analyses}</strong><small>Analisis Mapping</small></div><div class="stat-card"><strong>${journal}</strong><small>Catatan Jurnal</small></div><div class="stat-card"><strong>${savedCode ? '1' : '0'}</strong><small>Kode Tersimpan</small></div></section><section class="profile-list"><div class="profile-row"><span class="tool-icon">◉</span><span><strong>Data Tersimpan</strong><small>Riwayat dan preferensi tetap aman.</small></span><span class="check-mark">✓</span></div><div class="profile-row"><span class="tool-icon">⚡</span><span><strong>Sistem Aktif</strong><small>Fitur premium aktif.</small></span><span class="check-mark">✓</span></div><button class="profile-row danger-row" data-profile-action="clear"><span class="tool-icon">⌫</span><span><strong>Bersihkan cache aplikasi</strong><small>Tidak menghapus lisensi atau API key.</small></span><span class="chevron">›</span></button></section>`;
+    const userBalance = localStorage.getItem('amy_default_balance') || '5000';
+    const userRisk = localStorage.getItem('amy_default_risk') || '1.5';
+    const reminderConfig = window.AmyLearningReminder ? window.AmyLearningReminder.getConfig() : {
+      enabled: localStorage.getItem('amy_learning_reminder_enabled') !== 'false',
+      time: localStorage.getItem('amy_learning_reminder_time') || '20:00',
+      lastTitle: localStorage.getItem('amy_last_opened_title') || 'Fondasi ICT & Market Structure Dasar',
+      lastTimeText: 'Belum ada riwayat belajar'
+    };
+
+    const GLASS_PRESETS = [
+      { id: 'obsidian', name: 'Obsidian Glass', bg: '#070b14', accent: '#F5C451' },
+      { id: 'gold', name: 'Gold Terminal', bg: '#0c0f18', accent: '#F5C451' },
+      { id: 'cyber', name: 'Cyber Blue', bg: '#070e20', accent: '#3B82F6' },
+      { id: 'emerald', name: 'Emerald Risk', bg: '#05130e', accent: '#22C55E' },
+      { id: 'amethyst', name: 'Amethyst Flow', bg: '#0d0718', accent: '#C084FC' }
+    ];
+
+    const activeGlassPreset = window.AmyFXTheme?.colors?.preset || 'obsidian';
+    const presetsHTML = GLASS_PRESETS.map(p => `
+      <button type="button" class="glass-preset-btn ${p.id === activeGlassPreset ? 'is-active' : ''}" data-glass-preset="${p.id}">
+        <span class="preset-dot" style="background:${p.accent}; box-shadow:0 0 8px ${p.accent};"></span>
+        <span>${p.name}</span>
+      </button>
+    `).join('');
+
+    const customBgData = window.AmyFXTheme?.customBg;
+    const hasCustomBg = Boolean(customBgData && customBgData.image);
+    const customBgDim = customBgData?.dim ?? 50;
+    const customBgBlur = customBgData?.blur ?? 20;
+
+
+    mainContent.innerHTML = `
+      <div class="page-header">
+        <div>
+          <h2>Profil &amp; Pengaturan</h2>
+        </div>
+      </div>
+
+      <!-- Trading Environment Customization -->
+      <div class="profile-section-title" style="margin-top:8px;">Trading Environment Customization</div>
+      <section class="profile-glass-panel slide-up" data-amyfx-color-settings="true">
+        <div class="glass-group-label">Mode Tampilan</div>
+        <div class="theme-selector">
+          <button class="theme-choice" type="button" data-amyfx-theme-choice="system">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>
+            <span>Sistem</span>
+          </button>
+          <button class="theme-choice" type="button" data-amyfx-theme-choice="light">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+            <span>Terang</span>
+          </button>
+          <button class="theme-choice" type="button" data-amyfx-theme-choice="dark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2z"></path></svg>
+            <span>Gelap</span>
+          </button>
+        </div>
+
+        <div class="glass-group-label" style="margin-top:16px;">Preset Kaca &amp; Nuansa Trading</div>
+        <div class="presets-row">
+          ${presetsHTML}
+        </div>
+
+        <div class="glass-group-label" style="margin-top:18px; display:flex; justify-content:space-between; align-items:center;">
+          <span>Wallpaper &amp; Latar Belakang</span>
+          <span id="customBgBadge" class="bg-status-badge ${hasCustomBg ? 'active' : ''}">${hasCustomBg ? '● Foto Kustom Aktif' : 'Default Gradien'}</span>
+        </div>
+        <div class="wallpaper-controls-wrap">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <input type="file" id="customBgFileInput" accept="image/*" style="display:none;">
+            <button type="button" id="uploadCustomBgBtn" class="glass-preset-btn">
+              <span>🖼️</span>
+              <span>Pilih Foto Sendiri</span>
+            </button>
+            <button type="button" id="removeCustomBgBtn" class="glass-preset-btn danger-preset-btn" style="${hasCustomBg ? '' : 'display:none;'}">
+              <span>🗑️</span>
+              <span>Hapus Wallpaper</span>
+            </button>
+          </div>
+
+          <div id="customBgControls" class="wallpaper-sliders-card" style="${hasCustomBg ? '' : 'display:none;'}">
+            <div style="margin-bottom:12px;">
+              <div class="slider-header">
+                <span>Kecerahan / Dimming Latar</span>
+                <span id="customBgDimVal">${customBgDim}%</span>
+              </div>
+              <input type="range" id="customBgDimSlider" min="0" max="100" value="${customBgDim}" class="trading-slider">
+            </div>
+            <div>
+              <div class="slider-header">
+                <span>Efek Frosted Blur (Kaca Buram)</span>
+                <span id="customBgBlurVal">${customBgBlur}px</span>
+              </div>
+              <input type="range" id="customBgBlurSlider" min="0" max="25" value="${customBgBlur}" class="trading-slider">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Parameter Risiko Trading XAU/USD -->
+      <div class="profile-section-title" style="margin-top:20px; font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Parameter Trading &amp; Risiko (XAU/USD)</div>
+      <section style="padding:16px; border-radius:16px; background:var(--surface-color); border:1px solid var(--border-color); box-shadow:0 4px 16px rgba(0,0,0,0.05); margin-top:8px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <span style="display:block; font-size:11px; font-weight:750; color:var(--text-muted); margin-bottom:4px;">Saldo Default ($)</span>
+            <input type="number" id="profileBalance" value="${escapeHtml(userBalance)}" style="width:100%; border:1px solid var(--border-color); background:var(--surface-soft); color:var(--text-main); border-radius:10px; padding:10px; font-size:14px; font-weight:700; font-family:monospace; box-sizing:border-box;">
+          </div>
+          <div>
+            <span style="display:block; font-size:11px; font-weight:750; color:var(--text-muted); margin-bottom:4px;">Batas Risiko / Trade (%)</span>
+            <input type="number" step="0.5" id="profileRisk" value="${escapeHtml(userRisk)}" style="width:100%; border:1px solid var(--border-color); background:var(--surface-soft); color:var(--text-main); border-radius:10px; padding:10px; font-size:14px; font-weight:700; font-family:monospace; box-sizing:border-box;">
+          </div>
+        </div>
+        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center;">
+          <small style="color:var(--text-muted); font-size:11px; font-weight:600;">Aturan baku: Jangan ambil trade jika SL &gt; 2% modal.</small>
+          <button type="button" id="saveTradingParamsBtn" style="padding:8px 16px; background:linear-gradient(135deg, #d4af37, #aa8524); color:#000; font-weight:800; border-radius:10px; border:none; font-size:12px; cursor:pointer;">Simpan Parameter</button>
+        </div>
+      </section>
+
+      <!-- Panel 2.5: Pengingat Belajar & Peningkatan Skill (Academy) -->
+      <div class="profile-section-title" style="margin-top:20px; font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Pengingat Belajar &amp; Skill (Academy)</div>
+      <section style="padding:16px; border-radius:16px; background:var(--surface-color); border:1px solid var(--border-color); box-shadow:0 4px 16px rgba(0,0,0,0.05); margin-top:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <div>
+            <strong style="display:block; font-size:13px; font-weight:750; color:var(--text-main);">Notifikasi Pengingat Belajar</strong>
+            <small style="color:var(--text-muted); font-size:11px;">Mengingatkan materi terakhir untuk terus mengasah skill trading ICT-mu.</small>
+          </div>
+          <input type="checkbox" id="learningReminderEnabled" ${reminderConfig.enabled ? 'checked' : ''} style="width:20px; height:20px; accent-color:#38bdf8; cursor:pointer;">
+        </div>
+
+        <div id="learningReminderSettingsWrap" style="margin-top:14px; ${reminderConfig.enabled ? '' : 'display:none;'}">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-top:1px solid var(--border-color);">
+            <div>
+              <span style="display:block; font-size:12px; font-weight:750; color:var(--text-main);">Waktu Notifikasi</span>
+              <small style="color:var(--text-muted); font-size:11px;">Pilih jam pengingat muncul setiap hari</small>
+            </div>
+            <input type="time" id="learningReminderTimeInput" value="${escapeHtml(reminderConfig.time)}" style="border:1px solid var(--border-color); background:var(--surface-soft); color:var(--text-main); border-radius:8px; padding:6px 12px; font-size:14px; font-weight:700; font-family:monospace; outline:none;">
+          </div>
+
+          <div style="margin-top:10px; padding:10px 12px; background:var(--surface-soft); border-radius:10px; border:1px solid var(--border-color);">
+            <span style="display:block; font-size:10px; font-weight:750; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Materi Terakhir yang Kamu Pelajari</span>
+            <div id="learningReminderLastTitle" style="font-size:13px; font-weight:700; margin-top:3px; color:var(--accent,#38bdf8);">${escapeHtml(reminderConfig.lastTitle)}</div>
+            <small id="learningReminderLastTime" style="color:var(--text-muted); font-size:11px;">${escapeHtml(reminderConfig.lastTimeText)}</small>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:8px;">
+            <button type="button" id="saveLearningReminderBtn" style="flex:1; padding:9px 14px; background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; font-weight:800; border-radius:10px; border:none; font-size:12px; cursor:pointer;">Simpan Jadwal Pengingat</button>
+            <button type="button" id="testLearningReminderBtn" style="padding:9px 14px; background:var(--surface-soft); border:1px solid var(--border-color); color:var(--text-main); font-weight:700; border-radius:10px; font-size:12px; cursor:pointer;">🔔 Uji Notifikasi</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 3: Manajemen Data & Keamanan -->
+      <div class="profile-section-title" style="margin-top:20px; font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Manajemen Data &amp; Reset</div>
+      <section class="profile-list" style="margin-top:8px;">
+        <button class="profile-row" id="profileExportBtn" type="button">
+          <span class="tool-icon">💾</span>
+          <span><strong>Cadangkan / Ekspor Data</strong><small>Unduh file JSON berisi semua jurnal, rutinitas, dan catatan lokal.</small></span>
+          <span class="chevron">›</span>
+        </button>
+        <button class="profile-row danger-row" data-profile-action="clear" type="button">
+          <span class="tool-icon">×</span>
+          <span><strong>Bersihkan Data Lokal</strong><small>Menghapus riwayat, jurnal, dan koleksi lokal secara aman.</small></span>
+          <span class="chevron">›</span>
+        </button>
+      </section>
+    `;
+
+    // Event bindings for new profile features
+    document.getElementById('editTraderNameBtn')?.addEventListener('click', () => {
+      const current = localStorage.getItem('amy_trader_name') || 'Trader';
+      const updated = window.prompt('Masukkan Nama Trader Anda:', current);
+      if (updated && updated.trim()) {
+        localStorage.setItem('amy_trader_name', updated.trim());
+        const titleEl = document.getElementById('traderNameTitle');
+        if (titleEl) titleEl.textContent = updated.trim();
+        showToast('Nama profil trader berhasil diperbarui.');
+      }
+    });
+
+    document.getElementById('saveTradingParamsBtn')?.addEventListener('click', () => {
+      const bal = document.getElementById('profileBalance')?.value || '5000';
+      const r = document.getElementById('profileRisk')?.value || '1.5';
+      localStorage.setItem('amy_default_balance', bal);
+      localStorage.setItem('amy_default_risk', r);
+      showToast('Parameter risiko trading XAU/USD berhasil disimpan.');
+    });
+
+    // Learning Reminder event bindings
+    const reminderToggle = document.getElementById('learningReminderEnabled');
+    const reminderSettingsWrap = document.getElementById('learningReminderSettingsWrap');
+    reminderToggle?.addEventListener('change', () => {
+      const isChecked = reminderToggle.checked;
+      if (reminderSettingsWrap) reminderSettingsWrap.style.display = isChecked ? 'block' : 'none';
+      const timeVal = document.getElementById('learningReminderTimeInput')?.value || '20:00';
+      if (window.AmyLearningReminder) {
+        window.AmyLearningReminder.saveConfig(isChecked, timeVal);
+      } else {
+        localStorage.setItem('amy_learning_reminder_enabled', isChecked ? 'true' : 'false');
+        localStorage.setItem('amy_learning_reminder_time', timeVal);
+      }
+      showToast(isChecked ? 'Pengingat belajar diaktifkan.' : 'Pengingat belajar dinonaktifkan.');
+    });
+
+    document.getElementById('saveLearningReminderBtn')?.addEventListener('click', () => {
+      const isChecked = document.getElementById('learningReminderEnabled')?.checked ?? true;
+      const timeVal = document.getElementById('learningReminderTimeInput')?.value || '20:00';
+      if (window.AmyLearningReminder) {
+        window.AmyLearningReminder.saveConfig(isChecked, timeVal);
+      } else {
+        localStorage.setItem('amy_learning_reminder_enabled', isChecked ? 'true' : 'false');
+        localStorage.setItem('amy_learning_reminder_time', timeVal);
+      }
+      showToast(`Jadwal pengingat disimpan: Setiap hari jam ${timeVal}`);
+    });
+
+    document.getElementById('testLearningReminderBtn')?.addEventListener('click', () => {
+      if (window.AmyLearningReminder) {
+        window.AmyLearningReminder.triggerReminderNotification();
+      } else if (window.Android?.triggerLearningReminderNotification) {
+        window.Android.triggerLearningReminderNotification();
+      }
+      showToast('Notifikasi pengingat belajar dikirim!');
+    });
+
+    document.getElementById('profileExportBtn')?.addEventListener('click', () => {
+      const backupData = {
+        app: 'Amy FX Pro',
+        exportedAt: new Date().toISOString(),
+        traderName: localStorage.getItem('amy_trader_name') || 'Trader',
+        balance: localStorage.getItem('amy_default_balance') || '5000',
+        risk: localStorage.getItem('amy_default_risk') || '1.5',
+        habits: readJsonSafe('amy_habits_v2', []),
+        completedHabits: readJsonSafe('amy_completed_dates_v2', {}),
+        journals: readJsonArray('amy_journal_entries')
+      };
+      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `amyfx-pro-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('File backup profil & data berhasil diunduh.');
+    });
+
+    // Preset color buttons
+    document.querySelectorAll('[data-glass-preset]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const presetId = btn.dataset.glassPreset;
+        const preset = GLASS_PRESETS.find(p => p.id === presetId);
+        if (preset) {
+          window.AmyFXTheme?.setPreset?.(presetId);
+          document.querySelectorAll('[data-glass-preset]').forEach(b => {
+            b.classList.toggle('is-active', b.dataset.glassPreset === presetId);
+          });
+          showToast(`Tema kaca "${preset.name}" diterapkan.`);
+        }
+      });
+    });
+
+    // Custom Background Photo Handlers
+    const fileInput = document.getElementById('customBgFileInput');
+    const uploadBtn = document.getElementById('uploadCustomBgBtn');
+    const removeBtn = document.getElementById('removeCustomBgBtn');
+    const controls = document.getElementById('customBgControls');
+    const badge = document.getElementById('customBgBadge');
+    const dimSlider = document.getElementById('customBgDimSlider');
+    const blurSlider = document.getElementById('customBgBlurSlider');
+    const dimVal = document.getElementById('customBgDimVal');
+    const blurVal = document.getElementById('customBgBlurVal');
+
+    uploadBtn?.addEventListener('click', () => fileInput?.click());
+
+    fileInput?.addEventListener('change', event => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('Pilih file gambar (JPG, PNG, WebP).');
+        return;
+      }
+      showToast('Memproses foto latar...');
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1280;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+
+          const currentDim = dimSlider ? Number(dimSlider.value) : 50;
+          const currentBlur = blurSlider ? Number(blurSlider.value) : 20;
+          window.AmyFXTheme?.setCustomBg?.({
+            image: dataUrl,
+            dim: currentDim,
+            blur: currentBlur
+          });
+
+          if (controls) controls.style.display = 'block';
+          if (removeBtn) removeBtn.style.display = 'inline-flex';
+          if (badge) {
+            badge.textContent = '● Foto Kustom Aktif';
+            badge.style.color = '#10b981';
+          }
+          showToast('Wallpaper kustom berhasil dipasang!');
+        };
+        img.onerror = () => showToast('Gagal memuat gambar.');
+        img.src = e.target.result;
+      };
+      reader.onerror = () => showToast('Gagal membaca file gambar.');
+      reader.readAsDataURL(file);
+    });
+
+    dimSlider?.addEventListener('input', e => {
+      const val = Number(e.target.value);
+      if (dimVal) dimVal.textContent = `${val}%`;
+      const overlay = document.getElementById('amyfx-custom-bg-overlay');
+      if (overlay) {
+        overlay.style.backgroundColor = `rgba(7, 11, 20, ${(val / 100).toFixed(2)})`;
+      }
+      const current = window.AmyFXTheme?.customBg;
+      if (current) {
+        window.AmyFXTheme?.setCustomBg?.({ ...current, dim: val });
+      }
+    });
+
+    blurSlider?.addEventListener('input', e => {
+      const val = Number(e.target.value);
+      if (blurVal) blurVal.textContent = `${val}px`;
+      document.documentElement.style.setProperty('--glass-blur', `${val}px`);
+      const current = window.AmyFXTheme?.customBg;
+      if (current) {
+        window.AmyFXTheme?.setCustomBg?.({ ...current, blur: val });
+      }
+    });
+
+    removeBtn?.addEventListener('click', () => {
+      window.AmyFXTheme?.removeCustomBg?.();
+      if (controls) controls.style.display = 'none';
+      if (removeBtn) removeBtn.style.display = 'none';
+      if (badge) {
+        badge.textContent = 'Default Gradien';
+        badge.style.color = 'var(--text-muted)';
+      }
+      if (fileInput) fileInput.value = '';
+      showToast('Wallpaper kustom dihapus.');
+    });
+
+    const activePref = window.AmyFXTheme?.preference || 'system';
+    document.querySelectorAll('[data-amyfx-theme-choice]').forEach(b => {
+      b.classList.toggle('is-active', b.dataset.amyfxThemeChoice === activePref);
+    });
+
+    window.AmyFXTheme?.apply?.();
   }
 
   function handleKoleksi(action) {
@@ -163,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (action === 'favorit' || action === 'riwayat') {
       showToast('Fitur ini akan segera hadir pada update berikutnya.');
     } else if (action === 'update') {
-      showToast('Project saat ini sudah menggunakan versi terbaru.');
+      window.AmyFXUpdate?.checkNow?.({ announce: true });
     }
   }
 
@@ -204,9 +662,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function openProject(id) {
-    const project = projects.find(item => item.id === id);
+    const project = [...projects, ...practiceItems].find(item => item.id === id);
     if (!project) return;
-    const recent = JSON.parse(localStorage.getItem('amy_recent_projects') || '[]').filter(item => item !== id);
+    const recent = readJsonArray('amy_recent_projects').filter(item => item !== id);
     localStorage.setItem('amy_recent_projects', JSON.stringify([id, ...recent].slice(0, 8)));
     if (project.target === 'internal') {
       renderIndikator();
@@ -218,7 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function navigate(target) {
     if (target === 'beranda') renderHome();
-    if (target === 'proyek') renderProjectList('Proyek');
+    if (target === 'proyek' || target === 'backtest') renderProjectList('Backtest');
     if (target === 'koleksi') renderKoleksi();
     if (target === 'profil') renderProfile();
   }
@@ -269,9 +727,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveBtn) { localStorage.setItem('amy_saved_code', selectedIndicator.code || ''); saveBtn.textContent = 'Tersimpan'; }
     if (koleksiBtn) handleKoleksi(koleksiBtn.dataset.koleksi);
     if (profileBtn && profileBtn.dataset.profileAction === 'clear') {
-      if (window.confirm('Hapus riwayat analisis, jurnal, dan koleksi lokal? API key tidak ikut dihapus.')) {
-        ['amy_mapping_logs', 'amy_mapping_analyses', 'amy_mapping_setups', 'amy_recent_projects', 'amy_saved_code', 'amy_journal_entries'].forEach(key => localStorage.removeItem(key));
-        showToast('Riwayat lokal sudah dibersihkan.');
+      if (window.confirm('Hapus riwayat analisis, jurnal, library, dan koleksi lokal? API key tidak ikut dihapus.')) {
+        await clearPersonalLocalData();
+        showToast('Data lokal sudah dibersihkan. API key tetap tersimpan.');
         renderProfile();
       }
     }
@@ -290,7 +748,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   navBtns.forEach(btn => btn.addEventListener('click', () => navigate(btn.dataset.target)));
-  navigate(localStorage.getItem('amy_root_tab') || 'beranda');
+  let initialTab = 'beranda';
+  try { initialTab = localStorage.getItem('amy_root_tab') || initialTab; } catch (_) {}
+  navigate(['beranda', 'proyek', 'koleksi', 'profil'].includes(initialTab) ? initialTab : 'beranda');
 });
 
 

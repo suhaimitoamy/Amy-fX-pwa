@@ -1,8 +1,677 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Bagian 11 — Advanced ICT — Tutorial Trading</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script><!-- Amy FX PWA runtime overlay -->
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Pertemuan 11 — Advanced ICT — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/glass.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+<!-- Amy FX PWA runtime overlay -->
 <script src="../../../../platform-adapter.js"></script>
 <script src="../../../../pwa-live-price-bridge.js"></script>
 <script src="../../../../member-auth.js"></script>
 <script src="../../../../pwa-bootstrap.js"></script>
 <script src="../../../../pwa-update-bridge.js"></script>
 <!-- /Amy FX PWA runtime overlay -->
-</head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a><button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button><div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a></div><div class="eyebrow">Bagian 11 — Advanced ICT</div><h1>Advanced ICT</h1><div class="chapter-list"><a class="chapter-row" href="smart-money-reversal-smr.html"><span><strong>Smart Money Reversal (SMR)</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="stair-step-pattern.html"><span><strong>Stair Step Pattern</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="symmetrical-return-pengiriman-harga-simetris.html"><span><strong>Symmetrical Return (Pengiriman Harga Simetris)</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="breaker-plus-fvg-combination.html"><span><strong>Breaker + FVG Combination</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="breaker-fvg-combination.html"><span><strong>Breaker / FVG Combination</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="mmxm-market-maker-model.html"><span><strong>MMXM (Market Maker Model)</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="buy-model-dan-sell-model.html"><span><strong>Buy Model dan Sell Model</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="kapan-advanced-model-dipakai.html"><span><strong>Kapan Advanced Model Dipakai</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="smt-divergence.html"><span><strong>SMT Divergence</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="standard-deviation-projection.html"><span><strong>Standard Deviation Projection</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="stdv-accumulation-manipulation.html"><span><strong>Stdv Accumulation Manipulation</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="stdv-manipulation-distribution.html"><span><strong>Stdv Manipulation Distribution</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="unicorn-model.html"><span><strong>Unicorn Model</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="ict-2022-mentorship-model.html"><span><strong>ICT 2022 Mentorship Model</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a><a class="chapter-row" href="ict-2023-mentorship-model.html"><span><strong>ICT 2023 Mentorship Model</strong><br><small>Bagian 11 — Advanced ICT</small></span><span>→</span></a></div></section></main><footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer></body></html>
+</head>
+<body id="top">
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <div class="breadcrumb" style="margin-bottom:16px;">
+    <a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › Pertemuan 11
+  </div>
+
+  <div class="article-layout">
+    <article class="article" style="min-width:0;">
+      <div class="eyebrow" style="color:#d4a832;font-weight:800;letter-spacing:1px;font-size:12px;margin-bottom:8px;">
+        SEMESTER 1 • PEMULA • PERTEMUAN 11 (1 SKS)
+      </div>
+      <h1 style="margin-top:4px;font-size:clamp(26px, 3.5vw, 38px);">Advanced ICT</h1>
+      <p style="font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:28px;">Modul pembelajaran resmi Amy FX Academy.</p>
+
+      <details class="mobile-toc-drawer" style="display:none;margin-bottom:28px;padding:14px 18px;background:var(--surface-soft,#141416);border:1px solid var(--border);border-radius:12px;">
+        <summary style="font-weight:700;cursor:pointer;color:var(--gold,#d4a832);font-size:14px;">📑 Daftar Isi Bab (15 Bab Pembahasan)</summary>
+        <ul style="list-style:none;padding:12px 0 0;margin:0;display:grid;gap:8px;">
+          <li><a href="#smart-money-reversal-smr" style="color:var(--text);font-size:13px;text-decoration:none;">1. Smart Money Reversal (SMR)</a></li>
+<li><a href="#stair-step-pattern" style="color:var(--text);font-size:13px;text-decoration:none;">2. Stair Step Pattern</a></li>
+<li><a href="#symmetrical-return-pengiriman-harga-simetris" style="color:var(--text);font-size:13px;text-decoration:none;">3. Symmetrical Return (Pengiriman Harga Simetris)</a></li>
+<li><a href="#breaker-plus-fvg-combination" style="color:var(--text);font-size:13px;text-decoration:none;">4. Breaker + FVG Combination</a></li>
+<li><a href="#breaker-fvg-combination" style="color:var(--text);font-size:13px;text-decoration:none;">5. Breaker / FVG Combination</a></li>
+<li><a href="#mmxm-market-maker-model" style="color:var(--text);font-size:13px;text-decoration:none;">6. MMXM (Market Maker Model)</a></li>
+<li><a href="#buy-model-dan-sell-model" style="color:var(--text);font-size:13px;text-decoration:none;">7. Buy Model dan Sell Model</a></li>
+<li><a href="#kapan-advanced-model-dipakai" style="color:var(--text);font-size:13px;text-decoration:none;">8. Kapan Advanced Model Dipakai</a></li>
+<li><a href="#smt-divergence" style="color:var(--text);font-size:13px;text-decoration:none;">9. SMT Divergence</a></li>
+<li><a href="#standard-deviation-projection" style="color:var(--text);font-size:13px;text-decoration:none;">10. Standard Deviation Projection</a></li>
+<li><a href="#stdv-accumulation-manipulation" style="color:var(--text);font-size:13px;text-decoration:none;">11. Stdv Accumulation Manipulation</a></li>
+<li><a href="#stdv-manipulation-distribution" style="color:var(--text);font-size:13px;text-decoration:none;">12. Stdv Manipulation Distribution</a></li>
+<li><a href="#unicorn-model" style="color:var(--text);font-size:13px;text-decoration:none;">13. Unicorn Model</a></li>
+<li><a href="#ict-2022-mentorship-model" style="color:var(--text);font-size:13px;text-decoration:none;">14. ICT 2022 Mentorship Model</a></li>
+<li><a href="#ict-2023-mentorship-model" style="color:var(--text);font-size:13px;text-decoration:none;">15. ICT 2023 Mentorship Model</a></li>
+        </ul>
+      </details>
+
+      <div class="module-content">
+        
+      <section id="smart-money-reversal-smr" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 1 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Smart Money Reversal (SMR)</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Di bab sebelumnya, kita sudah membahas struktur lengkap dari Buy Model dan Sell Model. Keduanya memiliki satu titik kritis yang menjadi penentu arah: <strong>Smart Money Reversal (SMR)</strong>.</p></div>
+<p>SMR adalah titik di mana tren "palsu" (sisi kiri kurva) berakhir, dan tren "sebenarnya" (sisi kanan kurva) dimulai. Ini adalah momen saat "Uang Pintar" (Institusi/Algoritma) masuk ke pasar secara masif untuk membalikkan arah.</p>
+<h2>Syarat Mutlak SMR</h2>
+<p>Banyak trader melihat harga berbalik arah (reversal) dan langsung berteriak, "Ini SMR!". Padahal, 90% dari reversal di chart hanyalah <em>pullback</em> biasa, bukan Smart Money Reversal.</p>
+<p>Agar sebuah pembalikan arah bisa disebut sebagai SMR yang valid dalam kacamata ICT, ia <strong>wajib</strong> memenuhi syarat ini:</p>
+<p><strong>Syarat Utama:</strong> SMR HARUS terjadi di dalam atau setelah menyentuh <strong>Higher Timeframe (HTF) PD Array</strong>. Jika harga berbalik di tengah ruang kosong tanpa menyentuh level HTF apa pun, itu BUKAN Smart Money Reversal.</p>
+<p>Apa saja yang termasuk HTF PD Array yang kuat untuk memicu SMR?</p>
+<ul>
+<li>Menyapu Likuiditas Besar (seperti Previous Day High/Low, Previous Week High/Low).</li>
+<li>Menyentuh Order Block dari Timeframe yang lebih besar (H4, Daily, Weekly).</li>
+<li>Mengisi Fair Value Gap (FVG) dari Timeframe besar.</li>
+<li>Rejeksi dari Breaker Block HTF.</li>
+</ul>
+<h2>Anatomi Sebuah SMR</h2>
+<p>SMR tidak terjadi dalam satu kedipan mata. Ada proses atau "jejak" yang ditinggalkan oleh Smart Money saat mereka membalikkan harga. Prosesnya biasanya terlihat seperti ini di Timeframe yang lebih kecil (misalnya M5 atau M15):</p>
+<ol>
+<li><strong>Stop Run (Judas Swing):</strong> Harga melakukan dorongan terakhir ke arah tren lama. Gerakan ini dirancang sangat agresif untuk memancing ritel trader agar <em>breakout trading</em> dan sekaligus menyapu <em>Stop Loss</em> (Liquidity) di area tersebut. Dorongan terakhir inilah yang menyentuh HTF POI.</li>
+<li><strong>Rejection (Penolakan Kuat):</strong> Setelah menyentuh HTF POI dan mengambil likuiditas, harga langsung ditolak keras. Candle akan meninggalkan sumbu (wick) yang panjang.</li>
+<li><strong>Displacement (Dorongan Kuat Balik Arah):</strong> Ini adalah konfirmasi utamanya. Harga bergerak berlawanan dengan sangat cepat menggunakan candle berbadan besar (momentum), menciptakan FVG baru.</li>
+<li><strong>Market Structure Shift (MSS):</strong> Dorongan kuat tadi berhasil menembus <em>Higher Low</em> atau <em>Lower High</em> terakhir, mengubah struktur market secara resmi.</li>
+</ol>
+<h2>Cara Entry di Area SMR</h2>
+<p>Kesalahan fatal pemula adalah mencoba menjadi pahlawan dengan menebak titik SMR <strong>sebelum</strong> konfirmasi muncul. Mereka memasang <em>Buy Limit</em> tepat di garis HTF POI, berharap menangkap harga tepat di ujung jarum. Ini disebut "menangkap pisau jatuh" (<em>catching falling knives</em>) dan sangat berisiko.</p>
+<p>Trader ICT yang cerdas tidak peduli dengan titik absolut terbawah atau teratas. Mereka menunggu <strong>konfirmasi</strong>. Begini cara entry yang benar:</p>
+<ol>
+<li>Tandai HTF POI kamu (misal: Daily FVG).</li>
+<li>Tunggu harga masuk ke area tersebut.</li>
+<li>Jangan lakukan apa-apa sampai terjadi <strong>Displacement</strong> dan <strong>MSS (Market Structure Shift)</strong> di timeframe eksekusimu (misal: M5).</li>
+<li>Setelah MSS terjadi, harga telah resmi beralih ke "Sisi Kanan Kurva". Sekarang, kamu tinggal menunggu harga <em>pullback</em> (retrace) ke FVG atau Order Block yang baru saja dibuat oleh dorongan tersebut.</li>
+<li>Lakukan entry di sana dengan Stop Loss di bawah ayunan terendah SMR. Targetkan Original Consolidation.</li>
+</ol>
+<p><strong>Ingat:</strong> SMR adalah saklar yang mengubah mode market dari akumulasi/distribusi menjadi ekspansi ke arah yang berlawanan. Jika kamu bisa mengidentifikasi saklar ini dengan benar, 80% pekerjaan analisamu sudah selesai.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="stair-step-pattern" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 2 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Stair Step Pattern</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Pernah melihat pergerakan harga yang seolah-olah sedang menaiki atau menuruni anak tangga dengan sangat rapi? Dalam literatur ICT, bentuk ini sering disebut sebagai <strong>Stair Step Pattern</strong>.</p></div>
+<p>Stair Step Pattern adalah bentuk visual dari <em>Efficient Price Delivery</em> (Pengiriman Harga yang Efisien). Pola ini menunjukkan bahwa algoritma sedang memegang kendali penuh atas arah tren, tanpa ada hambatan yang berarti. Biasanya, pola ini muncul di "Sisi Kanan Kurva" setelah <em>Smart Money Reversal (SMR)</em> terjadi.</p>
+<h2>Mekanisme Stair Step</h2>
+<p>Bayangkan kamu sedang menaiki tangga. Kamu melangkah naik, kaki berpijak datar sejenak, lalu melangkah naik lagi. Di market, pijakan datar itu adalah <em>pullback</em> atau area konsolidasi kecil sebelum harga melanjutkan ekspansinya.</p>
+<h3>1. Bullish Stair Step (Tangga Naik)</h3>
+<p>Dalam kondisi bullish, harga akan melakukan ekspansi (dorongan naik yang kuat menembus <em>Resistance/High</em> sebelumnya). Setelah itu, harga akan turun sedikit (pullback) untuk menjemput pijakan. Pijakan ini bisa berupa:</p>
+<ul>
+<li><strong>Bullish Order Block:</strong> Candle turun terakhir sebelum dorongan naik.</li>
+<li><strong>Fair Value Gap (FVG):</strong> Celah kosong yang ditinggalkan saat harga naik agresif.</li>
+<li><strong>Breaker Block:</strong> Resistance/High lama yang sudah ditembus, kini diuji kembali sebagai Support.</li>
+</ul>
+<p>Setelah menyentuh pijakan tersebut, harga langsung memantul naik lagi membuat pijakan tangga berikutnya.</p>
+<h3>2. Bearish Stair Step (Tangga Turun)</h3>
+<p>Sebaliknya, dalam tren turun, harga akan jatuh tajam menembus <em>Support/Low</em>. Lalu ia akan naik sedikit untuk mencari pijakan (seperti Bearish Order Block atau FVG) sebelum akhirnya terjun kembali. Ini membentuk anak tangga yang mengarah ke bawah.</p>
+<h2>Kenapa Pola Ini Sangat Menguntungkan?</h2>
+<p>Stair Step Pattern adalah kondisi market yang memiliki <strong>Low Resistance Liquidity Run (LRLR)</strong>. Artinya, jalur yang dilewati harga sangat mulus karena tidak ada <em>support</em> atau <em>resistance</em> berarti dari Timeframe Besar yang menghalangi.</p>
+<p>Keuntungannya bagi kita sebagai trader:</p>
+<ol>
+<li><strong>Tren Sangat Jelas:</strong> Kamu tidak perlu menebak-nebak arah. Selama anak tangga terus terbentuk, tren masih berlanjut.</li>
+<li><strong>Entry Berlapis (Pyramiding):</strong> Karena pola ini berulang, kamu punya banyak kesempatan untuk melakukan entry. Jika ketinggalan di "anak tangga pertama", kamu bisa masuk di "anak tangga kedua" atau ketiga.</li>
+<li><strong>Stop Loss Jelas:</strong> Stop Loss cukup diletakkan di bawah (atau di atas) pijakan anak tangga terakhir. Jika pijakan itu dijebol, berarti pola Stair Step sudah rusak (invalidasi yang jelas).</li>
+</ol>
+<p><strong>Cara Membaca Kekuatan Tangga:</strong> Stair Step yang sehat biasanya meninggalkan FVG (Fair Value Gap) terbuka sebagian (disebut Measuring Gap) dan tidak pernah menutup sempurna. Jika harga tiba-tiba mulai menembus masuk terlalu dalam hingga menghancurkan pijakan sebelumnya, itu pertanda tren mulai kehabisan bensin.</p>
+<h2>Kapan Harus Berhenti?</h2>
+<p>Satu kesalahan terbesar trader pemula adalah mengira anak tangga ini akan terus terbentuk sampai ke langit. Ingat kembali materi <strong>MMXM</strong>!</p>
+<p>Stair Step Pattern akan berhenti saat harga mencapai <strong>Original Consolidation</strong> (target likuiditas utama) atau menyentuh <strong>HTF PD Array</strong> lawan (seperti Daily Order Block dari arah berlawanan).</p>
+<p>Begitu harga mencapai target HTF, berhentilah mencari <em>entry</em> searah anak tangga. Tunggu dan amati, karena <em>Smart Money Reversal</em> mungkin akan segera terjadi untuk membalikkan tren.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="symmetrical-return-pengiriman-harga-simetris" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 3 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Symmetrical Return (Pengiriman Harga Simetris)</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Pernahkah kamu melipat sebuah kertas yang ada coretan tintanya, lalu saat dibuka, coretan itu menjiplak persis di sisi sebelahnya? Dalam konsep ICT, market sering kali berperilaku seperti kertas yang dilipat tersebut. Inilah yang disebut dengan <strong>Symmetrical Return</strong> atau <em>Symmetrical Price Delivery</em>.</p></div>
+<p>Symmetrical Return adalah prinsip bahwa cara harga turun (di sisi kiri kurva) akan menjadi "cetakan" bagi cara harga naik (di sisi kanan kurva), dan sebaliknya.</p>
+<h2>Bagaimana Simetri Bekerja di Chart?</h2>
+<p>Algoritma tidak suka membuang-buang energi. Saat mereka menggerakkan harga kembali ke titik awal (Original Consolidation), mereka akan melihat "peta" yang sudah mereka buat sebelumnya di sisi kiri kurva. Mari kita lihat dua skenario utamanya:</p>
+<h3>1. Simetri Ruang Kosong (Low Resistance)</h3>
+<p>Katakanlah pada hari Selasa, harga emas (XAUUSD) anjlok $20 hanya dalam dua candle H1, meninggalkan FVG besar dan tidak ada struktur pendukung. Jatuhnya sangat cepat.</p>
+<p>Lalu pada hari Kamis, terjadi <em>Smart Money Reversal</em> di bawah. Harga kini berada di sisi kanan kurva dan mulai naik. Apa yang akan terjadi saat harga memasuki area "anjlok $20" tadi?</p>
+<p>Harga akan <strong>naik dengan kecepatan yang sama</strong> saat ia turun! Karena tidak ada <em>support/resistance</em> atau blok pesanan yang terbentuk di sisi kiri, area itu adalah ruang hampa (Low Resistance Liquidity Run). Harga akan menembusnya seperti pisau panas memotong mentega.</p>
+<h3>2. Simetri Konsolidasi (High Resistance)</h3>
+<p>Sekarang bayangkan skenario lain. Di sisi kiri kurva, harga turun perlahan. Ia turun, lalu <em>sideways</em> panjang, turun lagi, lalu <em>sideways</em> lagi yang sangat berantakan (choppy). Banyak jarum (wick) di mana-mana.</p>
+<p>Saat harga berbalik naik di sisi kanan kurva dan menabrak area konsolidasi tersebut, harga kemungkinan besar akan <strong>tertahan atau melambat</strong> di level harga yang sama persis.</p>
+<p><strong>Aturan Emas:</strong> Apa yang terjadi di kiri, kemungkinan besar akan ditiru di kanan. Cepat di kiri = Cepat di kanan. Lambat/Macet di kiri = Lambat/Macet di kanan.</p>
+<h2>Cara Memanfaatkan Symmetrical Return</h2>
+<p>Banyak trader yang bingung kapan harus <em>Take Profit</em> (TP) atau kapan harus membiarkan profitnya berjalan (<em>Hold</em>). Symmetrical Return memberi kamu panduan yang sangat jelas untuk <strong>Trade Management</strong>:</p>
+<ul>
+<li><strong>Kapan harus menahan posisi (Hold):</strong> Jika kamu sedang profit dan melihat ke sebelah kiri (masa lalu) ada pergerakan turun yang sangat tajam (candle besar/FVG lebar), tahan posisimu! Harga akan dengan mudah melewati area hampa tersebut. Jangan buru-buru tutup posisi.</li>
+<li><strong>Kapan harus ambil sebagian (Take Partial):</strong> Jika posisimu akan segera menabrak level harga yang dulunya (di sisi kiri) merupakan area konsolidasi berantakan, segera ambil sebagian profit (<em>partial TP</em>). Harga kemungkinan akan melambat, tersendat, atau bahkan melakukan <em>pullback</em> cukup dalam di area tersebut.</li>
+<li><strong>Kapan harus menggunakan Breakeven (BE):</strong> Jika harga mulai memasuki area simetri yang sulit, menggeser Stop Loss ke titik impas (BE) adalah langkah bijak untuk melindungi modal jika harga memutuskan untuk <em>retrace</em> terlalu dalam.</li>
+</ul>
+<p><strong>Jangan Terjebak FVG Lawan:</strong> Saat harga naik cepat melalui ruang kosong dari sisi kiri, FVG yang terbentuk saat turun dulu (Bearish FVG) akan menjadi <em>target</em>, bukan penghalang. Jangan gunakan Bearish FVG tersebut untuk mencari peluang Sell jika kamu tahu kamu sedang berada di "sisi kanan kurva" menuju Original Consolidation.</p>
+<h2>Kesimpulan</h2>
+<p>Symmetrical Return mengajarkan kita untuk selalu <strong>melihat ke kiri</strong>. Sebelum kamu entry atau menentukan target TP, lihat bagaimana cara harga melewati area tersebut sebelumnya. Chart yang bersih di kiri akan menghasilkan pergerakan yang bersih di kanan.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="breaker-plus-fvg-combination" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 4 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Breaker + FVG Combination</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Di bab sebelumnya kita sudah membahas betapa kuatnya <em>Unicorn Model</em>. Sekarang, kita akan membedah secara teknis mekanika di balik bertemunya <strong>Breaker Block</strong> dan <strong>Fair Value Gap (FVG)</strong>. Mengapa keduanya sering muncul bersamaan, dan bagaimana cara menarik garis eksekusinya yang presisi di chart?</p></div>
+<p>Tidak selamanya Breaker dan FVG akan bertumpuk secara sempurna. Terkadang letaknya sedikit meleset. Sebagai trader, kamu harus tahu level mana yang menjadi prioritas untuk menaruh <em>Limit Order</em>.</p>
+<h2>Cara Menggambar Zona Eksekusi</h2>
+<p>Untuk mengeksekusi kombinasi ini, kamu membutuhkan dua kotak (zona) di chartmu. Mari kita gunakan contoh <strong>Bullish Setup</strong> (mencari peluang Buy):</p>
+<ol>
+<li><strong>Gambar Zona Breaker:</strong> Cari <em>Higher High</em> terakhir sebelum harga anjlok mengambil likuiditas bawah. Tandai candle <em>up-close</em> (candle bullish) terakhir di area High tersebut. Tarik kotak dari harga Open hingga Close candle tersebut (tarik wicks/sumbu juga jika tidak terlalu panjang). Ini adalah Breaker Block-mu.</li>
+<li><strong>Gambar Zona FVG:</strong> Setelah harga memantul dari bawah dan melesat ke atas (Displacement) menembus Breaker tadi, cari tiga susunan candle yang meninggalkan celah kosong (Fair Value Gap). Tarik kotak FVG-mu.</li>
+<li><strong>Cari Area Irisan (Intersection):</strong> Bagian di mana kotak Breaker dan kotak FVG saling menimpa adalah area <strong>"Killzone"</strong>. Ini adalah area dengan sensitivitas paling tinggi.</li>
+</ol>
+<h2>Tiga Skenario Kombinasi</h2>
+<p>Di <em>real market</em>, bentuk kombinasi ini bervariasi. Berikut cara meresponsnya (contoh Bullish):</p>
+<h3>1. Skenario Sempurna (The Unicorn)</h3>
+<p>Kotak FVG berada tepat di <strong>dalam</strong> kotak Breaker. Keduanya memiliki batas harga yang nyaris sama.   
+<strong>Cara Entry:</strong> Letakkan <em>Buy Limit</em> di batas atas FVG. Harga biasanya hanya akan mencium area ini dengan sumbu (wick) sebelum terbang. Ini adalah setup dengan probabilitas paling tinggi.</p>
+<h3>2. FVG Berada di Atas Breaker</h3>
+<p>Dorongan naik sangat kuat sehingga FVG terbentuk <strong>sebelum</strong> (di atas) kotak Breaker.   
+<strong>Cara Entry:</strong> Gunakan FVG sebagai area entry utama. Jika harga ternyata menembus FVG (koreksi sedikit dalam), Breaker Block di bawahnya akan bertindak sebagai jaring pengaman (<em>safety net</em>) terakhir sebelum harga mengenai <em>Stop Loss</em>.</p>
+<h3>3. FVG Berada di Bawah Breaker (Tertembus)</h3>
+<p>Ini terjadi jika dorongan awal (candle pertama dari 3 candle FVG) sudah berhasil menembus Breaker, dan celah FVG terbentuk tepat di batas atas atau sedikit menembus ke bawah Breaker.   
+<strong>Cara Entry:</strong> Breaker Block (garis atasnya) adalah pertahanan pertama. Kamu bisa entry di sana. Namun bersiaplah harga mungkin akan menusuk lebih dalam (<em>dig deeper</em>) untuk mengisi FVG secara penuh sebelum akhirnya mantul naik.</p>
+<h2>Manajemen Stop Loss</h2>
+<p>Keuntungan utama menggunakan kombinasi Breaker + FVG adalah penempatan <em>Stop Loss</em> yang sangat jelas dan relatif sempit.</p>
+<ul>
+<li>Letakkan Stop Loss <strong>di bawah batas bawah Breaker Block</strong>.</li>
+<li>Jika harga sampai berhasil menembus dan tutup (<em>close candle</em>) di bawah batas bawah Breaker, maka setup tersebut otomatis <strong>INVALID</strong>.</li>
+<li>Tidak perlu menaruh Stop Loss terlalu jauh hingga ke dasar ayunan (<em>Swing Low</em>) terdalam jika kamu murni menggunakan setup kombinasi ini, karena jika Breaker + FVG gagal menahan harga, tren kemungkinan besar sudah berubah.</li>
+</ul>
+<p><strong>Syarat Utama:</strong> Ingat! Breaker Block hanya valid jika ia terbentuk setelah mengambil likuiditas (<em>Stop Run</em>). Jika tidak ada likuiditas yang disapu sebelum pergerakan pembalikan, blok tersebut hanyalah candle biasa, BUKAN Breaker.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="breaker-fvg-combination" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 5 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Breaker / FVG Combination</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Di bab sebelumnya kita sudah membahas betapa kuatnya <em><a href="../bagian-11-advanced-ict/index.html#unicorn-model">Unicorn Model</a></em>. Sekarang, kita akan membedah secara teknis mekanika di balik bertemunya <strong><a href="../bagian-05-smart-money-concept/index.html#breaker-block">Breaker Block</a></strong> dan <strong><a href="../bagian-05-smart-money-concept/index.html#fair-value-gap">Fair Value Gap</a> (FVG)</strong>. Mengapa keduanya sering muncul bersamaan, dan bagaimana cara menarik garis eksekusinya yang presisi di chart?</p></div>
+<p>Tidak selamanya Breaker dan FVG akan bertumpuk secara sempurna. Terkadang letaknya sedikit meleset. Sebagai trader, kamu harus tahu level mana yang menjadi prioritas untuk menaruh <em>Limit Order</em>.</p>
+<h2>Cara Menggambar Zona Eksekusi</h2>
+<p>Untuk mengeksekusi kombinasi ini, kamu membutuhkan dua kotak (zona) di chartmu. Mari kita gunakan contoh <strong>Bullish Setup</strong> (mencari peluang Buy):</p>
+<ol>
+<li><strong>Gambar Zona Breaker:</strong> Cari <em>Higher High</em> terakhir sebelum harga anjlok mengambil likuiditas bawah. Tandai candle <em>up-close</em> (candle bullish) terakhir di area High tersebut. Tarik kotak dari harga Open hingga Close candle tersebut (tarik wicks/sumbu juga jika tidak terlalu panjang). Ini adalah <a href="../bagian-05-smart-money-concept/index.html#breaker-block">Breaker Block</a>-mu.</li>
+<li><strong>Gambar Zona FVG:</strong> Setelah harga memantul dari bawah dan melesat ke atas (Displacement) menembus Breaker tadi, cari tiga susunan candle yang meninggalkan celah kosong (<a href="../bagian-05-smart-money-concept/index.html#fair-value-gap">Fair Value Gap</a>). Tarik kotak FVG-mu.</li>
+<li><strong>Cari Area Irisan (Intersection):</strong> Bagian di mana kotak Breaker dan kotak FVG saling menimpa adalah area <strong>"<a href="../bagian-08-session-dan-waktu/index.html#killzone">Killzone</a>"</strong>. Ini adalah area dengan sensitivitas paling tinggi.</li>
+</ol>
+<h2>Tiga Skenario Kombinasi</h2>
+<p>Di <em>real market</em>, bentuk kombinasi ini bervariasi. Berikut cara meresponsnya (contoh Bullish):</p>
+<h3>1. Skenario Sempurna (The Unicorn)</h3>
+<p>Kotak FVG berada tepat di <strong>dalam</strong> kotak Breaker. Keduanya memiliki batas harga yang nyaris sama. <br>
+<strong>Cara Entry:</strong> Letakkan <em>Buy Limit</em> di batas atas FVG. Harga biasanya hanya akan mencium area ini dengan sumbu (wick) sebelum terbang. Ini adalah setup dengan probabilitas paling tinggi.</br></p>
+<h3>2. FVG Berada di Atas Breaker</h3>
+<p>Dorongan naik sangat kuat sehingga FVG terbentuk <strong>sebelum</strong> (di atas) kotak Breaker. <br/>
+<strong>Cara Entry:</strong> Gunakan FVG sebagai area entry utama. Jika harga ternyata menembus FVG (koreksi sedikit dalam), <a href="../bagian-05-smart-money-concept/index.html#breaker-block">Breaker Block</a> di bawahnya akan bertindak sebagai jaring pengaman (<em>safety net</em>) terakhir sebelum harga mengenai <em>Stop Loss</em>.</p>
+<h3>3. FVG Berada di Bawah Breaker (Tertembus)</h3>
+<p>Ini terjadi jika dorongan awal (candle pertama dari 3 candle FVG) sudah berhasil menembus Breaker, dan celah FVG terbentuk tepat di batas atas atau sedikit menembus ke bawah Breaker. <br/>
+<strong>Cara Entry:</strong> <a href="../bagian-05-smart-money-concept/index.html#breaker-block">Breaker Block</a> (garis atasnya) adalah pertahanan pertama. Kamu bisa entry di sana. Namun bersiaplah harga mungkin akan menusuk lebih dalam (<em>dig deeper</em>) untuk mengisi FVG secara penuh sebelum akhirnya mantul naik.</p>
+<h2>Manajemen Stop Loss</h2>
+<p>Keuntungan utama menggunakan kombinasi Breaker + FVG adalah penempatan <em>Stop Loss</em> yang sangat jelas dan relatif sempit.</p>
+<ul>
+<li>Letakkan Stop Loss <strong>di bawah batas bawah <a href="../bagian-05-smart-money-concept/index.html#breaker-block">Breaker Block</a></strong>.</li>
+<li>Jika harga sampai berhasil menembus dan tutup (<em>close candle</em>) di bawah batas bawah Breaker, maka setup tersebut otomatis <strong>INVALID</strong>.</li>
+<li>Tidak perlu menaruh Stop Loss terlalu jauh hingga ke dasar ayunan (<em>Swing Low</em>) terdalam jika kamu murni menggunakan setup kombinasi ini, karena jika Breaker + FVG gagal menahan harga, tren kemungkinan besar sudah berubah.</li>
+</ul>
+<p><strong>Syarat Utama:</strong> Ingat! <a href="../bagian-05-smart-money-concept/index.html#breaker-block">Breaker Block</a> hanya valid jika ia terbentuk setelah mengambil likuiditas (<em>Stop Run</em>). Jika tidak ada likuiditas yang disapu sebelum pergerakan pembalikan, blok tersebut hanyalah candle biasa, BUKAN Breaker.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="mmxm-market-maker-model" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 6 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">MMXM (Market Maker Model)</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Selamat datang di <strong>Advanced ICT</strong>. Di bagian ini, kita akan mulai merangkai potongan-potongan puzzle yang sudah kamu pelajari sebelumnya (Liquidity, FVG, Order Block, Market Structure) menjadi sebuah <em>blueprint</em> pergerakan harga yang utuh. Blueprint paling terkenal dan kuat dari ICT adalah <strong>MMXM (Market Maker Model)</strong>.</p></div>
+<p>MMXM adalah singkatan untuk MMBM (Market Maker Buy Model) dan MMSM (Market Maker Sell Model). Konsep ini menjelaskan bagaimana harga bergerak dalam sebuah siklus penuh: mulai dari konsolidasi, manipulasi ke satu arah, pembalikan arah (reversal), dan akhirnya kembali ke area konsolidasi awal.</p>
+<h2>Apa itu Market Maker Model?</h2>
+<p>Bayangkan kamu sedang menonton sebuah film. Setiap film biasanya punya struktur cerita: pengenalan karakter, konflik (klimaks), dan resolusi (kembali normal). Di market, struktur cerita ini disebut <strong>Market Maker Model</strong>.</p>
+<p>Market tidak bergerak secara acak. Algoritma (atau "Market Maker") bekerja dengan sangat terstruktur. Mereka mengakumulasi pesanan, memanipulasi ritel agar terjebak ke arah yang salah, membalikkan arah, dan kemudian mengantarkan harga kembali ke titik awal (tempat banyak order ritel tersangkut).</p>
+<p><strong>Analogi Sederhana:</strong> Anggaplah sebuah bus berangkat dari Terminal A (Original Consolidation), mampir ke beberapa halte, sampai di tujuan akhir (Smart Money Reversal), lalu bus itu memutar balik, melewati halte-halte yang sama di seberang jalan, dan akhirnya kembali lagi ke Terminal A. MMXM adalah peta rute bus tersebut.</p>
+<h2>Dua Sisi Kurva (The Curve)</h2>
+<p>Kunci dari MMXM adalah memahami bahwa ada dua sisi dari sebuah pergerakan besar. ICT menyebutnya sebagai "The Curve" (Kurva).</p>
+<ul>
+<li><strong>Left Side of the Curve (Sisi Kiri Kurva):</strong> Di mana harga tampak sedang bergerak tren dengan kuat ke satu arah (misalnya turun). Ritel trader akan melihat ini sebagai tren <em>downtrend</em> yang valid dan mulai mencari posisi Sell. Padahal, <em>Smart Money</em> sedang menggunakan sisi ini untuk pelan-pelan melakukan <em>Buy</em>.</li>
+<li><strong>Right Side of the Curve (Sisi Kanan Kurva):</strong> Setelah mencapai area HTF (Higher Timeframe) tertentu, tren tiba-tiba berbalik. Di sinilah sisi kanan kurva dimulai. Harga akan bergerak berlawanan arah dengan sangat cepat dan agresif, menghancurkan posisi ritel trader yang terjebak di sisi kiri.</li>
+</ul>
+<h2>Komponen Utama dalam MMXM</h2>
+<p>Setiap MMXM yang valid memiliki tahapan-tahapan yang jelas. Kita tidak boleh asal menebak bahwa "ini pasti MMXM". Kita harus melihat struktur ini terbentuk:</p>
+<h3>1. Original Consolidation (Titik Awal)</h3>
+<p>Siklus dimulai dengan harga yang bergerak sideways/ranging. Di sinilah ritel trader menempatkan posisi buy dan sell dengan Stop Loss di atas dan di bawah area konsolidasi. Area ini ibarat bahan bakar utama (liquidity) yang akan dituju nanti di akhir siklus.</p>
+<h3>2. Tahap Ekspansi (Engineering Liquidity)</h3>
+<p>Harga keluar dari konsolidasi. Di tahap ini, market akan membentuk level-level support/resistance baru, atau tren kecil. Ritel trader akan berpikir, "Wah, tren sudah jelas nih!" dan ikut masuk. Fase ini terjadi di sisi kiri kurva.</p>
+<h3>3. Smart Money Reversal (SMR)</h3>
+<p>Ini adalah klimaksnya. Harga mencapai sebuah level kunci di Timeframe Besar (seperti Daily Order Block, Weekly FVG, atau area Stop Run HTF). Di sinilah <em>Smart Money</em> secara masif masuk ke market, menyebabkan perubahan karakter (MSS - Market Structure Shift). Ini menandai pergantian dari sisi kiri kurva ke sisi kanan kurva.</p>
+<h3>4. Tahap Distribusi Balik (Kembali)</h3>
+<p>Harga sekarang berada di sisi kanan kurva, dan bergerak kembali ke arah awal. Di tahap ini, harga biasanya akan menggunakan level-level yang dibentuk di sisi kiri kurva sebagai target (Liquidity Pool). Pergerakan di sisi kanan ini biasanya jauh lebih cepat dan mulus (low resistance Liquidity Run).</p>
+<h3>5. Kembali ke Original Consolidation</h3>
+<p>Tujuan akhir dari keseluruhan model ini adalah kembali ke <strong>Original Consolidation</strong> yang terbentuk di awal tadi. Kenapa? Karena di sanalah tersimpan kolam likuiditas terbesar yang belum diambil.</p>
+<p><strong>Peringatan!</strong> Jangan mencari MMXM di sembarang tempat. MMXM HARUS memiliki sandaran kuat di HTF (SMR harus terjadi di area HTF POI). Jika tidak ada dukungan dari HTF, itu kemungkinan besar hanyalah fluktuasi acak, bukan siklus algoritma yang terencana.</p>
+<h2>Kenapa Memahami MMXM Sangat Penting?</h2>
+<p>Keuntungan terbesar jika kamu memahami Market Maker Model adalah <strong>prediktabilitas</strong>. Jika kamu bisa mengidentifikasi bahwa kamu saat ini berada di "sisi kanan kurva" (setelah SMR terjadi), kamu tidak perlu lagi pusing menebak arah.</p>
+<p>Kamu tahu persis ke mana target akhirnya: <em>Original Consolidation</em>. Semua <em>pullback</em> yang terjadi di sisi kanan kurva hanyalah kesempatan untuk masuk posisi searah dengan tujuan akhir tersebut (sebagai Order Block atau FVG re-entry).</p>
+<p>Di bab-bab selanjutnya, kita akan membedah lebih dalam mengenai <strong>Buy Model</strong> dan <strong>Sell Model</strong> beserta contoh spesifiknya, dan bagaimana menemukan entry yang presisi di dalam model tersebut. Siapkan catatanmu, karena ini akan mengubah cara pandangmu melihat chart secara keseluruhan.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="buy-model-dan-sell-model" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 7 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Buy Model dan Sell Model</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Setelah memahami gambaran besar dari Market Maker Model (MMXM), sekarang kita akan memecahnya menjadi dua bentuk spesifik yang akan selalu kamu temui di chart: <strong>Market Maker Buy Model (MMBM)</strong> dan <strong>Market Maker Sell Model (MMSM)</strong>.</p></div>
+<p>Meskipun namanya "Model", jangan bayangkan ini seperti rumus matematika yang kaku. Ini adalah <em>framework</em> (kerangka kerja) narasi. Ini cara kita bercerita tentang ke mana harga sedang bergerak, dari mana ia berasal, dan di mana ia akan berakhir.</p>
+<h2>1. Market Maker Buy Model (MMBM)</h2>
+<p>MMBM adalah model di mana algoritma secara perlahan menurunkan harga untuk "membeli murah" (Buy) di area <em>Discount</em>, lalu membalikkan harga ke atas untuk mengambil likuiditas yang sudah diciptakan selama penurunan tadi.</p>
+<p>Target akhir dari MMBM adalah menjemput pesanan Sell Stop atau Buy Stop dari ritel trader yang terjebak di area konsolidasi awal (yang berada di atas).</p>
+<h3>Ciri-Ciri MMBM:</h3>
+<ul>
+<li><strong>Original Consolidation (Batas Atas):</strong> Model ini dimulai dari sebuah konsolidasi di area yang cukup tinggi. Ini adalah garis <em>finish</em> kita nanti.</li>
+<li><strong>Sisi Kiri Kurva (Sell-side of the Curve):</strong> Harga mulai turun. Ritel trader melihat ini sebagai <em>downtrend</em>. Harga mungkin membuat <em>lower lows</em> dan <em>lower highs</em>, menciptakan FVG dan Order Block bearish di sepanjang jalan. Ini adalah proses "engineering liquidity".</li>
+<li><strong>Smart Money Reversal (SMR):</strong> Harga menyentuh area HTF (Higher Timeframe) <em>Discount</em>. Misalnya: Daily Bullish Order Block, atau mengambil Sell-Side Liquidity dari Low minggu lalu. Di titik ini harga berhenti turun dan melakukan Market Structure Shift (MSS) ke arah atas.</li>
+<li><strong>Sisi Kanan Kurva (Buy-side of the Curve):</strong> Harga sekarang naik. Level-level <em>resistance</em> yang dibentuk saat turun tadi (di sisi kiri) sekarang dihancurkan satu per satu dengan mudah. Kenapa mudah? Karena algoritma sekarang berpihak pada "Buy".</li>
+<li><strong>Target Akhir:</strong> Harga kembali ke area Original Consolidation di atas untuk mengambil likuiditas.</li>
+</ul>
+<p><strong>Cara Entry di MMBM:</strong> Entry yang paling aman dan probabilitas tinggi adalah saat harga sudah berada di "Sisi Kanan Kurva". Setelah SMR dan MSS terjadi di bawah, kamu cukup menunggu harga retrace ke Bullish FVG atau Bullish Order Block, lalu Buy dengan target ke Original Consolidation.</p>
+<h2>2. Market Maker Sell Model (MMSM)</h2>
+<p>MMSM adalah kebalikan persis dari MMBM. Model ini dirancang oleh algoritma untuk menaikkan harga agar mereka bisa "menjual mahal" (Sell) di area <em>Premium</em>, lalu membalikkan harga ke bawah untuk menghancurkan posisi ritel trader yang ikut-ikutan Buy.</p>
+<h3>Ciri-Ciri MMSM:</h3>
+<ul>
+<li><strong>Original Consolidation (Batas Bawah):</strong> Model ini dimulai dari konsolidasi di area yang cukup rendah. Ingat, ini adalah target akhir penurunannya nanti.</li>
+<li><strong>Sisi Kiri Kurva (Buy-side of the Curve):</strong> Harga naik, membentuk struktur <em>uptrend</em> (higher highs, higher lows). Ritel trader FOMO dan ikut Buy. Support-support "palsu" sedang diciptakan oleh algoritma.</li>
+<li><strong>Smart Money Reversal (SMR):</strong> Harga menyentuh area HTF <em>Premium</em>. Misalnya: Weekly Bearish FVG, atau menyapu Buy-Side Liquidity (Previous Month High). Terjadi penolakan kuat (rejection) diikuti oleh MSS ke arah bawah.</li>
+<li><strong>Sisi Kanan Kurva (Sell-side of the Curve):</strong> Tren sekarang berubah menjadi turun. Level-level <em>support</em> yang tadinya terlihat kuat saat harga naik, sekarang dijebol begitu saja (menjadi sasaran/liquidity pools).</li>
+<li><strong>Target Akhir:</strong> Harga meluncur kembali turun ke Original Consolidation.</li>
+</ul>
+<h2>Kesalahan Fatal Saat Membaca Model</h2>
+<p>Meskipun terdengar sederhana, banyak trader terjebak saat mempraktikkannya. Berikut adalah kesalahan yang paling sering terjadi:</p>
+<ol>
+<li><strong>Tidak Ada HTF POI:</strong> Kamu mengira sedang terjadi Smart Money Reversal (SMR), padahal harga belum menyentuh area penting di Timeframe Besar. Akibatnya, harga hanya melakukan <em>pullback</em> kecil dan melanjutkan tren aslinya. SMR yang valid <strong>wajib</strong> terjadi setelah mengambil likuiditas HTF atau menyentuh HTF POI.</li>
+<li><strong>Menebak Dasar/Puncak Terlalu Cepat (Catching Knives):</strong> Trader sering mencoba Buy di titik terendah (saat SMR baru mulai). Ini sangat berbahaya. Lebih baik tunggu konfirmasi MSS yang jelas, barulah masuk di sisi kanan kurva (low-risk entry).</li>
+<li><strong>Lupa Target Akhir:</strong> Banyak trader sudah berhasil entry di sisi kanan kurva, tapi karena takut, mereka <em>take profit</em> terlalu cepat. Ingat, target utama MMXM adalah Original Consolidation! Biarkan algoritmanya bekerja mengantarkan harga ke tujuan akhir.</li>
+</ol>
+<p>Di bab berikutnya, kita akan membahas lebih dalam komponen paling krusial dari model ini, yaitu titik balik atau <strong>Smart Money Reversal (SMR)</strong>.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="kapan-advanced-model-dipakai" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 8 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Kapan Advanced Model Dipakai</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Selamat! Kamu telah menyelesaikan pelajaran tentang berbagai model <em>Advanced ICT</em>: mulai dari MMXM, SMT Divergence, Standard Deviation, hingga formasi langka seperti Unicorn Model. Semua konsep ini bagaikan senjata kelas berat (<em>heavy artillery</em>) di gudang senjatamu.</p></div>
+<p>Namun, sebuah bazooka tidak cocok digunakan untuk menangkap lalat. Senjata yang kuat hanya akan efektif jika digunakan di medan perang dan waktu yang tepat. Kesalahan terbesar trader yang baru belajar ICT adalah mencoba memaksakan model-model ini <strong>setiap hari, di setiap sesi, di setiap time frame</strong>.</p>
+<h2>Kondisi IDEAL Menggunakan Advanced Model (Lampu Hijau)</h2>
+<p>Gunakan model-model canggih ini HANYA ketika syarat-syarat lingkungan pasar (Market Conditions) terpenuhi:</p>
+<ol>
+<li><strong>HTF Narrative Sangat Jelas:</strong> Kamu tahu pasti ke mana arah Daily atau Weekly Chart sedang menuju. Jika chart Daily sedang konsolidasi atau membingungkan, lupakan MMXM di time frame kecil.</li>
+<li><strong>Terjadi di Dalam Killzone:</strong> Algoritma bekerja berdasarkan Waktu dan Harga (<em>Time and Price</em>). SMR (Smart Money Reversal) atau Setup Unicorn yang terjadi di jam 3 pagi (di luar sesi London/NY) kemungkinan besar adalah <em>noise</em> (sinyal palsu). Selalu cari setup ini saat volatilitas institusi masuk, yaitu di <strong>London Open</strong> atau <strong>New York Open</strong>.</li>
+<li><strong>Ada Objective Liquidity yang Jelas:</strong> Harga bergerak untuk mengambil likuiditas. Sebelum entry, tanyakan: <em>"Di mana target akhirnya?"</em> Jika tidak ada <em>Old High/Old Low</em>, <em>Equal Highs/Lows</em>, atau area <em>Original Consolidation</em> yang jelas sebagai target, jangan sentuh market.</li>
+<li><strong>Didukung oleh SMT Divergence:</strong> Jika kamu ragu apakah sebuah pembalikan (reversal) itu asli atau palsu, cek aset korelasinya. Jika ada SMT Divergence di area HTF POI, itu adalah konfirmasi level A+.</li>
+</ol>
+<h2>Kapan HARUS Menghindar (Lampu Merah)</h2>
+<p>Simpan senjata beratmu dan jangan trading ketika kondisi pasar sedang seperti ini:</p>
+<ul>
+<li><strong>Menjelang High Impact News:</strong> 30 menit sebelum berita besar seperti NFP (Non-Farm Payroll), CPI (Inflasi), atau rilis suku bunga FOMC, algoritma reguler akan "dimatikan". Semua FVG, Order Block, atau Breaker Block bisa dijebol begitu saja tanpa ampun. Jangan mencoba menebak arah pakai model teknikal sebelum berita keluar.</li>
+<li><strong>Middle of Nowhere (Di Antah Berantah):</strong> Jika harga sedang berada di tengah-tengah rentang (bukan di ujung atas <em>Premium</em> atau ujung bawah <em>Discount</em>), jangan mencari pola reversal. Biarkan harga mencapai POI (Point of Interest) terlebih dahulu.</li>
+<li><strong>Kondisi Choppy / Sideways Parah:</strong> Jika hari Senin dan Selasa pasar bergerak dalam <em>range</em> yang sangat sempit tanpa arah yang jelas, jangan memaksakan diri mencari pola <em>Stair Step</em>. Tunggu sampai ada pergerakan ekspansi yang memecah kebuntuan tersebut.</li>
+</ul>
+<h2>Satu Setup Saja Sudah Cukup</h2>
+<p>Banyak trader merasa mereka harus menguasai dan menggunakan SEMUA model ICT. Itu salah besar. Michael J. Huddleston (kreator ICT) sendiri berkata bahwa kamu bisa menjadi trader yang sangat <em>profitable</em> seumur hidup hanya dengan menguasai <strong>satu model saja</strong> secara mendalam.</p>
+<p>Apakah kamu sangat suka <em>Unicorn Model</em>? Fokuslah pada itu. Abaikan MMXM atau pola lainnya jika menurutmu membingungkan. Cari kondisi spesifik di mana Unicorn biasa muncul, latih matamu, dan tunggu dengan sabar sampai setup itu terbentuk.</p>
+<p><strong>Pesan Terakhir di Bab Teknikal:</strong> Kesabaran untuk TIDAK menekan tombol <em>Buy/Sell</em> saat setup tidak ada, jauh lebih berharga daripada kemampuan teknikal mana pun. Lindungi modalmu untuk hari di mana <em>Market Maker</em> memberimu setup A+ yang jelas.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="smt-divergence" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 9 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">SMT Divergence</h2>
+        <div class="chapter-content">
+          <div class="warning"><strong>Catatan Konsolidasi</strong><br/><p>Materi utama SMT Divergence sudah dipindahkan dan digabungkan ke:<br/>SMT Divergence<br/>Lokasi utama: `bagian-31-ict-advanced-concepts/SMT Divergence.md`</p></div>
+<div class="note"><strong>Ikhtisar</strong><br/><p>File ini dipertahankan sementara sebagai penanda agar pembaca lama tidak bingung saat mencari materi dari bagian-11.</p></div>
+<p>Untuk belajar materi lengkap, buka file SMT Divergence di bagian-31 ICT Advanced Concepts.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="standard-deviation-projection" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 10 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Standard Deviation Projection</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Pernah bingung menentukan di mana harga akan berhenti berlari setelah terjadi <em>breakout</em> atau <em>reversal</em>? Di sinilah konsep matematika algoritma masuk. Dalam ICT, kita menggunakan <strong>Standard Deviation (STDV)</strong> untuk memproyeksikan target pergerakan harga.</p></div>
+<p>Kita akan menggunakan alat ukur yang sudah sangat populer: <strong>Fibonacci Retracement</strong>. TAPI, kita tidak menggunakannya seperti trader ritel pada umumnya yang mencari pantulan di level 61.8% atau 78.6%. Kita memodifikasinya khusus untuk memproyeksikan ekstensi harga (proyeksi).</p>
+<h2>Setting Fibonacci untuk STDV ICT</h2>
+<p>Buka <em>setting</em> Fibonacci Retracement kamu di TradingView atau MT4/MT5. Hapus semua level bawaan (seperti 0.236, 0.382, dsb). Masukkan angka-angka berikut ini saja:</p>
+<ul>
+<li><strong>0</strong> dan <strong>1</strong> (Sebagai penanda batas awal tarikan)</li>
+<li><strong>-1</strong> atau <strong>-1.0</strong> (1 Standard Deviation)</li>
+<li><strong>-1.5</strong></li>
+<li><strong>-2</strong> atau <strong>-2.0</strong> (2 Standard Deviation)</li>
+<li><strong>-2.5</strong></li>
+<li><strong>-4</strong> atau <strong>-4.0</strong> (Maksimal ekstensi untuk pergerakan tren kuat)</li>
+</ul>
+<p><em>Catatan: Kamu juga bisa menggunakan angka positif seperti 2, 2.5, 4 jika kamu menarik fibo secara terbalik. Intinya, kita butuh kelipatan -1, -1.5, -2, -2.5, dan -4 dari rentang awal yang kita ukur.</em></p>
+<h2>Cara Menarik Fibo STDV</h2>
+<p>Kunci utama dari STDV Projection adalah: <strong>Apa yang diukur?</strong> Jika kamu salah menarik kotak pengukurannya (titik 0 ke 1), maka semua proyeksimu akan salah.</p>
+<p>Ada dua "kaki" utama yang sering digunakan ICT untuk menarik STDV:</p>
+<h3>1. Mengukur Manipulation Leg (Judas Swing)</h3>
+<p>Ini adalah cara yang paling sering digunakan, terutama saat <em>Smart Money Reversal (SMR)</em> terjadi.</p>
+<ul>
+<li>Tunggu sampai terjadi SMR dan harga telah melakukan MSS (Market Structure Shift).</li>
+<li>Cari kaki manipulasi terakhir (ayunan terakhir yang menyapu likuiditas sebelum harga berbalik).</li>
+<li>Tarik fibo dari titik tertinggi ke titik terendah (High to Low) dari kaki manipulasi tersebut.</li>
+<li>Level -1, -2, dan -2.5 akan muncul sebagai target di arah yang baru.</li>
+</ul>
+<h3>2. Mengukur Consolidation Box (Kotak Akumulasi)</h3>
+<p>Ini sering dipakai pada strategi <em>Asian Range</em> atau <em>London Killzone</em>.</p>
+<ul>
+<li>Tandai rentang tertinggi (High) dan terendah (Low) dari konsolidasi (misal: Asian Session).</li>
+<li>Tarik fibo dari High ke Low konsolidasi tersebut.</li>
+<li>Proyeksi STDV akan memberikan target ke mana harga akan bergerak setelah ia <em>breakout</em> dari konsolidasi tersebut.</li>
+</ul>
+<h2>Konfluensi (Gabungan) adalah Segalanya</h2>
+<p>Jangan pernah menaruh posisi Sell atau Buy Limit HANYA karena harga menyentuh garis -2 STDV! Angka-angka ini adalah alat bantu matematika, bukan tembok beton.</p>
+<p><strong>Cara Terbaik Menggunakannya:</strong> Proyeksi STDV paling akurat jika level fibo tersebut "bertumpuk" (overlap) dengan HTF PD Array lainnya.</p>
+<p>Contoh: Kamu memproyeksikan target naik dari sebuah MMBM. Garis level <strong>-2.5 STDV</strong> ternyata sejajar (berada di harga yang sama persis) dengan <strong>Daily Bearish FVG</strong> dan <strong>Previous Week High (Liquidity Pool)</strong>. Ini adalah konfluensi tingkat dewa! Area tersebut menjadi target Take Profit yang sangat logis dan memiliki probabilitas tinggi untuk memicu pembalikan harga (reversal) berikutnya.</p>
+<h2>Target Umum</h2>
+<ul>
+<li><strong>-2 hingga -2.5 STDV:</strong> Ini adalah area target paling normal di mana harga sering mengambil nafas atau membalik arah dalam satu hari (Intraday). Ambil sebagian besar profitmu di sini.</li>
+<li><strong>-4 STDV:</strong> Ini adalah target akhir. Hanya tercapai jika hari itu adalah hari <em>Trending</em> yang sangat kuat (One-sided market) atau saat ada rilis berita berdampak besar (High Impact News).</li>
+</ul>
+<p>Di dua bab selanjutnya, kita akan melihat lebih detail bagaimana Standard Deviation digunakan khusus untuk membedah fase Akumulasi, Manipulasi, dan Distribusi (AMD).</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="stdv-accumulation-manipulation" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 11 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Stdv Accumulation Manipulation</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Setelah kamu tahu cara <em>setting</em> Fibonacci untuk Standard Deviation (STDV), sekarang kita akan mempraktikkannya untuk membaca fase pasar. Dalam ICT, siklus harian pasar biasanya bergerak dalam tiga fase: <strong>Accumulation (Akumulasi), Manipulation (Manipulasi), dan Distribution (Distribusi)</strong> atau disingkat AMD.</p></div>
+<p>Di bab ini, kita akan fokus pada pertanyaan: <em>"Saat pasar melakukan Manipulasi (fakeout/Judas Swing), sampai sejauh mana harga akan bergerak menjebak ritel sebelum akhirnya berbalik arah?"</em></p>
+<h2>Mengukur Jarak Tipuan Market Maker</h2>
+<p>Manipulasi (seperti gerakan palsu saat Sesi London dibuka) tidak terjadi secara acak. Algoritma sudah mengkalkulasi seberapa jauh harga harus didorong untuk mengaktifkan <em>Stop Loss</em> mayoritas ritel trader dan menyentuh area likuiditas tanpa menghabiskan terlalu banyak "bensin".</p>
+<p>Kita bisa memprediksi area berhentinya manipulasi ini dengan menggunakan kotak Akumulasi (contohnya: Asian Range).</p>
+<h3>Cara Menganalisanya:</h3>
+<ol>
+<li><strong>Tandai Fase Akumulasi:</strong> Cari area konsolidasi yang jelas, misalnya rentang pergerakan selama sesi Asia (Asian Range). Tandai titik tertinggi (High) dan terendah (Low) dari konsolidasi tersebut. Ini adalah "Kotak Akumulasi" kita.</li>
+<li><strong>Tarik Fibo STDV:</strong> Tarik Fibonacci Retracement (yang sudah disetting STDV) dari <strong>High ke Low</strong> kotak tersebut (atau sebaliknya, tergantung arah manipulasi).</li>
+<em> Jika manipulasi menembus ke ATAS kotak (menjebak </em>buyers*), tarik fibo dari Low ke High kotak.
+<em> Jika manipulasi menembus ke BAWAH kotak (menjebak </em>sellers*), tarik fibo dari High ke Low kotak.
+<li><strong>Lihat Proyeksinya:</strong> Perhatikan level <strong>1 STDV</strong> hingga <strong>2 STDV</strong> (atau -1 hingga -2 di settinganmu) dari luar kotak tersebut.</li>
+</ol>
+<h2>Area Reversal yang Presisi</h2>
+<p>Level STDV 1 hingga 2 dari kotak Akumulasi adalah area di mana manipulasi biasanya kehabisan tenaga. Di zona inilah Smart Money mulai membalikkan posisi (Smart Money Reversal).</p>
+<p>Namun, ingat aturan emas dari bab sebelumnya: <strong>Konfluensi itu wajib!</strong></p>
+<p>Jangan langsung asal <em>Buy</em> saat harga jatuh menembus ke level -1.5 STDV. Cek sebelah kiri chart. Apakah level -1.5 STDV tersebut bertepatan dengan sebuah <strong>H4 Bullish Order Block</strong>? Atau apakah ia persis berada di bawah <strong>Low Hari Sebelumnya (Previous Day Low)</strong>?</p>
+<p>Jika ya, maka probabilitas bahwa gerakan turun itu HANYALAH manipulasi (Judas Swing) menjadi sangat tinggi. Kamu bisa bersiap mencari konfirmasi (Market Structure Shift) di area tersebut untuk ikut <em>Buy</em> bersama Smart Money.</p>
+<p><strong>Manfaat Teknik Ini:</strong> Teknik ini mencegah kamu tersapu oleh gerakan palsu (fakeout). Saat ritel trader panik karena melihat harga menembus support dengan kuat, kamu tetap tenang karena tahu harga sedang menuju target STDV Manipulasinya sebelum akhirnya berbalik.</p>
+<p>Setelah manipulasi selesai dan harga berbalik arah, fase selanjutnya adalah <strong>Distribusi</strong>. Bagaimana cara mengukur target akhir distribusi? Kita bahas di bab berikutnya.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="stdv-manipulation-distribution" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 12 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Stdv Manipulation Distribution</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Di bab sebelumnya kita menggunakan kotak Akumulasi untuk menebak kapan Manipulasi akan berhenti. Nah, setelah manipulasi itu berhenti dan <strong>Smart Money Reversal (SMR)</strong> terkonfirmasi, pertanyaan besar berikutnya adalah: <em>"Tren aslinya (Distribusi) ini akan melaju sampai harga berapa?"</em></p></div>
+<p>Di sinilah kita menggunakan kaki manipulasi (Manipulation Leg) itu sendiri sebagai alat ukur untuk memproyeksikan target Take Profit (TP).</p>
+<h2>Menjadikan Tipuan Sebagai Pengukur Jarak</h2>
+<p>Dalam algoritma ICT, besaran energi yang dikeluarkan untuk memanipulasi pasar biasanya berbanding lurus dengan besaran energi yang akan dilepaskan saat tren aslinya berjalan. Singkatnya, jarak manipulasi adalah "cetakan" untuk jarak distribusi.</p>
+<h3>Langkah-Langkah Mengukur Distribusi:</h3>
+<ol>
+<li><strong>Tunggu SMR Terkonfirmasi:</strong> Pastikan manipulasi sudah benar-benar selesai, ditandai dengan adanya <em>Market Structure Shift (MSS)</em> ke arah yang berlawanan.</li>
+<li><strong>Tandai Kaki Manipulasi (Judas Swing):</strong> Cari titik awal di mana harga mulai bermanuver palsu (misalnya: harga pembukaan sesi London), sampai ke titik ujung (ujung jarum/wick) tempat harga berbalik. Inilah satu <em>leg</em> (kaki) manipulasi.</li>
+<li><strong>Tarik Fibo STDV:</strong> Tarik alat ukur dari awal manipulasi ke ujung manipulasi.</li>
+<em> Jika manipulasi <strong>turun</strong> (menjebak </em>seller*, lalu berbalik naik): Tarik fibo dari <strong>High ke Low</strong> kaki manipulasi tersebut.
+<em> Jika manipulasi <strong>naik</strong> (menjebak </em>buyer*, lalu berbalik turun): Tarik fibo dari <strong>Low ke High</strong> kaki manipulasi tersebut.
+<li><strong>Lihat Proyeksi Searah Tren:</strong> Angka -1, -2, -2.5, dan -4 sekarang akan membentang di arah tren yang baru (Distribusi). Ini adalah level-level di mana algoritma kemungkinan besar akan mengambil keuntungan (menghentikan distribusi).</li>
+</ol>
+<h2>Menentukan Target Take Profit (TP)</h2>
+<p>Level mana yang harus dipilih sebagai TP? Jangan hanya memilih angka secara acak. Gunakan panduan konfluensi berikut:</p>
+<ul>
+<li><strong>Level -2 hingga -2.5 STDV:</strong> Ini adalah area penyelesaian distribusi yang paling standar (Normal Day Delivery). Sangat disarankan untuk mengambil sebagian besar (atau seluruh) profitmu di area ini.</li>
+<li><strong>Konfluensi dengan Likuiditas:</strong> Perhatikan apakah level -2 atau -2.5 STDV tersebut sejajar dengan <em>Previous Day High/Low</em> atau area <em>Equal Highs/Lows</em>. Jika sejajar, akurasi target tersebut mendekati 90%. Algoritma sangat suka mengakhiri siklus hariannya tepat di area likuiditas yang bertepatan dengan hitungan STDV.</li>
+<li><strong>Level -4 STDV:</strong> Hanya gunakan level ini sebagai target jika market sedang dalam kondisi <em>High Probability Trending</em> (misalnya: didukung oleh berita merah yang sangat besar, atau tren mingguan yang sangat kuat). Pada hari biasa, sangat jarang harga bisa mencapai ekstensi sejauh ini tanpa melakukan <em>pullback</em> besar.</li>
+</ul>
+<p><strong>Ringkasan Siklus AMD &amp; STDV:</strong>  
+1. Kotak Akumulasi digunakan untuk memproyeksikan kapan Manipulasi berakhir.  
+2. Kaki Manipulasi digunakan untuk memproyeksikan seberapa jauh Distribusi akan berjalan.</p>
+<p>Dengan menguasai dua cara pengukuran STDV ini, kamu tidak perlu lagi menebak-nebak (<em>guessing</em>) di mana harus entry dan di mana harus exit. Semua sudah memiliki panduan matematisnya.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="unicorn-model" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 13 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Unicorn Model</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Dalam dunia ICT, ada satu pola setup yang sangat diidam-idamkan oleh banyak trader. Pola ini memiliki probabilitas kemenangan (<em>win rate</em>) yang sangat tinggi dan biasanya menghasilkan pergerakan harga yang eksplosif. Saking langka dan "magis"-nya setup ini jika terbentuk sempurna, komunitas menyebutnya sebagai <strong>Unicorn Model</strong>.</p></div>
+<h2>Apa Itu Unicorn Model?</h2>
+<p>Secara teknis, Unicorn Model adalah <strong>pertemuan (overlap) yang sempurna antara sebuah Breaker Block dan sebuah Fair Value Gap (FVG)</strong>. Keduanya berada di level harga yang sama persis dan bekerja sama untuk menolak harga ke satu arah.</p>
+<p>Mari kita bedah secara perlahan agar tidak bingung. Kita ambil contoh <strong>Bullish Unicorn Model</strong>:</p>
+<ol>
+<li><strong>Tahap 1 (Menciptakan Liquidity):</strong> Harga naik membentuk <em>High</em> sementara, lalu turun membentuk <em>Low</em>.</li>
+<li><strong>Tahap 2 (Stop Run / Manipulasi):</strong> Harga tiba-tiba anjlok dengan cepat, menembus <em>Low</em> sebelumnya. Tujuannya adalah untuk menyapu <em>Stop Loss</em> (Sell Side Liquidity) dari para pembeli awal.</li>
+<li><strong>Tahap 3 (Displacement / SMR):</strong> Setelah menyapu <em>Low</em>, harga langsung berbalik arah (reversal) dengan sangat kuat menggunakan candle momentum berbadan besar (Displacement). Dorongan ini begitu kuat hingga menembus <em>High</em> sementara tadi, menciptakan <strong>Market Structure Shift (MSS)</strong>.</li>
+<li><strong>Tahap 4 (Lahirnya Unicorn):</strong> Dorongan kuat tadi meninggalkan celah kosong (Bullish FVG). Pada saat yang sama, candle naik terakhir sebelum harga anjlok (yang dulunya adalah <em>Resistance</em>/Order Block) kini telah ditembus dan berubah fungsi menjadi <strong>Breaker Block</strong>.</li>
+<strong>Di sinilah keajaibannya:</strong> Kotak FVG tersebut tercetak PERSIS di dalam atau tumpang tindih dengan kotak Breaker Block.
+</ol>
+<h2>Mengapa Unicorn Sangat Kuat?</h2>
+<p>Sebuah FVG sendirian itu kuat. Sebuah Breaker Block sendirian itu juga kuat. Namun, ketika algoritma menempatkan keduanya di satu tempat yang sama persis, area itu menjadi "tembok beton" bagi harga.</p>
+<p>Saat harga melakukan <em>pullback</em> (koreksi) turun kembali ke area Unicorn ini, pesanan dari Institusi (Smart Money) yang tertinggal di Breaker Block akan terpicu bersamaan dengan algoritma penyeimbang harga dari FVG. Hasilnya? Harga biasanya hanya menyentuh area tersebut sebentar (mungkin hanya sebatas ujung jarum/wick), lalu langsung melesat naik dengan kecepatan tinggi.</p>
+<p><strong>Cara Entry:</strong> Letakkan <em>Buy Limit</em> (atau Buy eksekusi pasar) saat harga mulai memasuki zona pertemuan (overlap) antara Breaker Block dan FVG. Stop Loss cukup diletakkan di bawah ujung bawah Breaker Block atau di bawah ayunan terendah (Low) terakhir.</p>
+<h2>Filter Kualitas Unicorn</h2>
+<p>Tidak semua gabungan Breaker dan FVG bisa disebut Unicorn yang berkualitas A+. Untuk memastikan itu Unicorn sungguhan (bukan kuda biasa yang dipasangi tanduk palsu), pastikan:</p>
+<ul>
+<li><strong>Didahului oleh Stop Run:</strong> Harus ada penyapuan likuiditas (mengambil <em>Old High</em> atau <em>Old Low</em>) SEBELUM Displacement terjadi. Jika tidak ada likuiditas yang diambil, Breaker Block tersebut memiliki probabilitas rendah.</li>
+<li><strong>Terjadi di Waktu yang Tepat:</strong> Unicorn yang muncul di sesi London (London Killzone) atau sesi New York (NY Killzone) jauh lebih kuat daripada yang muncul di tengah-tengah sesi Asia yang lambat.</li>
+<li><strong>Displacement yang Jelas:</strong> Candle yang menembus struktur (MSS) haruslah candle yang besar dan meyakinkan, bukan candle kecil yang ragu-ragu.</li>
+</ul>
+<p>Pada bab berikutnya, kita akan membahas lebih dalam secara teknis mengenai kombinasi Breaker dan FVG ini—termasuk apa yang harus dilakukan jika keduanya tidak tumpang tindih dengan sempurna.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="ict-2022-mentorship-model" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 14 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">ICT 2022 Mentorship Model</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p><strong>ICT 2022 Mentorship Model</strong> adalah "Bread and Butter" setup. Model ini dirancang khusus agar sangat mudah diulang (<em>repeatable</em>) dan sangat mekanikal. Fokus utamanya adalah menangkap kelanjutan atau pembalikan tren di dalam sesi New York atau London dengan mengandalkan 3 elemen: Liquidity Sweep, Market Structure Shift dengan Displacement, dan Fair Value Gap (FVG).</p></div>
+<h2>1. Apa Itu ICT 2022 Mentorship Model?</h2>
+<h2>2. Mengapa Model Ini Bekerja Sangat Baik?</h2>
+<h2>3. Kapan Waktu Menggunakannya (Time)?</h2>
+<h2>4. Bagaimana Cara Identifikasi (Langkah-Langkah Setup)?</h2>
+<h2>5. Kriteria Entry, Invalidasi (SL), dan Target (DOL)</h2>
+<div class="note"><strong>Pesan Mentor</strong><br/><p>Jangan paksa setup. Jika harga menembus likuiditas tapi bergeraknya loyo saat berbalik (tanpa displacement), tinggalkan. <em>Displacement</em> (candle tebal bertenaga kuat yang meninggalkan FVG) adalah "jejak kaki" institusi. Jika tidak ada jejak, mereka tidak ada di sana.</p></div>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="ict-2023-mentorship-model" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 15 DARI 15</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">ICT 2023 Mentorship Model</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p><strong>ICT 2023 Mentorship Model</strong> merupakan evolusi dari cara pandang ICT terhadap pasar, yang lebih menitikberatkan pada pergerakan waktu presisi tinggi (<em>Macromacros</em>), Siklus Waktu 90 Menit, dan model eksekusi yang dikenal sebagai <strong>Silver Bullet</strong>. Model ini membuktikan bahwa algoritma (IPDA) dipicu berulang kali pada jam-jam yang sangat spesifik.</p></div>
+<h2>1. Apa Itu ICT 2023 Mentorship Model?</h2>
+<h2>2. Konsep Kunci dalam Model 2023</h2>
+<h2>3. Kapan Waktu Menggunakannya (Silver Bullet Time)?</h2>
+<h2>4. Bagaimana Cara Identifikasi (Setup)?</h2>
+<h2>5. Kriteria Entry, Invalidasi (SL), dan Target (DOL)</h2>
+<div class="note"><strong>Pesan Mentor</strong><br/><p>Model 2023 membuktikan bahwa Anda tidak perlu begadang atau menatap chart seharian. Cukup datang di jam buka "toko" (jendela Silver Bullet), eksekusi saat algoritma menyala, ambil profit, lalu tutup chart Anda. Disiplin waktu adalah kunci.</p></div>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+      </div>
+
+      <div style="margin-top:48px;padding-top:32px;border-top:2px solid var(--border);">
+        
+      </div>
+
+      <div class="page-nav" style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <a class="btn ghost" href="../bagian-10-xauusd-playbook/index.html">← Pertemuan 10</a>
+        <a class="btn primary" href="../bagian-12-risk-management/index.html">Selesai & Lanjut Pertemuan 12 →</a>
+      </div>
+    </article>
+
+    <aside class="toc-card">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;text-transform:uppercase;margin-bottom:6px;">PERTEMUAN 11</div>
+      <h3 style="margin-bottom:12px;font-size:16px;">Daftar Isi Modul</h3>
+      <ul style="max-height: calc(100vh - 280px); overflow-y: auto;">
+        <li><a href="#smart-money-reversal-smr" class="toc-link" data-target="smart-money-reversal-smr">1. Smart Money Reversal (SMR)</a></li>
+<li><a href="#stair-step-pattern" class="toc-link" data-target="stair-step-pattern">2. Stair Step Pattern</a></li>
+<li><a href="#symmetrical-return-pengiriman-harga-simetris" class="toc-link" data-target="symmetrical-return-pengiriman-harga-simetris">3. Symmetrical Return (Pengiriman Harga Simetris)</a></li>
+<li><a href="#breaker-plus-fvg-combination" class="toc-link" data-target="breaker-plus-fvg-combination">4. Breaker + FVG Combination</a></li>
+<li><a href="#breaker-fvg-combination" class="toc-link" data-target="breaker-fvg-combination">5. Breaker / FVG Combination</a></li>
+<li><a href="#mmxm-market-maker-model" class="toc-link" data-target="mmxm-market-maker-model">6. MMXM (Market Maker Model)</a></li>
+<li><a href="#buy-model-dan-sell-model" class="toc-link" data-target="buy-model-dan-sell-model">7. Buy Model dan Sell Model</a></li>
+<li><a href="#kapan-advanced-model-dipakai" class="toc-link" data-target="kapan-advanced-model-dipakai">8. Kapan Advanced Model Dipakai</a></li>
+<li><a href="#smt-divergence" class="toc-link" data-target="smt-divergence">9. SMT Divergence</a></li>
+<li><a href="#standard-deviation-projection" class="toc-link" data-target="standard-deviation-projection">10. Standard Deviation Projection</a></li>
+<li><a href="#stdv-accumulation-manipulation" class="toc-link" data-target="stdv-accumulation-manipulation">11. Stdv Accumulation Manipulation</a></li>
+<li><a href="#stdv-manipulation-distribution" class="toc-link" data-target="stdv-manipulation-distribution">12. Stdv Manipulation Distribution</a></li>
+<li><a href="#unicorn-model" class="toc-link" data-target="unicorn-model">13. Unicorn Model</a></li>
+<li><a href="#ict-2022-mentorship-model" class="toc-link" data-target="ict-2022-mentorship-model">14. ICT 2022 Mentorship Model</a></li>
+<li><a href="#ict-2023-mentorship-model" class="toc-link" data-target="ict-2023-mentorship-model">15. ICT 2023 Mentorship Model</a></li>
+      </ul>
+      <hr style="margin:16px 0;border:none;border-top:1px solid var(--border);">
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+        ⏱️ Estimasi: ~45–60 Menit<br>
+        📚 15 Bab Lengkap<br>
+        🎓 Semester 1 • Pemula
+      </div>
+    </aside>
+  </div>
+</main>
+
+<style>
+@media (max-width: 900px) {
+  .mobile-toc-drawer { display: block !important; }
+  .toc-card { display: none !important; }
+}
+.module-chapter { scroll-margin-top: 100px; }
+.toc-card a.active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var links = document.querySelectorAll('.toc-card .toc-link');
+  var sections = document.querySelectorAll('.module-chapter');
+  if (!links.length || !sections.length) return;
+
+  function onScroll() {
+    var scrollPos = window.scrollY + 140;
+    var currentId = '';
+    sections.forEach(function(sec) {
+      if (sec.offsetTop <= scrollPos) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+    links.forEach(function(link) {
+      if (link.getAttribute('data-target') === currentId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive: true});
+  onScroll();
+});
+</script>
+
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Sistem Kuliah Trading dari Nol sampai Mandiri.</footer>
+<script>
+
+</script>
+</body>
+</html>

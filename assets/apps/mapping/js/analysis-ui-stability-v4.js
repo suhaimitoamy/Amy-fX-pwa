@@ -67,6 +67,10 @@
     }, true);
   }
 
+  function isInteractiveMappingDisclosure(details) {
+    return Boolean(details?.matches?.('.professional-disclosure'));
+  }
+
   function latestClosedCandle() {
     const candles = window.state?.candles || {};
     for (const timeframe of ['M15', 'M5', 'M1', 'M30', 'H1']) {
@@ -135,6 +139,7 @@
     if (!app || currentTab() !== 'Analyze') return;
     app.dataset.analysisStatic = 'true';
     app.querySelectorAll('details').forEach(details => {
+      if (isInteractiveMappingDisclosure(details)) return;
       if (!details.dataset.stabilityKey) {
         const key = stableKeyForSummary(details.querySelector(':scope > summary')?.textContent);
         if (key) details.dataset.stabilityKey = key;

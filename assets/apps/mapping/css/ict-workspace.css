@@ -1,0 +1,181 @@
+:root{color-scheme:dark;--bg:#0c1320;--card:#131e2d;--text:#e6eef8;--muted:#99aabe;--line:#29374b;--accent:#8bb9ff;--buy:#65d5b1;--sell:#ff8f9b}html[data-theme=light],html[data-amyfx-theme=light]{color-scheme:light;--bg:#f1f5fa;--card:#fff;--text:#17283b;--muted:#506277;--line:#d6e0eb;--accent:#285da8;--buy:#08775d;--sell:#bc334a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,sans-serif}header{display:flex;align-items:center;gap:16px;max-width:1040px;margin:auto;padding:20px}header>a{font-size:32px;text-decoration:none;padding:0 10px}header small{letter-spacing:.14em}header h1{font-size:22px;margin:0}#connection{margin-left:auto;font-size:12px;color:var(--muted)}main{max-width:1040px;margin:auto;padding:0 20px 32px}a{color:var(--accent)}button,select{font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-height:44px;cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button:disabled{opacity:.5;cursor:wait}.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px}.toolbar>div{margin-right:auto}.toolbar strong{font-size:22px}.toolbar p{margin:0;font-size:12px;color:var(--muted)}label{font-size:11px;color:var(--muted)}select{display:block}nav{display:flex;gap:8px;margin-bottom:20px}nav button{flex:1;font-size:13px}nav button[aria-selected=true]{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:700}article{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;min-width:0}h2{font-size:17px;margin:0 0 12px}small,.muted,footer{color:var(--muted);font-size:12px}p{margin:8px 0 12px}#signal{font-size:48px;line-height:1.2;margin:10px 0}#signal[data-side=BUY]{color:var(--buy)}#signal[data-side=SELL]{color:var(--sell)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metrics article{padding:16px}.metrics strong{display:block;font-size:17px;margin-top:8px;overflow-wrap:anywhere}.metrics small{font-size:10px}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}.section-heading span{font-size:12px;color:var(--muted)}#chart{height:330px;width:100%;overflow:hidden}dl{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}dl div{padding:12px;background:var(--bg);border-radius:10px}dt{font-size:11px;color:var(--muted)}dd{margin:4px 0 0;font-weight:650;font-variant-numeric:tabular-nums}ol{padding-left:22px}li{padding:6px 0}.record{border-bottom:1px solid var(--line);padding:12px 0}.record:last-child{border-bottom:0}.record strong{display:block}.record p{margin:4px 0;font-size:13px;overflow-wrap:anywhere}#error{border:1px solid var(--sell);border-radius:12px;padding:12px;color:var(--sell)}[hidden]{display:none!important}footer{text-align:center;margin-top:24px}@media(max-width:560px){header{padding:16px}main{padding:0 12px 24px}.toolbar{flex-wrap:wrap}.toolbar strong{font-size:20px}article{padding:16px}.metrics{gap:6px}.metrics article{padding:12px 9px}.metrics strong{font-size:13px}dl{grid-template-columns:repeat(2,1fr)}#chart{height:280px}nav{gap:5px}nav button{padding:9px 5px;font-size:12px}}
+
+.model-context{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}.model-context>summary{cursor:pointer;font-weight:650;min-height:30px}.model-context[open]>summary{margin-bottom:16px}.scalper-setup{border-top:1px solid var(--line);padding:18px 0;overflow-wrap:anywhere}.scalper-setup h3{font-size:17px;margin:0}.scalper-setup[data-side=BUY] h3{color:var(--buy)}.scalper-setup[data-side=SELL] h3{color:var(--sell)}.scalper-setup .section-heading{flex-wrap:wrap}.scalper-setup button[aria-pressed=true]{border-color:var(--accent);color:var(--accent)}#scalper-summary{font-weight:650}#scalper-state{font-size:12px}#scalper-methods .card{margin:0}#scalper-methods button{flex-shrink:0}
+.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}.evidence-grid .record{min-width:0}.analysis-priority .section-heading{align-items:flex-start}.analysis-priority .section-heading span{text-align:right}.analysis-secondary{background:var(--card)}.analysis-rules{margin:0 0 12px;padding-left:20px}.analysis-rules li{padding:4px 0}@media(max-width:560px){.evidence-grid{grid-template-columns:1fr}.analysis-priority .section-heading{display:block}.analysis-priority .section-heading span{display:block;text-align:left;margin-top:-6px}}
+
+/* Context-first view: only the evidence that changes a manual decision is visible. */
+.context-hero{border-color:var(--accent)}.context-hero>strong{display:block;font-size:clamp(20px,3vw,28px);line-height:1.25;margin:12px 0;overflow-wrap:anywhere}.context-hero>p{max-width:65ch}.context-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.context-grid article{margin-bottom:0}.context-grid strong{display:block;font-size:19px;margin-top:8px;overflow-wrap:anywhere}.context-grid p{color:var(--muted);font-size:13px}.scenario h3{font-size:19px;margin:8px 0}.scenario h3[data-side=BUY]{color:var(--buy)}.scenario h3[data-side=SELL]{color:var(--sell)}.scenario dl{grid-template-columns:repeat(3,minmax(0,1fr))}.scenario dd{overflow-wrap:anywhere}.execution{border-color:var(--accent)}.execution h2{font-size:24px;margin:6px 0}.execution ul{list-style:none;padding:0;margin:10px 0}.execution li{border-bottom:1px solid var(--line)}.context-grid+.execution{margin-top:16px}#liquidity{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+@media(max-width:560px){.context-grid{gap:7px}.context-grid article{padding:13px}.context-grid strong{font-size:15px}.scenario dl{grid-template-columns:1fr 1fr}.scenario dl div:first-child{grid-column:1/-1}#liquidity{grid-template-columns:1fr}}
+#news-awareness.news-lock{color:#ff7875!important;font-weight:700;padding:6px 10px;background:rgba(255,77,79,0.15);border-radius:6px;border:1px solid rgba(255,77,79,0.35);display:block;margin-top:8px}
+#news-awareness.news-warning{color:#ffc53d!important;font-weight:600;padding:6px 10px;background:rgba(250,173,20,0.15);border-radius:6px;border:1px solid rgba(250,173,20,0.35);display:block;margin-top:8px}
+#news-awareness.news-safe{color:#73d13d!important;font-weight:500}
+.driver-tournament-card{border-color:var(--accent)}
+.driver-tournament-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.driver-item{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.driver-item.leader{border-color:var(--accent);background:rgba(139,185,255,0.05)}
+.driver-header{display:flex;align-items:center;gap:8px;font-size:14px}
+.driver-rank{font-weight:800;color:var(--accent);min-width:24px}
+.driver-name{flex:1;font-size:13px}
+.driver-badge{font-size:11px;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
+.driver-badge.active{background:rgba(101,213,177,0.18);color:var(--buy);border:1px solid var(--buy)}
+.driver-badge.scalp{background:rgba(255,143,155,0.18);color:var(--sell);border:1px solid var(--sell)}
+.driver-badge.lock{background:rgba(255,120,117,0.12);color:#ff7875;border:1px solid rgba(255,120,117,0.3)}
+.driver-meta{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:4px}
+.driver-meta strong{color:var(--text)}
+.driver-desc{margin:4px 0 0;font-size:11px;color:var(--muted)}
+
+/* AMY ICT overlays and closed-candle dashboard */
+#chart{position:relative;min-height:460px;isolation:isolate;}
+.ict-overlay{position:absolute;inset:0;z-index:2;pointer-events:none;}
+.amy-dashboard{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:12px 0 0;background:var(--border,#354c6b);}
+.amy-dashboard>div{display:grid;grid-template-columns:100px minmax(0,1fr);gap:8px;padding:9px;background:var(--surface,#142540);}
+.amy-dashboard dt{font-size:10px;font-weight:700;color:var(--muted,#aabbd5);}.amy-dashboard dd{margin:0;font-size:11px;overflow-wrap:anywhere;}
+.amy-narration{white-space:pre-line;line-height:1.7;}.amy-score-table{width:100%;font-size:12px;border-collapse:collapse;}.amy-score-table th,.amy-score-table td{padding:6px;text-align:left;border-bottom:1px solid var(--border,#354c6b);}
+.ict-settings{margin:12px 0;padding:12px;border:1px solid var(--border,#354c6b);border-radius:12px;}.ict-settings summary{cursor:pointer;font-weight:700;}
+#ict-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px;}#ict-controls fieldset{min-width:0;border:1px solid var(--border,#354c6b);border-radius:10px;padding:10px;}#ict-controls legend{font-size:12px;}#ict-controls label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:9px 0;font-size:12px;}#ict-controls input[type=checkbox]{width:18px;height:18px;flex-shrink:0;}#ict-controls input[type=number]{width:65px;}#ict-controls select{max-width:140px;}#ict-controls button{grid-column:1/-1;}#ict-coverage{font-size:11px;overflow-wrap:anywhere;}
+@media(max-width:600px){.amy-dashboard{grid-template-columns:1fr;}#ict-controls{grid-template-columns:1fr;}#chart{min-height:460px;}.amy-dashboard>div{grid-template-columns:90px minmax(0,1fr);}}
+
+/* Pro377: short overview; full evidence and models remain available in Detail. */
+.inline-detail{margin-top:10px;font-size:13px;color:var(--muted)}
+summary{cursor:pointer;overflow-wrap:anywhere;min-height:44px;align-content:center}
+summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+.inline-detail[open]>summary{margin-bottom:8px}
+.panel-hint{font-size:13px;color:var(--muted);margin:0 0 12px}
+.model-context{background:var(--card);padding:10px 16px}
+.model-context[open]>summary{margin-bottom:12px}
+.model-context article{margin:12px 0 0;padding:12px}
+.detail-count{font-size:11px;font-weight:400;color:var(--muted);margin-left:8px}
+.context-hero>strong{font-size:clamp(18px,3vw,24px);margin:8px 0}
+.context-hero h2,.execution h2{margin:0;font-size:17px}
+.scenario dl{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.scenario dl div{padding:10px}.scenario dd{font-size:14px}
+.scenario h3{font-size:17px;margin:0}
+.price-map .section-heading{margin-bottom:12px}
+.driver-item{padding:0 12px;background:transparent;border-radius:8px}
+.driver-item>summary{display:list-item;font-size:13px;padding:10px 0;line-height:1.5}
+.driver-rank{margin-right:6px;color:var(--muted)}
+.driver-name{font-size:13px}.driver-meta{flex-direction:column;gap:4px}
+.driver-desc{font-size:12px;margin:10px 0}
+.settings-group{min-width:0;border:1px solid var(--line);border-radius:10px;padding:0 10px}
+#ict-controls fieldset{border:0;padding:0;margin:8px 0}
+.settings-group>summary{font-size:13px}
+.amy-dashboard>div{background:var(--card)}
+#mapping-alert{border:1px solid var(--sell);border-radius:12px;padding:12px;font-size:13px;overflow-wrap:anywhere}
+@media(max-width:560px){.section-heading{flex-wrap:wrap}.scenario dl div:first-child{grid-column:auto}.execution .section-heading small{font-size:11px}.driver-name{font-size:12px}}
+
+/* Body portal keeps the chart above sticky headers and Android WebView containers. */
+.chart-heading h2{margin:0}.chart-heading #chart-caption{margin-right:auto}
+#chart-fullscreen{font-size:13px;flex-shrink:0;min-height:44px}
+body.mapping-chart-fullscreen{overflow:hidden!important;overscroll-behavior:none}
+body.mapping-chart-fullscreen>:not(#gold-chart-workspace):not(script){visibility:hidden!important}
+#gold-chart-workspace.is-fullscreen{position:fixed!important;inset:0!important;z-index:2147483646!important;display:flex;flex-direction:column;gap:6px;width:100%!important;max-width:none!important;height:100vh;height:100dvh;margin:0!important;border:0!important;border-radius:0!important;box-sizing:border-box;padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left));background:var(--bg)!important;overflow:hidden}
+#gold-chart-workspace.is-fullscreen .chart-heading{flex:none;margin:0;min-height:44px;flex-wrap:nowrap}
+#gold-chart-workspace.is-fullscreen #chart-caption{display:none}
+#gold-chart-workspace.is-fullscreen #chart{flex:1;min-width:0;min-height:0!important;height:auto!important;border-radius:8px}
+#gold-chart-workspace.is-fullscreen #chart-fullscreen{font-size:14px}
+@media(max-width:560px){.chart-heading #chart-caption{flex-basis:100%;order:3}.chart-heading #chart-fullscreen{margin-left:auto}}
+
+/* TradingView Lightweight Charts owns both axis drags and pane gestures. */
+#chart{touch-action:none;overscroll-behavior:contain}
+#chart-auto-price{min-height:44px;font-size:12px;flex-shrink:0;padding:8px 10px}
+#gold-chart-workspace.is-fullscreen .chart-heading h2{margin-right:auto}
+@media(max-width:380px){#gold-chart-workspace.is-fullscreen .chart-heading h2{font-size:15px}#gold-chart-workspace.is-fullscreen #chart-fullscreen{font-size:12px;padding:8px 10px}}
+
+/* Amy Live Assistant Card on Dashboard */
+.amy-live-assistant {
+  margin: 10px 0 14px 0;
+  padding: 13px 15px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(20, 29, 45, 0.95), rgba(12, 19, 32, 0.98));
+  border: 1px solid rgba(245, 196, 81, 0.28);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.amy-live-assistant::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 4px; height: 100%;
+  background: var(--amy-accent, #F5C451);
+  border-radius: 4px 0 0 4px;
+}
+.amy-live-assistant.assistant-state-bull::before { background: var(--buy, #00e676); }
+.amy-live-assistant.assistant-state-bear::before { background: var(--sell, #ff5252); }
+.amy-live-assistant.assistant-state-sweep::before { background: #00bcd4; }
+.amy-live-assistant.assistant-state-poi::before { background: #ff9800; }
+.amy-live-assistant.assistant-state-news::before { background: #ff5722; }
+.amy-live-assistant.assistant-state-invalid::before { background: #d50000; }
+
+.assistant-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+.assistant-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+.assistant-spark {
+  color: var(--amy-accent, #F5C451);
+  font-size: 15px;
+}
+.assistant-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.badge-neutral { background: rgba(255,255,255,0.08); color: #94A3B8; }
+.badge-bull { background: rgba(0, 230, 118, 0.15); color: #00e676; border: 1px solid rgba(0,230,118,0.3); }
+.badge-bear { background: rgba(255, 82, 82, 0.15); color: #ff5252; border: 1px solid rgba(255,82,82,0.3); }
+.badge-sweep { background: rgba(0, 188, 212, 0.15); color: #00bcd4; border: 1px solid rgba(0,188,212,0.3); }
+.badge-poi { background: rgba(255, 152, 0, 0.15); color: #ff9800; border: 1px solid rgba(255,152,0,0.3); }
+.badge-news { background: rgba(255, 87, 34, 0.2); color: #ff7043; border: 1px solid rgba(255,87,34,0.4); }
+.badge-gold { background: rgba(245, 196, 81, 0.15); color: #F5C451; border: 1px solid rgba(245,196,81,0.3); }
+.badge-invalid { background: rgba(213, 0, 0, 0.2); color: #ff5252; border: 1px solid rgba(213,0,0,0.4); }
+.badge-warn { background: rgba(255, 152, 0, 0.18); color: #ffa726; border: 1px solid rgba(255,152,0,0.35); }
+
+.assistant-body {
+  margin: 4px 0 8px 0;
+}
+.assistant-primary {
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 600;
+  color: #F8FAFC;
+  margin: 0 0 4px 0;
+}
+.assistant-sub {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #94A3B8;
+  margin: 0;
+}
+.assistant-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #64748B;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 6px;
+  margin-top: 6px;
+}
+.assistant-tag {
+  color: var(--amy-accent, #F5C451);
+  font-weight: 600;
+}
+.assistant-clock {
+  color: #64748B;
+}
+

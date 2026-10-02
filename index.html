@@ -3,63 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#050505">
-  <meta name="background-color" content="#050505">
-  <meta name="description" content="Amy FX PWA untuk Mapping XAU/USD, Market Intel, jurnal, Academy, dan indikator trading.">
+  <meta name="theme-color" content="#070B12">
+  <meta name="background-color" content="#070B12">
+  <meta name="description" content="Amy FX Pro PWA — Market Intelligence XAU/USD, Mapping ICT, Academy, Jurnal, dan Indikator.">
   <meta name="robots" content="noindex,nofollow">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Amy FX">
-  <title>Amy FX</title>
+  <meta name="apple-mobile-web-app-title" content="Amy FX Pro">
+  <title>Amy FX Pro</title>
   <base href="./assets/">
   <link rel="manifest" href="../manifest.webmanifest">
   <link rel="icon" href="../icons/amy-fx-192.png" type="image/png">
   <link rel="apple-touch-icon" sizes="180x180" href="../icons/amy-fx-180.png">
+  <script src="apps/shared/amyfx-theme-controller.js" data-amyfx-theme-controller="v1"></script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="apps/shared/amyfx-blueprint-v1.css" data-amyfx-blueprint-css="v1">
+  <link rel="stylesheet" href="apps/shared/amyfx-ui-tokens.css" data-amyfx-ui-tokens="v1">
+  <link rel="stylesheet" href="apps/shared/amyfx-theme.css" data-amyfx-theme="v1">
+  <link rel="stylesheet" href="apps/shared/amyfx-components.css" data-amyfx-components="v1">
+  <link rel="stylesheet" href="apps/shared/amyfx-ui-polish-pro348.css" data-amyfx-ui-polish="pro348">
+  <link rel="stylesheet" href="apps/shared/amyfx-natural-ui-pro355.css" data-amyfx-natural-ui="pro355">
 </head>
-<body>
+<body class="amyfx-module amyfx-module--home">
   <div class="app-container">
-    <header>
-      <div class="header-bg">
-        <svg width="100%" height="100%" viewBox="0 0 200 60" preserveAspectRatio="none" fill="none" stroke="rgba(212, 175, 55, 0.08)" stroke-width="1" aria-hidden="true">
-          <path d="M10 40v-20 M10 25h4v-10h-4z M30 50v-30 M30 35h4v-15h-4z M50 30v-10 M50 25h4v-5h-4z M70 45v-25 M70 30h4v-10h-4z M90 55v-40 M90 40h4v-25h-4z M110 35v-15 M110 28h4v-8h-4z M130 60v-35 M130 45h4v-20h-4z M150 40v-20 M150 25h4v-10h-4z M170 25v-15 M170 18h4v-8h-4z M190 45v-25 M190 30h4v-10h-4z"></path>
-        </svg>
+    <header class="app-header">
+      <div class="app-logo" aria-hidden="true">AMY</div>
+      <div class="app-header__copy">
+        <strong>Amy FX Pro</strong>
       </div>
-      <div class="logo-container">
-        <div class="am-logo">AMY</div>
-      </div>
-      <h1>Amy FX</h1>
-      <p class="subtitle">VIP Facility</p>
+      <button class="app-header__action" type="button" data-nav="profil" aria-label="Buka pengaturan">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 .6 1.51 1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.12.38.34.72.64.98.3.26.68.4 1.08.4H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51.62z"></path></svg>
+      </button>
     </header>
 
-    <main id="main-content" aria-live="polite"></main>
+    <main id="main-content">
+      <!-- Pages will be rendered here -->
+    </main>
 
     <nav class="bottom-nav" aria-label="Navigasi utama">
       <button class="nav-btn active" data-target="beranda">
-        <span class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
+        <span class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </span>
         <span>Beranda</span>
       </button>
       <button class="nav-btn" data-target="proyek">
-        <span class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>
-        <span>Proyek</span>
+        <span class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        </span>
+        <span>Backtest</span>
       </button>
       <button class="nav-btn" data-target="koleksi">
-        <span class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></span>
+        <span class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </span>
         <span>Koleksi</span>
       </button>
       <button class="nav-btn" data-target="profil">
-        <span class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c.8-4 3.5-6 8-6s7.2 2 8 6"></path></svg></span>
+        <span class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c.8-4 3.5-6 8-6s7.2 2 8 6"></path></svg>
+        </span>
         <span>Profil</span>
       </button>
     </nav>
   </div>
 
   <noscript>Amy FX memerlukan JavaScript agar dapat berjalan.</noscript>
+  <!-- PWA Platform & Auth Overlays -->
   <script src="../platform-adapter.js"></script>
   <script src="../member-auth.js"></script>
-  <script src="app.js"></script>
   <script src="../pwa-bootstrap.js"></script>
   <script src="../pwa-update-bridge.js"></script>
+
+  <!-- Pro 390 Core Stack -->
+  <script src="apps/shared/amyfx-loading.js" data-amyfx-loading="v1"></script>
+  <script src="apps/academy/trading-practice/vendor/lightweight-charts.standalone.production.js"></script>
+  <script type="module" src="home-price-chart.js"></script>
+  <script src="app-version.js"></script>
+  <script src="app.js"></script>
+  <script src="profile-system-settings-v1.js"></script>
+  <script src="apps/shared/amyfx-home-data-integration-v1.js"></script>
+  <script src="apps/shared/amyfx-blueprint-v1.js" data-amyfx-blueprint-js="v1"></script>
+  <script src="apps/shared/amyfx-blueprint-hotfix-v1.js" data-amyfx-blueprint-hotfix="v1"></script>
+  <script src="apps/shared/amy-local-assistant.js" data-amy-local-assistant="v1"></script>
+  <script src="apps/shared/amy-learning-reminder.js" data-amy-learning-reminder="v1"></script>
 </body>
 </html>

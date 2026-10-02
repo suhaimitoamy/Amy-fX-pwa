@@ -9,7 +9,7 @@
   const responseCache = new Map();
   const intervalSnapshots = new Map();
   const retryAfter = new Map();
-  const PRIVATE_MARKET_URL = 'https://wliecyxzlwhmtftnfnps.supabase.co/functions/v1/market-candles';
+  const PRIVATE_MARKET_URL = 'https://amy-fx.vercel.app/api/twelvedata';
   const MARKET_API_HOSTS = new Set([
     'amy-fx.vercel.app',
     'amy-fx-git-personal-amyfx-private-aplikasi-trading.vercel.app',

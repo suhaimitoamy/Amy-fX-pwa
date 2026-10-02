@@ -321,11 +321,7 @@
 
   function relocateJournalReview() {
     const card = document.querySelector?.("[data-amy-journal-v2]");
-    const journalView = document.getElementById?.("journalView");
-    if (!card || !journalView || journalView.contains(card)) return;
-    const heading = journalView.querySelector(".section-head");
-    if (heading) heading.insertAdjacentElement("afterend", card);
-    else journalView.insertAdjacentElement("afterbegin", card);
+    if (card) card.remove();
   }
 
   function legacyCredentialsAvailable() {

@@ -1,0 +1,8 @@
+.pack-summary { margin: 12px 0 8px; color: var(--practice-muted); font-size: .78rem; font-weight: 800; }
+.pack-library { display: grid; gap: 8px; max-height: 300px; overflow: auto; padding-right: 2px; }
+.pack-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; padding: 10px 11px; border: 1px solid var(--practice-border); border-radius: 10px; background: #0a111b; }
+.pack-row strong, .pack-row small { display: block; overflow-wrap: anywhere; }
+.pack-row strong { color: var(--practice-text); font-size: .82rem; }
+.pack-row small { margin-top: 3px; color: var(--practice-muted); font-size: .7rem; line-height: 1.35; }
+.pack-row button { border: 1px solid rgba(251,113,133,.35); border-radius: 8px; background: rgba(251,113,133,.07); color: var(--practice-danger); padding: 7px 9px; cursor: pointer; font: inherit; font-size: .72rem; font-weight: 800; }
+.pack-empty { padding: 12px; border: 1px dashed var(--practice-border); border-radius: 10px; color: var(--practice-muted); font-size: .78rem; line-height: 1.5; }

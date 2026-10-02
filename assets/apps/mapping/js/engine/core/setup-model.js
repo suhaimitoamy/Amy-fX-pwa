@@ -71,6 +71,8 @@ export function modelSweepMssFvg(cs, tf, ctx) {
       qualityScore: validFvg.qualityScore,
       status: validFvg.status,
       components: {
+        // This generic model uses the FVG range and liquidity targets. It does
+        // not calculate the Sniper driver's OTE entry or fixed 0.8R exit.
         model: 'Sweep → MSS → FVG',
         sweep: sweep.type,
         sweepLevel: sweep.level,

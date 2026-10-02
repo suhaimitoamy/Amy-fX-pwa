@@ -22,9 +22,20 @@ window.AmyJournalAnalytics = {
   },
   equity(entries){
     let balance = 0;
-    return (Array.isArray(entries)?entries:[]).map(x => {
-      balance += Number(x.pnlMoney || (x.result === 'Win' ? (x.riskReward || 2) * 10 : x.result === 'Loss' ? -10 : 0));
-      return {time:x.analysisTime || x.createdAt || new Date().toISOString(), balance};
+    const list = (Array.isArray(entries)?entries:[]).filter(x => ['Win','Loss','Breakeven'].includes(x.result));
+    const hasMoney = list.some(x => {
+      const m = x.pnlMoney != null && x.pnlMoney !== '' ? Number(x.pnlMoney) : ((Number(x.profit)||0) - (Number(x.loss)||0));
+      return Number.isFinite(m) && m !== 0;
+    });
+    return list.map(x => {
+      const explicitMoney = x.pnlMoney != null && x.pnlMoney !== '' ? Number(x.pnlMoney) : null;
+      const calcMoney = (x.profit || x.loss) ? ((Number(x.profit)||0) - (Number(x.loss)||0)) : null;
+      const moneyVal = explicitMoney != null && Number.isFinite(explicitMoney) ? explicitMoney : (calcMoney != null && Number.isFinite(calcMoney) ? calcMoney : null);
+      const delta = (hasMoney && moneyVal != null)
+        ? moneyVal
+        : (x.result === 'Win' ? Number(x.riskReward || 2) : x.result === 'Loss' ? -1 : 0);
+      balance += delta;
+      return {time:x.analysisTime || x.createdAt || new Date().toISOString(), balance, unit: hasMoney ? '$' : 'R'};
     });
   },
   renderEquitySVG(entries){
@@ -32,11 +43,12 @@ window.AmyJournalAnalytics = {
     if (!data.length) {
       return '<div style="padding:20px;text-align:center;color:var(--muted,#888);font-size:13px;">Belum ada data trade tertutup untuk kurva equity.</div>';
     }
+    const unit = data[0]?.unit || 'R';
     const values = [0, ...data.map(d => d.balance)];
     const minVal = Math.min(...values);
     const maxVal = Math.max(...values);
     const range = (maxVal - minVal) || 1;
-
+    
     const width = 600;
     const height = 180;
     const padding = 20;
@@ -58,8 +70,8 @@ window.AmyJournalAnalytics = {
     return `
       <div style="background:var(--surface-soft, rgba(255,255,255,0.03));border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <span style="font-size:13px;font-weight:700;color:var(--gold,#d4a832);">EQUITY GROWTH CURVE</span>
-          <span style="font-size:13px;font-weight:700;color:${strokeColor};">${values[values.length-1] >= 0 ? '+' : ''}${values[values.length-1].toFixed(2)}</span>
+          <span style="font-size:13px;font-weight:700;color:var(--gold,#d4a832);">EQUITY GROWTH CURVE (${unit === '$' ? 'REAL' : 'R-MULTIPLE'})</span>
+          <span style="font-size:13px;font-weight:700;color:${strokeColor};">${values[values.length-1] >= 0 ? '+' : ''}${values[values.length-1].toFixed(2)} ${unit}</span>
         </div>
         <svg viewBox="0 0 ${width} ${height}" style="width:100%;height:auto;overflow:visible;">
           <polygon points="${areaPoints}" fill="${fillColor}" />
@@ -69,3 +81,4 @@ window.AmyJournalAnalytics = {
     `;
   }
 };
+

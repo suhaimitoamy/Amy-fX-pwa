@@ -5,7 +5,6 @@
   window.__amyFxMappingContextBridgeV2 = true;
 
   let lastFingerprint = "";
-  let timer = 0;
 
   function text(value) {
     return String(value ?? "").trim();
@@ -101,11 +100,10 @@
 
   function boot() {
     publish(true);
-    clearInterval(timer);
-    timer = window.setInterval(() => {
-      if (!document.hidden) publish();
-    }, 5_000);
-    window.addEventListener("amyfx:market-update", () => publish(true));
+    window.addEventListener("amyfx:candles-updated", () => publish(true));
+    window.addEventListener("amyfx:mapping-ui-rendered", () => publish());
+    window.addEventListener("amyfx:entry-watch-updated", () => publish());
+    window.addEventListener("amyfx:execution-authority-updated", () => publish());
     window.addEventListener("focus", () => publish(true));
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) publish(true);

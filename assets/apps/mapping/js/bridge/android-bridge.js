@@ -33,7 +33,7 @@ function validatedContract(result = state.result) {
   const active = Boolean(
     result &&
     !result.dataStale &&
-    directionDecision?.source === 'VALIDATED_DIRECTION_FORECAST' &&
+    directionDecision?.source === 'AMY_SMC_D_NEXT_MOVE' &&
     directionDecision?.invalidated === false &&
     (directionDecision?.signal === 'BUY' || directionDecision?.signal === 'SELL') &&
     setupExecution?.active === true &&
@@ -104,40 +104,8 @@ export function sendTargetsToNative() {
 }
 
 export function saveConnect() {
-  const input = document.getElementById('apiKey');
-  const apiKey = String(input?.value || '').trim();
-  if (apiKey) {
-    let saved = false;
-    try {
-      saved = window.AmyLivePrice?.saveApiKey?.(apiKey) === true;
-    } catch (_) {
-      saved = false;
-    }
-    if (!saved) {
-      state.conn = 'Key Required';
-      window.Android?.showAppToast?.('API key Twelve Data tidak valid.');
-      render();
-      return;
-    }
-  } else {
-    let hasStoredKey = false;
-    try {
-      hasStoredKey = window.AmyLivePrice?.hasApiKey?.() === true;
-    } catch (_) {
-      hasStoredKey = false;
-    }
-    if (!hasStoredKey) {
-      state.conn = 'Key Required';
-      window.Android?.showAppToast?.('Masukkan API key Twelve Data untuk harga WebSocket.');
-      render();
-      return;
-    }
-  }
-
   state.key = '';
   try { localStorage.removeItem('twelve_api_key'); } catch (_) {}
-  if (input) input.value = '';
-
   state.bg = false;
   try { localStorage.setItem('bg_scanner', 'false'); } catch (_) {}
   connect({ force: true });

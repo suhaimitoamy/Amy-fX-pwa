@@ -53,7 +53,7 @@ const config = JSON.parse(read('pwa-config.json'));
 const packageInfo = JSON.parse(read('package.json'));
 const expectedStream = 'https://amy-fx.vercel.app/api/pwa-live-price';
 
-if (packageInfo.version !== '2.3.0-pwa.7.0') fail('package version must be 2.3.0-pwa.7.0');
+if (packageInfo.version !== '2.0.0-pro.390') fail('package version must be 2.0.0-pro.390');
 if (manifest.id !== './' || manifest.start_url !== './' || manifest.scope !== './') fail('manifest paths must stay portable');
 if (manifest.display !== 'standalone') fail('manifest display must be standalone');
 if (!(manifest.icons || []).some(icon => icon.type === 'image/png' && icon.sizes === '192x192')) fail('manifest needs a 192x192 PNG icon');
@@ -122,7 +122,7 @@ const worker = read('service-worker.js');
 for (const eventName of ['install', 'activate', 'fetch', 'push', 'notificationclick']) {
   if (!worker.includes(`addEventListener('${eventName}'`)) fail(`service worker missing ${eventName}`);
 }
-for (const marker of ['-preview-parity-v1-pwa-ws-price-v4-market-cache-v7', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))', "appUrl('pwa-live-price-bridge.js')", "appUrl('pwa-update-bridge.js')"]) {
+for (const marker of ['-pro390-parity-v1-pwa-ws-price-v4-market-cache-v8', 'function isLivePriceStream(url)', "url.pathname.endsWith('/api/pwa-live-price')", 'event.respondWith(fetch(request))', "appUrl('pwa-live-price-bridge.js')", "appUrl('pwa-update-bridge.js')"]) {
   if (!worker.includes(marker)) fail(`service worker missing ${marker}`);
 }
 

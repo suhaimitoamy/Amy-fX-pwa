@@ -1,385 +1,264 @@
-import { deriveLiquidityContext } from './engine/market-intent-engine.js';
-import { detectMarketRegimeV2 } from './engine/market-regime-engine.js';
-import { routeRegimeStrategy } from './engine/strategy-router-engine.js';
-import { evaluateValidatedMarketContext } from './engine/validated-market-context.js';
-
 const CARD_ID = 'amy-regime-router-v3';
-const STATE_KEY = 'amy_regime_router_state_v3';
-const READY_STATUS = 'READY';
 
 let lastSignature = '';
-let refreshTimer = 0;
 let refreshFrame = 0;
 let lifecycleController = null;
-let lastRouterStateSignature = '';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
 })[character]);
-const numberText = (value, digits = 0) => Number.isFinite(Number(value)) ? Number(value).toFixed(digits) : '-';
-const labelText = value => String(value || '-').replaceAll('_', ' ');
 
-function closedCandles(state, timeframe = 'M15') {
-  return (Array.isArray(state?.candles?.[timeframe]) ? state.candles[timeframe] : [])
-    .filter(candle => candle?.isClosed !== false)
-    .filter(candle => [candle?.open, candle?.high, candle?.low, candle?.close]
-      .map(Number)
-      .every(Number.isFinite));
+function directionClass(value) {
+  const text = String(value || '').toUpperCase();
+  if (text.includes('BULL') || text === 'BUY' || text === 'DISCOUNT') return 'amy-d-bull';
+  if (text.includes('BEAR') || text === 'SELL' || text === 'PREMIUM') return 'amy-d-bear';
+  return 'amy-d-neutral';
+}
+
+function numberText(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number.toFixed(2) : '—';
+}
+
+function wita(value) {
+  const raw = Number(value);
+  if (!(raw > 0)) return '—';
+  const milliseconds = raw > 100_000_000_000 ? raw : raw * 1000;
+  return new Intl.DateTimeFormat('id-ID', {
+    timeZone: 'Asia/Makassar',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(new Date(milliseconds)).replace('.', ':');
+}
+
+function closedCandlePrice(result) {
+  const value = Number(result?.amySmcD?.sourceCandle?.close);
+  return Number.isFinite(value) ? value : null;
 }
 
 function closedCandleFingerprint(state, timeframe = 'M15') {
-  const candles = closedCandles(state, timeframe);
-  const latest = candles.at(-1);
-  return JSON.stringify({
-    timeframe,
-    count: candles.length,
-    time: Number(latest?.time || 0),
-    open: Number(latest?.open || 0),
-    high: Number(latest?.high || 0),
-    low: Number(latest?.low || 0),
-    close: Number(latest?.close || 0)
-  });
+  const tf = String(timeframe || 'M15').toUpperCase();
+  const candles = state?.candles?.[tf]
+    || state?.candleContext?.[tf]
+    || state?.candlesByTimeframe?.[tf]
+    || [];
+  const closed = Array.isArray(candles)
+    ? candles.filter(candle => candle && candle.isClosed !== false && candle.amyfxSyntheticCurrent !== true)
+    : [];
+  const candle = closed.at(-1);
+  if (!candle) return null;
+  return [candle.time, candle.open, candle.high, candle.low, candle.close].join(':');
 }
 
-function closedCandlePrice(result, state) {
-  const preferred = closedCandles(state, 'M15').at(-1)?.close;
-  if (Number.isFinite(Number(preferred))) return Number(preferred);
-  const activeTf = String(result?.tf || state?.tf || 'M15').toUpperCase();
-  const active = closedCandles(state, activeTf).at(-1)?.close;
-  if (Number.isFinite(Number(active))) return Number(active);
-  const fallback = Number(result?.price);
-  return Number.isFinite(fallback) ? fallback : 0;
+function eventValue(event) {
+  if (!event) return { title: 'WAIT', note: 'Tidak ada event baru pada candle sumber.' };
+  const direction = Number(event.direction) > 0 ? 'BULLISH'
+    : Number(event.direction) < 0 ? 'BEARISH'
+      : String(event.direction || 'NEUTRAL');
+  return {
+    title: `${event.kind || event.type || 'EVENT'} ${direction}`,
+    note: Number.isFinite(Number(event.level)) ? `Level ${numberText(event.level)}` : 'Closed-candle event'
+  };
 }
 
-function readRouterState() {
-  try { return JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); } catch (_) { return null; }
+function cell(label, value, note = '') {
+  return `<div class="amy-d-cell ${directionClass(value)}">${label ? `<small>${escapeHtml(label)}</small>` : ''}<strong>${escapeHtml(value || 'WAIT')}</strong>${note ? `<span>${escapeHtml(note)}</span>` : ''}</div>`;
 }
 
-function persistRouterState(nextState) {
-  const signature = JSON.stringify(nextState || null);
-  if (signature === lastRouterStateSignature) return;
-  lastRouterStateSignature = signature;
-  try { localStorage.setItem(STATE_KEY, signature); } catch (_) {}
+function installStyle() {
+  if (document.getElementById('amy-smc-d-mapping-style')) return;
+  const style = document.createElement('style');
+  style.id = 'amy-smc-d-mapping-style';
+  style.textContent = `.amy-d-card{position:relative;overflow:hidden}.amy-d-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.amy-d-head h2{margin:3px 0}.amy-d-source{font-size:10px;color:#94a3b8;text-align:right}.amy-d-badge{display:inline-flex;padding:5px 8px;border-radius:999px;background:rgba(56,189,248,.12);color:#7dd3fc;font-size:10px;font-weight:800;letter-spacing:.04em}.amy-d-section{margin-top:13px}.amy-d-section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#cbd5e1;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}.amy-d-section-title span{font-size:9px;color:#64748b;font-weight:600}.amy-d-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.amy-d-cell{padding:9px 10px;border:1px solid rgba(148,163,184,.15);border-radius:10px;background:rgba(15,23,42,.52);min-width:0}.amy-d-cell small{display:block;color:#94a3b8;font-size:9px;text-transform:uppercase;letter-spacing:.04em}.amy-d-cell strong{display:block;color:#e2e8f0;font-size:12px;margin-top:3px;overflow-wrap:anywhere}.amy-d-cell span{display:block;color:#94a3b8;font-size:9px;line-height:1.35;margin-top:3px}.amy-d-bull strong{color:#4ade80}.amy-d-bear strong{color:#fb7185}.amy-d-neutral strong{color:#fbbf24}.amy-d-note{margin-top:10px;padding:9px 10px;border-left:3px solid #38bdf8;border-radius:8px;background:rgba(14,116,144,.08);color:#cbd5e1;font-size:10px;line-height:1.5}.amy-d-actions{display:flex;gap:7px;margin-top:12px}.amy-d-actions button{flex:1}.amy-d-card[data-stale="true"] .amy-d-badge{background:rgba(245,158,11,.12);color:#fbbf24}@media(max-width:640px){.amy-d-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.amy-d-head{display:block}.amy-d-source{text-align:left;margin-top:5px}}`;
+  document.head.appendChild(style);
 }
 
-function calculateContext(result, state) {
-  const candles = closedCandles(state, 'M15');
-  if (!result || candles.length < 30) {
-    return {
-      validated: null,
-      regime: null,
-      router: null,
-      liquidity: deriveLiquidityContext({ candles })
-    };
-  }
-
-  const analysisPrice = closedCandlePrice(result, state);
-  const validated = result.validatedMarketContext?.status === READY_STATUS
-    ? result.validatedMarketContext
-    : evaluateValidatedMarketContext({
-        candles,
-        tf: 'M15',
-        htfCandles: { H4: closedCandles(state, 'H4') }
-      });
-
-  const intel = window.AmyFXIntel?.read?.() || {};
-  const regime = result.marketRegime?.status === READY_STATUS
-    ? result.marketRegime
-    : detectMarketRegimeV2({
-        candles,
-        tf: 'M15',
-        htfBiases: result.htfBiases || {},
-        marketConcepts: result.marketConcepts || null,
-        entryMap: result.entryMap || null,
-        currentPrice: analysisPrice,
-        newsRisk: window.AmyFXIntel?.newsRisk?.(intel) || 'UNKNOWN',
-        freshness: window.AmyMappingIntegrity?.qualityByInterval || {}
-      });
-
-  const router = result.strategyRouter?.activeRegime
-    ? result.strategyRouter
-    : routeRegimeStrategy({
-        candles,
-        result,
-        regime,
-        currentPrice: analysisPrice,
-        previousState: readRouterState()
-      });
-
-  persistRouterState(router?.state || null);
-  const liquidity = deriveLiquidityContext({ result, regime, candles });
-
-  result.validatedMarketContext = validated;
-  result.marketRegime = regime;
-  result.strategyRouter = router;
-  result.liquidityContextV4 = liquidity;
-  return { validated, regime, router, liquidity };
+function waitingMarkup() {
+  return `<section class="card amy-d-card" id="${CARD_ID}" data-market-intent-ready="false"><div class="amy-d-head"><div><div class="kicker">AMY-SMC-D MAPPING</div><h2>Menunggu candle tertutup</h2></div><span class="amy-d-badge">CLOSED CANDLE ONLY</span></div><p class="muted">Mapping tidak dihitung dari tick harga WebSocket.</p><div class="amy-d-actions"><button class="action" type="button" data-amy-d-refresh>Perbarui Candle</button></div></section>`;
 }
 
-function marketOverviewMarkup(validated, liquidity) {
-  const marketState = validated?.marketState || {};
-  const forecast = validated?.directionForecast || {};
-  const target = liquidity?.nearestLiquidity || null;
-  const stateKind = Number(marketState.directionValue || 0) > 0
-    ? 'stable'
-    : Number(marketState.directionValue || 0) < 0 ? 'danger' : 'warning';
-  const forecastKind = Number(forecast.directionValue || 0) > 0
-    ? 'stable'
-    : Number(forecast.directionValue || 0) < 0 ? 'danger' : 'warning';
-
-  return `<div class="market-health-title"><span>RINGKASAN MARKET</span><small>Struktur, arah, dan target terdekat</small></div>
-    <div class="router-status-strip validated-context-strip">
-      <div class="${stateKind}"><small>Kondisi Struktur</small><strong>${escapeHtml(marketState.state || 'RANGE / TRANSITION')}</strong><span>Sumber candle M15 yang sudah close</span></div>
-      <div class="${forecastKind}"><small>Proyeksi Arah</small><strong>${escapeHtml(forecast.direction || 'BELUM JELAS')}</strong><span>${forecast.active ? escapeHtml(forecast.horizonText || 'Forecast aktif') : 'Belum ada proyeksi aktif'}</span></div>
-      <div><small>Target Likuiditas</small><strong>${escapeHtml(target?.label || target?.type || 'BELUM JELAS')}</strong><span>${target ? numberText(target.level, 2) : 'Menunggu target aktif'}</span></div>
-    </div>`;
+function contextMarkup(d) {
+  const descriptive = d.descriptive;
+  const liquidityNote = descriptive.liquidity.active
+    ? `${descriptive.liquidity.side || '-'} ${numberText(descriptive.liquidity.level)}`
+    : 'Continuous context';
+  return `<div class="amy-d-section"><div class="amy-d-section-title">Context / Descriptive <span>bukan semua predictor</span></div><div class="amy-d-grid">
+    ${cell(`HTF Swing · ${descriptive.htfSwing.timeframe || '-'}`, descriptive.htfSwing.direction, descriptive.htfSwing.fresh ? 'Fresh change' : 'Continuous state')}
+    ${cell('Swing Structure', descriptive.swingStructure.direction, descriptive.swingStructure.fresh ? 'Fresh change' : 'Continuous state')}
+    ${cell('Internal Structure', descriptive.internalStructure.direction, descriptive.internalStructure.fresh ? 'Fresh change' : 'Continuous state')}
+    ${cell('Liquidity', descriptive.liquidity.direction, liquidityNote)}
+    ${cell('Dealing Range', descriptive.dealingRange.location, `${descriptive.dealingRange.source} · descriptive-only`)}
+    ${cell('Pattern', descriptive.pattern.name, descriptive.pattern.detectedOnSourceCandle ? 'Raw event baru' : 'Continuous/stale state')}
+    ${cell('Final Bias', descriptive.finalBias.direction, descriptive.finalBias.fresh ? 'Fresh bias change' : 'Continuous descriptive bias')}
+  </div></div>`;
 }
 
-function targetMarkup(title, target, emptyText) {
-  if (!target) {
-    return `<div class="liquidity-context-target empty"><small>${escapeHtml(title)}</small><strong>${escapeHtml(emptyText)}</strong><span>Belum tersedia</span></div>`;
-  }
-  return `<div class="liquidity-context-target"><small>${escapeHtml(title)}</small><strong>${escapeHtml(target.label || target.type)}</strong><span>${numberText(target.level, 2)} · ${escapeHtml(target.type)}</span></div>`;
+function freshMarkup(d) {
+  const descriptive = d.descriptive;
+  const swing = eventValue(descriptive.swingStructure.event);
+  const internal = eventValue(descriptive.internalStructure.event);
+  const sweep = eventValue(descriptive.liquidity.rawSweep);
+  return `<div class="amy-d-section"><div class="amy-d-section-title">Fresh Structural Evidence <span>candle sumber saja</span></div><div class="amy-d-grid">
+    ${cell('Swing Event', descriptive.swingStructure.fresh ? swing.title : 'STALE / CONTINUOUS', descriptive.swingStructure.fresh ? swing.note : 'Tidak diperlakukan sebagai event baru')}
+    ${cell('Internal Event', descriptive.internalStructure.fresh ? internal.title : 'STALE / CONTINUOUS', descriptive.internalStructure.fresh ? internal.note : 'Tidak diperlakukan sebagai event baru')}
+    ${cell('Raw Sweep', descriptive.liquidity.rawSweep ? sweep.title : 'WAIT', descriptive.liquidity.rawSweep ? sweep.note : 'Tidak ada raw sweep baru')}
+  </div></div>`;
 }
 
-function scenarioMarkup(result, router) {
-  const setup = result?.experimentalBestSetup || result?.unroutedBestSetup || router?.watchSetup || null;
-  if (!setup) {
-    return `<div class="router-execution wait"><small>SKENARIO PEMANTAUAN</small><strong>Belum terbentuk</strong><p>Belum ada rangkaian harga yang cukup lengkap untuk membuat skenario level.</p></div>`;
-  }
-  return `<div class="router-execution ${String(setup.dir || setup.direction || '').toLowerCase()}"><small>SKENARIO PEMANTAUAN</small><strong>${escapeHtml(setup.dir || setup.direction || 'TUNGGU')} · ${escapeHtml(setup.type || 'SWEEP → MSS')}</strong><div class="router-level-row"><span><b>Area harga</b>${numberText(setup.entry ?? setup.entryLow, 2)}</span><span><b>Batas skenario</b>${numberText(setup.sl, 2)}</span><span><b>Target awal</b>${numberText(setup.tp1, 2)}</span><span><b>Target lanjutan</b>${numberText(setup.tp2, 2)}</span></div><p>Gunakan sebagai skenario pemantauan dan tunggu konfirmasi harga sebelum mengambil keputusan.</p></div>`;
+function predictiveMarkup(d) {
+  const predictive = d.predictive;
+  const rawBreak = eventValue(predictive.rawValidBreak);
+  const qualifiedBreak = eventValue(predictive.qualifiedValidBreak);
+  const choch = eventValue(predictive.qualifiedChoch);
+  const bos = eventValue(predictive.qualifiedBos);
+  const bosNote = ['M5', 'M15', 'H1'].includes(d.tf) && !predictive.qualifiedBos
+    ? 'Baseline riset N=0; tidak dibuat synthetic BOS.'
+    : bos.note;
+  return `<div class="amy-d-section"><div class="amy-d-section-title">Predictive / Event Signals <span>Amy-SMC-D baseline</span></div><div class="amy-d-grid">
+    ${cell('', predictive.nextMove.signal)}
+    ${cell('Sweep Continuation', predictive.sweepContinuation.active ? predictive.sweepContinuation.direction : 'WAIT', 'Tidak meng-invert Raw Sweep secara sembarang')}
+    ${cell('Raw Valid Break', predictive.rawValidBreak ? rawBreak.title : 'WAIT', rawBreak.note)}
+    ${cell('Qualified Valid Break', predictive.qualifiedValidBreak ? qualifiedBreak.title : 'WAIT', qualifiedBreak.note)}
+    ${cell('Qualified CHoCH', predictive.qualifiedChoch ? choch.title : 'WAIT', choch.note)}
+    ${cell('Qualified BOS', predictive.qualifiedBos ? bos.title : 'WAIT', bosNote)}
+    ${cell('Raw Pattern', predictive.rawPattern.active ? predictive.rawPattern.name : 'WAIT', predictive.rawPattern.active ? predictive.rawPattern.direction : 'Tidak ada raw event baru')}
+    ${cell('Qualified Pattern', predictive.qualifiedPattern.active ? predictive.qualifiedPattern.name : 'WAIT', predictive.qualifiedPattern.lowSample ? 'Low sample; bukan confidence probability' : 'Baseline-qualified event')}
+  </div></div>`;
 }
 
-function waitingMarkup(tab) {
-  const dashboard = tab === 'Dashboard';
-  return `<section class="card regime-router-card waiting ${dashboard ? 'dashboard-context-card' : 'analyze-context-card'}" id="${CARD_ID}" data-market-intent-ready="false">
-    <div class="regime-preview-ribbon">AMY FX · MARKET INTELLIGENCE</div>
-    <div class="regime-header"><div><div class="kicker">KONTEKS MARKET</div><h2>Menyiapkan analisis market</h2></div><span class="regime-badge">MEMUAT</span></div>
-    <p class="muted">Memuat data struktur, arah, dan likuiditas XAU/USD dari candle yang sudah close.</p>
-    <button class="router-primary-button" type="button" data-router-action="scan">Muat Ulang Analisis M15</button>
+function marketOverviewMarkup(d) {
+  return `<div class="amy-d-section"><div class="amy-d-section-title">Ringkasan Mapping</div><div class="amy-d-grid">
+    ${cell('Final Bias', d.descriptive.finalBias.direction)}
+    ${cell('', d.predictive.nextMove.signal)}
+    ${cell('Dealing Range', d.descriptive.dealingRange.location)}
+  </div></div>`;
+}
+
+function renderDashboardCard(result) {
+  const d = result.amySmcD;
+  const stale = Boolean(result.dataStale || result.dataDegraded);
+  return `<section class="card amy-d-card dashboard-context-card" id="${CARD_ID}" data-market-intent-ready="true" data-stale="${stale}"><div class="amy-d-head"><div><div class="kicker">AMY-SMC-D · ${escapeHtml(d.tf)}</div><h2>Mapping candle tertutup</h2><span class="amy-d-badge">${stale ? 'LAST VALID CLOSED CANDLE' : 'CLOSED CANDLE'}</span></div><div class="amy-d-source">Candle sumber<br><b>${escapeHtml(wita(d.sourceCandle?.time))} WITA</b></div></div>
+    ${marketOverviewMarkup(d)}
+    <div class="amy-d-actions"><button class="action" type="button" data-amy-d-refresh>Perbarui Candle ${escapeHtml(d.tf)}</button></div>
   </section>`;
 }
 
-function renderDashboardCard(validated, liquidity) {
-  return `<section class="card regime-router-card dashboard-context-card" id="${CARD_ID}" data-market-intent-ready="true">
-    <div class="regime-preview-ribbon">AMY FX · MARKET INTELLIGENCE</div>
-    <div class="regime-header"><div><div class="kicker">RINGKASAN LIVE</div><h2>Kondisi market saat ini</h2></div><span class="regime-badge">M15 CANDLE TERTUTUP</span></div>
-    ${marketOverviewMarkup(validated, liquidity)}
-    <div class="router-actions dashboard-context-actions">
-      <button type="button" data-router-open-analyze>Lihat Analisis Lengkap</button>
-      <button type="button" data-router-action="scan">Perbarui Data</button>
-    </div>
+function renderAnalyzeCard(result) {
+  const d = result.amySmcD;
+  const stale = Boolean(result.dataStale || result.dataDegraded);
+  const execution = result.setupExecution || {};
+  return `<section class="card amy-d-card analyze-context-card" id="${CARD_ID}" data-market-intent-ready="true" data-stale="${stale}"><div class="amy-d-head"><div><div class="kicker">AMY-SMC-D · ${escapeHtml(d.tf)}</div><h2>Analisis Mapping</h2><span class="amy-d-badge">${stale ? 'LAST VALID CLOSED CANDLE' : 'CLOSED CANDLE'}</span></div><div class="amy-d-source">Candle sumber<br><b>${escapeHtml(wita(d.sourceCandle?.time))} WITA</b></div></div>
+    ${marketOverviewMarkup(d)}
+    <details class="professional-disclosure"><summary><span>Context & Fresh Evidence</span><small>Descriptive state dan event struktur baru</small></summary>${contextMarkup(d)}${freshMarkup(d)}</details>
+    <details class="professional-disclosure"><summary><span>Predictive / Event Signals</span><small>Signal baseline Amy-SMC-D</small></summary>${predictiveMarkup(d)}</details>
+    <div class="amy-d-note"><b>Rencana Eksekusi:</b> ${escapeHtml(execution.status || 'WAIT')}</div>
+    <p class="muted">Diperbarui setelah candle berikutnya ditutup.</p>
+    <div class="amy-d-actions"><button class="action" type="button" data-amy-d-refresh>Perbarui Candle ${escapeHtml(d.tf)}</button></div>
   </section>`;
 }
 
-function renderAnalyzeCard(result, validated, regime, router, liquidity) {
-  const probabilities = regime?.probabilities || {};
-  const health = regime?.health || {};
-  const shiftClass = Number(regime?.shift?.risk || 0) >= 55
-    ? 'danger'
-    : Number(regime?.shift?.risk || 0) >= 30 ? 'warning' : 'stable';
-  return `<section class="card regime-router-card analyze-context-card" id="${CARD_ID}" data-market-intent-ready="true">
-    <div class="regime-preview-ribbon">AMY FX · ANALISIS PASAR</div>
-    <div class="regime-header"><div><div class="kicker">XAU/USD · M15</div><h2>Analisis market</h2></div><span class="regime-badge">M15 CANDLE TERTUTUP</span></div>
-    ${marketOverviewMarkup(validated, liquidity)}
-    <details class="professional-disclosure">
-      <summary><span>Konteks Market Lanjutan</span><small>Karakter, stabilitas, dan risiko perubahan</small></summary>
-      <div class="regime-hero ${String(router?.activeRegime || 'transition').toLowerCase()}">
-        <div><small>KARAKTER MARKET</small><strong>${escapeHtml(labelText(router?.activeRegime || 'TRANSITION'))}</strong><p>Kondisi terdeteksi: ${escapeHtml(labelText(router?.rawRegime || regime?.regime || 'TRANSITION'))} · skor kejelasan ${numberText(regime?.confidence)}/100</p></div>
-        <div class="regime-strategy"><small>KONTEKS STRATEGI</small><strong>${escapeHtml(labelText(router?.activeStrategy || 'NO TRADE'))}</strong><span>${router?.blocked ? 'Tunggu hingga kondisi market lebih stabil.' : 'Gunakan sebagai konteks tambahan untuk membaca market.'}</span></div>
-      </div>
-      <div class="regime-probability-list">${Object.entries(probabilities).map(([name, value]) => `<div class="regime-probability ${name === router?.activeRegime ? 'active' : ''}"><div><span>${escapeHtml(labelText(name))}</span><b>${numberText(value)} / 100</b></div><i style="--regime-value:${numberText(value)}%"></i></div>`).join('')}</div>
-      <div class="market-health-grid">
-        <div class="health-metric"><small>Kekuatan Tren</small><strong>${numberText(health.trendStrength)} / 100</strong></div>
-        <div class="health-metric"><small>Stabilitas Tren</small><strong>${numberText(health.trendStability)} / 100</strong></div>
-        <div class="health-metric ${shiftClass}"><small>Risiko Transisi</small><strong>${numberText(health.transitionRisk)} / 100</strong></div>
-        <div class="health-metric"><small>Potensi Ekspansi</small><strong>${numberText(health.expansionProbability)} / 100</strong></div>
-      </div>
-    </details>
-    <details class="professional-disclosure">
-      <summary><span>Target & Skenario Harga</span><small>Level yang sedang dipantau</small></summary>
-      <div class="liquidity-context-grid">
-        ${targetMarkup('TARGET TERDEKAT', liquidity?.nearestLiquidity, 'Belum ada target')}
-        ${targetMarkup('TARGET TIMEFRAME BESAR', liquidity?.htfAlignedLiquidity, 'Arah timeframe besar belum selaras')}
-        ${targetMarkup('TARGET UTAMA', liquidity?.destinationTarget, 'Belum ada target utama')}
-      </div>
-      ${scenarioMarkup(result, router)}
-      <div class="liquidity-warning"><b>${escapeHtml(liquidity?.destination || 'KONTEKS LIKUIDITAS')}</b><span>${escapeHtml(liquidity?.warning || 'Target likuiditas tidak menentukan waktu entry.')}</span></div>
-    </details>
-    <div class="router-actions"><button type="button" data-router-action="scan">Perbarui Analisis M15</button></div>
-    <p class="router-disclaimer">Konteks hanya berubah ketika sumber candle closed-candle berubah, bukan pada setiap tick harga live.</p>
-  </section>`;
-}
-
-function renderCard(tab, result, validated, regime, router, liquidity) {
-  const ready = validated?.status === READY_STATUS
-    && regime?.status === READY_STATUS
-    && Boolean(router);
-  if (!ready) return waitingMarkup(tab);
-  return tab === 'Dashboard'
-    ? renderDashboardCard(validated, liquidity)
-    : renderAnalyzeCard(result, validated, regime, router, liquidity);
-}
-
-function disclosureStates(card) {
-  return new Map([...card.querySelectorAll('details')].map(details => [
-    String(details.querySelector(':scope > summary')?.textContent || '').trim(),
-    details.open
-  ]));
-}
-
-function restoreDisclosureStates(card, states) {
-  card.querySelectorAll('details').forEach(details => {
-    const key = String(details.querySelector(':scope > summary')?.textContent || '').trim();
-    if (states.has(key)) details.open = states.get(key);
-  });
-}
-
-function syncAttributes(current, next) {
-  [...current.attributes].forEach(attribute => {
-    if (attribute.name === 'id' || attribute.name === 'data-market-intent-bound') return;
-    if (!next.hasAttribute(attribute.name)) current.removeAttribute(attribute.name);
-  });
-  [...next.attributes].forEach(attribute => {
-    if (attribute.name === 'id') return;
-    if (current.getAttribute(attribute.name) !== attribute.value) {
-      current.setAttribute(attribute.name, attribute.value);
-    }
-  });
+function renderCard(tab, result) {
+  if (!result?.amySmcD?.ready) return waitingMarkup();
+  return tab === 'Dashboard' ? renderDashboardCard(result) : renderAnalyzeCard(result);
 }
 
 function bindCard(card) {
-  if (!card || card.dataset.marketIntentBound === 'true') return;
-  card.dataset.marketIntentBound = 'true';
+  if (!card || card.dataset.amySmcDBound === 'true') return;
+  card.dataset.amySmcDBound = 'true';
   card.addEventListener('click', event => {
-    const scan = event.target.closest?.('[data-router-action="scan"]');
-    if (scan) {
-      scan.disabled = true;
-      scan.textContent = 'Memperbarui...';
-      const operation = typeof window.runAnalysis === 'function'
-        ? window.runAnalysis('M15')
-        : Promise.resolve(false);
-      Promise.resolve(operation).finally(() => schedule(0));
-      return;
-    }
-    const openAnalyze = event.target.closest?.('[data-router-open-analyze]');
-    if (openAnalyze && typeof window.setTab === 'function') window.setTab('Analyze');
+    const button = event.target.closest?.('[data-amy-d-refresh]');
+    if (!button) return;
+    button.disabled = true;
+    const tf = window.state?.result?.tf || window.state?.tf || 'M15';
+    Promise.resolve(window.runAnalysis?.(tf)).finally(() => {
+      button.disabled = false;
+      schedule();
+    });
   });
 }
 
-function mountCard(app, markup, signature, ready) {
+function mount(markup, signature, ready) {
+  const app = document.getElementById('app');
+  if (!app) return false;
   const template = document.createElement('template');
   template.innerHTML = markup.trim();
   const next = template.content.firstElementChild;
   if (!next) return false;
-
   let current = document.getElementById(CARD_ID);
   if (current?.dataset.marketIntentReady === 'true' && !ready) {
-    const badge = current.querySelector('.regime-badge');
-    if (badge && badge.textContent !== 'MEMPERBARUI CANDLE') badge.textContent = 'MEMPERBARUI CANDLE';
+    const badge = current.querySelector('.amy-d-badge');
+    if (badge) badge.textContent = 'MEMPERBARUI CANDLE';
     return false;
   }
-
   if (!current) {
-    const validBreak = [...app.querySelectorAll('details.disclosure')].find(item =>
-      item.querySelector(':scope > summary')?.textContent?.trim().startsWith('Valid Break')
-    );
-    if (validBreak) validBreak.insertAdjacentElement('beforebegin', next);
-    else app.appendChild(next);
+    const anchor = app.querySelector('[data-stability-key="market-regime"]');
+    if (anchor) anchor.replaceWith(next);
+    else app.prepend(next);
     current = next;
-  } else if (current.dataset.marketIntentSignature !== signature) {
-    const states = disclosureStates(current);
-    syncAttributes(current, next);
+  } else if (current.dataset.amySmcDSignature !== signature) {
+    current.className = next.className;
     current.innerHTML = next.innerHTML;
-    restoreDisclosureStates(current, states);
+    current.dataset.marketIntentReady = next.dataset.marketIntentReady || 'false';
+    current.dataset.stale = next.dataset.stale || 'false';
   }
-
-  current.dataset.marketIntentSignature = signature;
-  current.dataset.marketIntentReady = String(ready);
+  current.dataset.amySmcDSignature = signature;
   bindCard(current);
   return true;
 }
 
-function renderSignature(tab, result, state, validated, regime, router, liquidity) {
+function renderSignature(result, state, tab) {
+  const d = result?.amySmcD;
   return JSON.stringify({
     tab,
-    selectedTf: state.tf,
-    activeResultTf: result?.tf || null,
     m15: closedCandleFingerprint(state, 'M15'),
-    resultSourceTime: result?.mappingSnapshot?.sourceCandleTime || 0,
-    marketState: validated?.marketState?.state || null,
-    forecast: validated?.directionForecast?.direction || null,
-    forecastStart: validated?.directionForecast?.startTime || null,
-    regime: router?.activeRegime || regime?.regime || null,
-    shiftRisk: regime?.shift?.risk || 0,
-    strategy: router?.activeStrategy || null,
-    decision: router?.decision || null,
-    setup: router?.watchSetup?.id || result?.setupExecution?.id || '',
-    executionStatus: result?.setupExecution?.status || '',
-    liquidity: liquidity?.nearestLiquidity?.level || null
+    tf: d?.tf || result?.tf || null,
+    sourceTime: d?.sourceCandle?.time || 0,
+    sourceClose: closedCandlePrice(result),
+    sourceOhlc: d?.sourceCandle ? [d.sourceCandle.open, d.sourceCandle.high, d.sourceCandle.low, d.sourceCandle.close] : null,
+    descriptive: d?.descriptive || null,
+    predictive: d?.predictive || null,
+    executionStatus: result?.setupExecution?.status || null,
+    stale: Boolean(result?.dataStale || result?.dataDegraded)
   });
 }
 
 export function syncMarketIntentV3() {
-  const app = document.getElementById('app');
+  installStyle();
   const state = window.state || {};
-  const tab = state.tab;
-  if (!app || !['Dashboard', 'Analyze'].includes(tab)) {
+  if (!['Dashboard', 'Analyze'].includes(state.tab)) {
     lastSignature = '';
     return false;
   }
-
   const result = state.result || null;
-  const { validated, regime, router, liquidity } = calculateContext(result, state);
-  const signature = renderSignature(tab, result, state, validated, regime, router, liquidity);
-  const current = document.getElementById(CARD_ID);
-  if (current && signature === lastSignature && current.dataset.marketIntentSignature === signature) return false;
-
-  const ready = validated?.status === READY_STATUS
-    && regime?.status === READY_STATUS
-    && Boolean(router);
-  const changed = mountCard(
-    app,
-    renderCard(tab, result, validated, regime, router, liquidity),
-    signature,
-    ready
-  );
+  const ready = Boolean(result?.amySmcD?.ready);
+  const signature = renderSignature(result, state, state.tab);
+  if (signature === lastSignature && document.getElementById(CARD_ID)?.dataset.amySmcDSignature === signature) return false;
+  const changed = mount(renderCard(state.tab, result), signature, ready);
   lastSignature = signature;
-
   if (changed) {
     window.dispatchEvent(new CustomEvent('amyfx:market-intent-rendered', {
-      detail: {
-        tab,
-        timeframe: 'M15',
-        sourceFingerprint: closedCandleFingerprint(state, 'M15'),
-        renderedAt: Date.now()
-      }
+      detail: { timeframe: result?.tf || state.tf, sourceCandleTime: result?.amySmcD?.sourceCandle?.time || 0 }
     }));
-    queueMicrotask(() => window.AmyFXMappingClarity?.refresh?.());
   }
   return changed;
 }
 
 function runScheduledSync() {
-  refreshTimer = 0;
   refreshFrame = 0;
   syncMarketIntentV3();
 }
 
-function schedule(delay = 0) {
-  if (refreshTimer) clearTimeout(refreshTimer);
-  if (refreshFrame) cancelAnimationFrame(refreshFrame);
-  refreshTimer = window.setTimeout(() => {
-    refreshTimer = 0;
-    if (typeof requestAnimationFrame === 'function') refreshFrame = requestAnimationFrame(runScheduledSync);
-    else runScheduledSync();
-  }, Math.max(0, Number(delay) || 0));
+function schedule() {
+  if (refreshFrame) return;
+  refreshFrame = requestAnimationFrame(runScheduledSync);
 }
 
 function stop() {
-  if (refreshTimer) clearTimeout(refreshTimer);
   if (refreshFrame) cancelAnimationFrame(refreshFrame);
-  refreshTimer = 0;
   refreshFrame = 0;
   lifecycleController?.abort();
   lifecycleController = null;
@@ -395,26 +274,21 @@ function start() {
     'amyfx:candles-updated',
     'amyfx:entry-watch-updated',
     'amyfx:execution-authority-updated'
-  ].forEach(name => window.addEventListener(name, () => schedule(0), { signal }));
+  ].forEach(name => window.addEventListener(name, schedule, { signal }));
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) schedule(0);
+    if (!document.hidden) schedule();
   }, { signal });
   window.addEventListener('pagehide', stop, { once: true, signal });
-  schedule(0);
+  schedule();
 }
 
-window.addEventListener('pageshow', event => {
-  if (event.persisted) start();
-});
-
 window.AmyFXMarketIntentUi = Object.freeze({
-  version: '4.0.0',
+  version: '5.0.0',
+  source: 'AMY_SMC_D',
   sync: syncMarketIntentV3,
   schedule,
   start,
-  stop,
-  closedCandlePrice,
-  closedCandleFingerprint
+  stop
 });
 
 if (document.readyState === 'loading') {

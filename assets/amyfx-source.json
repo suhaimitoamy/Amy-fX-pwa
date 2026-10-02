@@ -1,6 +1,6 @@
 {
-  "repository": "suhaimitoamy/Amy-fx",
-  "branch": "personal/amyfx-private",
-  "commit": "9e160f65e4e1d0211b6432029ef946f47e665b0b",
-  "strategy": "preview-parity-with-pwa-runtime-overlay"
+  "repository": "suhaimitoamy/Amy-fx-pro",
+  "branch": "main",
+  "commit": "161860069028692564bf31f141cba5bda7c2cb52",
+  "strategy": "pro-parity-with-pwa-runtime-overlay"
 }

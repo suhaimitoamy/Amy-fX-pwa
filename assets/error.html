@@ -16,8 +16,17 @@
 <body>
   <section class="card">
     <h1>Halaman gagal dimuat</h1>
-    <p>WebView tidak bisa membuka halaman lokal. Coba kembali ke dashboard utama.</p>
-    <button onclick="location.href='file:///android_asset/index.html'">Buka Dashboard</button>
+    <p>Halaman lokal tidak dapat ditemukan atau gagal dimuat. Coba kembali ke dashboard utama.</p>
+    <button onclick="handleGoHome()">Buka Dashboard</button>
   </section>
+  <script>
+    function handleGoHome() {
+      if (window.Android && typeof window.Android.goHome === 'function') {
+        window.Android.goHome();
+        return;
+      }
+      location.href = window.location.pathname.startsWith('/assets/') ? '/assets/index.html' : '/index.html';
+    }
+  </script>
 </body>
 </html>

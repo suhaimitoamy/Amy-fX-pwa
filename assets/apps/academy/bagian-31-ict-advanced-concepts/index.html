@@ -1,12 +1,860 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Bagian 31 — ICT Advanced Concepts — Tutorial Trading</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script><!-- Amy FX PWA runtime overlay -->
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Pertemuan 31 — ICT Advanced Concepts — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/glass.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+<!-- Amy FX PWA runtime overlay -->
 <script src="../../../../platform-adapter.js"></script>
 <script src="../../../../pwa-live-price-bridge.js"></script>
 <script src="../../../../member-auth.js"></script>
 <script src="../../../../pwa-bootstrap.js"></script>
 <script src="../../../../pwa-update-bridge.js"></script>
 <!-- /Amy FX PWA runtime overlay -->
-</head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
-<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-<div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a></div><div class="eyebrow">Bagian 31 — ICT Advanced Concepts</div><h1>ICT Advanced Concepts</h1><p>Pilih bab yang ingin dibaca. Setiap bab akan terbuka sebagai halaman sendiri.</p><div class="chapter-list"><a class="chapter-row" href="ipda.html"><span><strong>IPDA</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="ipda-data-ranges.html"><span><strong>IPDA Data Ranges</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="ipda-data-ranges-dan-daily-profiles.html"><span><strong>IPDA Data Ranges dan Daily Profiles</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="market-maker-x-model-mmxm.html"><span><strong>Market Maker X Model (MMXM)</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="smt-divergence-smart-money-tool.html"><span><strong>SMT Divergence (Smart Money Tool)</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="standard-deviation-projections.html"><span><strong>Standard Deviation Projections</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="balanced-price-range-bpr.html"><span><strong>Balanced Price Range (BPR)</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="breaker-blocks-dan-mitigation-blocks.html"><span><strong>Breaker Blocks dan Mitigation Blocks</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="killzones-dan-true-day-open.html"><span><strong>Killzones dan True Day Open</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="macro-times-dan-algorithmic-time.html"><span><strong>Macro Times dan Algorithmic Time</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="news-driver-model.html"><span><strong>News Driver Model</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="optimal-trade-entry-ote.html"><span><strong>Optimal Trade Entry (OTE)</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="amdx-weekly-model.html"><span><strong>AMDX Weekly Model</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="monthly-cycle-ict.html"><span><strong>Monthly Cycle ICT</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="power-of-three-weekly.html"><span><strong>Power of Three Weekly</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="quarterly-theory-ict.html"><span><strong>Quarterly Theory ICT</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a><a class="chapter-row" href="weekly-cycle-ict.html"><span><strong>Weekly Cycle ICT</strong><br><small>Bagian 31 — ICT Advanced Concepts</small></span><span>→</span></a></div><div class="quiz-container" data-module="pemula-nol"></div>
-<script src="../assets/js/quiz.js"></script>
-</section></main><footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer></body></html>
+</head>
+<body id="top">
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <div class="breadcrumb" style="margin-bottom:16px;">
+    <a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › Pertemuan 31
+  </div>
+
+  <div class="article-layout">
+    <article class="article" style="min-width:0;">
+      <div class="eyebrow" style="color:#10b981;font-weight:800;letter-spacing:1px;font-size:12px;margin-bottom:8px;">
+        SEMESTER 3 • ADVANCED • PERTEMUAN 31 (1 SKS)
+      </div>
+      <h1 style="margin-top:4px;font-size:clamp(26px, 3.5vw, 38px);">ICT Advanced Concepts</h1>
+      <p style="font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:28px;">Pilih bab yang ingin dibaca. Setiap bab akan terbuka sebagai halaman sendiri.</p>
+
+      <details class="mobile-toc-drawer" style="display:none;margin-bottom:28px;padding:14px 18px;background:var(--surface-soft,#141416);border:1px solid var(--border);border-radius:12px;">
+        <summary style="font-weight:700;cursor:pointer;color:var(--gold,#d4a832);font-size:14px;">📑 Daftar Isi Bab (17 Bab Pembahasan)</summary>
+        <ul style="list-style:none;padding:12px 0 0;margin:0;display:grid;gap:8px;">
+          <li><a href="#ipda" style="color:var(--text);font-size:13px;text-decoration:none;">1. IPDA</a></li>
+<li><a href="#ipda-data-ranges" style="color:var(--text);font-size:13px;text-decoration:none;">2. IPDA Data Ranges</a></li>
+<li><a href="#ipda-data-ranges-dan-daily-profiles" style="color:var(--text);font-size:13px;text-decoration:none;">3. IPDA Data Ranges dan Daily Profiles</a></li>
+<li><a href="#market-maker-x-model-mmxm" style="color:var(--text);font-size:13px;text-decoration:none;">4. Market Maker X Model (MMXM)</a></li>
+<li><a href="#smt-divergence-smart-money-tool" style="color:var(--text);font-size:13px;text-decoration:none;">5. SMT Divergence (Smart Money Tool)</a></li>
+<li><a href="#standard-deviation-projections" style="color:var(--text);font-size:13px;text-decoration:none;">6. Standard Deviation Projections</a></li>
+<li><a href="#balanced-price-range-bpr" style="color:var(--text);font-size:13px;text-decoration:none;">7. Balanced Price Range (BPR)</a></li>
+<li><a href="#breaker-blocks-dan-mitigation-blocks" style="color:var(--text);font-size:13px;text-decoration:none;">8. Breaker Blocks dan Mitigation Blocks</a></li>
+<li><a href="#killzones-dan-true-day-open" style="color:var(--text);font-size:13px;text-decoration:none;">9. Killzones dan True Day Open</a></li>
+<li><a href="#macro-times-dan-algorithmic-time" style="color:var(--text);font-size:13px;text-decoration:none;">10. Macro Times dan Algorithmic Time</a></li>
+<li><a href="#news-driver-model" style="color:var(--text);font-size:13px;text-decoration:none;">11. News Driver Model</a></li>
+<li><a href="#optimal-trade-entry-ote" style="color:var(--text);font-size:13px;text-decoration:none;">12. Optimal Trade Entry (OTE)</a></li>
+<li><a href="#amdx-weekly-model" style="color:var(--text);font-size:13px;text-decoration:none;">13. AMDX Weekly Model</a></li>
+<li><a href="#monthly-cycle-ict" style="color:var(--text);font-size:13px;text-decoration:none;">14. Monthly Cycle ICT</a></li>
+<li><a href="#power-of-three-weekly" style="color:var(--text);font-size:13px;text-decoration:none;">15. Power of Three Weekly</a></li>
+<li><a href="#quarterly-theory-ict" style="color:var(--text);font-size:13px;text-decoration:none;">16. Quarterly Theory ICT</a></li>
+<li><a href="#weekly-cycle-ict" style="color:var(--text);font-size:13px;text-decoration:none;">17. Weekly Cycle ICT</a></li>
+        </ul>
+      </details>
+
+      <div class="module-content">
+        
+      <section id="ipda" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 1 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">IPDA</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>IPDA (Interbank Price Delivery Algorithm)</strong> adalah otak di balik pergerakan harga. Menurut ICT, pasar tidak bergerak karena tekanan beli dan jual (buying/selling pressure) dari ritel, melainkan dikendalikan oleh algoritma kecerdasan buatan bank sentral yang sangat canggih. IPDA bertugas mengantarkan harga secara efisien, mencari likuiditas, dan menyeimbangkan ketidakseimbangan harga (imbalance).</p></p>
+</div>
+<h2>1. Apa Itu IPDA?</h2>
+<p>IPDA adalah algoritma yang mengontrol <em>price action</em> di pasar finansial (khususnya Forex, Futures, dan Indeks). Algoritma ini berjalan berdasarkan <strong>Waktu (Time)</strong> dan <strong>Harga (Price)</strong>. Harga yang kita lihat di chart bukanlah hasil dari pertarungan <em>bulls vs bears</em>, melainkan harga sedang di-"deliver" (diantarkan) ke level-level tertentu oleh IPDA.</p>
+<h2>2. Mengapa Memahami IPDA Penting?</h2>
+<p>Karena jika kamu percaya harga itu acak, kamu akan selalu stres. Jika kamu paham IPDA, kamu tahu bahwa market beroperasi di bawah aturan algoritma yang sangat presisi. Tugas IPDA hanya dua:
+1. <strong>Mencari Likuiditas (Liquidity Runs):</strong> Menembus Old High/Old Low untuk mengambil stop loss.
+2. <strong>Menyeimbangkan Harga (Rebalancing):</strong> Mengisi Fair Value Gap (FVG) atau memitigasi Order Block yang ditinggalkan sebelumnya.</p>
+<h2>3. Komponen Utama IPDA</h2>
+<p>IPDA memiliki siklus atau rentang tinjauan balik (<em>look-back periods</em>) untuk menentukan signifikansi level harga yang dikenal sebagai <strong>IPDA Data Ranges</strong>:
+- <strong>20 hari:</strong> Likuiditas jangka pendek.
+- <strong>40 hari:</strong> Likuiditas jangka menengah.
+- <strong>60 hari:</strong> Likuiditas jangka panjang.
+Algoritma selalu melihat ke belakang selama 20, 40, dan 60 hari untuk menentukan ke mana arah (DOL) harga selanjutnya.</p>
+<h2>4. Kapan Algoritma Paling Aktif (Time)?</h2>
+<p>Algoritma tidak selalu dalam mode agresif. Ada waktu-waktu khusus yang diprogram atau dijadwalkan (disebut Killzones):
+- London Open Killzone (02:00 - 05:00 AM NY time)
+- New York Open Killzone (07:00 - 10:00 AM NY time)
+- Waktu rilis berita ekonomi makro tinggi (lihat <em>News Driver Model</em>).</p>
+<h2>5. Bagaimana Identifikasi dan Implementasinya?</h2>
+<ul>
+<li><strong>Tentukan Harga:</strong> Temukan Premium &amp; Discount menggunakan rentang pergerakan saat ini. IPDA memprogram harga untuk turun ke area Discount untuk Buy, dan naik ke Premium untuk Sell.</li>
+<li><strong>Tentukan Waktu:</strong> Jangan mengambil posisi jika tidak ada jadwal "pengantaran harga" (contohnya di Dead Zone Asia atau makan siang NY).</li>
+<li>Selalu tanyakan: "Apakah IPDA sedang mencari Likuiditas atau sedang mengisi Inefisiensi (FVG)?"</li>
+</ul>
+<div class="note">
+<p><strong>Pesan Mentor</strong><br/><p><em>Time and Price</em>. IPDA tidak akan memberikan harga yang bagus jika waktunya tidak tepat. Harga di level Order Block yang sempurna tidak ada artinya jika dicapai di luar Killzone, karena algoritma belum dihidupkan untuk merespons level tersebut. Selalu sinkronkan POI (Price) dengan Killzone (Time).</p></p>
+</div>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="ipda-data-ranges" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 2 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">IPDA Data Ranges</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p>Algoritma Interbank (IPDA) tidak melihat grafik tanpa akhir; ia menggunakan periode waktu "look-back" (kilas balik) spesifik untuk menentukan di mana Likuiditas dan Inefisiensi berada. Konsep <strong>IPDA Data Ranges</strong> adalah bagaimana kita mensinkronkan kalender kita dengan kalender algoritma.</p></p>
+</div>
+<h2>Apa itu IPDA Data Range?</h2>
+<p>Data Range adalah jendela waktu spesifik ke belakang yang ditinjau oleh IPDA dari hari ini (Current Day) untuk mencari level referensi PD Array (Order Block, FVG, Liquidity Pool).
+ICT membaginya dalam rentang hari lookback utama:
+- <strong>20 Hari (20-Day Lookback):</strong> Digunakan untuk mencari inefisiensi harga (FVG) atau likuiditas jangka pendek.
+- <strong>40 Hari (40-Day Lookback):</strong> Titik rujukan jangka menengah.
+- <strong>60 Hari (60-Day Lookback):</strong> Referensi harga institusional jangka panjang yang sangat kuat (Makro).</p>
+<h2>Mengapa Lookback Period Ini Penting?</h2>
+<p>Pasar bergerak dari masa kini menuju target di masa depan dengan berpatokan pada masa lalu. Jika harga berada di kondisi Premium pada Data Range 20 hari, tetapi algoritma melihat adanya Liquidity Pool yang belum tersentuh di dasar Data Range 60 hari, pergerakan jangka panjang mungkin akan menargetkan dasar 60 hari tersebut.</p>
+<h2>Kapan &amp; Bagaimana Mengidentifikasinya?</h2>
+<ol>
+<li>Tandai hari trading saat ini.</li>
+<li>Hitung mundur sejauh 20, 40, dan 60 hari perdagangan (trading days, bukan hari kalender).</li>
+<li>Identifikasi <strong>High dan Low absolut</strong> dalam rentang waktu tersebut.</li>
+<li>Temukan PD Array yang belum termitigasi dalam rentang ini (contoh: FVG harian (Daily) 20 hari lalu).</li>
+</ol>
+<div class="note">
+<p><strong>Matriks Premium/Discount Sejati</strong><br/><p>Tarik Fibonacci dari Low terendah hingga High tertinggi dalam IPDA Data Range (20/40/60). Inilah area Premium dan Discount sejati yang sedang dimanipulasi oleh algo.</p></p>
+</div>
+<h2>Kriteria Eksekusi (Aplikasi)</h2>
+<ul>
+<li><strong>Entry:</strong> Jangan langsung Entry hanya berdasarkan lookback. Gunakan level dari Data Range (misal: Discount FVG dari 40-day lookback) sebagai <em>Higher Timeframe Point of Interest (HTF POI)</em> Anda.</li>
+<li><strong>Invalidasi (SL):</strong> Bergantung pada setup lower timeframe (LTF) ketika harga merespons level Data Range tersebut.</li>
+<li><strong>Target (DOL):</strong> Jika Anda entry dari Discount 20-hari, targetkan Equilibrium (50%) atau Premium Array dari rentang 20-hari tersebut.</li>
+</ul>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="ipda-data-ranges-dan-daily-profiles" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 3 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">IPDA Data Ranges dan Daily Profiles</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p>Untuk menangkap tren besar dan terhindar dari <em>choppy market</em> (pasar membingungkan) pada <em>timeframe</em> kecil, seorang <em>trader</em> tingkat lanjut wajib melihat kalender algoritma dari lensa sudut lebar. ICT mengenalkan dua elemen prediktif dalam <em>top-down analysis</em>: <strong>IPDA Data Ranges</strong> (Rentang Data Algoritma) dan <strong>Daily Profiles</strong> (Model Profil Harian).</p></p>
+</div>
+<h2>1. IPDA Data Ranges (Lookback Periods)</h2>
+<p>Algoritma antar bank tidak melihat chart dalam rentang 1 tahun atau 5 tahun seperti <em>swing trader</em> teknikal. Algoritma (IPDA) diprogram pada matriks <em>lookback</em> tetap. Mereka melihat kembali riwayat harga pada hitungan mundur 20 hari, 40 hari, dan 60 hari dari hari kalender saat ini (tidak termasuk akhir pekan).</p>
+<h3>Aturan 20-40-60:</h3>
+<ul>
+<li><strong>Rentang 20 Hari:</strong> Menentukan tren jangka pendek yang sangat agresif. Jika dalam siklus 20 hari terakhir pasar terus naik, maka setiap penurunan adalah rejeki mencari posisi beli (<em>Discount</em>).</li>
+<li><strong>Rentang 40 Hari:</strong> Menentukan tren jangka menengah yang mengendalikan alur narasi bulanan (<em>Institutional Narrative</em>). Ini acuan utama <em>swing trader</em>.</li>
+<li><strong>Rentang 60 Hari:</strong> Siklus makro teratas.</li>
+</ul>
+<p>Setiap kali Anda menganalisis <em>Daily Timeframe</em> (D1), hitunglah mundur 20 <em>candle</em> ke belakang dan tandai titik <em>Highest High</em> dan <em>Lowest Low</em>-nya. Algoritma saat ini hampir dipastikan tertarik secara magnetis pada salah satu sisi likuiditas dari 20 hari terakhir (tergantung dari konteks Market Maker Models (MMXM) Peta Besar Pengiriman Harga).</p>
+<h2>2. Daily Profiles (Model Profil Pembentukan Harga Harian)</h2>
+<p>Hari pergerakan harga tidak terbentuk secara acak. ICT memetakan beberapa pola profil yang berulang setiap harinya berdasar bias struktur.</p>
+<h3>Standard Trend Profile (Buy/Sell Day)</h3>
+<ul>
+<li>Jika bias dari <em>IPDA 20-day</em> adalah <strong>Bullish</strong>, maka model hari standar adalah: Harga dibuka (Midnight NY), harga turun tipis memburu stoploss awal pagi (membentuk <em>Low of the Day</em> di sesi London - Killzones dan True Day Open), lalu berekspansi memanjang naik sisa hari, dan ditutup di dekat harga tertingginya.</li>
+</ul>
+<h3>Seek and Destroy Profile</h3>
+<ul>
+<li>Ini adalah kondisi "Hari Penghancur". Profil ini sering muncul sebelum berita besar rilis (seperti NFP) atau di tengah konsolidasi HTF.</li>
+<li>Karakteristik: Harga akan naik membobol <em>Buy Side Liquidity</em>, lalu seketika berbalik turun menghancurkan <em>Sell Side Liquidity</em>, lalu naik lagi.</li>
+<li><em>Rule:</em> Jika Anda mendeteksi profil ini (harga hanya naik-turun kencang tanpa arah menembus batas), <strong>JANGAN TRADE</strong>. Profil ini diprogram algoritma untuk melikuidasi <em>trader</em> ritel dari kedua sisi, tak peduli Anda Buy atau Sell.</li>
+</ul>
+<h3>Konsolidasi Expansion (Accumulation-Manipulation-Distribution)</h3>
+<p>Model tertua dari konsep dasar ICT, yakni kerangka Power of Three. Profil ini sangat stabil untuk diperdagangkan karena memiliki ciri urutan: Range Asia sempit, manipulasi palsu di London, pengeboman arah asli di sesi New York.</p>
+<p>Dengan memadukan <em>IPDA Lookback 20-day</em> untuk menentukan arah (<em>Bias</em>), dan mencocokkan <em>Daily Profiles</em> untuk hari itu, eksekusi masuk <em>entry</em> Anda pada sesi yang tepat tak akan pernah meleset jauh dari bayangan para institusi perbankan.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="market-maker-x-model-mmxm" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 4 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Market Maker X Model (MMXM)</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>MMXM</strong> terdiri dari Market Maker Buy Model (MMBM) dan Market Maker Sell Model (MMSM). Ini adalah cetak biru sejati tentang bagaimana algoritma (IPDA) merekayasa harga. Pasar bergerak dari konsolidasi awal, manipulasi, hingga akhirnya membalikkan arah untuk kembali ke konsolidasi awal tadi (Original Consolidation).</p></p>
+</div>
+<h2>Apa itu MMXM?</h2>
+<p>Ini adalah siklus pengiriman harga lengkap yang menggambarkan bagaimana Smart Money membangun posisi. Model ini berbentuk kurva atau parabola dan dibagi menjadi dua sisi: <strong>Buy Side of the Curve (BSoC)</strong> dan <strong>Sell Side of the Curve (SSoC)</strong>.</p>
+<p>Untuk <strong>MMSM (Sell Model)</strong>:
+1. <strong>Original Consolidation:</strong> Harga berada di kisaran (range) akumulasi awal.
+2. <strong>Buy Side of the Curve:</strong> Harga perlahan naik, menciptakan serangkaian higher highs, mengundang retail untuk membeli. Sering ditandai dengan Reaccumulation.
+3. <strong>Smart Money Reversal (SMR):</strong> Harga mencapai POI HTF (Premium PD Array) dan berbalik arah. Sering disertai SMT Divergence.
+4. <strong>Sell Side of the Curve:</strong> Harga mulai turun secara agresif. FVG dan Order Block ditembus (menjadi Inversion).
+5. <strong>Draw on Liquidity (Target Utama):</strong> Harga kembali ke Original Consolidation dan mengambil likuiditas di bawahnya.</p>
+<h2>Mengapa MMXM Sangat Kuat?</h2>
+<p>Karena ia menceritakan narasi yang lengkap. Retail trader sering terjebak membeli di puncak SSoC, padahal Smart Money sedang membongkar posisi beli mereka (distribusi) untuk mulai menjual. Dengan memahami MMXM, kita tidak menebak arah, melainkan menyelaraskan diri di fase yang tepat.</p>
+<h2>Kapan &amp; Bagaimana Mengidentifikasinya?</h2>
+<p>Cari Original Consolidation di timeframe H1 atau M15. Saat harga bergerak menjauh dan mendekati Key Level HTF, bersiaplah mencari <strong>Smart Money Reversal</strong>.</p>
+<div class="note">
+<p><strong>Low Risk Entry</strong><br/><p>Jangan pernah mencoba menebak SMR. Tunggu hingga SMR terbentuk, lalu cari <strong>Low Risk Sell (LRS)</strong> di kaki pertama SSoC, setelah Market Structure Shift (MSS) terjadi.</p></p>
+</div>
+<h2>Kriteria Eksekusi (Contoh MMSM)</h2>
+<ul>
+<li><strong>Entry:</strong> Masuk pada <strong>Low Risk Sell</strong> (FVG/OB pertama yang terbentuk setelah SMR) atau pada fase Redistribusi di Sell Side of the Curve.</li>
+<li><strong>Invalidasi (SL):</strong> Di atas SMR High atau di atas struktur redistribusi terakhir.</li>
+<li><strong>Target (DOL):</strong> Secara bertahap, targetkan level likuiditas di BSoC, namun target pamungkasnya selalu berada di <strong>Original Consolidation</strong>.</li>
+</ul>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="smt-divergence-smart-money-tool" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 5 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">SMT Divergence (Smart Money Tool)</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>SMT Divergence</strong> (<em>Smart Money Tool</em>) adalah konsep analisis korelasi tingkat lanjut dari ICT yang digunakan untuk memvalidasi jebakan pergerakan <em>Smart Money</em>. SMT Divergence membantu kita memastikan apakah sebuah pergerakan harga menembus titik <em>High</em> atau <em>Low</em> itu benar-benar valid (pertanda penerusan tren) atau hanya sekadar jebakan likuiditas (Liquidity Sweep / Turtle Soup).</p></p>
+</div>
+<h2>Dasar Logika SMT</h2>
+<p>Pasar finansial bergerak secara sinkron pada aset-aset yang memiliki korelasi tinggi.
+- <strong>Korelasi Positif (Searah):</strong> Contoh paling umum adalah <strong>EURUSD</strong> dan <strong>GBPUSD</strong>, atau <strong>Nasdaq (NQ)</strong> dan <strong>S&amp;P 500 (ES)</strong>. Jika EURUSD membuat <em>Higher High</em>, secara normal GBPUSD juga harus membuat <em>Higher High</em>.
+- <strong>Korelasi Negatif (Berlawanan):</strong> Contoh paling umum adalah <strong>DXY</strong> (Indeks Dolar AS) berbanding terbalik dengan EURUSD. Jika DXY membuat <em>Higher High</em>, EURUSD normalnya membuat <em>Lower Low</em>.</p>
+<h2>Bagaimana SMT Divergence Terjadi?</h2>
+<p>!smt_divergence.svg</p>
+<p><em>SMT Divergence</em> terjadi ketika korelasi sinkron tersebut <strong>patah</strong> atau <strong>gagal</strong> terbentuk di area level likuiditas penting.</p>
+<h3>Contoh SMT Bearish (Di Area Resistance / Premium)</h3>
+<p>Misalkan EURUSD dan GBPUSD sama-sama sedang naik mendekati level <em>Resistance</em> kuat atau area <em>Buy Side Liquidity</em>.
+1. EURUSD berhasil menembus puncak sebelumnya dan mencetak <strong>Higher High (HH)</strong>.
+2. Namun di saat yang sama, GBPUSD terlihat tertahan, melemah, dan gagal menembus puncaknya sendiri, sehingga hanya mencetak <strong>Lower High (LH)</strong>.</p>
+<p>Ketidakmampuan GBPUSD untuk mengikuti jejak EURUSD ini adalah <em>SMT Divergence</em>. Ini menandakan bahwa pergerakan naik (Higher High) pada EURUSD kemungkinan besar <strong>palsu</strong> dan hanya sekadar manuver pencarian likuiditas (<em>Liquidity Grab</em>). <em>Smart Money</em> sedang melakukan distribusi (menjual) secara diam-diam. Setelah SMT ini terkonfirmasi, kita akan mencari konfirmasi Market Structure Shift (MSS) ke arah bawah untuk melakukan <em>entry Sell</em>.</p>
+<h3>Contoh SMT Bullish (Di Area Support / Discount)</h3>
+<p>Misalkan NQ (Nasdaq) dan ES (S&amp;P 500) sama-sama sedang turun tajam mendekati area <em>Sell Side Liquidity</em>.
+1. NQ menembus lembah sebelumnya dan mencetak <strong>Lower Low (LL)</strong>.
+2. Di waktu yang bersamaan, ES tertahan dan gagal menembus lembah sebelumnya, mencetak <strong>Higher Low (HL)</strong>.</p>
+<p>Ini adalah <em>SMT Divergence Bullish</em>. Penurunan pada NQ kemungkinan hanyalah jebakan <em>Stop Hunt</em>. <em>Smart Money</em> sebenarnya sedang melakukan akumulasi pembelian. Kita akan bersiap mencari konfirmasi Market Structure Shift ke arah atas untuk melakukan <em>entry Buy</em>.</p>
+<h2>Mengapa SMT Sangat Penting?</h2>
+<p>Sebagai <em>trader</em>, kita sering kebingungan membedakan apakah sebuah <em>breakout</em> itu asli (BOS) atau palsu (Sweep). Dengan mengamati SMT Divergence pada aset berkorelasi, kita seolah mendapatkan "sinyal bocoran" dari balik layar bahwa institusi sedang mendistribusikan pesanan di arah sebaliknya.</p>
+<p>SMT adalah <em>filter</em> tambahan yang sangat mematikan. Ketika digabungkan dengan Order Block atau Fair Value Gap (FVG) yang berkualitas tinggi, tingkat <em>win rate</em> Anda dapat meningkat drastis.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="standard-deviation-projections" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 6 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Standard Deviation Projections</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p>Proyeksi Standar Deviasi adalah cara matematis rahasia ICT untuk menemukan sejauh mana harga akan bergerak setelah sebuah periode manipulasi atau konsolidasi selesai. Ini adalah alat pamungkas untuk menentukan "Kapan pergerakan tren ini akan berakhir?".</p></p>
+</div>
+<h2>Apa itu Standard Deviation Projections?</h2>
+<p>Ini adalah metode menggunakan Fibonacci Extension untuk memproyeksikan target pergerakan harga. Alih-alih menebak di mana harga berhenti, kita mengukur ukuran spesifik dari "fase manipulasi" dan melipatgandakannya menggunakan koefisien standar deviasi (-1, -1.5, -2, -2.5, -3, hingga maksimal biasanya -4).</p>
+<h2>Mengapa Alat Ini Digunakan?</h2>
+<p>Algoritma IPDA memindahkan harga secara simetris. Jarak harga dimanipulasi keluar dari range konsolidasi sering kali sama dengan blok-blok (kelipatan) ekspansi yang akan datang. Alat ini memberikan kita titik keluar (Take Profit) presisi-tinggi sebelum pasar tiba di sana.</p>
+<h2>Kapan &amp; Bagaimana Mengidentifikasinya?</h2>
+<p>Proyeksi ini digunakan ketika kita memiliki dua hal:
+1. <strong>Central Bank Dealers Range (CBDR) / Asian Range</strong> atau <strong>Accumulation/Consolidation</strong> apa pun yang rapi.
+2. <strong>Manipulation Phase / Judas Swing:</strong> Harga menembus rentang konsolidasi ke satu arah (untuk memicu SL/breakout trader), lalu berbalik arah sepenuhnya.</p>
+<p><strong>Langkah Menarik Fibonacci:</strong>
+- Temukan Swing High dan Swing Low dari <strong>fase manipulasi (Judas Swing)</strong> atau rentang konsolidasi terakhir.
+- Tarik Fibonacci dari Swing Low ke Swing High (jika antisipasi harga akan turun / Bearish) atau dari Swing High ke Swing Low (jika antisipasi harga akan naik / Bullish).
+- Setel level Fibonacci Anda pada:
+  - <code>-1.0</code> (Standar Deviasi ke-1)
+  - <code>-1.5</code>
+  - <code>-2.0</code> (Standar Deviasi ke-2)
+  - <code>-2.5</code> (Target yang paling umum dicapai)
+  - <code>-4.0</code> (Pergerakan ekstrem/maksimal)</p>
+<div class="note">
+<p><strong>Konfluensi Presisi</strong><br/><p>Proyeksi Standard Deviation tidak berdiri sendiri. Level -2.0 atau -2.5 yang <em>bertepatan</em> dengan HTF Liquidity Pool atau HTF FVG adalah magnet sejati. Itulah Draw on Liquidity probabilitas tinggi!</p></p>
+</div>
+<h2>Kriteria Eksekusi</h2>
+<ul>
+<li><strong>Entry:</strong> Masuk menggunakan model biasa (MSS + FVG di dalam kisaran harga setelah manipulasi selesai).</li>
+<li><strong>Invalidasi (SL):</strong> Di ujung titik manipulasi ekstrem (swing High/Low dari Judas Swing).</li>
+<li><strong>Target (DOL):</strong></li>
+<li>TP 1 (Parsial): Level -1.0 hingga -1.5.</li>
+<li>TP Utama: Level -2.0 hingga -2.5.</li>
+<li>Jika ini hari tren besar (Trending Day), pegang sisa posisi hingga level -4.0.</li>
+</ul>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="balanced-price-range-bpr" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 7 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Balanced Price Range (BPR)</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>Balanced Price Range (BPR)</strong> atau Rentang Harga Seimbang adalah konsep penyempurnaan dari Fair Value Gap (FVG) yang sangat mematikan. Sementara FVG adalah jejak kaki ketidakseimbangan harga yang ditinggalkan oleh satu pihak (misal: <em>Buy Side Imbalance</em>), BPR adalah bukti terjadinya pertempuran brutal dua sisi yang berakhir dengan dominasi absolut secara instan.</p></p>
+</div>
+<p>BPR adalah salah satu dari sedikit <em>PD Array</em> tingkat atas dalam ekosistem <em>Inner Circle Trader (ICT)</em> yang jarang dipahami oleh trader amatir.</p>
+<h2>Anatomi Terjadinya BPR</h2>
+<p>BPR terjadi saat dua buah FVG yang berbeda arah tercipta secara beruntun dan saling menumpuk satu sama lain pada area harga yang persis sama.</p>
+<p>Langkah penciptaannya (Contoh BPR Bearish):
+1. Algoritma menciptakan sebuah lilin/candle agresif ke atas (Lilin Bullish besar), yang meninggalkan sebuah celah <strong>FVG Bullish</strong>.
+2. Normalnya, saat harga kembali ke FVG Bullish ini, ia akan memantul naik. Ini adalah ekspektasi <em>trader</em>.
+3. Namun tepat sesaat setelah penciptaannya, atau tak lama kemudian, harga tiba-tiba dihancurkan ke bawah dengan sebuah <em>candle</em> merah raksasa (Lilin Bearish agresif) yang <strong>menembus dan menghancurkan seluruh area FVG Bullish</strong> tadi.
+4. Parahnya, penurunan tersebut begitu cepat sehingga ia sendiri meninggalkan celah kosong di tempat jatuhnya, yakni sebuah <strong>FVG Bearish</strong>.
+5. Di area perpotongan <em>overlap</em> yang spesifik tempat berdirinya bekas FVG Bullish dan FVG Bearish yang baru, harga kini telah diantar ke atas dengan cepat, lalu dibanting ke bawah dengan cepat pula. Area spesifik yang tumpang tindih ini dinamakan <strong>Balanced Price Range (BPR)</strong>.</p>
+<h2>Psikologi di Balik BPR</h2>
+<p>Ketika harga menari agresif ke atas dan ke bawah meninggalkan dua celah, algoritma IPDA telah <strong>menyeimbangkan</strong> zona tersebut dari kedua sisi. Tidak ada lagi kepentingan algoritma untuk kembali berlama-lama di dalam zona tersebut.</p>
+<p>Akibatnya, BPR menjadi seperti tembok beton.</p>
+<h2>Cara Entry Menggunakan BPR</h2>
+<ul>
+<li>BPR sangat sering berfungsi sebagai titik penolakan tajam (<em>sharp rejection</em>).</li>
+<li>Ketika harga perlahan-lahan mencoba kembali naik ke area BPR Bearish yang tercipta, harga seringkali tidak akan menembus ke tengah-tengahnya apalagi menutupnya secara penuh (seperti sifat FVG biasa).</li>
+<li>Harga akan menyentuh <strong>ambang batas (ujung) area perpotongan</strong> dari BPR tersebut, dan langsung bereaksi agresif menolak ke bawah seketika (sering meninggalkan <em>wick/ekor</em> panjang).</li>
+</ul>
+<h2>Kekuatan Ekstrem BPR</h2>
+<p>BPR memiliki hierarki respek yang jauh lebih tinggi dibandingkan FVG standar. Jika Anda melihat sebuah FVG biasa, harga mungkin akan menembusnya separuh jalan (zona <em>consequent encroachment</em> / 50%) sebelum berbalik. Namun jika area itu adalah sebuah BPR, penolakannya bisa terjadi hanya dengan sentuhan satu <em>tick</em> harga pada garis awalnya saja.</p>
+<p>BPR adalah pertanda nyata pergeseran besar narasi institusional (<em>Institutional Narrative Shift</em>).</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="breaker-blocks-dan-mitigation-blocks" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 8 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Breaker Blocks dan Mitigation Blocks</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p>Dalam konsep SMC dasar, kita diajarkan bahwa Order Block (OB) adalah benteng pertahanan yang kuat. Harga akan memantul ketika kembali ke area tersebut. Namun, bagaimana jika benteng tersebut hancur? Bagaimana jika sebuah OB yang sangat jelas justru ditembus (<em>break</em>) dengan telak oleh harga?</p></p>
+</div>
+<p>Bagi <em>trader</em> ritel pemula, ini disebut <em>Stop Out</em> (kerugian). Namun dalam konsep ICT tingkat lanjut, <strong>sebuah Order Block yang gagal adalah pintu masuk baru</strong>. Konsep inilah yang melahirkan <em>Breaker Blocks</em> dan <em>Mitigation Blocks</em>.</p>
+<h2>1. Breaker Block (BRK)</h2>
+<p>!breaker_block.svg</p>
+<p>Sebuah <em>Breaker Block</em> adalah Order Block yang gagal menahan harga, di mana kegagalan tersebut sekaligus menciptakan sebuah <em>Market Structure Shift</em> (MSS) dengan terlebih dahulu menyapu likuiditas (Liquidity Sweep).</p>
+<h3>Anatomi Bullish Breaker:</h3>
+<ol>
+<li>Harga bergerak naik membentuk sebuah puncak baru (<em>High</em>), lalu turun. Penurunan ini adalah tempat di mana <em>Bullish Order Block</em> klasik terbentuk.</li>
+<li>Harga mencoba naik lagi tapi tertahan, lalu tiba-tiba turun tajam menembus lembah terendah sebelumnya (<strong>Lower Low</strong>), menyapu likuiditas (<em>Sell Side Liquidity Grab</em>).</li>
+<li>Setelah menyapu likuiditas di bawah, harga berbalik arah dan <strong>naik secara agresif dengan momentum yang kuat</strong>, menembus puncak tertinggi sebelumnya (menciptakan Market Structure Shift ke arah atas).</li>
+<li>Penembusan ke atas ini secara otomatis <strong>menghancurkan Bearish Order Block terakhir</strong> yang berada di puncak (yang awalnya bertanggung jawab atas penurunan tadi).</li>
+<li><strong>Bearish Order Block yang hancur inilah yang kini berubah wujud menjadi Bullish Breaker Block.</strong></li>
+<li>Ketika harga kembali turun (<em>pullback</em>) menguji balok yang hancur ini, balok tersebut kini berfungsi sebagai pijakan <em>support</em> yang sangat kuat untuk <em>Buy</em>.</li>
+</ol>
+<p>Kunci utama sebuah Breaker Block adalah <strong>harus ada penyapuan likuiditas (Sweep) sebelum struktur pasar berubah.</strong></p>
+<h2>2. Mitigation Block (MB)</h2>
+<p><em>Mitigation Block</em> memiliki konsep yang hampir identik dengan <em>Breaker Block</em>, tetapi dengan satu perbedaan fundamental yang sangat penting: <strong>Tidak ada penyapuan likuiditas (Sweep) pada puncak/lembah sebelumnya.</strong></p>
+<h3>Anatomi Bullish Mitigation:</h3>
+<ol>
+<li>Harga membentuk sebuah puncak (<em>High</em>).</li>
+<li>Harga turun membentuk lembah (<em>Low</em>).</li>
+<li>Harga mencoba naik lagi, namun gagal menembus puncak sebelumnya, sehingga hanya menciptakan <strong>Lower High</strong> (<em>Failure Swing</em>).</li>
+<li>Harga kemudian turun dan menembus lembah sebelumnya, menyebabkan Bearish MSS (perubahan struktur ke bawah).</li>
+<li>Bullish Order Block terakhir di area lembah yang ditembus tadi kini menjadi <strong>Mitigation Block</strong>.</li>
+<li>Ketika harga kembali naik menyentuh area yang ditembus ini, <em>Smart Money</em> akan melakukan "Mitigasi" (menutup posisi <em>Buy</em> lama mereka yang terjebak dalam kondisi rugi menjadi <em>Break Even</em>), dan harga akan memantul kembali ke bawah (Peluang <em>Sell</em>).</li>
+</ol>
+<h2>Perbedaan Utama dan Hierarki Kekuatan</h2>
+<ul>
+<li><strong>Breaker Block (BRK)</strong> adalah hasil dari <em>Stop Hunt</em> / Manipulasi. Karena <em>Smart Money</em> baru saja menjebak banyak orang dan mengumpulkan banyak pesanan dari <em>Liquidity Sweep</em>, dorongan setelahnya akan sangat agresif. Oleh karena itu, <strong>Breaker Block adalah PD Array probabilitas tinggi.</strong></li>
+<li><strong>Mitigation Block (MB)</strong> terjadi saat pasar kehabisan tenaga (<em>Failure Swing</em>) dan tidak berhasil mengambil likuiditas eksternal. Karena tidak ada bahan bakar dari jebakan, level ini secara probabilitas <strong>lebih lemah dibandingkan Breaker Block</strong>.</li>
+</ul>
+<p><em>Pro Tip:</em>
+Sebuah Breaker Block akan menjadi setup level <em>A+</em> (Sangat Akurat) jika ia bertepatan lokasinya dengan area Fair Value Gap (FVG). Penyatuan antara Breaker dan FVG di zona harga yang sama sering disebut oleh ICT sebagai <strong>Unicorn Setup</strong>.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="killzones-dan-true-day-open" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 9 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Killzones dan True Day Open</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p>Algoritma pergerakan harga (<em>Interbank Price Delivery Algorithm</em> / IPDA) tidak berjalan secara acak sepanjang waktu. Dalam konsep ICT, waktu dan harga (<em>Time &amp; Price</em>) adalah raja, namun <strong>Waktu selalu mendahului Harga</strong>. Sebagus apa pun setup Order Block atau Fair Value Gap yang Anda temukan, jika itu terjadi di zona waktu yang salah, probabilitasnya akan sangat rendah.</p></p>
+</div>
+<p>Di sinilah konsep <strong>Killzones</strong> dan <strong>True Day Open</strong> bermain. Konsep ini membagi waktu dalam sehari ke dalam jendela-jendela operasi spesifik tempat institusi menyuntikkan volume besar.</p>
+<h2>True Day Open (Harga Buka Harian)</h2>
+<p>Meskipun sesi harian Forex secara teknikal dihitung berdasarkan waktu Sydney/Wellington, ICT memiliki dua garis waktu "Open" yang menjadi tolok ukur utama (berpatokan pada Waktu New York / EST):</p>
+<ol>
+<li><strong>Midnight New York Open (00:00 EST / 12:00 WITA)</strong>
+   Harga pada tepat tengah malam waktu NY adalah harga keseimbangan harian sejati.</li>
+<li>Jika bias harian Anda adalah <strong>Bullish</strong>, Anda HANYA ingin mencari posisi <strong>Buy di bawah harga Midnight Open</strong> (zona <em>Discount</em>).</li>
+<li>
+<p>Jika bias harian Anda adalah <strong>Bearish</strong>, Anda HANYA ingin mencari posisi <strong>Sell di atas harga Midnight Open</strong> (zona <em>Premium</em>).</p>
+</li>
+<li>
+<p><strong>8:30 AM EST Open (20:30 WITA)</strong>
+   Waktu ini sangat sakral karena bertepatan dengan rilis sebagian besar berita ekonomi penting AS (NFP, CPI, PPI). Seringkali, manipulasi pembukaan sesi New York (Judas Swing) diukur dari garis 8:30 AM EST ini.</p>
+</li>
+</ol>
+<h2>ICT Killzones</h2>
+<p><em>Killzones</em> adalah jendela waktu volatilitas tinggi tempat <em>Smart Money</em> mengeksekusi volume. Setup yang muncul di dalam jendela ini adalah setup probabilitas tinggi. (<em>Semua waktu dalam EST / Waktu New York</em>).</p>
+<h3>1. Asian Range (20:00 - 00:00 EST)</h3>
+<ul>
+<li><strong>Karakteristik:</strong> Pergerakan harga cenderung lambat dan <em>sideways</em> (konsolidasi).</li>
+<li><strong>Fungsi:</strong> Sesuai dengan konsep Power of Three, sesi Asia adalah tahap <strong>Akumulasi</strong>. <em>Smart Money</em> sedang mengumpulkan pesanan. Area puncak dan lembah dari <em>Asian Range</em> menjadi target likuiditas (Asian High &amp; Asian Low) yang akan disapu di sesi berikutnya.</li>
+</ul>
+<h3>2. London Killzone (02:00 - 05:00 EST)</h3>
+<ul>
+<li><strong>Karakteristik:</strong> Sesi paling volatil pertama dalam sehari, sering menjadi pencipta titik tertinggi (<em>High of the Day</em>) atau titik terendah harian (<em>Low of the Day</em>).</li>
+<li><strong>Fungsi:</strong> Dalam struktur Power of Three, sesi London sering bertindak sebagai tahap <strong>Manipulasi</strong> (<em>Judas Swing</em>). Misalnya, harga akan bergerak turun secara agresif menyapu <em>Asian Low</em>, sebelum akhirnya berbalik arah (<em>reversal</em>) membentuk tren naik (tahap <em>Distribusi</em>) yang sebenarnya untuk sisa hari itu.</li>
+</ul>
+<h3>3. New York Killzone (07:00 - 10:00 EST)</h3>
+<ul>
+<li><strong>Karakteristik:</strong> Sesi masuknya institusi Amerika dan dirilisnya berita major.</li>
+<li><strong>Fungsi:</strong> NY Killzone bisa bertindak sebagai penerus tren dari London (Ekspansi kelanjutan), atau bisa menjadi pembalikan arah total (<em>New York Reversal</em>) jika London telah mencapai target likuiditas HTF (<em>Higher Time Frame</em>).</li>
+</ul>
+<h3>4. London Close Killzone (10:00 - 12:00 EST)</h3>
+<ul>
+<li><strong>Karakteristik:</strong> Menjelang penutupan sesi London di siang hari NY.</li>
+<li><strong>Fungsi:</strong> Sering memberikan <em>setup reversal</em> kecil untuk mengambil <em>Take Profit</em> sebagian dari tren pagi, di mana harga akan bergerak retracement melawan tren utama hari itu.</li>
+</ul>
+<h2>Menggabungkan Waktu dan Harga</h2>
+<p>Selalu tanyakan pada diri Anda sebelum masuk ke pasar:
+- <em>"Apakah kita sedang berada di dalam Killzone?"</em>
+- <em>"Di manakah posisi harga saat ini terhadap Midnight Open? Apakah saya membeli di area Premium (terlalu mahal) atau menjual di area Discount (terlalu murah)?"</em></p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="macro-times-dan-algorithmic-time" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 10 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Macro Times dan Algorithmic Time</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p>Meskipun kita sudah memahami sesi utama menggunakan Killzones dan True Day Open, pergerakan algoritma institusional (<em>Interbank Price Delivery Algorithm</em> / IPDA) sebetulnya berjalan pada tingkat presisi yang jauh lebih mikroskopis. Salah satu rahasia paling mematikan dari kalender harian <em>Smart Money</em> adalah konsep <strong>Macro Times</strong>.</p></p>
+</div>
+<h2>Apa Itu Macro?</h2>
+<p><em>Macro</em> adalah jendela waktu yang sangat spesifik dan berulang (biasanya berdurasi 20 menit) setiap hari. Dalam rentang waktu 20 menit ini, IPDA diprogram secara sistematis untuk menjalankan tugas utamanya:
+1. Mencari likuiditas (memburu <em>Stop Loss</em> / Liquidity Sweep).
+2. Menyeimbangkan ketidakefisienan harga (bergerak menutup Fair Value Gap / BPR).</p>
+<p>Selama jendela Macro ini berlangsung, pergerakan harga sering bertentangan dengan gravitasi normal, bergerak tajam dan tak masuk akal dengan tujuan murni menyapu area target yang belum terselesaikan.</p>
+<h2>Daftar Waktu Macro Utama ICT</h2>
+<p><em>(Semua dalam Waktu New York / EST)</em></p>
+<p>Setiap sesi besar memiliki jendela eksekusi algoritmiknya sendiri:</p>
+<ol>
+<li><strong>London Macro (Pagi Buta NY)</strong></li>
+<li>02:33 - 03:00 EST</li>
+<li>
+<p>04:00 - 04:30 EST</p>
+</li>
+<li>
+<p><strong>New York AM Macros (Paling Populer)</strong></p>
+</li>
+<li><strong>08:50 - 09:10 EST</strong> (Macro persiapan setelah Open Equities)</li>
+<li><strong>09:50 - 10:10 EST</strong> (Sering dijuluki Silver Bullet Macro - Momen terbaik untuk mencari entri)</li>
+<li>
+<p><strong>10:50 - 11:10 EST</strong> (Macro menjelang tutup sesi pagi Eropa)</p>
+</li>
+<li>
+<p><strong>New York PM Macros (Sesi Siang/Sore)</strong></p>
+</li>
+<li><strong>13:10 - 13:40 EST</strong></li>
+<li><strong>15:15 - 15:45 EST</strong> (Macro penutupan pasar, sering terjadi lonjakan gila di indeks saham)</li>
+</ol>
+<h2>Cara Menggunakan Macros dalam Trading</h2>
+<ol>
+<li><strong>Antisipasi, Bukan Reaksi Spontan:</strong> Jangan mulai menganalisis chart persis di detik Macro dimulai. Anda harus sudah melakukan top-down analysis, menandai <em>Draw on Liquidity</em> (DOL) atau sasaran harga terdekat SEBELUM jam 09:50 EST.</li>
+<li><strong>Katalis Pergerakan:</strong> Jika harga sedang bergerak lambat (<em>consolidation</em>) pada jam 09:30 EST, ketahuilah bahwa saat jam menyentuh 09:50 EST, algoritma akan "dibangunkan" dan langsung menembak ke area likuiditas (membuat Market Structure Shift palsu).</li>
+<li><strong>Konfirmasi Entry:</strong> <em>Trader</em> profesional ICT biasanya akan menunggu sebuah FVG tercipta <em>tepat di dalam rentang</em> Macro (misal di jam 09:55), lalu melakukan <em>entry</em> saat harga masuk ke area tersebut, karena mereka sadar algoritma sedang aktif merekam jejak.</li>
+</ol>
+<p>Menguasai waktu adalah langkah pertama menundukkan harga. Jika sebuah setup teknikal cantik terbentuk di jam 11:45 EST, abaikan. Itu algoritma jebakan. Tapi jika setup identik terbentuk di jam 09:55 EST, itu adalah algoritma distribusi. Waktu adalah raja.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="news-driver-model" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 11 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">News Driver Model</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p>Di dalam konsep ICT, <strong>News Driver Model</strong> mengajarkan bahwa berita berdampak tinggi (High Impact News seperti NFP, CPI, FOMC) bukanlah penyebab acak yang menggerakkan market tanpa arah. Berita hanyalah katalis atau "alasan" bagi Smart Money untuk menyuntikkan volatilitas dan memindahkan harga ke level likuiditas yang sudah ditentukan sebelumnya oleh algoritma (IPDA).</p></p>
+</div>
+<h2>1. Apa Itu News Driver Model?</h2>
+<p>News Driver Model adalah pemahaman bahwa rilis berita ekonomi digunakan untuk memberikan <strong>volatilitas instan</strong> agar harga bisa segera mencapai target (Draw on Liquidity/DOL). Seringkali, sebelum berita dirilis, harga akan dikonsolidasikan. Saat berita keluar, harga akan melakukan pergerakan agresif untuk menyapu likuiditas ritel (stop loss), lalu berbalik arah ke target sebenarnya.</p>
+<h2>2. Mengapa Ini Terjadi?</h2>
+<p>Market butuh likuiditas untuk mengeksekusi pesanan besar (Smart Money). Rilis berita menarik partisipasi ritel secara masif. Ritel biasanya menempatkan Buy Stop/Sell Stop breakout, atau mencoba menebak arah. Smart Money menggunakan momentum ini untuk menjebak ritel dan mendapatkan harga terbaik.</p>
+<h2>3. Kapan Harus Mengantisipasi?</h2>
+<ul>
+<li>Perhatikan kalender ekonomi (Forex Factory dll). Fokus pada kalender <strong>Folder Merah</strong> (High Impact).</li>
+<li>Biasanya terjadi pada zona waktu <strong>New York Session</strong> (08:30 AM atau 10:00 AM NY time).</li>
+<li>Saat rilis suku bunga (FOMC) pada jam 14:00 NY time.</li>
+</ul>
+<h2>4. Bagaimana Cara Identifikasinya (Set-Up)?</h2>
+<ol>
+<li><strong>Identifikasi POI dan Likuiditas:</strong> Sebelum berita, tandai Buy Side Liquidity (BSL) dan Sell Side Liquidity (SSL), serta POI (Order Block, FVG) di Timeframe lebih tinggi (HTF).</li>
+<li><strong>Tunggu Rilis Berita:</strong> Jangan entry <em>sebelum</em> berita keluar. Biarkan volatilitas awal terjadi (biasanya manipulasi).</li>
+<li><strong>Lihat Reaksi pada Level Kunci:</strong> Apakah rilis berita mendorong harga untuk menembus BSL/SSL secara agresif namun gagal tutup di atas/bawahnya (hanya wick / sumbu)?</li>
+<li><strong>Market Structure Shift (MSS):</strong> Setelah manipulasi (Turtle Soup), tunggu harga berbalik arah dan mematahkan struktur berlawanan di Timeframe lebih rendah (LTF).</li>
+</ol>
+<h2>5. Kriteria Entry, Invalidasi (SL), dan Target (DOL)</h2>
+<ul>
+<li><strong>Entry:</strong> Masuk pada <strong>Fair Value Gap (FVG)</strong> atau <strong>Breaker Block</strong> yang tercipta saat harga berbalik setelah menyapu likuiditas lewat rilis berita.</li>
+<li><strong>Invalidasi (SL):</strong> Stop loss diletakkan tepat di atas/bawah swing high/low yang dibentuk <em>saat</em> rilis berita (titik manipulasi ekstrem).</li>
+<li><strong>Target (DOL):</strong> Opposing Liquidity. Jika harga baru saja menyapu BSL (manipulasi atas), maka targetkan SSL di bawah (seperti swing low harian/mingguan).</li>
+</ul>
+<div class="note">
+<p><strong>Pesan Mentor</strong><br/><p>Jangan pernah trading dengan cara menebak arah sebelum berita rilis ("judi berita"). Profesional sejati membiarkan rilis berita melakukan tugas kotornya (sapu stop loss ritel), lalu kita masuk saat debu mulai mereda dan arah algoritma sebenarnya sudah terlihat.</p></p>
+</div>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="optimal-trade-entry-ote" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 12 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Optimal Trade Entry (OTE)</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>Optimal Trade Entry (OTE)</strong> adalah salah satu pola <em>entry</em> tertua, paling murni, dan paling sering dibahas oleh pencipta ICT. Di saat <em>trader</em> ritel menggunakan alat Fibonacci Retracement secara acak untuk memprediksi pantulan harga, ICT menspesifikasikan zona emas tertentu yang disebut OTE, di mana institusi <em>Smart Money</em> selalu menempatkan pesanan limit mereka secara mekanis.</p></p>
+</div>
+<h2>Rentang Fibonacci OTE</h2>
+<p>Dalam penggunaan OTE, Anda harus menarik Fibonacci Retracement dari ayunan terendah (<em>Swing Low</em>) ke ayunan tertinggi (<em>Swing High</em>) untuk tren Bullish, atau sebaliknya dari <em>Swing High</em> ke <em>Swing Low</em> untuk tren Bearish.</p>
+<p>Level kunci yang digunakan dalam matriks OTE ICT adalah:
+1. <strong>0.00</strong> (Target Akhir - <em>Take Profit</em> 1)
+2. <strong>0.50</strong> (<em>Equilibrium</em> / Titik Keseimbangan Keadilan Harga)
+3. <strong>0.62 (62%)</strong> - <em>Discount Level</em>
+4. <strong>0.705 (70.5%)</strong> - <strong>Titik Inti OTE (Sweet Spot)</strong>
+5. <strong>0.79 (79%)</strong> - <em>Deep Discount Level</em>
+6. <strong>1.00</strong> (Level Invalidation / <em>Stop Loss</em>)</p>
+<p>Zona yang terbentang antara <strong>62% hingga 79%</strong> adalah Zona OTE. Sedangkan angka <strong>70.5%</strong> adalah titik akurasi tertingginya.</p>
+<h2>Aturan Emas OTE</h2>
+<ul>
+<li><strong>Aturan Paruh Waktu:</strong> Anda sama sekali DILARANG melakukan <em>buy</em> jika harga belum turun melewati level <strong>0.50 (Equilibrium)</strong> ke arah bawah. Begitu juga, jangan melakukan <em>sell</em> jika harga belum naik melewati 0.50 ke arah atas.</li>
+<li><em>Smart Money</em> hanya membeli barang saat sedang diskon (<em>Discount Market</em> &lt; 0.50) dan hanya menjual saat harga terlalu mahal (<em>Premium Market</em> &gt; 0.50).</li>
+</ul>
+<h2>Konfirmasi Entry OTE</h2>
+<p>Meskipun harga memasuki zona Fibonacci 62% - 79%, Anda tidak disarankan menaruh pending order (<em>Buy Limit</em> / <em>Sell Limit</em>) secara membabi buta. OTE adalah sebuah <strong>Area of Interest (POI)</strong>.</p>
+<p>Untuk mengubahnya menjadi setup <em>A+</em> (<em>high probability</em>), sebuah zona OTE harus memiliki pertemuan (<em>confluence</em>) dengan setidaknya satu, atau lebih baik dua, <em>PD Arrays</em> di dalam zona 62%-79% tersebut:
+- Sebuah Order Block yang belum dimitigasi.
+- Sebuah Fair Value Gap (FVG) yang masih terbuka (sering disebut <em>OTE to FVG</em>).
+- Sebuah level Breaker Blocks dan Mitigation Blocks (Sangat kuat jika terbentuk sebagai Unicorn Setup).</p>
+<h2>Sinkronisasi dengan Waktu</h2>
+<p>Seperti hukum mutlak ICT lainnya (lihat Killzones dan True Day Open), pola OTE paling mematikan terjadi pada waktu-waktu spesifik. Jika Anda menemukan formasi pergerakan <em>Impulse</em> dan Anda menarik fibonacci, pastikan bahwa <em>Retracement</em> (penurunan ke area 70.5%) <strong>terjadi tepat saat salah satu Killzone terbuka</strong> (misalnya pada 08:30 AM EST atau di dalam rentang waktu London).</p>
+<p><em>(Waktu + Harga OTE + FVG = Precision Strike)</em>.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="amdx-weekly-model" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 13 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">AMDX Weekly Model</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p>Model <strong>AMDX Mingguan (Accumulation, Manipulation, Distribution, X-Reversal)</strong> adalah spesifikasi harian dari siklus mingguan. Ini menjabarkan "apa tugas algoritma pada setiap hari" dalam sepekan.</p></p>
+</div>
+<h3>Apa itu AMDX Mingguan?</h3>
+<p>Ini adalah "jadwal kerja" dari algoritma pengiriman harga (IPDA).
+- <strong>Senin = Accumulation (Akumulasi)</strong>: Konsolidasi lambat. Membangun posisi di kedua sisi harga pembukaan mingguan.
+- <strong>Selasa = Manipulation (Manipulasi)</strong>: Menembus ke luar dari rentang akumulasi Senin (sering disebut <em>Judas Swing</em>). Tujuannya menjemput Stop Loss trader yang terjebak di hari Senin.
+- <strong>Rabu = Distribution (Distribusi)</strong>: Ekspansi masif. Bergerak agresif menjauhi titik manipulasi menuju ke target sesungguhnya.
+- <strong>Kamis = Distribution / Continuation</strong>: Melanjutkan pergerakan dari hari Rabu. Sering memberikan setup <em>entry</em> paling bersih.
+- <strong>Jumat = X (Reversal / Consolidation)</strong>: Mengambil likuiditas akhir pekan (Friday Reversal) akibat para institusi yang menutup posisi mereka, atau sekadar konsolidasi mati.</p>
+<h3>Mengapa Model Ini Akurat?</h3>
+<p>Pasar tidak bisa tren secara lurus selama 5 hari berturut-turut. Harus ada rekayasa likuiditas (Senin/Selasa) agar bank besar bisa masuk dengan posisi raksasa (Rabu/Kamis), dan keluar (Jumat).</p>
+<h3>Bagaimana Identifikasinya?</h3>
+<ol>
+<li>Kotak/tandai rentang pergerakan (High dan Low) dari sepanjang hari <strong>Senin</strong>.</li>
+<li>Tunggu hari <strong>Selasa</strong>. Jika bias Anda <em>Bullish</em>, biarkan Selasa menembus <em>Low</em> hari Senin.</li>
+<li>Setelah Selasa menunjukkan penolakan (<em>rejection</em>) yang kuat (menciptakan manipulasi), bersiaplah untuk pergerakan utama.</li>
+<li><strong>Rabu dan Kamis</strong> adalah hari di mana Anda akan menahan posisi (Hold) karena ini adalah fase Ekspansi murni.</li>
+</ol>
+<hr/>
+<div class="note">
+<p><strong>Kriteria Trading</strong><br/><p>Rabu sering kali menjadi hari paling mudah untuk ditradingkan karena arah minggu tersebut (biasanya) sudah ditetapkan oleh manipulasi hari Selasa.</p></p>
+</div>
+<ul>
+<li><strong>Entry</strong>: Bergabung dengan tren pada hari Rabu dengan mencari <em>Fair Value Gap</em> (FVG) atau sentuhan pada <em>Order Block</em> di sesi London atau New York.</li>
+<li><strong>Invalidasi (SL)</strong>: Titik balik (<em>extremes</em>) yang diciptakan pada fase Manipulasi (Selasa). Jika level ini ditembus di hari Rabu/Kamis, AMDX model tersebut gagal.</li>
+<li><strong>Target (DOL)</strong>: Draw on Liquidity utama pada kerangka waktu makro (Harian / Mingguan). Pada hari Jumat siang, sangat disarankan untuk mengambil sebagian besar atau seluruh <em>Take Profit</em> (TP).</li>
+</ul>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="monthly-cycle-ict" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 14 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Monthly Cycle ICT</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>Monthly Cycle (Siklus Bulanan)</strong> menjelaskan bagaimana sebuah <em>candle</em> bulanan (Monthly Candle) membentuk anatominya: <strong>Open, High, Low, Close (Power of Three)</strong> sepanjang 4 minggu dalam satu bulan kalender.</p></p>
+</div>
+<h3>Apa itu Monthly Cycle?</h3>
+<p>Sama seperti kuartal memiliki siklus, pergerakan di dalam satu bulan tunggal juga memiliki ritme algoritmik (biasanya terbagi dalam 4 minggu).
+- <strong>Minggu ke-1</strong>: <strong>Opening &amp; Accumulation</strong>. Menentukan harga pembukaan bulan (<em>True Month Open</em>). Biasanya minggu ini cenderung membangun likuiditas.
+- <strong>Minggu ke-2</strong>: <strong>Manipulation (Judas Swing)</strong>. Seringkali bertepatan dengan rilis NFP (Non-Farm Payrolls). Minggu ini sering kali menciptakan ujung sumbu (Wick) dari <em>candle</em> bulanan, yaitu Monthly High atau Monthly Low.
+- <strong>Minggu ke-3</strong>: <strong>Expansion / Distribution</strong>. Setelah manipulasi selesai di minggu ke-2, harga berekspansi cepat menuju target makro (DOL). Ini adalah minggu paling mudah untuk trading tren.
+- <strong>Minggu ke-4</strong>: <strong>Consolidation / Reversal (X)</strong>. Harga mendekati akhir bulan, institusi melakukan <em>profit taking</em>, harga melambat, dan mulai berbalik (retracement) untuk menutup <em>candle</em> bulanan.</p>
+<h3>Mengapa Harus Dipahami?</h3>
+<p>Banyak trader ritel terjebak saat NFP di awal bulan karena mengira itu adalah tren asli, padahal itu hanyalah manipulasi algoritma untuk menjemput likuiditas (Stop Loss) sebelum berekspansi ke arah sebenarnya.</p>
+<h3>Kapan Menggunakannya?</h3>
+<p>Setiap awal bulan kalender. Sangat penting bagi Swing Trader dan Day Trader untuk mengetahui di minggu ke berapa mereka berada saat ini.</p>
+<h3>Bagaimana Identifikasinya?</h3>
+<ol>
+<li>Tarik garis horizontal di <strong>Harga Pembukaan (Open) tanggal 1</strong>.</li>
+<li>Jika bias bulanan Anda <strong>Bullish</strong>, Anda ingin melihat pergerakan harga turun ke bawah harga pembukaan di <strong>Minggu ke-1 atau ke-2</strong> (Manipulasi).</li>
+<li>Setelah tanda-tanda penolakan (<em>rejection</em>) di level <em>Discount</em> terlihat (misalnya menyentuh HTF Order Block), Anda bersiap untuk posisi Buy besar-besaran untuk memasuki <strong>Minggu ke-3</strong>.</li>
+</ol>
+<hr/>
+<div class="note">
+<p><strong>Kriteria Trading</strong><br/><p>Pahami bahwa pergerakan arah harian akan dikendalikan oleh "Di fase apa bulan ini berada sekarang?".</p></p>
+</div>
+<ul>
+<li><strong>Entry</strong>: Cari setup harian yang sejajar dengan siklus. Jika kita berada di Minggu ke-3 dalam bulan yang Bullish, cari skenario beli (<em>long</em>) secara agresif.</li>
+<li><strong>Invalidasi Bias</strong>: Jika di Minggu ke-3 harga tidak melakukan ekspansi dan malah menembus titik terendah (Low) yang dibuat di Minggu ke-2, narasi bulanan Anda kemungkinan besar salah.</li>
+<li><strong>Target (DOL)</strong>: Targetkan pencapaian (Run) likuiditas pada level High/Low bulanan bulan sebelumnya (Previous Month High/Low) atau Inefisiensi Makro yang ada.</li>
+</ul>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="power-of-three-weekly" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 15 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Power of Three Weekly</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>Power of Three (PO3)</strong> adalah inti fundamental dari seluruh konsep ICT, yaitu singkatan dari <strong>AMD (Accumulation, Manipulation, Distribution)</strong>. Ketika diterapkan secara khusus pada skala mingguan, ini berpusat secara mutlak pada <strong>Harga Pembukaan Mingguan (Weekly Open Price)</strong>.</p></p>
+</div>
+<h3>Apa itu Power of Three (PO3) Mingguan?</h3>
+<p>Setiap <em>candle</em> (lilin) memiliki anatomi: <strong>Open, High, Low, Close</strong>.
+- Jarak antara Open ke Low (pada candle Bullish) disebut <strong>Wick (Sumbu)</strong> bawah.
+- Dalam ICT, <em>Wick</em> ini BUKAN kebetulan; <em>wick</em> itu adalah fase <strong>Manipulasi</strong>.
+- PO3 Mingguan menegaskan bahwa <strong>Uang Pintar (Smart Money)</strong> HANYA membeli aset di harga diskon dari Pembukaan Mingguan, dan menjual di harga premium dari Pembukaan Mingguan.</p>
+<h3>Mengapa Penting?</h3>
+<p>Ini memberikan Anda batas (Parameter) yang jelas, hitam dan putih, tanpa keraguan:
+- Jika bias Anda naik (<em>Bullish</em>), Anda <strong>DILARANG</strong> membeli (Buy) jika harga saat ini berada DI ATAS harga pembukaan mingguan.
+- Institusi tidak membeli di harga mahal (Premium); mereka menunggu harga turun di bawah pembukaan (Diskon), baru membeli.</p>
+<h3>Bagaimana Identifikasinya?</h3>
+<ol>
+<li>Catat harga pembukaan minggu pada hari <strong>Minggu 18:00 EST / Senin 00:00 EST</strong>. Tarik garis horizontal melintasi keseluruhan minggu (ke kanan).</li>
+<li>Tentukan Bias Mingguan Anda. (Anggaplah <em>Bearish</em>/Turun).</li>
+<li>Karena <em>Bearish</em>, Anda harus menunggu harga naik <strong>di atas</strong> garis pembukaan tersebut. (Ini adalah fase pembentukan Sumbu Atas / <em>Manipulation</em>).</li>
+<li>Ketika harga berada di atas garis (Premium) dan menyentuh zona <em>Resistance/FVG</em>, cari konfirmasi turun di <em>Lower Timeframe</em> (M15).</li>
+</ol>
+<hr/>
+<div class="note">
+<p><strong>Kriteria Trading</strong><br/><p>Ini adalah filter terbaik untuk menghindari "FOMO" (Takut Ketinggalan). Pembukaan Mingguan memisahkan posisi probabilitas rendah dan probabilitas tinggi.</p></p>
+</div>
+<ul>
+<li><strong>Entry</strong>: Cari setup <em>entry</em> standar (seperti MSS &amp; kembali ke FVG) HANYA ketika harga berada di zona yang tepat terhadap Pembukaan Mingguan (di bawah Open untuk Long; di atas Open untuk Short).</li>
+<li><strong>Invalidasi (SL)</strong>: Swing yang menciptakan ujung sumbu mingguan tersebut. Jika harga menembus level ini berlawanan dengan arah bias, artinya ekspansi bergeser ke arah yang salah.</li>
+<li><strong>Target (DOL)</strong>: Targetkan likuiditas jangka menengah (Liquidity Pools Harian). Setelah harga bergerak tajam menjauhi Harga Pembukaan (Distribution), jangan serakah, ini adalah waktu untuk taking profit sebelum pasar tutup (Close).</li>
+</ul>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="quarterly-theory-ict" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 16 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Quarterly Theory ICT</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>Quarterly Theory</strong> adalah konsep tingkat lanjut di mana siklus pergerakan harga setahun (Macro Cycle) dibagi menjadi 4 kuartal. Teori ini didasarkan pada model <strong>AMDX (Accumulation, Manipulation, Distribution, X/Reversal)</strong> dalam skala makro.</p></p>
+</div>
+<h3>Apa itu Quarterly Theory?</h3>
+<p>Pasar tidak bergerak secara acak. Institusi besar dan bank sentral beroperasi dengan siklus kuartalan yang terikat pada laporan pendapatan (earnings), pajak, dan penyesuaian suku bunga.
+Kuartal dalam setahun dibagi menjadi:
+- <strong>Q1 (Januari - Maret)</strong>: Biasanya merupakan fase <strong>Accumulation</strong> (Akumulasi). Pasar mencari pijakan awal.
+- <strong>Q2 (April - Juni)</strong>: Sering menjadi fase <strong>Manipulation</strong> (Manipulasi). Q2 kerap kali mencetak Titik Tertinggi atau Terendah untuk tahun tersebut (Yearly High / Yearly Low).
+- <strong>Q3 (Juli - September)</strong>: Fase <strong>Distribution</strong> (Distribusi). Trend sebenarnya dari tahun tersebut terjadi dengan sangat jelas dan terarah.
+- <strong>Q4 (Oktober - Desember)</strong>: Fase <strong>X (Reversal/Continuation)</strong>. Harga akan mengambil likuiditas akhir tahun, melakukan konsolidasi, atau berbalik arah untuk bersiap masuk ke tahun baru.</p>
+<h3>Mengapa Konsep Ini Penting?</h3>
+<p>Karena institusi besar tidak bisa membeli/menjual semua posisi dalam satu hari. Mereka butuh hitungan bulan untuk mengakumulasi posisi. Memahami siklus ini memberi Anda <strong>Bias Jangka Panjang (Macro Bias)</strong> yang luar biasa kuat.</p>
+<h3>Kapan dan Bagaimana Menggunakannya?</h3>
+<ol>
+<li>Tandai <strong>Yearly Open</strong> (Harga pembukaan awal Januari).</li>
+<li>Perhatikan perilaku <strong>Q1</strong>. Apakah ia berkonsolidasi atau mulai membentuk tren kecil?</li>
+<li>Waspadai <strong>Q2</strong>. Jika Q1 konsolidasi dan Q2 tiba-tiba bergerak agresif ke satu sisi, tanyakan pada diri sendiri: <em>"Apakah ini Judas Swing makro untuk menjebak retail sebelum Q3 mendistribusikan harga ke arah sebaliknya?"</em></li>
+<li>Jika Q2 membentuk Yearly High/Low yang valid, maka fokus <strong>Q3</strong> adalah trading searah dengan trend utama yang baru terbentuk, menargetkan likuiditas besar (HTF Liquidity).</li>
+</ol>
+<hr/>
+<div class="note">
+<p><strong>Aplikasi Trading</strong><br/><p>Anda tidak menggunakan Quarterly Theory untuk menekan tombol Buy/Sell langsung di MetaTrader Anda.</p></p>
+</div>
+<ul>
+<li><strong>Kriteria Penggunaan</strong>: Gunakan ini untuk menentukan <em>Directional Bias</em> pada chart <strong>Monthly (Bulanan)</strong> atau <strong>Weekly (Mingguan)</strong>.</li>
+<li><strong>Targeting Makro</strong>: Menargetkan kumpulan <em>Buy Stop</em> atau <em>Sell Stop</em> dari tahun-tahun sebelumnya.</li>
+<li><strong>Keselarasan</strong>: Jika Anda berada di Q3 dan bias makro adalah Bearish, semua setup posisi Jual (Short) pada grafik harian/H4 akan memiliki tingkat keberhasilan (win-rate) yang jauh lebih tinggi.</li>
+</ul>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="weekly-cycle-ict" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 17 DARI 17</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Weekly Cycle ICT</h2>
+        <div class="chapter-content">
+          <div class="note">
+<p><strong>Ikhtisar</strong><br/><p><strong>Weekly Cycle (Siklus Mingguan)</strong> adalah kerangka kerja (framework) yang memetakan bagaimana profil <em>candle</em> mingguan biasanya terbentuk dari Senin hingga Jumat.</p></p>
+</div>
+<h3>Apa itu Weekly Cycle?</h3>
+<p>Siklus pergerakan yang memprediksi hari apa <em>High</em> (Titik Tertinggi) atau <em>Low</em> (Titik Terendah) mingguan akan terbentuk. Model paling klasik dan akurat dalam ICT adalah:
+- <strong>Tuesday / Wednesday Low of the Week</strong> (Untuk kondisi pasar Bullish).
+- <strong>Tuesday / Wednesday High of the Week</strong> (Untuk kondisi pasar Bearish).</p>
+<h3>Mengapa Berpola Seperti Ini?</h3>
+<p>Algoritma membutuhkan waktu (biasanya 24 hingga 48 jam pertama dalam seminggu) untuk menjebak uang ritel ke arah yang salah (manipulasi) sebelum institusi melepaskan volume sebenarnya untuk mendistribusikan harga ke arah tren yang asli di pertengahan minggu.</p>
+<h3>Kapan Menggunakannya?</h3>
+<p>Siklus ini dipantau dari <strong>Senin hingga Rabu</strong>. Jika titik ekstrem mingguan belum terbentuk pada hari Rabu, maka hari Kamis memiliki probabilitas tinggi untuk membentuknya.</p>
+<h3>Bagaimana Identifikasinya (Contoh Bullish)?</h3>
+<ol>
+<li>Tentukan Bias Makro Anda (Misal: Naik/Bullish).</li>
+<li>Perhatikan hari <strong>Senin</strong>. Senin biasanya membentuk rentang harga awal (Initial Range).</li>
+<li>Perhatikan hari <strong>Selasa</strong>. Harga turun menembus titik terendah Senin (<em>Monday's Low</em>) dan masuk ke area <strong>Discount (FVG/Order Block) pada kerangka waktu H4/Daily</strong>.</li>
+<li>Terjadi penolakan harga pada hari Selasa atau Rabu (London Session). Inilah indikasi bahwa <strong>Low of the Week</strong> telah terbentuk.</li>
+</ol>
+<hr/>
+<div class="note">
+<p><strong>Kriteria Trading</strong><br/><p>Jangan panik jika awal minggu (Senin/Selasa) harga bergerak berlawanan dengan analisa makro Anda. Itu adalah fase manipulasi.</p></p>
+</div>
+<ul>
+<li><strong>Entry</strong>: Cari model <em>entry</em> (seperti MSS) pada M15 atau M5 di sesi London/NY pada hari Selasa atau Rabu setelah harga masuk ke area <em>Discount</em>.</li>
+<li><strong>Invalidasi (SL)</strong>: Jika hari Kamis harga malah turun tajam melewati titik terendah hari Selasa, maka siklus mingguan (narasi) Anda batal atau <em>Market</em> sedang berada dalam kondisi yang sangat tidak teratur (<em>choppy</em>).</li>
+<li><strong>Target (DOL)</strong>: Targetkan likuiditas di atas titik tertinggi minggu sebelumnya (Previous Week High) atau level resistensi/ketidakseimbangan pada chart Mingguan/Harian.</li>
+</ul>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+      </div>
+
+      <div style="margin-top:48px;padding-top:32px;border-top:2px solid var(--border);">
+        <div class="quiz-container" data-module="pemula-nol"></div>
+    <script src="../assets/js/quiz.js"></script>
+      </div>
+
+      <div class="page-nav" style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <a class="btn ghost" href="../bagian-30-a-plus-setup-library/index.html">← Pertemuan 30</a>
+        <a class="btn primary" href="../bagian-32-trading-tools-setup/index.html">Selesai & Lanjut Pertemuan 32 →</a>
+      </div>
+    </article>
+
+    <aside class="toc-card">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#10b981;text-transform:uppercase;margin-bottom:6px;">PERTEMUAN 31</div>
+      <h3 style="margin-bottom:12px;font-size:16px;">Daftar Isi Modul</h3>
+      <ul style="max-height: calc(100vh - 280px); overflow-y: auto;">
+        <li><a href="#ipda" class="toc-link" data-target="ipda">1. IPDA</a></li>
+<li><a href="#ipda-data-ranges" class="toc-link" data-target="ipda-data-ranges">2. IPDA Data Ranges</a></li>
+<li><a href="#ipda-data-ranges-dan-daily-profiles" class="toc-link" data-target="ipda-data-ranges-dan-daily-profiles">3. IPDA Data Ranges dan Daily Profiles</a></li>
+<li><a href="#market-maker-x-model-mmxm" class="toc-link" data-target="market-maker-x-model-mmxm">4. Market Maker X Model (MMXM)</a></li>
+<li><a href="#smt-divergence-smart-money-tool" class="toc-link" data-target="smt-divergence-smart-money-tool">5. SMT Divergence (Smart Money Tool)</a></li>
+<li><a href="#standard-deviation-projections" class="toc-link" data-target="standard-deviation-projections">6. Standard Deviation Projections</a></li>
+<li><a href="#balanced-price-range-bpr" class="toc-link" data-target="balanced-price-range-bpr">7. Balanced Price Range (BPR)</a></li>
+<li><a href="#breaker-blocks-dan-mitigation-blocks" class="toc-link" data-target="breaker-blocks-dan-mitigation-blocks">8. Breaker Blocks dan Mitigation Blocks</a></li>
+<li><a href="#killzones-dan-true-day-open" class="toc-link" data-target="killzones-dan-true-day-open">9. Killzones dan True Day Open</a></li>
+<li><a href="#macro-times-dan-algorithmic-time" class="toc-link" data-target="macro-times-dan-algorithmic-time">10. Macro Times dan Algorithmic Time</a></li>
+<li><a href="#news-driver-model" class="toc-link" data-target="news-driver-model">11. News Driver Model</a></li>
+<li><a href="#optimal-trade-entry-ote" class="toc-link" data-target="optimal-trade-entry-ote">12. Optimal Trade Entry (OTE)</a></li>
+<li><a href="#amdx-weekly-model" class="toc-link" data-target="amdx-weekly-model">13. AMDX Weekly Model</a></li>
+<li><a href="#monthly-cycle-ict" class="toc-link" data-target="monthly-cycle-ict">14. Monthly Cycle ICT</a></li>
+<li><a href="#power-of-three-weekly" class="toc-link" data-target="power-of-three-weekly">15. Power of Three Weekly</a></li>
+<li><a href="#quarterly-theory-ict" class="toc-link" data-target="quarterly-theory-ict">16. Quarterly Theory ICT</a></li>
+<li><a href="#weekly-cycle-ict" class="toc-link" data-target="weekly-cycle-ict">17. Weekly Cycle ICT</a></li>
+      </ul>
+      <hr style="margin:16px 0;border:none;border-top:1px solid var(--border);">
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+        ⏱️ Estimasi: ~45–60 Menit<br>
+        📚 17 Bab Lengkap<br>
+        🎓 Semester 3 • Advanced
+      </div>
+    </aside>
+  </div>
+</main>
+
+<style>
+@media (max-width: 900px) {
+  .mobile-toc-drawer { display: block !important; }
+  .toc-card { display: none !important; }
+}
+.module-chapter { scroll-margin-top: 100px; }
+.toc-card a.active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var links = document.querySelectorAll('.toc-card .toc-link');
+  var sections = document.querySelectorAll('.module-chapter');
+  if (!links.length || !sections.length) return;
+
+  function onScroll() {
+    var scrollPos = window.scrollY + 140;
+    var currentId = '';
+    sections.forEach(function(sec) {
+      if (sec.offsetTop <= scrollPos) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+    links.forEach(function(link) {
+      if (link.getAttribute('data-target') === currentId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive: true});
+  onScroll();
+});
+</script>
+
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Sistem Kuliah Trading dari Nol sampai Mandiri.</footer>
+<script>
+
+</script>
+</body>
+</html>

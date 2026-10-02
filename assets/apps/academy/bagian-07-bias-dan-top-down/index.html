@@ -1,12 +1,550 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Bagian 07 — Bias dan Top Down — Tutorial Trading</title><link rel="stylesheet" href="../assets/css/style.css"><script>const ROOT_PATH='../';</script><script src="../assets/js/auth.js"></script><script src="../assets/js/main.js" defer></script><!-- Amy FX PWA runtime overlay -->
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Pertemuan 07 — Bias dan Top Down — Amy FX Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/glass.css">
+  <script>const ROOT_PATH='../';</script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+<!-- Amy FX PWA runtime overlay -->
 <script src="../../../../platform-adapter.js"></script>
 <script src="../../../../pwa-live-price-bridge.js"></script>
 <script src="../../../../member-auth.js"></script>
 <script src="../../../../pwa-bootstrap.js"></script>
 <script src="../../../../pwa-update-bridge.js"></script>
 <!-- /Amy FX PWA runtime overlay -->
-</head><body><script>requireLogin();</script><header class="topbar hide-until-auth"><nav class="nav"><a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
-<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-<div class="navlinks" id="navlinks"><a href="../index.html">Beranda</a><a href="../daftar-materi.html">Daftar Materi</a><a href="../tentang.html">Tentang</a><a href="../glosarium/index.html">Glosarium</a></div></nav></header><main class="container hide-until-auth"><section class="article"><div class="breadcrumb"><a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a></div><div class="eyebrow">Bagian 07 — Bias dan Top Down</div><h1>Bias dan Top Down</h1><p>Pilih bab yang ingin dibaca. Setiap bab akan terbuka sebagai halaman sendiri.</p><div class="chapter-list"><a class="chapter-row" href="apa-itu-daily-bias.html"><span><strong>Apa Itu Daily Bias</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="bias-bukan-ramalan.html"><span><strong>Bias Bukan Ramalan</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="bias-untuk-scalper-day-trader-dan-swing-trader.html"><span><strong>Bias untuk Scalper, Day Trader, dan Swing Trader</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="irl-dan-erl-untuk-bias.html"><span><strong>IRL dan ERL untuk Bias</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="previous-day-high-dan-low.html"><span><strong>Previous Day High dan Low</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="daily-candle-ohlc-dan-olhc.html"><span><strong>Daily Candle OHLC dan OLHC</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="m15-orderflow.html"><span><strong>M15 Orderflow</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="top-down-analysis.html"><span><strong>Top Down Analysis</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="menentukan-draw-on-liquidity.html"><span><strong>Menentukan Draw on Liquidity</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a><a class="chapter-row" href="skenario-bullish-bearish-dan-netral.html"><span><strong>Skenario Bullish, Bearish, dan Netral</strong><br><small>Bagian 07 — Bias dan Top Down</small></span><span>→</span></a></div><div class="quiz-container" data-module="bias-dan-top-down"></div>
-<script src="../assets/js/quiz.js"></script>
-</section></main><footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer></body></html>
+</head>
+<body id="top">
+<script>requireLogin();</script>
+<header class="topbar hide-until-auth">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="navlinks" id="navlinks">
+      <a href="../index.html">Beranda</a>
+      <a href="../daftar-materi.html">Daftar Materi</a>
+      <a href="../tentang.html">Tentang</a>
+      <a href="../glosarium/index.html">Glosarium</a>
+    </div>
+  </nav>
+</header>
+<main class="container hide-until-auth">
+  <div class="breadcrumb" style="margin-bottom:16px;">
+    <a href="../index.html">Beranda</a> › <a href="../daftar-materi.html">Daftar Materi</a> › Pertemuan 07
+  </div>
+
+  <div class="article-layout">
+    <article class="article" style="min-width:0;">
+      <div class="eyebrow" style="color:#d4a832;font-weight:800;letter-spacing:1px;font-size:12px;margin-bottom:8px;">
+        SEMESTER 1 • PEMULA • PERTEMUAN 07 (1 SKS)
+      </div>
+      <h1 style="margin-top:4px;font-size:clamp(26px, 3.5vw, 38px);">Bias dan Top Down</h1>
+      <p style="font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:28px;">Pilih bab yang ingin dibaca. Setiap bab akan terbuka sebagai halaman sendiri.</p>
+
+      <details class="mobile-toc-drawer" style="display:none;margin-bottom:28px;padding:14px 18px;background:var(--surface-soft,#141416);border:1px solid var(--border);border-radius:12px;">
+        <summary style="font-weight:700;cursor:pointer;color:var(--gold,#d4a832);font-size:14px;">📑 Daftar Isi Bab (10 Bab Pembahasan)</summary>
+        <ul style="list-style:none;padding:12px 0 0;margin:0;display:grid;gap:8px;">
+          <li><a href="#apa-itu-daily-bias" style="color:var(--text);font-size:13px;text-decoration:none;">1. Apa Itu Daily Bias</a></li>
+<li><a href="#bias-bukan-ramalan" style="color:var(--text);font-size:13px;text-decoration:none;">2. Bias Bukan Ramalan</a></li>
+<li><a href="#bias-untuk-scalper-day-trader-dan-swing-trader" style="color:var(--text);font-size:13px;text-decoration:none;">3. Bias untuk Scalper, Day Trader, dan Swing Trader</a></li>
+<li><a href="#irl-dan-erl-untuk-bias" style="color:var(--text);font-size:13px;text-decoration:none;">4. IRL dan ERL untuk Bias</a></li>
+<li><a href="#previous-day-high-dan-low" style="color:var(--text);font-size:13px;text-decoration:none;">5. Previous Day High dan Low</a></li>
+<li><a href="#daily-candle-ohlc-dan-olhc" style="color:var(--text);font-size:13px;text-decoration:none;">6. Daily Candle OHLC dan OLHC</a></li>
+<li><a href="#m15-orderflow" style="color:var(--text);font-size:13px;text-decoration:none;">7. M15 Orderflow</a></li>
+<li><a href="#top-down-analysis" style="color:var(--text);font-size:13px;text-decoration:none;">8. Top Down Analysis</a></li>
+<li><a href="#menentukan-draw-on-liquidity" style="color:var(--text);font-size:13px;text-decoration:none;">9. Menentukan Draw on Liquidity</a></li>
+<li><a href="#skenario-bullish-bearish-dan-netral" style="color:var(--text);font-size:13px;text-decoration:none;">10. Skenario Bullish, Bearish, dan Netral</a></li>
+        </ul>
+      </details>
+
+      <div class="module-content">
+        
+      <section id="apa-itu-daily-bias" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 1 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Apa Itu Daily Bias</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Di dunia trading, istilah <strong>Daily Bias</strong> sering banget disebut. Tapi banyak trader pemula yang bingung dan akhirnya menganggap bias itu seperti ramalan sakti. Padahal, <em>daily bias</em> jauh lebih sederhana dari itu.</p></div>
+<p>Secara harfiah, "bias" berarti kecenderungan. Jadi, <strong>Daily Bias adalah kecenderungan arah pergerakan harga dalam satu hari tertentu</strong>. Apakah hari ini harga lebih cenderung naik (Bullish) atau turun (Bearish)? Itulah inti dari daily bias.</p>
+<h2>Analogi Daily Bias: Kompas dan Cuaca</h2>
+<p>Bayangkan kamu adalah seorang nelayan yang mau melaut. Sebelum berangkat, kamu pasti melihat arah angin dan cuaca hari itu. Kalau angin bertiup kencang ke arah timur, apakah kamu akan memaksa berlayar ke barat? Tentu tidak, karena melawan arus itu berat dan berbahaya.</p>
+<p>Dalam trading, <strong>Daily Bias adalah arah anginnya</strong>. Kalau bias hari ini adalah bullish (naik), maka posisi yang paling aman dan punya probabilitas menang tertinggi adalah <em>Buy</em> (Long). Begitu juga sebaliknya, kalau bias bearish (turun), posisi terbaik adalah <em>Sell</em> (Short).</p>
+<div class="note"><strong>Note</strong><br/><p><em>Trend is your friend</em>. Mengikuti daily bias berarti kita berenang searah dengan arus besar (Smart Money), bukan melawannya.</p></div>
+<h2>Kenapa Kita Butuh Daily Bias?</h2>
+<p>Banyak pemula yang asal buka chart, lihat harga turun sedikit, langsung <em>Sell</em>. Pas harga naik sedikit, langsung <em>Buy</em>. Akhirnya bolak-balik kena Stop Loss (SL). Ini terjadi karena mereka trading tanpa arah yang jelas.</p>
+<p>Mengetahui daily bias memberikan kita beberapa keuntungan krusial:</p>
+<h3>1. Filter Keputusan (Mencegah Overtrading)</h3>
+<p>Kalau kamu sudah tahu bias hari ini adalah Bullish, maka kamu akan <strong>mengabaikan semua sinyal Sell</strong>. Sekalipun ada setup Sell yang kelihatannya bagus di timeframe kecil (M5 atau M15), kamu tidak akan tergoda. Kamu hanya akan fokus mencari setup Buy di area diskon. Ini akan sangat mengurangi frekuensi entry dan mencegah overtrading.</p>
+<h3>2. Meningkatkan Probabilitas (Win Rate)</h3>
+<p>Trading adalah permainan probabilitas. Saat kamu open posisi searah dengan bias besar (misalnya Daily atau H4), probabilitas harga akan mencapai Take Profit (TP) jauh lebih tinggi. Smart Money dan institusi besar menggerakkan pasar searah dengan bias ini.</p>
+<h3>3. Ketenangan Psikologis</h3>
+<p>Pernah merasa deg-degan waktu harga <em>floating minus</em> sebentar? Kalau kamu trading melawan tren, rasa takut itu wajar. Tapi kalau kamu trading searah dengan daily bias, kamu akan lebih tenang saat harga melakukan <em>retracement</em> (koreksi sementara) karena kamu tahu arah besarnya masih mendukung posisimu.</p>
+<h2>Bagaimana Bias Terbentuk?</h2>
+<p>Daily bias tidak muncul dari ruang hampa. Bias terbentuk dari narasi besar di market yang sering kali dikendalikan oleh <strong><a>Draw on Liquidity</a> (DOL)</strong>. Market selalu bergerak mencari likuiditas (uang). Kalau likuiditas besar ada di atas harga saat ini, market akan cenderung naik (Bullish Bias) untuk mengambil likuiditas tersebut.</p>
+<p>Beberapa hal teknikal yang membantu kita menentukan bias:</p>
+<ul>
+<li><strong>Struktur Harga (Market Structure):</strong> Apakah sedang membuat Higher High (HH) / Higher Low (HL) atau Lower High (LH) / Lower Low (LL)?</li>
+<li><strong>Order Blocks dan FVG:</strong> Apakah harga baru saja merespon zona <em>demand</em> besar atau zona <em>supply</em>?</li>
+<li><strong>Likuiditas (Internal &amp; External):</strong> Ke mana harga kemungkinan besar akan bergerak selanjutnya untuk "mencari bensin"?</li>
+</ul>
+<p><strong>Awas:</strong> Jangan menentukan bias hanya dari satu <em>candle</em> yang sedang berjalan! Bias ditentukan dari struktur yang sudah terbentuk di <em>timeframe</em> besar.</p>
+<h2>Kesimpulan</h2>
+<p>Daily Bias adalah peta jalan (roadmap) harianmu. Tanpa bias, kamu hanya akan meraba-raba di dalam kegelapan. Mulai sekarang, sebelum kamu memikirkan di mana harus <em>entry</em>, tanyakan dulu pada dirimu sendiri:</p>
+<p><em>"Hari ini, harga lebih cenderung ke mana? Bullish atau Bearish?"</em></p>
+<p>Kalau kamu belum bisa menjawab pertanyaan ini dengan yakin, <strong>jangan buka posisi!</strong> Lebih baik duduk diam mengamati chart daripada membuang uang tanpa alasan yang jelas.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="bias-bukan-ramalan" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 2 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Bias Bukan Ramalan</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Salah satu jebakan terbesar bagi trader yang baru belajar menentukan bias adalah menganggap bahwa <strong>Bias = Kepastian</strong>. Mereka merasa, kalau sudah menganalisa dan menyimpulkan bias hari ini adalah <em>Bullish</em>, maka harga <strong>pasti</strong> akan naik dan tidak mungkin turun.</p></div>
+<p>Pola pikir ini sangat berbahaya. Kenapa? Karena saat market tidak bergerak sesuai analisa (dan percayalah, ini sering terjadi), trader tersebut akan ngeyel, menahan <em>floating minus</em> tanpa Stop Loss (SL), atau bahkan melakukan <em>average down</em> (menambah posisi rugi) dengan harapan harga akan berbalik arah. Hasil akhirnya sudah bisa ditebak: Margin Call (MC).</p>
+<h2>Trading adalah Probabilitas, Bukan Prediksi Masa Depan</h2>
+<p>Mari kita luruskan konsepnya: <strong>Bias bukanlah ramalan cuaca yang 100% akurat. Bias hanyalah sebuah skenario probabilitas tinggi.</strong></p>
+<p>Saat kita mengatakan bias hari ini Bullish, artinya: berdasarkan data struktur harga saat ini, <em>kemungkinan</em> harga akan naik itu lebih besar (misalnya 70%) dibandingkan kemungkinan harga turun (30%). Tapi ingat, sisa 30% kemungkinan turun itu tetap ada dan bisa saja terjadi hari ini!</p>
+<p>Kita bukan pengendali market. Market digerakkan oleh institusi besar, algoritma, dan berita fundamental global yang bisa berubah dalam hitungan detik. Tugas kita sebagai <em>retail trader</em> hanyalah membaca jejak mereka (Smart Money) dan menumpang ombaknya, bukan memaksakan kehendak kita pada lautan.</p>
+<div class="note"><strong>Note</strong><br/><p>Trader amatir mencari <em>kepastian</em>. Trader profesional mengelola <em>probabilitas</em> dan <em>risiko</em>.</p></div>
+<h2>Apa yang Terjadi Jika Bias Salah?</h2>
+<p>Pertanyaan ini harus selalu ada di kepalamu setiap kali membuat rencana trading. Kalau biasmu Bullish dan kamu pasang posisi <em>Buy</em>, tapi ternyata harga malah <em>breakdown</em> (jebol ke bawah), apa yang harus kamu lakukan?</p>
+<p>Jawabannya sederhana: <strong>Terima kerugian kecil (SL), akui bahwa biasmu salah hari ini, dan adaptasi.</strong></p>
+<p>Ciri-ciri bahwa bias kita hari ini mungkin salah (Invalidation):</p>
+<ul>
+<li>Harga menembus (<em>break</em>) dan <em>close</em> di bawah level <em>Higher Low</em> terakhir (untuk bias Bullish).</li>
+<li>Harga mengabaikan semua zona <em><a>support</a></em> (<a>Order Block</a> / FVG) dan menembusnya dengan momentum besar (<em>displacement</em>).</li>
+<li>Ada rilis berita fundamental <em>High Impact</em> (seperti NFP atau CPI) yang berlawanan dengan arah analisamu.</li>
+</ul>
+<h2>Seni Beradaptasi (Being Reactive, Not Predictive)</h2>
+<p>Banyak trader egois yang tidak mau disalahkan oleh market. Kalau harga turun padahal biasnya naik, mereka marah dan mencari pembenaran. "Ah, ini cuma <em>stop hunt</em>, nanti juga naik lagi." Padahal struktur jelas-jelas sudah berubah (Change of Character / ChoCh).</p>
+<p>Trader yang sukses adalah trader yang <strong>reaktif</strong> terhadap apa yang <em>sedang</em> dilakukan harga, bukan yang terus berpegang pada apa yang <em>seharusnya</em> dilakukan harga menurut analisa awalnya.</p>
+<h3>Langkah Adaptasi:</h3>
+<ol>
+<li><strong>Jangan Langsung Balik Arah (Revenge Trading):</strong> Kalau posisi Buy kena SL, jangan detik itu juga langsung buka posisi Sell. Tenang dulu.</li>
+<li><strong>Tunggu Konfirmasi Ulang:</strong> Biarkan market membentuk struktur baru. Apakah benar tren sudah berbalik menjadi Bearish, atau ini hanya manipulasi sesaat?</li>
+<li><strong>Stand Aside (Minggir):</strong> Kalau chart terlihat membingungkan dan tidak sesuai dengan skenario mana pun (Bullish atau Bearish), langkah terbaik adalah tidak trading (<em>flat</em>). Tidak punya posisi adalah sebuah posisi (posisi aman).</li>
+</ol>
+<div class="warning"><strong>Warning</strong><br/><p>Jangan pernah menghapus Stop Loss (SL) hanya karena kamu sangat yakin dengan biasmu. Pasar tidak peduli seberapa yakin dirimu.</p></div>
+<h2>Kesimpulan</h2>
+<p>Gunakan Daily Bias sebagai <em>guideline</em> (panduan), bukan sebagai kitab suci yang tak bisa salah. Saat biasmu benar, maksimalkan keuntungan (Hold sampai Take Profit). Saat biasmu salah, minimalkan kerugian (Cut Loss cepat). Itulah inti dari <em>Risk Management</em> dan kunci bertahan lama di industri trading ini.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="bias-untuk-scalper-day-trader-dan-swing-trader" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 3 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Bias untuk Scalper, Day Trader, dan Swing Trader</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Setiap trader punya gaya dan preferensi masing-masing. Ada yang suka menahan posisi berhari-hari (Swing), ada yang menutup posisi sebelum pasar tutup setiap hari (Day Trader), dan ada yang cuma masuk pasar hitungan menit (Scalper). Karena target dan waktu tahan posisinya berbeda, <strong>cara menggunakan Daily Bias juga harus disesuaikan.</strong></p></div>
+<p>Salah satu kesalahan paling konyol yang sering dilakukan pemula adalah: masuk pasar sebagai Scalper, tapi pas posisi <em>floating minus</em>, mendadak berubah pikiran jadi Swing Trader dengan alasan, "Wah, daily bias-nya masih mendukung kok!" Ini adalah resep instan untuk menghancurkan akunmu.</p>
+<h2>1. Swing Trader (Fokus: Weekly &amp; Daily Bias)</h2>
+<p>Bagi Swing Trader, <em>Daily Bias</em> adalah nyawa. Tapi mereka tidak berhenti di situ; mereka juga harus melihat gambaran yang lebih besar, yaitu <em>Weekly Bias</em>.</p>
+<ul>
+<li><strong>Timeframe Utama:</strong> Weekly (untuk arah makro) dan Daily (untuk eksekusi atau mencari momentum). Kadang H4 digunakan untuk presisi <em>entry</em>.</li>
+<li><strong>Cara Pakai:</strong> Swing trader mencari perubahan struktur besar (ChoCh) di Daily. Kalau Weekly sedang Bullish dan harga di Daily baru saja mantul dari area <em>Demand</em>, mereka akan <em>Buy</em> dan menahan posisi (<em>Hold</em>) selama berhari-hari sampai target likuiditas eksternal di Weekly/Daily tercapai.</li>
+<li><strong>Psikologi:</strong> Swing trader tidak peduli dengan fluktuasi kecil (<em>noise</em>) di M15. Selama struktur H4/Daily belum patah, mereka tenang menahan posisi.</li>
+</ul>
+<h2>2. Day Trader (Fokus: Daily Bias &amp; H1/M15 Struktur)</h2>
+<p>Ini adalah gaya trading yang paling seimbang dan sangat disarankan untuk sebagian besar trader. Day Trader tidak membawa posisi menginap (<em>overnight</em>), sehingga bebas dari risiko <em>gap</em> atau biaya <em>swap</em>.</p>
+<ul>
+<li><strong>Timeframe Utama:</strong> Daily (untuk menentukan Bias), H1 (untuk struktur intraday), M15/M5 (untuk eksekusi <em>entry</em>).</li>
+<li><strong>Cara Pakai:</strong> Pagi hari, Day Trader melihat chart Daily untuk menentukan bias (misal: Bullish). Kemudian, mereka akan turun ke H1/M15 untuk mencari momen kapan harga turun sementara (<em>retracement</em>) ke area <em>Discount</em> (<a>Order Block</a> atau FVG di M15). Setelah ada konfirmasi pembalikan (ChoCh di M5), mereka <em>Buy</em>.</li>
+<li><strong>Target:</strong> Target mereka sangat realistis: <em>Previous Day High</em> (PDH), <em>Session High</em> (Asian/London High), atau level likuiditas terdekat. Mereka keluar (<em>Exit</em>) sebelum hari berganti.</li>
+</ul>
+<p><strong>Aturan Emas Day Trader:</strong> Kalau target sudah tercapai, tutup laptop. Jangan tamak mencoba mengambil seluruh pergerakan harga.</p>
+<h2>3. Scalper (Fokus: H1/M15 Bias &amp; M1 Eksekusi)</h2>
+<p>Scalper adalah sniper yang bergerak cepat. Mereka mengincar profit kecil-kecil (5-15 pips di forex/gold) tapi dengan lot yang sedikit lebih berani, dan dilakukan berulang kali dalam sehari.</p>
+<ul>
+<li><strong>Timeframe Utama:</strong> H1 (untuk Bias besar), M15 (untuk struktur jangka pendek), M1 (untuk <em>entry sniper</em>).</li>
+<li><strong>Cara Pakai:</strong> Apakah Scalper butuh Daily Bias? <strong>Iya, tapi sebagai konteks tambahan.</strong> Bagi Scalper, struktur di M15 adalah "raja"-nya. Jika Daily Bullish, tapi M15 saat ini sedang Bearish tajam menuju area Discount H1, seorang Scalper <em>boleh</em> mengambil posisi <em>Sell</em> pendek (<em>counter-trend intraday</em>). Namun, probabilitas tertinggi tetap ada saat M15 selaras dengan H1 dan Daily.</li>
+<li><strong>Risiko:</strong> Scalping membutuhkan fokus tingkat tinggi dan kedisiplinan baja (Stop Loss ketat). Karena sangat bergantung pada <em>noise</em> dan pergerakan kecil, telat keluar beberapa menit saja bisa mengubah profit menjadi <em>loss</em> besar.</li>
+</ul>
+<p><strong>Jangan Dicampur Aduk!</strong> Kalau kamu masuk pasar menggunakan struktur M5 dengan target 10 pips (gaya Scalper), jangan pasang Stop Loss di area Daily <a>Support</a> (gaya Swing). <em>Risk/Reward Ratio</em> (RR)-mu akan hancur lebur!</p>
+<h2>Kesimpulan: Kenali Dirimu Sendiri</h2>
+<p>Sebelum pusing menentukan bias, tanyakan dulu pada dirimu: <strong>Kamu tipe trader yang mana?</strong> Apakah kamu punya waktu luang berjam-jam untuk pantau chart (Scalper/Day Trader), atau kamu sibuk kerja dan cuma bisa lihat chart pagi/malam hari (Swing)?</p>
+<p>Sesuaikan penggunaan timeframe bias dengan waktu luang dan ketahanan mentalmu. Jangan mencoba memakai baju yang ukurannya tidak pas untuk tubuhmu.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="irl-dan-erl-untuk-bias" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 4 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">IRL dan ERL untuk Bias</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Kalau kamu sudah paham konsep likuiditas (bahwa market bergerak untuk menjemput Stop Loss orang lain sebagai bahan bakar), sekarang kita akan hubungkan konsep itu dengan Daily Bias. Untuk menentukan bias yang kuat, kita wajib paham siklus perpindahan antara <strong>Internal Range Liquidity (IRL)</strong> dan <strong>External Range Liquidity (ERL)</strong>.</p></div>
+<p>Konsep ini sering disebut sebagai <strong>Algorithmic <a>Price Delivery</a></strong> (Pengiriman Harga Berbasis Algoritma). Market itu tidak bergerak acak; dia punya mesin (algoritma) yang tugasnya memindahkan harga dari satu kolam likuiditas ke kolam likuiditas lainnya.</p>
+<h2>Apa Itu ERL (External Range Liquidity)?</h2>
+<p>ERL adalah likuiditas yang berada di batas luar sebuah struktur harga. Secara sederhana, ERL adalah pucuk (<em>High</em>) dan dasar (<em>Low</em>) dari sebuah ayunan harga (<em>Swing High</em> dan <em>Swing Low</em>). Di sinilah tempat para trader ritel biasanya meletakkan Stop Loss atau Buy/Sell Stop mereka.</p>
+<ul>
+<li><strong><a>Buy Side Liquidity</a> (BSL):</strong> Terletak di atas <em>Swing High</em> sebelumnya. Ini adalah target (ERL) saat market sedang <em>Bullish</em>.</li>
+<li><strong><a>Sell Side Liquidity</a> (SSL):</strong> Terletak di bawah <em>Swing Low</em> sebelumnya. Ini adalah target (ERL) saat market sedang <em>Bearish</em>.</li>
+</ul>
+<h2>Apa Itu IRL (Internal Range Liquidity)?</h2>
+<p>IRL adalah ketidakseimbangan harga yang terjadi di <em>dalam</em> jangkauan ayunan tersebut (di antara <em>Swing High</em> dan <em>Swing Low</em> terakhir). Bentuk paling umum dari IRL adalah <strong><a>Fair Value Gap</a> (FVG)</strong>. Saat harga naik terlalu cepat, ia akan meninggalkan area kosong (FVG) di bawahnya. Area kosong ini harus diisi (rebalance) sebelum market bisa melanjutkan perjalanan naiknya.</p>
+<p><strong>Rumus Emas Smart Money:</strong> Harga akan selalu bergerak bolak-balik: <strong>Dari IRL menuju ERL, lalu dari ERL kembali ke IRL.</strong></p>
+<h2>Bagaimana IRL &amp; ERL Menentukan Daily Bias?</h2>
+<p>Sekarang, mari kita gunakan rumus emas di atas sebagai kompas untuk menentukan Daily Bias. Coba lihat <em>Daily Chart</em>, dan tanyakan 2 hal ini:</p>
+<ol>
+<li>Di mana posisi harga saat ini berada?</li>
+<li>Apa level yang <em>baru saja</em> disapu (diambil) oleh harga?</li>
+</ol>
+<h3>Skenario 1: Harga Baru Saja Mengambil IRL (FVG)</h3>
+<p>Katakanlah market sedang dalam tren naik yang kuat. Harga baru saja turun (<em>pullback</em>) dan menyentuh sebuah FVG besar (IRL) di <em>Daily Chart</em>, lalu mulai memantul naik.</p>
+<p><strong>Bias Kita: BULLISH.</strong></p>
+<p><strong>Kenapa?</strong> Karena setelah mengambil bensin dari dalam (IRL), tujuan (<a>Draw on Liquidity</a>) algoritma selanjutnya adalah menembus pucuk harga di luar sana (ERL / <em>Old High</em>). Jadi, pada hari-hari berikutnya, kita akan fokus mencari posisi <em>Buy</em> di timeframe kecil (H1/M15) sampai target ERL tersebut tersentuh.</p>
+<h3>Skenario 2: Harga Baru Saja Menyapu ERL (Old High/Low)</h3>
+<p>Katakanlah harga baru saja melesat kencang ke atas dan berhasil menembus <em>Swing High</em> sebelumnya (menyapu ERL / BSL). Setelah menembus, bukannya lanjut naik, harga malah mulai tertahan dan membentuk <em>Candle Rejection</em> (penolakan).</p>
+<p><strong>Bias Kita: BEARISH (atau Netral/Konsolidasi).</strong></p>
+<p><strong>Kenapa?</strong> Karena target utama (ERL) sudah tercapai. Pesta likuiditas di pucuk sudah selesai diambil oleh Smart Money. Sesuai rumus, setelah ERL diambil, harga akan mencari IRL (area FVG) di arah yang berlawanan untuk menyeimbangkan pasar. Jadi, kita bisa mencari setup <em>Sell</em> untuk menargetkan FVG (IRL) yang ada di bawah.</p>
+<p><strong>Hati-hati Jebakan Breakout Trader:</strong> Ritel trader sering tertipu saat harga menyapu ERL. Mereka melihat harga menembus <em><a>Resistance</a></em> kuat, lalu mereka langsung <em>Buy (Breakout Trading)</em>. Padahal, bagi Smart Money, itu adalah area untuk <em>Take Profit</em> atau justru mulai membuka posisi <em>Sell</em> menuju IRL!</p>
+<h2>Kesimpulan</h2>
+<p>Membaca bias bukanlah menebak-nebak. Ini adalah seni mengamati dari mana harga datang dan ke mana ia akan pergi. Hubungan IRL dan ERL memberikan <em>framework</em> (kerangka berpikir) yang logis:</p>
+<p><em>"Kalau bensin di dalam (IRL) sudah diisi, saatnya ngebut ke luar (ERL). Kalau bensin di luar (ERL) sudah habis disedot, saatnya balik ke dalam (IRL) untuk isi ulang."</em></p>
+<p>Selalu gunakan <em>Daily Chart</em> untuk melihat <em>puzzle</em> ini, lalu eksekusi di timeframe yang lebih kecil.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="previous-day-high-dan-low" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 5 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Previous Day High dan Low</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Bagi seorang <em>Day Trader</em>, tidak ada level yang lebih penting dan sering dilihat setiap harinya selain <strong>Previous Day High (PDH)</strong> dan <strong>Previous Day Low (PDL)</strong>. Kedua level ini adalah kompas harianmu. Jika kamu membuka chart di pagi hari dan belum menandai level tertinggi dan terendah dari pergerakan harga kemarin, kamu ibarat mengemudi dengan mata tertutup.</p></div>
+<h2>Kenapa PDH dan PDL Sangat Penting?</h2>
+<p>Market digerakkan oleh satu hal utama: <strong>Likuiditas</strong>. Likuiditas adalah tumpukan order (berupa <em>Stop Loss</em>, <em>Buy Stop</em>, atau <em>Sell Stop</em>) dari para trader di seluruh dunia.</p>
+<p>Coba posisikan dirimu sebagai trader ritel biasa. Kalau kemarin harga terus naik dan kamu memutuskan untuk menahan posisi Buy sampai hari ini, di mana kamu akan meletakkan Stop Loss-mu agar "aman"? Tentu saja di bawah level terendah hari kemarin (PDL). Sebaliknya, trader yang nge-<em>Sell</em> kemarin akan meletakkan <em>Stop Loss</em> mereka di atas level tertinggi hari kemarin (PDH).</p>
+<p>Karena itulah, <strong>PDH dan PDL adalah sarang likuiditas terbesar (External Range Liquidity / ERL) dalam skala harian</strong>. Smart Money (Institusi) sangat tahu hal ini. Mereka menjadikan level-level ini sebagai <strong>magnet utama (<a>Draw on Liquidity</a>)</strong> untuk pergerakan harga hari ini.</p>
+<p><strong>Level Wajib Marking:</strong> Setiap pagi (sebelum sesi London dibuka), tarik garis horizontal pada titik tertinggi (PDH) dan terendah (PDL) dari pergerakan harga satu hari sebelumnya.</p>
+<h2>Dua Skenario Utama di PDH/PDL</h2>
+<p>Saat harga mendekati PDH atau PDL di hari ini, jangan panik atau buru-buru masuk posisi. Amati dan tunggu reaksi market. Biasanya, hanya akan terjadi salah satu dari dua skenario ini:</p>
+<h3>1. Sweep &amp; Reversal (Skenario Sapu Bersih)</h3>
+<p>Ini adalah skenario yang paling sering memakan korban trader ritel (biasa disebut <em>Stop Hunt</em> atau Manipulasi).</p>
+<p>Misalnya, harga hari ini perlahan naik mendekati PDH. Begitu harga sedikit menembus PDH, banyak trader ritel yang berpikir, <em>"Wah, <a>Resistance</a> jebol! Breakout! Buy sekarang!"</em>. Tapi yang terjadi selanjutnya, harga tiba-tiba berbalik arah (<em>reversal</em>) dengan sangat kencang ke bawah.</p>
+<p><strong>Kenapa?</strong> Karena Smart Money hanya berniat menembus PDH sedikit untuk "menyapu" <em>Buy Stop</em> dan <em>Stop Loss</em> (mengambil likuiditas), setelah kantong mereka penuh, mereka membanting harga turun menuju PDL.</p>
+<p><strong>Cara Entry:</strong> Tunggu harga menembus PDH. Jangan langsung Sell! Tunggu sampai harga kembali masuk ke <em>range</em> (turun lagi di bawah PDH) dan membentuk <em>Change of Character (ChoCh)</em> di M5 atau M15. Baru eksekusi Sell.</p>
+<h3>2. Expansion / Continuation (Skenario Lanjut Terus)</h3>
+<p>Skenario ini terjadi saat Daily Bias sedang sangat kuat (misalnya tren sedang sangat Bullish dan didukung fundamental besar). Harga menembus PDH dengan <em>Candle Marubozu</em> besar (<em>Displacement</em> / momentum kuat) dan tidak kembali turun.</p>
+<p>Pada skenario ini, PDH yang tadinya menjadi target (<em><a>Resistance</a></em> / ERL), kini berubah fungsi menjadi pijakan baru (<em><a>Support</a></em>) untuk melanjutkan kenaikan.</p>
+<p><strong>Cara Entry:</strong> Jangan kejar harga yang sedang lari! Tunggu harga menembus PDH dengan jelas, tinggalkan <em><a>Fair Value Gap</a> (FVG)</em>. Saat harga <em>pullback</em> (koreksi) turun kembali mengetes area di dekat PDH (yang kini jadi <em><a>support</a></em>), cari konfirmasi di M5 untuk posisi <em>Buy</em> lanjutan.</p>
+<p><strong>Waktu itu Krusial (Time &amp; Price):</strong> Sweep (Manipulasi) paling sering terjadi di ujung Sesi Asia (Frankfurt Open) atau awal pembukaan Sesi London. Hati-hati jika harga menembus PDH/PDL di waktu-waktu transisi ini.</p>
+<h2>Menghubungkan PDH/PDL dengan Daily Bias</h2>
+<p>Level ini sangat ampuh jika digabungkan dengan bias harianmu (yang sudah dibahas di bab sebelumnya):</p>
+<ul>
+<li>Jika <strong>Daily Bias = BULLISH</strong>: Kamu ingin melihat market turun dulu mengambil PDL (Sweep PDL sebagai manipulasi). Setelah likuiditas di PDL diambil, harga akan berbalik naik kencang (Ekspansi) dan target <em>Take Profit</em>-mu ada di PDH.</li>
+<li>Jika <strong>Daily Bias = BEARISH</strong>: Kamu berharap harga naik dulu mengambil PDH di awal sesi. Setelah PDH disapu, harga akan dibanting turun, dan targetmu adalah PDL.</li>
+</ul>
+<p>Dengan menguasai PDH dan PDL, kamu tidak akan lagi bingung di mana mencari <em>entry point</em> yang akurat dan di mana meletakkan target <em>Take Profit</em> yang masuk akal setiap harinya.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="daily-candle-ohlc-dan-olhc" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 6 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Daily Candle OHLC dan OLHC</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Jika kamu pernah belajar <em>candlestick</em> dasar, kamu pasti tahu bahwa setiap <em>candle</em> terbentuk dari 4 komponen: <strong>Open</strong> (Harga Buka), <strong>High</strong> (Harga Tertinggi), <strong>Low</strong> (Harga Terendah), dan <strong>Close</strong> (Harga Tutup). Atau sering disingkat OHLC.</p></div>
+<p>Tapi tahukah kamu, bahwa urutan terbentuknya 4 titik tersebut dalam <em>Daily Candle</em> (Candle Harian) adalah <strong>rahasia terbesar bagaimana Smart Money menggerakkan harga (<a>Power of Three</a> / AMD)</strong>? Kalau kamu paham rahasia ini, kamu tidak akan mudah ditipu oleh gerakan "palsu" di pagi hari.</p>
+<h2>Konsep <a>Power of Three</a> (AMD)</h2>
+<p>Smart Money menggerakkan harga harian dalam tiga fase utama:</p>
+<ol>
+<li><strong>Accumulation (Akumulasi):</strong> Terjadi di dekat harga <em>Open</em> harian. Harga bergerak menyamping (sideways), mengumpulkan order.</li>
+<li><strong>Manipulation (Manipulasi):</strong> Harga bergerak <em>berlawanan</em> dengan arah tren asli (Daily Bias). Tujuannya untuk menjebak trader ritel ke arah yang salah dan mengambil Stop Loss mereka (<em>Sweep Liquidity</em>).</li>
+<li><strong>Distribution / Expansion (Distribusi):</strong> Setelah likuiditas cukup, harga bergerak sangat cepat searah dengan tren asli (Daily Bias) dan akhirnya ditutup (<em>Close</em>).</li>
+</ol>
+<p>Konsep AMD ini terlihat jelas pada bentuk harian dari anatomi <em>Candle</em> Bullish (OLHC) dan Bearish (OHLC).</p>
+<h2>Anatomi Candle Bullish Harian: O - L - H - C</h2>
+<p>Jika <strong>Daily Bias-mu hari ini adalah Bullish (Naik)</strong>, maka kamu mengharapkan bentuk candle harian akan menjadi <strong>Open -&gt; Low -&gt; High -&gt; Close (OLHC)</strong>.</p>
+<p>Kronologinya seperti ini:</p>
+<ul>
+<li><strong>O (Open):</strong> Hari baru dimulai (biasanya dihitung dari pembukaan jam tengah malam <em>Midnight New York</em>). Harga cenderung tenang atau bergerak dalam <em>range</em> kecil (Akumulasi / Sesi Asia).</li>
+<li><strong>L (Low):</strong> Harga tiba-tiba merosot turun ke bawah harga <em>Open</em>. Trader amatir akan teriak: <em>"Wah harga </em>breakdown<em>, ayo Sell!"</em>. Padahal, penurunan ini adalah <strong>Manipulasi (<a>Judas Swing</a>)</strong>. Smart Money sengaja menurunkan harga ke area <em>Discount</em> (<a>Order Block</a> atau FVG di bawah harga Open) untuk memborong (Buy) dengan harga murah. Titik <em>Low</em> ini sering kali menyapu PDL (Previous Day Low) atau Asian Low.</li>
+<li><strong>H (High):</strong> Setelah <em>Low</em> terbentuk, harga berbalik arah dan terbang tinggi menjebol harga <em>Open</em>, terus naik membentuk titik <em>High</em> harian. Ini adalah fase <strong>Distribusi (Ekspansi)</strong> searah dengan bias Bullish awal. Target utamanya adalah PDH (Previous Day High).</li>
+<li><strong>C (Close):</strong> Di akhir hari (Sesi New York tutup), harga ditutup di dekat area <em>High</em>, menyisakan sebuah <em>candle hijau</em> (Bullish) yang utuh.</li>
+</ul>
+<p><strong>Rahasia Bullish:</strong> Jika biasmu Bullish, <strong>jangan pernah Buy saat harga berada DI ATAS Midnight Open!</strong> Belilah hanya saat harga turun (membentuk ekor bawah/Low) DI BAWAH garis Midnight Open (area Discount).</p>
+<h2>Anatomi Candle Bearish Harian: O - H - L - C</h2>
+<p>Sebaliknya, jika <strong>Daily Bias-mu hari ini adalah Bearish (Turun)</strong>, kamu mengharapkan bentuk candle menjadi <strong>Open -&gt; High -&gt; Low -&gt; Close (OHLC)</strong>.</p>
+<p>Kronologinya berkebalikan:</p>
+<ul>
+<li><strong>O (Open):</strong> Hari dimulai, harga akumulasi.</li>
+<li><strong>H (High):</strong> Harga tiba-tiba meloncat naik melewatin harga <em>Open</em>. Trader ritel ikut <em>Buy (Breakout)</em>. Tapi ini adalah <strong>Manipulasi</strong> untuk mencapai area <em>Premium</em> (Supply / <a>Resistance</a>) di atas harga Open. <em>Smart Money</em> sedang menjual di harga mahal.</li>
+<li><strong>L (Low):</strong> Harga dibanting turun tajam, melewati harga <em>Open</em>, dan terus meluncur membentuk titik terendah (<em>Low</em>) hari itu. (Fase <strong>Distribusi</strong> Bearish).</li>
+<li><strong>C (Close):</strong> Harga tutup di bawah, menyisakan <em>candle merah</em> besar.</li>
+</ul>
+<p><strong>Rahasia Bearish:</strong> Jika biasmu Bearish, <strong>jangan Sell saat harga DI BAWAH Midnight Open!</strong> Jual-lah hanya setelah harga naik (membentuk ekor atas/High) DI ATAS garis Midnight Open (area Premium).</p>
+<h2>Kesimpulan dan Cara Pakai</h2>
+<p>Mengerti urutan <a>OHLC dan OLHC</a> membuatmu menjadi trader yang <strong>sabar</strong>. Saat kamu bangun pagi, melihat bias Bearish, tapi harga di Sesi London malah meroket naik... kamu tidak akan panik. Kamu akan tersenyum dan berkata, <em>"Bagus, Smart Money sedang membentuk titik High (H). Aku akan tunggu sampai manipulasi selesai, lalu aku Sell di atas Midnight Open untuk ikut fase Low (L) ke bawah."</em></p>
+<p>Ingat, dalam trading institusional: waktu (Time) sama pentingnya dengan harga (Price). Tandai garis <em>Midnight Open</em> di chart-mu setiap hari, dan gunakan itu sebagai pemisah antara harga mahal (Premium) dan harga murah (Discount) harian.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="m15-orderflow" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 7 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">M15 Orderflow</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Setelah kita membahas konsep makro seperti <em>Daily Bias</em> dan ayunan harga besar, sekarang kita masuk ke ruang mesinnya. Tempat di mana kita benar-benar melihat jejak uang dipindahkan. Itulah yang disebut <strong>Orderflow</strong>, dan <em>Timeframe</em> 15 Menit (M15) adalah <em>sweet spot</em> (tempat terbaik) untuk membacanya, khususnya bagi <em>Day Trader</em>.</p></div>
+<h2>Apa Itu Orderflow?</h2>
+<p><em>Orderflow</em> (Aliran Order) adalah rangkaian pengiriman harga yang terjadi secara berturut-turut. Secara visual di chart, <em>Orderflow</em> yang sehat terlihat seperti tangga yang bergerak teratur.</p>
+<p>Bayangkan kamu sedang naik eskalator yang mengarah ke atas (Bullish). Eskalator itu akan terus menghormati pijakan yang ada di bawah (<a>Support</a>/Demand) dan dengan mudah menembus rintangan apa pun yang ada di atas (<a>Resistance</a>/Supply).</p>
+<ul>
+<li><strong>Bullish Orderflow:</strong> Harga secara konsisten memantul dari area <em>Discount</em> (<a>Order Block</a> Bullish / FVG Bullish) dan menembus area <em>Premium</em> (<a>Order Block</a> Bearish). Area <em>Supply</em> gagal menahan harga.</li>
+<li><strong>Bearish Orderflow:</strong> Harga secara konsisten tertahan dan turun dari area <em>Premium</em> (<a>Order Block</a> Bearish / FVG Bearish) dan dengan mudah menembus area <em>Discount</em> (<a>Order Block</a> Bullish). Area <em>Demand</em> gagal menahan harga.</li>
+</ul>
+<p><strong>Aturan Sederhana:</strong> Orderflow adalah tentang <em>rasa hormat</em>. Zona mana yang dihormati harga (dipantulkan), dan zona mana yang dilecehkan (ditembus)?</p>
+<h2>M15 Sebagai Filter Bias</h2>
+<p>Daily Bias memberitahumu <em>"Kita mau pergi ke mana?"</em>. Sedangkan <a>M15 Orderflow</a> memberitahumu <em>"Apakah kita sudah mulai berangkat sekarang?"</em>.</p>
+<p>Sering kali, <em>Daily Bias</em>-mu sudah Bullish, tapi saat kamu buka chart di pagi hari, M15 masih menunjukkan pergerakan turun (Bearish Orderflow). Banyak trader pemula yang panik di sini. <em>"Wah, bias-ku salah ya? Kok malah turun?"</em></p>
+<p>Padahal, belum tentu salah! Ingat konsep <em><a>Power of Three</a></em> (Manipulasi) di bab sebelumnya? Penurunan di M15 itu kemungkinan besar hanyalah harga yang sedang mundur (<em>pullback</em>) untuk mencari area pijakan yang lebih murah (<em>Discount Area</em> di H1/Daily) sebelum akhirnya benar-benar melesat naik.</p>
+<h2>Cara Eksekusi: Menyelaraskan M15 dengan Daily</h2>
+<p>Kunci dari profit konsisten adalah <strong>keselarasan (Alignment)</strong> antara <em>Timeframe</em> Besar (Bias) dan <em>Timeframe</em> Kecil (Orderflow).</p>
+<h3>Langkah-langkah Eksekusi (Contoh Bias Bullish):</h3>
+<ol>
+<li><strong>Identifikasi Bias (Daily):</strong> Analisa Daily menunjukkan harga mengincar likuiditas di atas (PDH). Bias = Bullish.</li>
+<li><strong>Tunggu Pullback (M15):</strong> Di Sesi Asia/London awal, M15 membentuk <em>Lower Highs</em> dan <em>Lower Lows</em> (Bearish Orderflow). Biarkan saja! Jangan dilawan. Market sedang bergerak menuju area <em>Discount</em>.</li>
+<li><strong>Masuk ke Area Krusial (POI):</strong> Harga akhirnya menyentuh level <em><a>Support</a></em> harian (misal: Daily FVG atau H1 <a>Order Block</a>) di bawah harga <em>Midnight Open</em>.</li>
+<li><strong>Tunggu Perubahan Karakter (ChoCh) di M15:</strong> Ini bagian paling penting. Jangan langsung <em>Buy</em> saat harga menyentuh zona. Tunggu sampai <em>Bearish Orderflow</em> di M15 patah! Tandanya: Harga berhasil menembus dan <em>close</em> di atas <em>Swing High</em> M15 terakhir. Inilah yang disebut <strong>Change of Character (ChoCh)</strong>.</li>
+<li><strong>Mulai M15 Bullish Orderflow:</strong> Setelah ChoCh, M15 sekarang sudah sejajar (selaras) dengan Daily Bias. Area M15 yang berhasil mematahkan struktur tadi (OB atau FVG) menjadi tempat <em>entry Buy</em>-mu yang paling aman.</li>
+</ol>
+<p><strong>Jangan Terjebak:</strong> Jika M15 belum menunjukkan tanda-tanda berbalik arah (belum ada ChoCh) dan masih terus merosot turun merusak area <em><a>Support</a></em>... jangan nekat menangkap pisau jatuh! Tetap minggir. <em>Orderflow M15</em> adalah bos dalam urusan <em>timing</em> masuk pasar.</p>
+<h2>Kesimpulan</h2>
+<p>Membaca <em><a>M15 Orderflow</a></em> adalah keterampilan membaca "napas" market secara <em>real-time</em>. Jangan pernah memaksakan <em>Daily Bias</em>-mu jika M15 dengan jelas sedang bergerak melawannya dengan kuat. Sabarlah menunggu M15 mengonfirmasi bahwa Smart Money sudah siap menggerakkan harga searah dengan bias-mu.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="top-down-analysis" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 8 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Top Down Analysis</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Bayangkan kamu sedang menonton film detektif. Kamu tidak bisa langsung melompat ke 10 menit terakhir untuk tahu siapa pembunuhnya. Kamu harus menonton dari awal untuk membangun <em>cerita</em> dan memahami motifnya. Di dunia trading, proses merangkai cerita dari gambaran besar ke detail terkecil ini disebut <strong><a>Top Down Analysis</a></strong>.</p></div>
+<p><em><a>Top Down Analysis</a></em> adalah fondasi utama bagi <em>Price Action Trader</em>. Ini adalah teknik menganalisa pergerakan harga yang dimulai dari <em>Timeframe</em> paling besar (Makro), lalu diturunkan perlahan ke <em>Timeframe</em> eksekusi (Mikro). Tujuannya agar kita tidak tersesat dalam <em>noise</em> (gangguan) grafik kecil yang sering kali menipu.</p>
+<h2>Hierarki Timeframe (Dari Makro ke Mikro)</h2>
+<p>Kita tidak perlu membuka semua <em>timeframe</em> yang ada di platform trading. Cukup gunakan hierarki yang jelas dan memiliki fungsi spesifik:</p>
+<h3>1. Monthly / Weekly (Gambaran Makro)</h3>
+<p><strong>Fungsi: Identifikasi Arus Utama dan Level Ekstrem.</strong></p>
+<p>Kamu tidak perlu mengecek ini setiap hari. Cukup seminggu sekali (saat <em>weekend</em>). Tujuannya untuk melihat posisi harga saat ini di skala global. Apakah harga sedang berada di titik tertingginya dalam sejarah (<em>All Time High</em>)? Ataukah harga baru saja memantul dari <em>Weekly <a>Order Block</a></em> besar?</p>
+<p><em>Pertanyaan Detektif:</em> Di mana likuiditas terbesar berminggu-minggu yang belum diambil?</p>
+<h3>2. Daily (Penentu Bias)</h3>
+<p><strong>Fungsi: Menentukan Arah Hari Ini (Daily Bias).</strong></p>
+<p>Ini adalah <em>timeframe</em> wajib untuk ditengok setiap pagi. Kamu menandai <em>Previous Day High</em> (PDH), <em>Previous Day Low</em> (PDL), serta mencari apakah struktur harian sedang naik atau turun.</p>
+<p><em>Pertanyaan Detektif:</em> Siapa yang akan menjadi korban hari ini? Likuiditas sisi <em>Buy</em> atau sisi <em>Sell</em>?</p>
+<h3>3. H4 / H1 (Area Persiapan - POI)</h3>
+<p><strong>Fungsi: Menandai Point of Interest (POI) atau Zona Pantau.</strong></p>
+<p>Setelah tahu <em>bias</em> (misal: Bullish), kamu turun ke H1 untuk mencari <em>di mana tempat terbaik untuk masuk</em>. Kamu akan mencari area <em>Discount</em> (murah) yang berisi <em><a>Order Block</a></em>, <em><a>Fair Value Gap</a> (FVG)</em>, atau <em><a>Breaker Block</a></em> yang belum tersentuh. Gambarlah kotak di area tersebut.</p>
+<p><em>Pertanyaan Detektif:</em> Di zona mana Smart Money meninggalkan jejak terbesarnya kemarin?</p>
+<h3>4. M15 / M5 (Area Eksekusi &amp; Konfirmasi)</h3>
+<p><strong>Fungsi: Menunggu Orderflow Berubah (Trigger).</strong></p>
+<p>Saat harga akhirnya memasuki kotak POI yang sudah kamu gambar di H1, jangan langsung pasang badan (<em>Limit Order</em>). Tunggu sampai <em>timeframe</em> kecil (M15/M5) mengonfirmasi bahwa zona itu benar-benar bereaksi. Cari pola <em>Change of Character (ChoCh)</em> atau <em><a>Market Structure Shift</a> (MSS)</em> searah dengan biasmu.</p>
+<p><em>Pertanyaan Detektif:</em> Apakah Smart Money sudah mulai menyuntikkan uang untuk menggerakkan harga?</p>
+<h2>Menyusun Cerita (Narrative)</h2>
+<p>Jika kamu melakukan <em><a>Top Down Analysis</a></em> dengan benar, hasil akhirmu di pagi hari bukan cuma berupa sinyal "Buy di sini, Sell di situ", melainkan sebuah <strong>cerita yang masuk akal (Narrative)</strong>.</p>
+<p>Contoh cerita yang baik:</p>
+<blockquote>
+<p>"Di grafik Weekly, harga sedang tren naik. Di grafik Daily, harga kemarin baru saja melakukan <em>pullback</em> ke dalam FVG (IRL) dan hari ini bersiap menargetkan puncak likuiditas bulan lalu (Bias Bullish). Di grafik H1, ada <a>Order Block</a> kuat tepat di bawah harga <em>Midnight Open</em>. Rencanaku: Menunggu sesi London buka, membiarkan harga dimanipulasi turun menyentuh <a>Order Block</a> H1 tersebut, lalu mencari konfirmasi ChoCh di M15 untuk Buy."</p>
+</blockquote>
+<p><strong>Rahasia Profesional:</strong> Trading tanpa <em>Narrative</em> ibarat menembak dalam gelap. Jika kamu tidak bisa menceritakan alasan <em>entry</em>-mu dalam 3 kalimat logis, berarti analisamu belum matang.</p>
+<h2>Kesalahan Umum Pemula</h2>
+<p>Kesalahan fatal yang sering terjadi adalah <strong>Bottom Up Analysis</strong> (menganalisa dari bawah ke atas). Trader bangun tidur, langsung buka chart M5, lihat harga naik kencang, langsung berasumsi "Ini tren naik!", lalu Buy. Padahal, kenaikan di M5 itu hanyalah manipulasi kecil menuju <em>Supply Area</em> besar di H4 yang siap membanting harga ke dasar laut.</p>
+<p>Mulailah kebiasaan yang benar dari sekarang: <strong>Selalu <em>zoom out</em> (perbesar skala) sebelum kamu <em>zoom in</em> (perkecil skala).</strong></p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="menentukan-draw-on-liquidity" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 9 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Menentukan Draw on Liquidity</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Dalam bahasa Inggris sehari-hari, kata "Draw" bisa berarti menarik (seperti menarik laci) atau sesuatu yang menarik perhatian. Dalam <em>Smart Money Concepts (SMC)</em>, <strong><a>Draw on Liquidity</a> (DOL) adalah magnet yang menarik harga menuju suatu level tertentu.</strong></p></div>
+<p>Harga di pasar keuangan tidak pernah bergerak secara acak. Ia bergerak layaknya misil pencari panas. Namun alih-alih mencari panas, harga mencari "likuiditas" (uang dari Stop Loss trader lain atau area ketidakseimbangan). Jika kamu bisa menebak ke arah mana misil itu akan terbang, kamu bisa menumpang di atasnya dengan aman.</p>
+<div class="warning"><strong>Warning</strong><br/><p>Ada pepatah terkenal di kalangan trader institusional: <em>"Jika kamu membuka chart dan tidak tahu di mana letak likuiditasnya, maka bersiaplah, karena uang KAMULAH yang akan jadi likuiditasnya."</em></p></div>
+<h2>Dua Target Utama Magnet (DOL)</h2>
+<p>Secara garis besar, <em><a>Draw on Liquidity</a></em> hanya memiliki dua target utama:</p>
+<h3>1. Stop Hunt (<a>External Liquidity</a>)</h3>
+<p>Harga ditarik ke luar untuk "berburu" <em>Stop Loss</em> yang terkumpul di area-area puncak dan dasar yang sangat jelas. Level-level ini sangat menggiurkan bagi institusi karena di situlah berkumpul order dalam jumlah masif.</p>
+<ul>
+<li><strong>Old Highs / Old Lows:</strong> Puncak atau dasar yang terbentuk beberapa hari, minggu, atau bulan yang lalu.</li>
+<li><strong>Previous Day High / Low (PDH/PDL):</strong> Puncak dan dasar hari kemarin (sudah dibahas di bab sebelumnya).</li>
+<li><strong>Equal Highs / Equal Lows (EQH/EQL):</strong> Dua pucuk atau dua dasar yang tingginya hampir sama rata (sering disebut sebagai <em>Double Top</em> atau <em>Double Bottom</em> oleh trader ritel). Trader ritel sangat percaya level ini "kuat" sebagai <em><a>Support</a>/<a>Resistance</a></em>, sehingga mereka menaruh jutaan dolar <em>Stop Loss</em> tepat di baliknya. Bagi Smart Money, EQH/EQL adalah <strong>prasmanan likuiditas</strong> yang sangat lezat!</li>
+</ul>
+<h3>2. Rebalance (<a>Internal Liquidity</a>)</h3>
+<p>Harga ditarik kembali ke "dalam" untuk mengisi area yang pengiriman harganya tidak seimbang atau tergesa-gesa.</p>
+<ul>
+<li><strong><a>Fair Value Gap</a> (FVG):</strong> Ruang kosong yang ditinggalkan oleh <em>candle</em> besar (<em>Displacement</em>). Magnet harga akan menarik kembali pergerakan <em>candle</em> untuk mengisi celah ini (<em>rebalance</em>) sebelum tren berlanjut.</li>
+</ul>
+<h2>Cara Menentukan DOL Harian</h2>
+<p>Menentukan DOL adalah langkah pamungkas setelah kamu menentukan <em>Daily Bias</em>. Jika kamu tahu biasnya naik, pertanyaan selanjutnya adalah: "Naik sampai mana?"</p>
+<ol>
+<li><strong>Lihat Sebelah Kiri Chart (Look Left):</strong> Jika harga sedang naik kencang, geser layarmu ke kiri. Apa hal paling menarik yang ada di atas harga saat ini? Apakah ada <em>Old High</em> dari minggu lalu? Apakah ada sebuah FVG Daily yang sangat besar dan belum terisi?</li>
+<li><strong>Identifikasi Titik Resistensi Terlemah:</strong> Harga selalu memilih jalan yang paling sedikit hambatannya (<em>path of least <a>resistance</a></em>). Ia akan tertarik ke level likuiditas yang paling dekat dan paling "menggoda".</li>
+<li><strong>Gunakan Sebagai Take Profit (TP):</strong> DOL adalah tempat terbaik, teraman, dan paling logis untuk meletakkan target Take Profit-mu. Jangan pernah berkhayal harga akan terus naik selamanya. Begitu harga menyentuh DOL, tugasmu selesai. Ambil profitmu dan tutup laptop.</li>
+</ol>
+<h2>Kesimpulan</h2>
+<p><em>Daily Bias</em> dan <em><a>Draw on Liquidity</a> (DOL)</em> adalah saudara kembar yang tidak bisa dipisahkan. Bias memberimu arah kompas (Utara/Selatan), sedangkan DOL memberimu koordinat GPS (titik spesifik yang harus dituju). Jika kedua hal ini sudah jelas di kepalamu, percayalah, mencari peluang (setup) untuk <em>entry</em> akan terasa seratus kali lebih mudah dan santai.</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+
+      <section id="skenario-bullish-bearish-dan-netral" class="module-chapter" style="margin-bottom: 56px; padding-top: 36px; border-top: 1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;background:rgba(212,168,50,0.1);padding:3px 8px;border-radius:6px;text-transform:uppercase;">BAB 10 DARI 10</span>
+        </div>
+        <h2 style="font-size:24px;margin:8px 0 16px;color:var(--heading);border-bottom:none;padding-bottom:0;">Skenario Bullish, Bearish, dan Netral</h2>
+        <div class="chapter-content">
+          <div class="note"><strong>Ikhtisar</strong><br/><p>Selamat! Kamu sudah sampai di akhir bab <em>Bias dan <a>Top Down Analysis</a></em>. Sampai di titik ini, kamu seharusnya sudah memiliki kacamata baru untuk melihat <em>chart</em>. Kamu bukan lagi penjudi yang asal tekan tombol <em>Buy/Sell</em>, tapi seorang ahli taktik yang memiliki rencana matang.</p></div>
+<p>Sebagai rangkuman dan <em>Standard Operating Procedure (SOP)</em> harianmu, setiap kali kamu duduk di depan laptop untuk trading, kamu harus memiliki 3 skenario di kepala: <strong>Skenario Bullish, Skenario Bearish, dan Skenario Netral (Tidak Trading).</strong></p>
+<h2>1. Skenario Bullish (Ketika Fokus Mencari Buy)</h2>
+<p>Kamu akan menyusun skenario ini jika analisa Top Down (Weekly/Daily) menunjukkan struktur naik dan ada magnet (DOL) kuat di atas sana (misalnya <em>Previous Day High</em> atau <em>Equal Highs</em>).</p>
+<p><strong>Ceklis Skenario Bullish:</strong></p>
+<ul>
+<li><strong>Posisi Harga:</strong> Harga pembukaan (Midnight Open) telah terbentuk. Aku menunggu harga bergerak <strong>turun</strong> terlebih dahulu (fase Manipulasi).</li>
+<li><strong>Zona Diskon:</strong> Harga masuk ke area <em>Discount</em> (di bawah Midnight Open) dan merespon <em><a>Order Block</a></em> atau FVG di <em>timeframe</em> H1 atau M15.</li>
+<li><strong>Konfirmasi:</strong> Di M15 atau M5, muncul <em>Change of Character (ChoCh)</em> Bullish (patahan tren turun menjadi naik).</li>
+<li><strong>Eksekusi &amp; Target:</strong> Aku masuk <em>Buy</em> dengan <em>Stop Loss</em> di bawah ayunan terendah (<em>Swing Low</em>) terakhir, dan target <em>Take Profit</em> di DOL (seperti PDH).</li>
+</ul>
+<h2>2. Skenario Bearish (Ketika Fokus Mencari Sell)</h2>
+<p>Kamu menyusun skenario ini jika harga Daily baru saja membentur <em><a>Resistance</a>/Supply</em> kuat (seperti Bearish <a>Order Block</a> Daily) dan DOL selanjutnya ada di bawah (seperti <em>Previous Day Low</em> atau FVG kosong di bawah).</p>
+<p><strong>Ceklis Skenario Bearish:</strong></p>
+<ul>
+<li><strong>Posisi Harga:</strong> Setelah Midnight Open, aku menunggu harga bergerak <strong>naik</strong> ke area <em>Premium</em> (fase Manipulasi untuk <em>Stop Hunt</em> awal).</li>
+<li><strong>Zona Premium:</strong> Harga masuk ke zona <em>Supply</em> (<a>Order Block</a> Bearish atau FVG) di atas harga pembukaan.</li>
+<li><strong>Konfirmasi:</strong> Muncul konfirmasi <em>Bearish ChoCh</em> di M15/M5 yang menunjukkan Smart Money mulai membanting harga.</li>
+<li><strong>Eksekusi &amp; Target:</strong> Aku masuk <em>Sell</em> dengan perlindungan (SL) ketat di pucuk <em>High</em> terakhir, menargetkan likuiditas di bawah (PDL / EQL).</li>
+</ul>
+<h2>3. Skenario Netral (Kekuatan "Duduk Diam")</h2>
+<p>Ini adalah skenario yang paling dibenci oleh pemula, tapi paling sering menyelamatkan akun trader profesional dari kehancuran (<em>Margin Call</em>). <strong>Kamu berhak (dan wajib) memutuskan untuk TIDAK TRADING hari ini.</strong></p>
+<p><strong>Kapan Skenario Netral Diaktifkan?</strong></p>
+<ul>
+<li><strong>Hari NFP (Non-Farm Payroll) atau CPI:</strong> Jangan menebak arah saat akan rilis berita ekonomi raksasa! Market akan bergerak sangat liar menyapu <em>Stop Loss</em> atas dan bawah (Choppy/Whipsaw).</li>
+<li><strong>Konsolidasi (Sideways) Panjang:</strong> Jika harga terjebak di <em>range</em> yang sangat sempit dan tidak berhasil menyapu PDH atau PDL selama berhari-hari. Arah belum jelas, jangan memaksakan kehendak.</li>
+<li><strong>Struktur Makro vs Mikro Bertabrakan:</strong> Daily mengatakan "Turun kuat", tapi H4/H1 mengatakan "Naik sangat kuat" dari <em><a>Support</a></em> utama. Jika ceritanya (<em>Narrative</em>) membingungkan dan saling bertentangan, lebih baik tutup chart dan pergi main.</li>
+</ul>
+<div class="note"><strong>Note</strong><br/><p><em>No Trade is a Profitable Trade</em>. (Tidak buka posisi di saat market kacau adalah sebuah kemenangan, karena kamu berhasil melindungi modalmu).</p></div>
+<h2>Apa Selanjutnya?</h2>
+<p>Sekarang kamu sudah tahu <strong>ARAH (Bias)</strong> dan <strong>TUJUAN (<a>Draw on Liquidity</a>)</strong>. Kamu juga sudah punya gambaran besar bagaimana harga bergerak. Di bab-bab selanjutnya (Bagian 08 dan seterusnya), kita akan mulai membedah taktik <em>Entry</em>. Kita akan belajar cara menarik pelatuk senjata dengan sangat presisi di zona eksekusi.</p>
+<p>Pastikan kamu benar-benar menguasai materi <em>Bias dan Top Down</em> ini. Jangan lanjut ke materi <em>Entry Setup</em> jika kamu masih ragu membaca arah harian, karena sehebat apa pun teknik <em>Entry</em>-mu, kalau arah <em>Bias</em>-mu salah, hasilnya akan tetap <em>Stop Loss</em>!</p>
+        </div>
+        <div style="margin-top:20px;text-align:right;">
+          <a href="#top" style="font-size:12px;color:var(--muted);text-decoration:none;">↑ Kembali ke atas</a>
+        </div>
+      </section>
+      </div>
+
+      <div style="margin-top:48px;padding-top:32px;border-top:2px solid var(--border);">
+        <div class="quiz-container" data-module="bias-dan-top-down"></div>
+    <script src="../assets/js/quiz.js"></script>
+      </div>
+
+      <div class="page-nav" style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <a class="btn ghost" href="../bagian-06-ict-core/index.html">← Pertemuan 06</a>
+        <a class="btn primary" href="../bagian-08-session-dan-waktu/index.html">Selesai & Lanjut Pertemuan 08 →</a>
+      </div>
+    </article>
+
+    <aside class="toc-card">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#d4a832;text-transform:uppercase;margin-bottom:6px;">PERTEMUAN 07</div>
+      <h3 style="margin-bottom:12px;font-size:16px;">Daftar Isi Modul</h3>
+      <ul style="max-height: calc(100vh - 280px); overflow-y: auto;">
+        <li><a href="#apa-itu-daily-bias" class="toc-link" data-target="apa-itu-daily-bias">1. Apa Itu Daily Bias</a></li>
+<li><a href="#bias-bukan-ramalan" class="toc-link" data-target="bias-bukan-ramalan">2. Bias Bukan Ramalan</a></li>
+<li><a href="#bias-untuk-scalper-day-trader-dan-swing-trader" class="toc-link" data-target="bias-untuk-scalper-day-trader-dan-swing-trader">3. Bias untuk Scalper, Day Trader, dan Swing Trader</a></li>
+<li><a href="#irl-dan-erl-untuk-bias" class="toc-link" data-target="irl-dan-erl-untuk-bias">4. IRL dan ERL untuk Bias</a></li>
+<li><a href="#previous-day-high-dan-low" class="toc-link" data-target="previous-day-high-dan-low">5. Previous Day High dan Low</a></li>
+<li><a href="#daily-candle-ohlc-dan-olhc" class="toc-link" data-target="daily-candle-ohlc-dan-olhc">6. Daily Candle OHLC dan OLHC</a></li>
+<li><a href="#m15-orderflow" class="toc-link" data-target="m15-orderflow">7. M15 Orderflow</a></li>
+<li><a href="#top-down-analysis" class="toc-link" data-target="top-down-analysis">8. Top Down Analysis</a></li>
+<li><a href="#menentukan-draw-on-liquidity" class="toc-link" data-target="menentukan-draw-on-liquidity">9. Menentukan Draw on Liquidity</a></li>
+<li><a href="#skenario-bullish-bearish-dan-netral" class="toc-link" data-target="skenario-bullish-bearish-dan-netral">10. Skenario Bullish, Bearish, dan Netral</a></li>
+      </ul>
+      <hr style="margin:16px 0;border:none;border-top:1px solid var(--border);">
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+        ⏱️ Estimasi: ~45–60 Menit<br>
+        📚 10 Bab Lengkap<br>
+        🎓 Semester 1 • Pemula
+      </div>
+    </aside>
+  </div>
+</main>
+
+<style>
+@media (max-width: 900px) {
+  .mobile-toc-drawer { display: block !important; }
+  .toc-card { display: none !important; }
+}
+.module-chapter { scroll-margin-top: 100px; }
+.toc-card a.active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var links = document.querySelectorAll('.toc-card .toc-link');
+  var sections = document.querySelectorAll('.module-chapter');
+  if (!links.length || !sections.length) return;
+
+  function onScroll() {
+    var scrollPos = window.scrollY + 140;
+    var currentId = '';
+    sections.forEach(function(sec) {
+      if (sec.offsetTop <= scrollPos) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+    links.forEach(function(link) {
+      if (link.getAttribute('data-target') === currentId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive: true});
+  onScroll();
+});
+</script>
+
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Sistem Kuliah Trading dari Nol sampai Mandiri.</footer>
+<script>
+
+</script>
+</body>
+</html>

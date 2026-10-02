@@ -1,0 +1,707 @@
+/* ============================================================
+   AMY FX PRO — OBSIDIAN GLASS TRADING UI (GLOBAL DESIGN SYSTEM)
+   Luxury Fintech Trading Terminal styling across all main modules:
+   - Mapping Gold (XAU/USD Market Intelligence)
+   - Berita (Market Intelligence Feed)
+   - Jurnal Trading (Trading Performance Journal)
+   - Tutorial Trading (Trading Academy)
+   ============================================================ */
+
+/* ── 1. OBSIDIAN GLASS COLOR TOKENS ──────────────────────── */
+:root, html[data-amyfx-theme="dark"] {
+  --amy-bg: #070B14;
+  --amy-bg-secondary: #0B1020;
+  --bg-color: #070B14;
+  --bg-color-alt: #0B1020;
+  
+  --card-tint: rgba(255, 255, 255, 0.075);
+  --glass-blur: 24px;
+  
+  --amy-surface: rgba(255, 255, 255, 0.075);
+  --amy-surface-strong: rgba(255, 255, 255, 0.11);
+  --amy-surface-solid: rgba(11, 16, 32, 0.92);
+  --amy-surface-soft: rgba(255, 255, 255, 0.04);
+  
+  --amy-border: rgba(255, 255, 255, 0.14);
+  --amy-border-strong: rgba(255, 255, 255, 0.24);
+  --amy-highlight: rgba(255, 255, 255, 0.12);
+  
+  --primary-gold: #F5C451;
+  --secondary-gold: #FBE6A2;
+  --amy-accent: #F5C451;
+  --amy-accent-strong: #E5B23A;
+  
+  --cyber-blue: #3B82F6;
+  --amy-cyan: #3B82F6;
+  --trading-green: #22C55E;
+  --amy-buy: #22C55E;
+  --trading-red: #EF4444;
+  --amy-sell: #EF4444;
+  --amy-wait: #F5B942;
+  
+  --amy-text: #FFFFFF;
+  --amy-text-secondary: #94A3B8;
+  --amy-text-muted: #64748B;
+  
+  --border-gold: rgba(245, 196, 81, 0.45);
+  --glow-gold: rgba(245, 196, 81, 0.35);
+  --glow-blue: rgba(59, 130, 246, 0.25);
+  
+  --amy-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+  --amy-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ── 2. GLOBAL BACKGROUND ENGINE ─────────────────────────── */
+body.amyfx-module {
+  background-color: #070B14 !important;
+  background-image:
+    linear-gradient(rgba(245, 196, 81, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 18% 12%, rgba(59, 130, 246, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 82% 20%, rgba(245, 196, 81, 0.10) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(11, 16, 32, 0.6) 0%, transparent 60%) !important;
+  background-size: 36px 36px, 36px 36px, 100% 100%, 100% 100%, 100% 100% !important;
+  background-attachment: fixed !important;
+  color: var(--amy-text, #ffffff);
+  padding-bottom: 120px !important;
+  min-height: 100vh;
+}
+
+/* Custom wallpaper engine support: preserve wallpaper & dimming layer */
+html[data-amyfx-custom-bg="true"],
+html[data-amyfx-custom-bg="true"] body.amyfx-module {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+html[data-amyfx-custom-bg="true"] body.amyfx-module::before {
+  display: none !important;
+}
+
+/* Light Theme Fallback Protection */
+html[data-amyfx-theme="light"] body.amyfx-module {
+  background:
+    radial-gradient(circle at 15% -12%, rgba(33, 107, 219, 0.11), transparent 30rem),
+    radial-gradient(circle at 100% 48%, rgba(22, 142, 187, 0.08), transparent 26rem),
+    linear-gradient(160deg, #f7fafd, #eef4fa 50%, #e8f0f8) !important;
+  color: #111a25 !important;
+}
+
+/* ── 3. REALISTIC GLASS CARD SYSTEM ──────────────────────── */
+body.amyfx-module :is(
+  .card, .quick-card, .course-card, .news-item,
+  .dashboard-card, .library-card, .journal-card,
+  .workspace-card, .profile-summary, .profile-list,
+  .execution-plan, .scalper-watch, .practice-card,
+  .practice-panel, .amy-command-strip, .amy-briefing,
+  .stats-card, .stat-card, .habit-heatmap-card,
+  .habit-calc-card, .assistant-card, .hero-card
+),
+body.amyfx-module--ict article,
+body.amyfx-module--ict .model-context,
+body.amyfx-module--intel .node-card,
+body.amyfx-module--academy .article,
+body.amyfx-module--academy .panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 50%),
+    rgba(255, 255, 255, 0.065) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.22) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 12px 36px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(var(--glass-blur, 24px)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 24px)) saturate(180%) !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover depth for interactive cards */
+body.amyfx-module :is(.quick-card, .course-card, .news-item, .library-card, .journal-card):hover {
+  border-color: rgba(245, 196, 81, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 16px 44px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(245, 196, 81, 0.15) !important;
+  transform: translateY(-2px);
+}
+
+/* ── 4. FLOATING GLASS HEADERS & NAVIGATION ──────────────── */
+body.amyfx-module :is(.app-header, .intel-header, .topbar) {
+  background: rgba(7, 11, 20, 0.78) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+body.amyfx-module .bottom-nav {
+  background: rgba(11, 16, 32, 0.85) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+body.amyfx-module .bottom-nav .nav-button.is-active,
+body.amyfx-module .bottom-nav .nav-btn.active {
+  color: #F5C451 !important;
+  background: rgba(245, 196, 81, 0.12) !important;
+}
+
+body.amyfx-module .bottom-nav .nav-button.is-active::before,
+body.amyfx-module .bottom-nav .nav-btn.active::before {
+  background: #F5C451 !important;
+  box-shadow: 0 0 12px #F5C451 !important;
+}
+
+/* ── 5. GLOBAL AMY AI COPILOT FLOATING BUTTON ────────────── */
+#amy-local-fab {
+  position: fixed !important;
+  right: 20px !important;
+  bottom: 90px !important;
+  z-index: 10000 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: linear-gradient(135deg, rgba(20, 28, 48, 0.9) 0%, rgba(10, 14, 26, 0.94) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(245, 196, 81, 0.65) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 9999px !important;
+  color: #ffffff !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  padding: 10px 18px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), 0 0 22px rgba(245, 196, 81, 0.35) !important;
+  cursor: pointer !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+#amy-local-fab:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  border-color: rgba(245, 196, 81, 0.9) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.75), inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), 0 0 30px rgba(245, 196, 81, 0.5) !important;
+}
+
+#amy-local-fab .ai-spark {
+  color: #F5C451 !important;
+  font-size: 14px !important;
+  filter: drop-shadow(0 0 8px #F5C451) !important;
+}
+
+#amy-local-panel {
+  position: fixed !important;
+  right: 16px !important;
+  bottom: 90px !important;
+  z-index: 10001 !important;
+  background: linear-gradient(180deg, rgba(14, 20, 36, 0.96) 0%, rgba(8, 11, 20, 0.98) 100%) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  border: 1px solid rgba(245, 196, 81, 0.45) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), 0 0 25px rgba(245, 196, 81, 0.2) !important;
+}
+
+/* ── 6. MODULE: MAPPING GOLD (XAU/USD Market Intelligence) ─ */
+body.amyfx-module--ict {
+  --bg: #070B14;
+  --card: rgba(255, 255, 255, 0.065);
+  --text: #FFFFFF;
+  --muted: #94A3B8;
+  --line: rgba(255, 255, 255, 0.14);
+  --accent: #F5C451;
+  --buy: #22C55E;
+  --sell: #EF4444;
+}
+
+body.amyfx-module--ict .toolbar {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 12px 16px;
+}
+
+body.amyfx-module--ict .toolbar strong {
+  color: #F5C451;
+  font-family: var(--amy-font-mono, monospace);
+  font-size: 20px;
+  letter-spacing: 0.05em;
+}
+
+body.amyfx-module--ict nav {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 4px;
+}
+
+body.amyfx-module--ict nav button {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  color: #94A3B8 !important;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+body.amyfx-module--ict nav button[aria-selected="true"] {
+  background: rgba(245, 196, 81, 0.16) !important;
+  border-color: rgba(245, 196, 81, 0.45) !important;
+  color: #F5C451 !important;
+  box-shadow: 0 0 14px rgba(245, 196, 81, 0.15) !important;
+}
+
+body.amyfx-module--ict .context-hero {
+  border: 1px solid rgba(245, 196, 81, 0.4) !important;
+  box-shadow: inset 0 1px 0 rgba(245, 196, 81, 0.2), 0 0 24px rgba(245, 196, 81, 0.1) !important;
+}
+
+body.amyfx-module--ict .context-hero > strong {
+  color: #FFFFFF;
+  font-family: var(--amy-font-mono, monospace);
+  letter-spacing: 0.04em;
+}
+
+body.amyfx-module--ict .execution {
+  border-left: 4px solid #3B82F6 !important;
+}
+
+body.amyfx-module--ict .execution h2 {
+  color: #F5C451;
+}
+
+body.amyfx-module--ict .driver-tournament-card {
+  border-color: rgba(245, 196, 81, 0.3) !important;
+}
+
+body.amyfx-module--ict .driver-item {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px;
+}
+
+body.amyfx-module--ict .driver-item.leader {
+  background: rgba(245, 196, 81, 0.08) !important;
+  border-color: rgba(245, 196, 81, 0.45) !important;
+  box-shadow: 0 0 16px rgba(245, 196, 81, 0.15) !important;
+}
+
+body.amyfx-module--ict .driver-rank {
+  color: #F5C451 !important;
+  font-family: var(--amy-font-mono, monospace);
+  font-weight: 800;
+}
+
+body.amyfx-module--ict #chart {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(7, 11, 20, 0.85);
+}
+
+/* ── 7. MODULE: BERITA (Market Intelligence Feed) ────────── */
+body.amyfx-module--intel .intel-tabs {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 16px !important;
+  padding: 5px;
+}
+
+body.amyfx-module--intel .intel-tab {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 11px !important;
+  color: #94A3B8 !important;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+body.amyfx-module--intel .intel-tab.active {
+  background: rgba(245, 196, 81, 0.16) !important;
+  border-color: rgba(245, 196, 81, 0.45) !important;
+  color: #F5C451 !important;
+  box-shadow: 0 0 14px rgba(245, 196, 81, 0.15) !important;
+}
+
+body.amyfx-module--intel .cal-filter {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #94A3B8 !important;
+  border-radius: 12px !important;
+  font-weight: 700;
+  min-height: 42px !important;
+}
+
+body.amyfx-module--intel .cal-filter.active {
+  background: rgba(245, 196, 81, 0.16) !important;
+  border-color: rgba(245, 196, 81, 0.45) !important;
+  color: #F5C451 !important;
+}
+
+body.amyfx-module--intel .news-item {
+  position: relative;
+  padding: 16px !important;
+  margin-bottom: 12px !important;
+  border-left: 3px solid #3B82F6 !important;
+}
+
+body.amyfx-module--intel .news-item:hover {
+  border-left-color: #F5C451 !important;
+}
+
+body.amyfx-module--intel .news-time {
+  color: #F5C451 !important;
+  font-family: var(--amy-font-mono, monospace);
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+}
+
+body.amyfx-module--intel .news-text {
+  color: #FFFFFF !important;
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+}
+
+body.amyfx-module--intel .status-bar {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  color: #94A3B8 !important;
+}
+
+body.amyfx-module--intel .liq-center {
+  border-color: #F5C451 !important;
+  box-shadow: 0 0 28px rgba(245, 196, 81, 0.25), inset 0 0 18px rgba(245, 196, 81, 0.12) !important;
+}
+
+/* ── 8. MODULE: JURNAL TRADING (Trading Performance Journal) */
+body.amyfx-module--journal .brand-mark {
+  border: 1px solid rgba(245, 196, 81, 0.45) !important;
+  background: rgba(245, 196, 81, 0.12) !important;
+  color: #F5C451 !important;
+}
+
+body.amyfx-module--journal .stats-card,
+body.amyfx-module--journal .stat-card {
+  padding: 18px !important;
+}
+
+body.amyfx-module--journal .stats-card p,
+body.amyfx-module--journal .stat-card p {
+  color: #94A3B8 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 4px;
+}
+
+body.amyfx-module--journal .stats-card strong,
+body.amyfx-module--journal .stat-card strong {
+  color: #F5C451 !important;
+  font-family: var(--amy-font-mono, monospace) !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+}
+
+body.amyfx-module--journal .streak-pill {
+  background: rgba(245, 196, 81, 0.14) !important;
+  border: 1px solid rgba(245, 196, 81, 0.4) !important;
+  color: #F5C451 !important;
+  font-weight: 800;
+  border-radius: 9999px;
+  padding: 6px 14px;
+}
+
+body.amyfx-module--journal .performa-subnav {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 4px;
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+body.amyfx-module--journal .performa-subtab {
+  flex: 1;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  color: #94A3B8 !important;
+  font-weight: 700;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+body.amyfx-module--journal .performa-subtab.is-active {
+  background: rgba(245, 196, 81, 0.14) !important;
+  border-color: rgba(245, 196, 81, 0.4) !important;
+  color: #F5C451 !important;
+}
+
+/* Journal cards: Entry/Exit/Profit/Loss highlights */
+body.amyfx-module--journal .journal-card {
+  padding: 18px !important;
+  margin-bottom: 14px !important;
+  border-left: 3px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+body.amyfx-module--journal .journal-card[data-result="Win"],
+body.amyfx-module--journal .journal-card:has(.profit-tag) {
+  border-left-color: #22C55E !important;
+}
+
+body.amyfx-module--journal .journal-card[data-result="Loss"],
+body.amyfx-module--journal .journal-card:has(.loss-tag) {
+  border-left-color: #EF4444 !important;
+}
+
+body.amyfx-module--journal .journal-text-block {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 10px;
+}
+
+body.amyfx-module--journal .journal-text-block strong {
+  color: #F5C451;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+body.amyfx-module--journal .side-drawer {
+  background: rgba(7, 11, 20, 0.96) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(32px) !important;
+  -webkit-backdrop-filter: blur(32px) !important;
+}
+
+body.amyfx-module--journal .side-nav-button {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  color: #94A3B8 !important;
+}
+
+body.amyfx-module--journal .side-nav-button.is-active {
+  background: rgba(245, 196, 81, 0.15) !important;
+  border-color: rgba(245, 196, 81, 0.45) !important;
+  color: #F5C451 !important;
+}
+
+/* ── 9. MODULE: TUTORIAL TRADING (Trading Academy) ───────── */
+body.amyfx-module--academy .brand {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+body.amyfx-module--academy .brand-mark {
+  border: 1px solid rgba(245, 196, 81, 0.45) !important;
+  background: rgba(245, 196, 81, 0.12) !important;
+  color: #F5C451 !important;
+  min-width: 44px !important;
+  width: auto !important;
+  height: 38px !important;
+  padding: 0 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+}
+
+body.amyfx-module--academy .hero-card {
+  border-color: rgba(245, 196, 81, 0.35) !important;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(245, 196, 81, 0.10), transparent 40%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 45%),
+    rgba(255, 255, 255, 0.05) !important;
+}
+
+body.amyfx-module--academy .hero-card h1 {
+  color: #FFFFFF !important;
+}
+
+body.amyfx-module--academy .hero-card h1 span {
+  color: #F5C451 !important;
+}
+
+body.amyfx-module--academy .eyebrow {
+  color: #F5C451 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+}
+
+body.amyfx-module--academy .course-card {
+  position: relative;
+  padding: 20px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+body.amyfx-module--academy .course-card .num {
+  color: #F5C451 !important;
+  font-family: var(--amy-font-mono, monospace) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+}
+
+body.amyfx-module--academy .course-card h3 {
+  color: #FFFFFF !important;
+  font-size: 17px !important;
+  margin: 6px 0 10px !important;
+}
+
+body.amyfx-module--academy .course-card .btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 14px;
+}
+
+body.amyfx-module--academy .course-card .btn:hover {
+  background: rgba(245, 196, 81, 0.2) !important;
+  border-color: rgba(245, 196, 81, 0.5) !important;
+  color: #F5C451 !important;
+}
+
+body.amyfx-module--academy .btn.primary {
+  background: rgba(245, 196, 81, 0.18) !important;
+  border-color: rgba(245, 196, 81, 0.5) !important;
+  color: #F5C451 !important;
+}
+
+body.amyfx-module--academy .academy-track-switcher {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+body.amyfx-module--academy .academy-track-card {
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+  color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+body.amyfx-module--academy .academy-track-card.is-current {
+  border-color: rgba(245, 196, 81, 0.45);
+  background: rgba(245, 196, 81, 0.08);
+  box-shadow: 0 0 18px rgba(245, 196, 81, 0.12);
+}
+
+body.amyfx-module--academy .academy-track-card span {
+  color: #F5C451;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+/* ── 10. SHARED BUTTONS & FORM INPUTS ────────────────────── */
+body.amyfx-module input,
+body.amyfx-module textarea,
+body.amyfx-module select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 12px !important;
+  color: #FFFFFF !important;
+  backdrop-filter: blur(16px);
+}
+
+body.amyfx-module input:focus,
+body.amyfx-module textarea:focus,
+body.amyfx-module select:focus {
+  border-color: rgba(245, 196, 81, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(245, 196, 81, 0.2) !important;
+  outline: none !important;
+}
+
+body.amyfx-module input::placeholder,
+body.amyfx-module textarea::placeholder {
+  color: #64748B !important;
+}
+
+body.amyfx-module .primary-button {
+  background: linear-gradient(135deg, rgba(245, 196, 81, 0.25), rgba(245, 196, 81, 0.12)) !important;
+  border: 1px solid rgba(245, 196, 81, 0.5) !important;
+  color: #F5C451 !important;
+  font-weight: 800 !important;
+  border-radius: 12px !important;
+}
+
+body.amyfx-module .primary-button:hover {
+  background: rgba(245, 196, 81, 0.3) !important;
+  border-color: rgba(245, 196, 81, 0.8) !important;
+  box-shadow: 0 0 18px rgba(245, 196, 81, 0.25) !important;
+}
+
+body.amyfx-module .ghost-button {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  color: #94A3B8 !important;
+}
+
+/* ── 11. NAV ARROW BUTTONS ───────────────────────────────── */
+body.amyfx-module .nav-arrow-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 12px !important;
+  color: #FFFFFF !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.amyfx-module .nav-arrow-btn:hover,
+body.amyfx-module .nav-arrow-btn:active {
+  background: rgba(245, 196, 81, 0.2) !important;
+  border-color: rgba(245, 196, 81, 0.6) !important;
+  color: #F5C451 !important;
+  box-shadow: 0 0 16px rgba(245, 196, 81, 0.25) !important;
+}
+
+/* ── 12. SCROLLBARS & SELECTIONS ─────────────────────────── */
+body.amyfx-module ::-webkit-scrollbar-thumb {
+  background: rgba(245, 196, 81, 0.35) !important;
+  border-radius: 10px !important;
+}
+
+body.amyfx-module ::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 196, 81, 0.7) !important;
+}
+
+body.amyfx-module ::selection {
+  background: rgba(245, 196, 81, 0.25) !important;
+  color: #FFFFFF !important;
+}
+
+/* ── 13. REDUCED MOTION SAFEGUARD ────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  body.amyfx-module *,
+  body.amyfx-module *::before,
+  body.amyfx-module *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

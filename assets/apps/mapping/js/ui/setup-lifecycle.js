@@ -9,7 +9,7 @@ const LABELS = [
 export function lifecycleState(setupExecution) {
   const se = setupExecution?.setupExecution || setupExecution;
   const stage = String(se?.lifecycleStage || 'WAITING_ENTRY');
-
+  
   let states = ['locked', 'locked', 'locked', 'locked', 'locked'];
 
   switch (stage) {

@@ -42,17 +42,15 @@
   }
 
   function scoreOf(result) {
-    var forecast = result && result.validatedMarketContext && result.validatedMarketContext.directionForecast;
-    var score = finite(forecast && (forecast.confidenceScore != null ? forecast.confidenceScore : forecast.confidence));
-    if (score == null) return 0;
-    return Math.max(0, Math.min(100, Math.round(score)));
+    void result;
+    return null;
   }
 
   function honestForecastText(text, score) {
     if (typeof text !== 'string') return text;
     return text
-      .replace(/VALIDATED FORECAST\s*\(\s*\d+(?:\.\d+)?\s*%\s*\)/gi, 'VALIDATED FORECAST · SCORE ' + score + '/100')
-      .replace(/Direction Forecast tervalidasi\s+([A-Z]+)\s*\(\s*\d+(?:\.\d+)?\s*%\s*\)/gi, 'Direction Forecast tervalidasi $1 · SCORE ' + score + '/100');
+      .replace(/VALIDATED FORECAST\s*\(\s*\d+(?:\.\d+)?\s*%\s*\)/gi, 'AMY-SMC-D · HISTORICAL REFERENCE ONLY')
+      .replace(/Direction Forecast tervalidasi\s+([A-Z]+)\s*\(\s*\d+(?:\.\d+)?\s*%\s*\)/gi, 'Amy-SMC-D Next Move $1 · HISTORICAL REFERENCE ONLY');
   }
 
   function repairStateLabels() {
@@ -135,6 +133,7 @@
       sourceCandleTime: sourceCandles[tf] || null,
       sourceCandles: sourceCandles,
       dataStale: Boolean(result.dataStale),
+      mappingReady: Boolean(result.amySmcD && result.amySmcD.ready),
       directionDecision: {
         bias: upper(decision.bias),
         signal: upper(decision.signal),
@@ -215,7 +214,7 @@
       });
     }
 
-    if (item.dataStale && decision.signal && decision.signal !== 'WAIT' && decision.signal !== 'DATA USANG') {
+    if (item.dataStale && !item.mappingReady && decision.signal && decision.signal !== 'WAIT' && decision.signal !== 'DATA USANG') {
       add('STALE_DATA_DIRECTION', 'critical', 'Data usang menghasilkan arah selain WAIT.', { signal: decision.signal });
     }
     if (item.dataStale && execution.active) {
@@ -325,9 +324,8 @@
   }
 
   window.addEventListener('amyfx:candles-updated', function () { setTimeout(function () { tick('candles-updated'); }, 100); });
-  window.addEventListener('amyfx:market-update', function () { tick('market-update'); });
+  window.addEventListener('amyfx:mapping-state-change', function () { tick('mapping-state-change'); });
   window.addEventListener('amyfx:entry-watch-updated', function () { tick('entry-watch-updated'); });
   window.addEventListener('focus', function () { tick('focus'); });
-  setInterval(function () { tick('automatic'); }, 1000);
   setTimeout(function () { tick('startup'); }, 500);
 })();

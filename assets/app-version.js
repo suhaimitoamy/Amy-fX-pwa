@@ -1,11 +1,11 @@
-// Amy FX PWA release identity — Preview engine parity 310.
+// Amy FX PWA release identity — Pro 390 parity.
 (function () {
-  const VERSION = Object.freeze({ name: '2.3.0', code: 58 });
+  const VERSION = Object.freeze({ name: '2.0.0-pro.390', code: 950390 });
   window.AmyFXAppVersion = VERSION;
-  window.AmyFXUpdateManifestUrl = 'https://raw.githubusercontent.com/suhaimitoamy/Amy-fx/main/update.json';
+  window.AmyFXUpdateManifestUrl = 'https://raw.githubusercontent.com/suhaimitoamy/Amy-fx-pro/main/update.json';
 
   function versionText() {
-    return `Amy FX PWA v${VERSION.name} • Version code ${VERSION.code}`;
+    return `Amy FX PWA v${VERSION.name} • Build ${VERSION.code}`;
   }
 
   function injectVersionRow() {

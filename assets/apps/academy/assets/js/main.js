@@ -93,22 +93,22 @@
     // Glass Control
     var glassControl = document.createElement('div');
     glassControl.className = 'glass-control';
-
+    
     var glassLabel = document.createElement('label');
     glassLabel.innerHTML = '<span>Transparansi Kaca</span><span id="glassValDisplay">66%</span>';
-
+    
     var glassRange = document.createElement('input');
     glassRange.type = 'range';
     glassRange.min = '36';
     glassRange.max = '92';
-
+    
     var savedAlpha = localStorage.getItem('amy_glass_alpha');
     var currentAlpha = savedAlpha ? parseFloat(savedAlpha) : 0.66;
     glassRange.value = Math.round(currentAlpha * 100);
-
+    
     var displaySpan = glassLabel.querySelector('#glassValDisplay');
     displaySpan.textContent = glassRange.value + '%';
-
+    
     glassRange.addEventListener('input', function() {
       var val = parseInt(this.value, 10);
       var alpha = val / 100;
@@ -116,14 +116,14 @@
       displaySpan.textContent = val + '%';
       localStorage.setItem('amy_glass_alpha', alpha);
     });
-
+    
     var glassNote = document.createElement('small');
     glassNote.textContent = 'Sesuaikan efek tembus pandang (glass) sesuai selera Anda.';
-
+    
     glassControl.appendChild(glassLabel);
     glassControl.appendChild(glassRange);
     glassControl.appendChild(glassNote);
-
+    
     panel.appendChild(glassControl);
 
     var closeBtn = document.createElement('button');
@@ -168,6 +168,23 @@
     } else {
       nav.appendChild(btn);
     }
+  }
+
+  function injectLearningTrackLinks() {
+    var navlinks = document.querySelector('.navlinks');
+    if (!navlinks) return;
+    var root = (typeof ROOT_PATH !== 'undefined') ? ROOT_PATH : '';
+    [
+      { match: 'trading-practice/index.html', href: root + 'trading-practice/index.html', label: 'Practice' }
+    ].forEach(function (item) {
+      var exists = Array.prototype.some.call(navlinks.querySelectorAll('a'), function (link) { return String(link.getAttribute('href') || '').indexOf(item.match) >= 0; });
+      if (exists) return;
+      var link = document.createElement('a');
+      link.href = item.href;
+      link.textContent = item.label;
+      link.dataset.academyTrackLink = 'true';
+      navlinks.appendChild(link);
+    });
   }
 
   /* ==========================================
@@ -235,15 +252,15 @@
   function initLanjutBelajar() {
     var container = document.getElementById('lanjutBelajarContainer');
     if (!container) return;
-
+    
     container.style.display = 'block';
-
+    
     var titleEl = document.getElementById('lanjutBelajarTitle');
     var btnEl = document.getElementById('lanjutBelajarBtn');
-
+    
     var lastTitle = localStorage.getItem('amy_last_opened_title');
     var lastUrl = localStorage.getItem('amy_last_opened_url');
-
+    
     if (lastTitle && lastUrl) {
       titleEl.textContent = lastTitle;
       btnEl.href = lastUrl;
@@ -294,7 +311,7 @@
         badge.style.marginBottom = '8px';
         badge.style.display = 'inline-block';
         badge.style.width = 'fit-content';
-
+        
         if (readSet.indexOf(folder) !== -1) {
           badge.textContent = '✓ Selesai dibaca';
           badge.style.background = 'rgba(0, 217, 126, 0.15)';
@@ -318,11 +335,11 @@
     var pBar = document.getElementById('academyProgressBar');
     var pText = document.getElementById('academyProgressText');
     if (pBar && pText) {
-      var totalBagian = 36;
-      var count = readSet.length;
+      var totalBagian = 35;
+      var count = Math.min(totalBagian, readSet.length);
       var pct = Math.min(100, Math.round((count / totalBagian) * 100));
       pBar.style.width = pct + '%';
-      pText.textContent = 'Membaca ' + count + ' dari ' + totalBagian + ' Bagian (' + pct + '%)';
+      pText.textContent = 'Menyelesaikan ' + count + ' dari ' + totalBagian + ' Pertemuan (' + pct + '%)';
     }
   }
 
@@ -333,6 +350,7 @@
     sInput.addEventListener('input', function() {
       var query = this.value.toLowerCase().trim();
       var panels = document.querySelectorAll('.panel');
+      var dividers = document.querySelectorAll('.semester-divider');
 
       panels.forEach(function(panel) {
         var text = panel.textContent.toLowerCase();
@@ -342,13 +360,17 @@
           panel.style.display = 'none';
         }
       });
+
+      dividers.forEach(function(div) {
+        div.style.display = query ? 'none' : 'block';
+      });
     });
   }
 
   function initFilters() {
     var filterBtns = document.querySelectorAll('.filter-btn');
     if (filterBtns.length === 0) return;
-
+    
     filterBtns.forEach(function(btn) {
       btn.addEventListener('click', function() {
         filterBtns.forEach(function(b) {
@@ -357,14 +379,26 @@
         });
         btn.classList.add('active');
         btn.classList.remove('ghost');
-
+        
         var filter = btn.dataset.filter;
         var panels = document.querySelectorAll('.panel');
+        var dividers = document.querySelectorAll('.semester-divider');
+
         panels.forEach(function(panel) {
-          if (filter === 'Semua' || panel.dataset.category === filter) {
+          var cats = (panel.dataset.category || '').split(',').map(function(s){ return s.trim(); });
+          if (filter === 'Semua' || cats.indexOf(filter) !== -1 || panel.dataset.category === filter) {
             panel.style.display = 'block';
           } else {
             panel.style.display = 'none';
+          }
+        });
+
+        dividers.forEach(function(div) {
+          var targetSem = div.dataset.semester;
+          if (filter === 'Semua' || filter === targetSem) {
+            div.style.display = 'block';
+          } else {
+            div.style.display = 'none';
           }
         });
       });
@@ -374,23 +408,23 @@
   function initReaderMode() {
     var article = document.querySelector('.article-layout .article, .article');
     if (!article) return;
-
+    
     var progressBar = document.createElement('div');
     progressBar.className = 'reading-progress-bar';
     document.body.appendChild(progressBar);
-
+    
     var fab = document.createElement('button');
     fab.className = 'fab-to-top';
     fab.innerHTML = '↑';
     fab.onclick = function() { window.scrollTo({top: 0, behavior: 'smooth'}); };
     document.body.appendChild(fab);
-
+    
     window.addEventListener('scroll', function() {
       var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       var scrolled = (winScroll / height) * 100;
       progressBar.style.width = scrolled + '%';
-
+      
       if (winScroll > 300) {
         fab.classList.add('visible');
       } else {
@@ -414,6 +448,7 @@
     injectGlassCSS();
     createThemePanel();
     injectThemeToggle();
+    injectLearningTrackLinks();
     initHamburger();
     initImageSlots();
     initLanjutBelajar();
@@ -596,7 +631,8 @@ if (!window.amyHapticListenerAdded) {
   if(window.__amyLearningBridgeLoaderV1)return;
   window.__amyLearningBridgeLoaderV1=true;
   var script=document.createElement('script');
-  script.src='/assets/apps/academy/assets/js/market-learning-bridge.js';
+  var root=(typeof ROOT_PATH!=='undefined')?ROOT_PATH:'';
+  script.src=root+'assets/js/market-learning-bridge.js';
   script.async=false;
   script.onerror=function(){window.__amyLearningBridgeLoaderV1=false;};
   document.head.appendChild(script);

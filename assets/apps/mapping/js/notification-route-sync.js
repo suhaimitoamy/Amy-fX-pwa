@@ -3,7 +3,7 @@
 
   const ROUTE_KEY = 'amyfx.notification.route';
   const CONSUMED_URL_KEY = 'amyfx.notification.consumed_url';
-  const VALID_ROUTES = new Set(['Dashboard', 'Analyze', 'Setups', 'History', 'Settings']);
+  const VALID_ROUTES = new Set(['Dashboard', 'Analyze', 'Setups', 'History', 'Settings', 'context', 'scalper']);
   const RETRY_DELAYS_MS = [0, 50, 120, 250, 500, 900, 1500, 2500];
 
   let retryTimers = [];
@@ -29,11 +29,13 @@
     if (!route) {
       try { route = decodeURIComponent((location.hash || '').replace(/^#/, '')); } catch (_) {}
     }
+    if (route.startsWith('context') || route.startsWith('scalper')) route = 'Dashboard';
     return VALID_ROUTES.has(route) ? route : '';
   }
 
   function pendingRoute() {
-    const stored = readStorage(ROUTE_KEY);
+    let stored = readStorage(ROUTE_KEY);
+    if (stored.startsWith('context') || stored.startsWith('scalper')) stored = 'Dashboard';
     if (VALID_ROUTES.has(stored)) return { route: stored, source: 'ANDROID_PENDING' };
     const located = routeFromLocation();
     return located ? { route: located, source: 'DEEP_LINK_URL' } : null;

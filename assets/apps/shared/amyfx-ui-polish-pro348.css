@@ -1,0 +1,278 @@
+/* Amy FX Pro348 — UI-only visual alignment. No market or trading logic. */
+
+body.amyfx-module {
+  --amy-content-width: 760px;
+  --amy-header-height: 68px;
+  font-size: 14px;
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+body.amyfx-module :is(h1, h2, h3, p, small, strong, span, label, button, a, li, dd, dt) {
+  overflow-wrap: anywhere;
+}
+
+body.amyfx-module :is(h1, h2, h3) {
+  color: var(--amy-text);
+  text-wrap: balance;
+}
+
+body.amyfx-module :is(p, li, dd) { text-wrap: pretty; }
+
+body.amyfx-module :is(button, .btn, [role="button"]) {
+  min-height: 44px;
+  font-weight: 680;
+}
+
+body.amyfx-module :is(article, .card, .panel, .news-item, .course-card, .library-card, .journal-card, .dashboard-card) {
+  border-radius: 16px;
+}
+
+body.amyfx-module :is(.muted, small, .subtitle, .card-meta, .status-bar) {
+  color: var(--amy-text-secondary);
+}
+
+body.amyfx-module :is(.empty-state, .empty-state-card, #error[role="alert"]) {
+  min-height: 112px;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  padding: 24px 18px;
+  border: 1px dashed var(--amy-border-strong);
+  border-radius: 16px;
+  background: var(--amy-surface-soft);
+  color: var(--amy-text-secondary);
+  text-align: center;
+}
+
+/* Home: denser cards, stronger hierarchy, quieter navigation. */
+body.amyfx-module--home .app-header { min-height: var(--amy-header-height); }
+body.amyfx-module--home main { padding-top: 14px; }
+body.amyfx-module--home .page-header { margin: 4px 0 18px; }
+body.amyfx-module--home .page-header h2 { font-size: 25px; line-height: 1.15; }
+body.amyfx-module--home .home-hero { min-height: 164px; padding: 20px; }
+body.amyfx-module--home .home-hero h2 { font-size: 21px; line-height: 1.25; }
+body.amyfx-module--home .quick-card,
+body.amyfx-module--home .project-card {
+  min-height: 102px;
+  padding: 16px;
+}
+body.amyfx-module--home .quick-card h3,
+body.amyfx-module--home .quick-card strong,
+body.amyfx-module--home .project-card h3 { font-size: 15px; line-height: 1.3; }
+body.amyfx-module--home .quick-card small,
+body.amyfx-module--home .project-card p { font-size: 12px; line-height: 1.45; }
+body.amyfx-module--home .bottom-nav { height: 70px; border-radius: 20px; }
+body.amyfx-module--home .nav-btn { min-height: 54px; border-radius: 14px; }
+body.amyfx-module--home .nav-btn.active::before { box-shadow: none; }
+
+/* ICT Mapping shell: connect the current markup to the shared design system. */
+body.amyfx-module--ict {
+  margin: 0;
+  padding-bottom: calc(22px + var(--amy-safe-bottom));
+  background: var(--amy-bg);
+  color: var(--amy-text);
+  font-family: var(--amy-font);
+}
+body.amyfx-module--ict > header {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  min-height: var(--amy-header-height);
+  max-width: none;
+  padding: calc(var(--amy-safe-top) + 9px) max(var(--amy-page-padding), calc((100vw - var(--amy-content-width)) / 2 + var(--amy-page-padding))) 9px;
+  border-bottom: 1px solid var(--amy-border);
+  background: color-mix(in srgb, var(--amy-bg) 88%, transparent);
+  backdrop-filter: blur(var(--amy-blur-strong));
+  -webkit-backdrop-filter: blur(var(--amy-blur-strong));
+}
+body.amyfx-module--ict > header > a {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--amy-border);
+  border-radius: 50%;
+  background: var(--amy-surface-soft);
+  color: var(--amy-text);
+  font-size: 25px;
+  line-height: 1;
+}
+body.amyfx-module--ict > header small { color: var(--amy-text-muted); font-size: 10px; }
+body.amyfx-module--ict > header h1 { font-size: 19px; line-height: 1.15; }
+body.amyfx-module--ict #connection {
+  padding: 6px 9px;
+  border: 1px solid var(--amy-border);
+  border-radius: 999px;
+  background: var(--amy-surface-soft);
+  color: var(--amy-text-secondary);
+}
+body.amyfx-module--ict > main { max-width: var(--amy-content-width); padding: 16px var(--amy-page-padding) 32px; }
+body.amyfx-module--ict > main > .toolbar {
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid var(--amy-border);
+  border-radius: 16px;
+  background: var(--amy-surface-solid);
+}
+body.amyfx-module--ict .toolbar strong { font-size: 19px; }
+body.amyfx-module--ict .toolbar label { min-width: 92px; }
+body.amyfx-module--ict :is(button, select) {
+  border-color: var(--amy-border);
+  background: var(--amy-surface-soft);
+  color: var(--amy-text);
+}
+body.amyfx-module--ict > main > nav {
+  position: sticky;
+  top: calc(var(--amy-header-height) + var(--amy-safe-top));
+  z-index: 60;
+  gap: 5px;
+  margin-bottom: 16px;
+  padding: 5px;
+  border: 1px solid var(--amy-border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--amy-bg) 92%, transparent);
+  backdrop-filter: blur(14px);
+}
+body.amyfx-module--ict > main > nav button {
+  min-width: 0;
+  padding: 9px 7px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--amy-text-secondary);
+  font-size: 12px;
+}
+body.amyfx-module--ict > main > nav button[aria-selected="true"] {
+  border-color: color-mix(in srgb, var(--amy-accent) 38%, var(--amy-border));
+  background: color-mix(in srgb, var(--amy-accent) 13%, var(--amy-surface-solid));
+  color: var(--amy-accent);
+}
+body.amyfx-module--ict article {
+  padding: 17px;
+  border-color: var(--amy-border);
+  background: var(--amy-surface-solid);
+  box-shadow: none;
+}
+body.amyfx-module--ict article h2 { font-size: 17px; line-height: 1.3; }
+body.amyfx-module--ict .section-heading { align-items: flex-start; margin-bottom: 10px; }
+body.amyfx-module--ict .model-context {
+  padding: 0;
+  border-color: var(--amy-border);
+  background: var(--amy-surface-solid);
+  overflow: hidden;
+}
+body.amyfx-module--ict .model-context > summary { min-height: 52px; padding: 14px 16px; color: var(--amy-text); }
+body.amyfx-module--ict .model-context[open] > summary { margin: 0; border-bottom: 1px solid var(--amy-border); }
+body.amyfx-module--ict .model-context[open] > :not(summary) { margin: 14px; }
+body.amyfx-module--ict .metrics { gap: 8px; }
+body.amyfx-module--ict .metrics article { padding: 13px 10px; background: var(--amy-surface-soft); }
+body.amyfx-module--ict #signal { font-size: clamp(36px, 12vw, 48px); }
+body.amyfx-module--ict #chart { border: 1px solid var(--amy-border); border-radius: 13px; background: var(--amy-bg-secondary); }
+body.amyfx-module--ict footer { padding: 0 16px; line-height: 1.5; }
+
+/* Market Intel: clearer reading rhythm and in-app expand affordance. */
+body.amyfx-module--intel .intel-container { padding-bottom: calc(30px + var(--amy-safe-bottom)); }
+body.amyfx-module--intel .intel-header {
+  min-height: var(--amy-header-height);
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--amy-border);
+}
+body.amyfx-module--intel .intel-header h1 { font-size: 21px; }
+body.amyfx-module--intel .intel-tabs { position: sticky; top: calc(var(--amy-header-height) + var(--amy-safe-top) + 6px); z-index: 65; }
+body.amyfx-module--intel .intel-panel { padding: 0; border: 0; background: transparent; }
+body.amyfx-module--intel .status-bar { margin: 12px 0; padding: 9px 12px; }
+body.amyfx-module--intel .news-list { gap: 11px; }
+body.amyfx-module--intel .news-item {
+  position: relative;
+  padding: 16px 16px 13px;
+  border-left: 1px solid var(--amy-border);
+  background: var(--amy-surface-solid);
+}
+body.amyfx-module--intel .news-time {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--amy-module-news) 12%, transparent);
+  font-size: 10px;
+  font-weight: 760;
+}
+body.amyfx-module--intel .news-text { font-size: 14px; line-height: 1.62; }
+body.amyfx-module--intel .news-item::after {
+  content: "Ketuk untuk baca selengkapnya";
+  display: block;
+  margin-top: 10px;
+  color: var(--amy-text-muted);
+  font-size: 10px;
+  font-weight: 650;
+}
+body.amyfx-module--intel .news-item.expanded::after { content: "Ketuk untuk ringkas"; }
+body.amyfx-module--intel .news-item:not(.expanded) .news-text {
+  max-height: none;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+body.amyfx-module--intel .heatmap-info { padding: 12px 2px; }
+body.amyfx-module--intel .heatmap-canvas { border-radius: 16px; background: var(--amy-surface-solid); }
+body.amyfx-module--intel .heatmap-legend { padding: 12px 2px; line-height: 1.45; }
+
+/* Journal: prevent cramped two-column mobile cards. */
+body.amyfx-module--journal .app-header { min-height: var(--amy-header-height); }
+body.amyfx-module--journal .brand-copy h1 { font-size: 17px; line-height: 1.2; }
+body.amyfx-module--journal .control-panel { margin: 12px var(--amy-page-padding) 0; padding: 12px; border-radius: 16px; }
+body.amyfx-module--journal .main-content { padding-top: 14px; }
+body.amyfx-module--journal :is(.library-card, .journal-card, .dashboard-card) { box-shadow: none; }
+body.amyfx-module--journal .card-title { font-size: 15px; line-height: 1.35; }
+body.amyfx-module--journal .card-meta { font-size: 11px; line-height: 1.45; }
+
+/* Academy: one typographic system and predictable course cards. */
+body.amyfx-module--academy { font-family: var(--amy-font); font-size: 15px; line-height: 1.6; }
+body.amyfx-module--academy .topbar { min-height: var(--amy-header-height); border-bottom: 1px solid var(--amy-border); }
+body.amyfx-module--academy .nav { min-height: var(--amy-header-height); padding-top: 10px; padding-bottom: 10px; }
+body.amyfx-module--academy .hero { padding-top: 22px; }
+body.amyfx-module--academy .hero-card { padding: clamp(22px, 6vw, 32px); }
+body.amyfx-module--academy .hero-card h1 { font-family: var(--amy-font); font-size: clamp(28px, 8vw, 39px); line-height: 1.15; }
+body.amyfx-module--academy .section-heading { display: block; margin: 30px 0 14px; }
+body.amyfx-module--academy .section-heading h2 { margin: 5px 0 6px; font-family: var(--amy-font); font-size: 21px; line-height: 1.3; }
+body.amyfx-module--academy .section-heading p { max-width: 44rem; font-size: 13px; line-height: 1.55; }
+body.amyfx-module--academy .course-card { display: flex; flex-direction: column; min-height: 220px; padding: 18px; }
+body.amyfx-module--academy .course-card h3 { margin: 7px 0 10px; font-family: var(--amy-font); font-size: 17px; line-height: 1.35; }
+body.amyfx-module--academy .course-card .course-description { margin-bottom: 14px; }
+body.amyfx-module--academy .course-card > .btn { margin-top: auto; align-self: flex-start; }
+
+/* Light-theme protections for legacy hard-coded module colors. */
+html[data-amyfx-theme="light"] body.amyfx-module :is(h1, h2, h3, strong, .news-text, .card-title) { color: var(--amy-text) !important; }
+html[data-amyfx-theme="light"] body.amyfx-module :is(p, small, .muted, .subtitle, .card-meta) { color: var(--amy-text-secondary); }
+html[data-amyfx-theme="light"] body.amyfx-module--intel :is(.ladder-price, .ladder-vol, .ladder-label) { color: var(--amy-text-secondary); text-shadow: none; }
+
+@media (max-width: 560px) {
+  body.amyfx-module--ict > header { gap: 10px; padding-left: 12px; padding-right: 12px; }
+  body.amyfx-module--ict > main { padding-left: 12px; padding-right: 12px; }
+  body.amyfx-module--ict > main > .toolbar { align-items: flex-end; }
+  body.amyfx-module--ict > main > .toolbar > div { width: 100%; }
+  body.amyfx-module--ict > main > .toolbar label { flex: 1; }
+  body.amyfx-module--ict > main > .toolbar select { width: 100%; }
+  body.amyfx-module--ict .metrics { grid-template-columns: 1fr; }
+  body.amyfx-module--ict .metrics article { min-height: 76px; }
+  body.amyfx-module--journal .card-grid,
+  body.amyfx-module--journal .library-grid { grid-template-columns: 1fr; }
+  body.amyfx-module--academy .cards { grid-template-columns: 1fr; }
+  body.amyfx-module--academy .course-card { min-height: 0; }
+}
+
+@media (max-width: 390px) {
+  body.amyfx-module--home .quick-grid { grid-template-columns: 1fr; }
+  body.amyfx-module--home .quick-card { min-height: 92px; }
+  body.amyfx-module--intel .intel-tab { font-size: 11px; }
+  body.amyfx-module--ict > main > nav button { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.amyfx-module--intel .news-item { animation: none; }
+}

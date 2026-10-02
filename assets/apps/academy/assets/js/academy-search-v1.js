@@ -9,7 +9,7 @@
     const empty = document.createElement('div');
     empty.className = 'empty-state-card';
     empty.hidden = true;
-    empty.innerHTML = '<strong>Materi tidak ditemukan</strong><span>Coba kata kunci lain dari judul atau topik materi.</span>';
+    empty.innerHTML = '';
     input.insertAdjacentElement('afterend', empty);
 
     function filter() {

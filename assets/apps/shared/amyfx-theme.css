@@ -64,6 +64,10 @@ html[data-amyfx-theme="light"] body {
     linear-gradient(160deg, var(--amy-bg-secondary), var(--amy-bg) 50%, #e8f0f8);
 }
 
+html[data-amyfx-custom-colors] body {
+  background: var(--amy-bg);
+}
+
 .sr-only {
   position: absolute !important;
   width: 1px !important;

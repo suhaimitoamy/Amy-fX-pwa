@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Daftar Materi — Amy FX Academy</title>
+  <title>Kurikulum Kuliah Trading — Amy FX Academy</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <script>const ROOT_PATH='';</script>
   <script src="assets/js/auth.js"></script>
@@ -21,57 +21,497 @@
 <script>requireLogin();</script>
 <header class="topbar hide-until-auth">
   <nav class="nav">
-    <a class="brand" href="index.html"><span class="brand-mark">A</span><span>Amy FX Academy</span></a>
+    <a class="brand" href="index.html" style="white-space:nowrap; display:inline-flex; align-items:center; gap:10px;"><span class="brand-mark" style="white-space:nowrap; width:auto; min-width:44px; height:38px; padding:0 10px; display:inline-flex; align-items:center; justify-content:center; font-weight:900; letter-spacing:0.04em;">AMY</span><span style="font-weight:800; letter-spacing:0.02em; white-space:nowrap;">Trading Academy</span></a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="navlinks" id="navlinks">
       <a href="index.html">Beranda</a>
       <a href="daftar-materi.html">Daftar Materi</a>
       <a href="tentang.html">Tentang</a>
       <a href="glosarium/index.html">Glosarium</a>
-
     </div>
   </nav>
 </header>
 <main class="container hide-until-auth">
   <div class="section-heading">
-    <div class="eyebrow">Amy FX Academy</div>
-    <h1>Daftar Materi</h1>
-    <p>36 bagian utama dari pemula sampai advanced execution.</p>
+    <h1>Kurikulum Kuliah Trading</h1>
+    <p>3 Semester • 36 Pertemuan Terstruktur (~1 Jam per Pertemuan / SKS) dari Pemula Nol sampai Trader Institusional Mandiri.</p>
   </div>
 
-  <div id="academyProgressContainer" style="margin-bottom:20px;padding:16px;background:var(--surface-soft, rgba(255,255,255,0.05));border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+  <div id="academyProgressContainer" style="margin-bottom:24px;padding:18px 20px;background:var(--surface-soft, rgba(255,255,255,0.05));border:1px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
     <div>
-      <div style="font-size:13px;font-weight:700;color:var(--gold, #d4a832);">PROGRES BELAJAR</div>
-      <div id="academyProgressText" style="font-size:12px;color:var(--muted);margin-top:2px;">Membaca 0 dari 36 Bagian (0%)</div>
+      <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:var(--gold, #d4a832);text-transform:uppercase;">PROGRES PERKULIAHAN</div>
+      <div id="academyProgressText" style="font-size:13px;color:var(--muted);margin-top:3px;">Menyelesaikan 0 dari 36 Pertemuan (0%)</div>
     </div>
-    <div style="width:140px;height:8px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;position:relative;">
+    <div style="width:160px;height:10px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;position:relative;">
       <div id="academyProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg, #d4a832, #00d97e);transition:width 0.4s ease;"></div>
     </div>
   </div>
 
-  <div style="margin-bottom:16px;">
-    <input type="text" id="academySearchInput" placeholder="🔍 Cari materi (misal: FVG, Order Block, Turtle Soup, Risk)..." style="width:100%;padding:12px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface-soft, #121212);color:inherit;font-size:14px;outline:none;">
+  <div style="margin-bottom:20px;">
+    <input type="text" id="academySearchInput" placeholder="🔍 Cari materi perkuliahan (misal: FVG, Order Block, Turtle Soup, Risk, PO3)..." style="width:100%;padding:14px 18px;border-radius:12px;border:1px solid var(--border);background:var(--surface-soft, #121212);color:inherit;font-size:14px;outline:none;">
   </div>
 
-  <div class="filter-chips" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;justify-content:center;">
-    <button class="btn sm filter-btn active" data-filter="Semua">Semua</button>
-    <button class="btn sm ghost filter-btn" data-filter="Pemula">Pemula</button>
-    <button class="btn sm ghost filter-btn" data-filter="ICT">ICT</button>
-    <button class="btn sm ghost filter-btn" data-filter="Risk">Risk</button>
-    <button class="btn sm ghost filter-btn" data-filter="Psikologi">Psikologi</button>
-    <button class="btn sm ghost filter-btn" data-filter="Mandiri">Mandiri</button>
-    <button class="btn sm ghost filter-btn" data-filter="Advanced">Advanced</button>
+  <div class="filter-chips" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;justify-content:center;">
+    <button class="btn sm filter-btn active" data-filter="Semua">Semua (36 Pertemuan)</button>
+    <button class="btn sm ghost filter-btn" data-filter="Semester 1">Semester 1: Pemula</button>
+    <button class="btn sm ghost filter-btn" data-filter="Semester 2">Semester 2: Medium</button>
+    <button class="btn sm ghost filter-btn" data-filter="Semester 3">Semester 3: Advanced</button>
+    <button class="btn sm ghost filter-btn" data-filter="ICT Core">ICT Core</button>
+    <button class="btn sm ghost filter-btn" data-filter="Risk & Psikologi">Risk & Psikologi</button>
   </div>
 
-  <section class="panel" data-category="Pemula" style="padding:24px;margin-bottom:20px"><h2>Bagian 01 — Pemula Nol</h2><div class="chapter-list"><a class="chapter-row" href="bagian-01-pemula-nol/index.html"><span><strong>Pemula Nol</strong><br><small>Fondasi awal untuk benar-benar paham trading sebelum masuk strategi.</small></span><span>→</span></a></div></section><section class="panel" data-category="Pemula" style="padding:24px;margin-bottom:20px"><h2>Bagian 02 — Membaca Chart</h2><div class="chapter-list"><a class="chapter-row" href="bagian-02-membaca-chart/index.html"><span><strong>Membaca Chart</strong><br><small>Belajar membaca chart, candle, timeframe, trend, dan struktur market.</small></span><span>→</span></a></div></section><section class="panel" data-category="Pemula" style="padding:24px;margin-bottom:20px"><h2>Bagian 03 — Fondasi Market</h2><div class="chapter-list"><a class="chapter-row" href="bagian-03-fondasi-market/index.html"><span><strong>Fondasi Market</strong><br><small>Memahami cara harga bergerak dari consolidation sampai displacement.</small></span><span>→</span></a></div></section><section class="panel" data-category="Pemula" style="padding:24px;margin-bottom:20px"><h2>Bagian 04 — Liquidity</h2><div class="chapter-list"><a class="chapter-row" href="bagian-04-liquidity/index.html"><span><strong>Liquidity</strong><br><small>Belajar liquidity sebagai bahan bakar utama pergerakan harga.</small></span><span>→</span></a></div></section><section class="panel" data-category="ICT" style="padding:24px;margin-bottom:20px"><h2>Bagian 05 — Smart Money Concept</h2><div class="chapter-list"><a class="chapter-row" href="bagian-05-smart-money-concept/index.html"><span><strong>Smart Money Concept</strong><br><small>Konsep Smart Money: FVG, OB, PD Array, premium-discount, dan block penting.</small></span><span>→</span></a></div></section><section class="panel" data-category="ICT" style="padding:24px;margin-bottom:20px"><h2>Bagian 06 — ICT Core</h2><div class="chapter-list"><a class="chapter-row" href="bagian-06-ict-core/index.html"><span><strong>ICT Core</strong><br><small>Inti ICT: context, delivery, CISD, MSS, dan kombinasi entry area.</small></span><span>→</span></a></div></section><section class="panel" data-category="ICT" style="padding:24px;margin-bottom:20px"><h2>Bagian 07 — Bias dan Top Down</h2><div class="chapter-list"><a class="chapter-row" href="bagian-07-bias-dan-top-down/index.html"><span><strong>Bias dan Top Down</strong><br><small>Cara membangun bias harian dan top-down analysis sebelum entry.</small></span><span>→</span></a></div></section><section class="panel" data-category="ICT" style="padding:24px;margin-bottom:20px"><h2>Bagian 08 — Session dan Waktu</h2><div class="chapter-list"><a class="chapter-row" href="bagian-08-session-dan-waktu/index.html"><span><strong>Session dan Waktu</strong><br><small>Session, killzone, NYMO, weekly profile, dan ritme waktu market.</small></span><span>→</span></a></div></section><section class="panel" data-category="ICT" style="padding:24px;margin-bottom:20px"><h2>Bagian 09 — Entry Model</h2><div class="chapter-list"><a class="chapter-row" href="bagian-09-entry-model/index.html"><span><strong>Entry Model</strong><br><small>Model entry dari liquidity grab sampai SL/TP berbasis struktur.</small></span><span>→</span></a></div></section><section class="panel" data-category="ICT" style="padding:24px;margin-bottom:20px"><h2>Bagian 10 — XAUUSD Playbook</h2><div class="chapter-list"><a class="chapter-row" href="bagian-10-xauusd-playbook/index.html"><span><strong>XAUUSD Playbook</strong><br><small>Playbook khusus Gold/XAUUSD untuk membaca peluang harian.</small></span><span>→</span></a></div></section><section class="panel" data-category="ICT" style="padding:24px;margin-bottom:20px"><h2>Bagian 11 — Advanced ICT</h2><div class="chapter-list"><a class="chapter-row" href="bagian-11-advanced-ict/index.html"><span><strong>Advanced ICT</strong><br><small>Konsep advanced seperti MMXM, STDV, SMT, dan Unicorn Model.</small></span><span>→</span></a></div></section><section class="panel" data-category="Risk" style="padding:24px;margin-bottom:20px"><h2>Bagian 12 — Risk Management</h2><div class="chapter-list"><a class="chapter-row" href="bagian-12-risk-management/index.html"><span><strong>Risk Management</strong><br><small>Money management, risk per trade, lot, daily limit, dan aturan bertahan.</small></span><span>→</span></a></div></section><section class="panel" data-category="Psikologi" style="padding:24px;margin-bottom:20px"><h2>Bagian 13 — Psikologi Trading</h2><div class="chapter-list"><a class="chapter-row" href="bagian-13-psikologi-trading/index.html"><span><strong>Psikologi Trading</strong><br><small>Psikologi trading: FOMO, revenge, disiplin, sabar, dan menerima loss.</small></span><span>→</span></a></div></section><section class="panel" data-category="Risk" style="padding:24px;margin-bottom:20px"><h2>Bagian 14 — Backtesting dan Jurnal</h2><div class="chapter-list"><a class="chapter-row" href="bagian-14-backtesting-dan-jurnal/index.html"><span><strong>Backtesting dan Jurnal</strong><br><small>Backtesting, forward testing, jurnal, review, dan evaluasi sistem.</small></span><span>→</span></a></div></section><section class="panel" data-category="Mandiri" style="padding:24px;margin-bottom:20px"><h2>Bagian 15 — Menjadi Trader Mandiri</h2><div class="chapter-list"><a class="chapter-row" href="bagian-15-menjadi-trader-mandiri/index.html"><span><strong>Menjadi Trader Mandiri</strong><br><small>Menyusun trading plan, playbook pribadi, rutinitas, dan roadmap live trading.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 16 — Advanced Market Structure Reading</h2><div class="chapter-list"><a class="chapter-row" href="bagian-16-advanced-entry-logic/index.html"><span><strong>Advanced Market Structure Reading</strong><br><small>Membaca structure lanjutan: minor/major swing, valid MSS, complex structure, dan kapan structure tidak layak dijadikan alasan entry.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 17 — Advanced Liquidity Mapping</h2><div class="chapter-list"><a class="chapter-row" href="bagian-17-fvg-masterclass/index.html"><span><strong>Advanced Liquidity Mapping</strong><br><small>Membaca internal/external liquidity, IRL/ERL, trendline liquidity, liquidity void, dan kualitas draw on liquidity.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 18 — Advanced Sweep &amp; Delivery Model</h2><div class="chapter-list"><a class="chapter-row" href="bagian-18-order-block-masterclass/index.html"><span><strong>Advanced Sweep &amp; Delivery Model</strong><br><small>Membedakan sweep, grab, run, false displacement, CISD, dan delivery change yang benar-benar layak dipakai.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 19 — POI Selection Masterclass</h2><div class="chapter-list"><a class="chapter-row" href="bagian-19-liquidity-masterclass/index.html"><span><strong>POI Selection Masterclass</strong><br><small>Memilih POI yang benar: POI utama, POI sekunder, trend vs range, tumpang tindih, dan kapan POI wajib diabaikan.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 20 — FVG, OB, CE &amp; IFVG Decision Model</h2><div class="chapter-list"><a class="chapter-row" href="bagian-20-idm-inducement-masterclass/index.html"><span><strong>FVG, OB, CE &amp; IFVG Decision Model</strong><br><small>Menentukan kapan FVG lebih kuat, kapan OB lebih kuat, kapan CE dipakai, dan kapan IFVG menjadi model entry.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 21 — Session Timing Advanced</h2><div class="chapter-list"><a class="chapter-row" href="bagian-21-ifvg-inversion-model/index.html"><span><strong>Session Timing Advanced</strong><br><small>Membaca Asia, London, New York, transition, news day, dan killzone sebagai filter waktu advanced.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 22 — Daily Bias &amp; Weekly Profile Advanced</h2><div class="chapter-list"><a class="chapter-row" href="bagian-22-block-advanced/index.html"><span><strong>Daily Bias &amp; Weekly Profile Advanced</strong><br><small>Menghubungkan daily bias, weekly profile, PDH/PDL, OHLC/OLHC, AMD, PO3, dan draw on liquidity.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 23 — ICT Macro &amp; Silver Bullet Model</h2><div class="chapter-list"><a class="chapter-row" href="bagian-23-premium-discount-advanced/index.html"><span><strong>ICT Macro &amp; Silver Bullet Model</strong><br><small>Memakai macro time window, Silver Bullet, killzone, dan time-price alignment sebagai model waktu yang presisi.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 24 — Opening Gap Model</h2><div class="chapter-list"><a class="chapter-row" href="bagian-24-market-structure-advanced/index.html"><span><strong>Opening Gap Model</strong><br><small>Membaca NDOG, NWOG, opening gap, gap fill, session transition, dan kapan gap menjadi draw atau POI.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 25 — Turtle Soup &amp; Smart Money Reversal</h2><div class="chapter-list"><a class="chapter-row" href="bagian-25-session-entry-model/index.html"><span><strong>Turtle Soup &amp; Smart Money Reversal</strong><br><small>Model reversal setelah liquidity diambil: Turtle Soup, SMR, failed run, false displacement, dan CISD reversal.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 26 — OTE &amp; Standard Deviation Targeting</h2><div class="chapter-list"><a class="chapter-row" href="bagian-26-xauusd-advanced-playbook/index.html"><span><strong>OTE &amp; Standard Deviation Targeting</strong><br><small>Memakai OTE, Fibonacci ICT, premium/discount, STDV projection, dan target ke liquidity secara lebih objektif.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 27 — Intermarket &amp; SMT Confirmation</h2><div class="chapter-list"><a class="chapter-row" href="bagian-27-no-trade-advanced/index.html"><span><strong>Intermarket &amp; SMT Confirmation</strong><br><small>Menggunakan SMT, DXY, intermarket, dan correlation sebagai konfirmasi tambahan, bukan alasan entry tunggal.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 28 — Advanced Entry Workflow</h2><div class="chapter-list"><a class="chapter-row" href="bagian-28-trade-management-advanced/index.html"><span><strong>Advanced Entry Workflow</strong><br><small>Alur lengkap dari validasi setup, trigger, entry, invalidation, do not chase, checklist sebelum entry, dan review.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 29 — Trade Management Advanced</h2><div class="chapter-list"><a class="chapter-row" href="bagian-29-backtest-advanced/index.html"><span><strong>Trade Management Advanced</strong><br><small>Mengelola posisi setelah entry: partial, move SL, hold, scale-out, pyramiding, dan exit objektif.</small></span><span>→</span></a></div></section><section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 30 — A+ Setup Library &amp; Full Checklist</h2><div class="chapter-list"><a class="chapter-row" href="bagian-30-a-plus-setup-library/index.html"><span><strong>A+ Setup Library &amp; Full Checklist</strong><br><small>Library setup final: A+ FVG, OB, IFVG, Turtle Soup, Silver Bullet, MMXM context, dan checklist lengkap sebelum entry.</small></span><span>→</span></a></div></section>
-<section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 31 — ICT Advanced Concepts</h2><div class="chapter-list"><a class="chapter-row" href="bagian-31-ict-advanced-concepts/index.html"><span><strong>ICT Advanced Concepts</strong><br><small>IPDA Data Ranges, BPR, AMDX, NWOG/NDOG, SMT Divergence, dan Standard Deviation Projections.</small></span><span>→</span></a></div></section>
-<section class="panel" data-category="Mandiri" style="padding:24px;margin-bottom:20px"><h2>Bagian 32 — Trading Tools Setup</h2><div class="chapter-list"><a class="chapter-row" href="bagian-32-trading-tools-setup/index.html"><span><strong>Trading Tools Setup</strong><br><small>Konfigurasi TradingView, pine script indicators, layout chart, dan alat pendukung analisis.</small></span><span>→</span></a></div></section>
-<section class="panel" data-category="Advanced" style="padding:24px;margin-bottom:20px"><h2>Bagian 33 — Live Case Studies</h2><div class="chapter-list"><a class="chapter-row" href="bagian-33-live-case-studies/index.html"><span><strong>Live Case Studies</strong><br><small>Studi kasus nyata membaca struktur market XAU/USD pada sesi live trading.</small></span><span>→</span></a></div></section>
-<section class="panel" data-category="Mandiri" style="padding:24px;margin-bottom:20px"><h2>Bagian 34 — Prop Firm Mastery</h2><div class="chapter-list"><a class="chapter-row" href="bagian-34-prop-firm-mastery/index.html"><span><strong>Prop Firm Mastery</strong><br><small>Aturan lulus evaluasi prop firm, manajemen drawdown, dan strategi konsistensi.</small></span><span>→</span></a></div></section>
-<section class="panel" data-category="Mandiri" style="padding:24px;margin-bottom:20px"><h2>Bagian 35 — Trading Plan Template</h2><div class="chapter-list"><a class="chapter-row" href="bagian-35-trading-plan-template/index.html"><span><strong>Trading Plan Template</strong><br><small>Template dokumen trading plan profesional, aturan entry/exit, dan checklist harian.</small></span><span>→</span></a></div></section>
-<section class="panel" data-category="Psikologi" style="padding:24px;margin-bottom:20px"><h2>Bagian 36 — Psikologi Trading Lanjutan</h2><div class="chapter-list"><a class="chapter-row" href="bagian-36-psikologi-ict-lanjutan/index.html"><span><strong>Psikologi Trading Lanjutan</strong><br><small>Pengelolaan emosi saat drawdown, mengatasi burnout, dan membentuk mindset institusional.</small></span><span>→</span></a></div></section>
+  <div class="semester-divider" data-semester="Semester 1" style="margin: 36px 0 20px; padding: 18px 24px; background: linear-gradient(135deg, rgba(212,168,50,0.1), rgba(7,11,18,0.9)); border-left: 4px solid #d4a832; border-radius: 12px;">
+    <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #d4a832; text-transform: uppercase;">SEMESTER 1 • TINGKAT PEMULA</div>
+    <h2 style="margin: 4px 0 6px; font-size: 20px; color: #fff;">Fondasi Pasar sampai Trader Mandiri</h2>
+    <p style="margin: 0; font-size: 13px; color: var(--muted, #94a3b8);">12 Pertemuan • Estimasi 10.5 Jam Belajar (12 SKS) • Target: Memahami chart, mekanisme pergerakan harga, konsep likuiditas, dan manajemen risiko dasar.</p>
+  </div>
+  <section class="panel" data-category="Semester 1, Pemula" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 01 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~45 Menit • 📄 9 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 01 — Mulai dari Nol (Pemula)</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-01-pemula-nol/index.html">
+        <span><strong>Mulai dari Nol (Pemula)</strong><br><small>Fondasi awal untuk benar-benar paham cara kerja market, lot, pip, leverage, dan risiko sebelum masuk strategi.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 02 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~50 Menit • 📄 11 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 02 — Membaca Chart & Candlestick</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-02-membaca-chart/index.html">
+        <span><strong>Membaca Chart & Candlestick</strong><br><small>Belajar membaca chart, anatomi candle, timeframe, trend, swing high/low, dan struktur market dasar.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 03 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~45 Menit • 📄 10 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 03 — Fondasi Market & Siklus AMD</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-03-fondasi-market/index.html">
+        <span><strong>Fondasi Market & Siklus AMD</strong><br><small>Memahami cara harga bergerak: Accumulation, Manipulation, Distribution (AMD), Power of Three (PO3), dan displacement.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 04 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 17 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 04 — Liquidity Dasar (Bahan Bakar Market)</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-04-liquidity/index.html">
+        <span><strong>Liquidity Dasar (Bahan Bakar Market)</strong><br><small>Konsep dasar Buy-Side & Sell-Side Liquidity (BSL/SSL), sweep vs run, liquidity pool, dan jebakan retail.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 05 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 13 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 05 — Smart Money Concept (SMC)</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-05-smart-money-concept/index.html">
+        <span><strong>Smart Money Concept (SMC)</strong><br><small>Pengenalan Order Block, Fair Value Gap (FVG), breaker block, PD Array, serta zona premium dan discount.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 06 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~50 Menit • 📄 11 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 06 — ICT Core Concepts</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-06-ict-core/index.html">
+        <span><strong>ICT Core Concepts</strong><br><small>Inti metodologi ICT: context, price delivery algorithm, CISD, valid Market Structure Shift (MSS), dan HTF/LTF alignment.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 07 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~50 Menit • 📄 11 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 07 — Daily Bias & Top-Down Analysis</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-07-bias-dan-top-down/index.html">
+        <span><strong>Daily Bias & Top-Down Analysis</strong><br><small>Cara membangun bias harian objektif, menentukan Draw on Liquidity (DOL), membaca PDH/PDL, dan skenario eksekusi.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 08 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 20 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 08 — Session & Waktu Trading</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-08-session-dan-waktu/index.html">
+        <span><strong>Session & Waktu Trading</strong><br><small>Karakter sesi Asia, London, New York, killzone emas, Judas swing, ICT macros, dan cara membaca jadwal rilis news.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 09 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 15 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 09 — Entry Model Dasar</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-09-entry-model/index.html">
+        <span><strong>Entry Model Dasar</strong><br><small>Model entry ICT: Optimal Trade Entry (OTE), FVG entry, MSS confirmation, Turtle Soup dasar, dan penempatan stop-loss logis.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 10 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~50 Menit • 📄 11 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 10 — XAUUSD Playbook Dasar</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-10-xauusd-playbook/index.html">
+        <span><strong>XAUUSD Playbook Dasar</strong><br><small>Karakteristik khusus Gold, jam-jam volatilitas tinggi, model London/NY untuk emas, dan perhitungan SL/TP realistis.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, Risk & Psikologi" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 11 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~50 Menit • 📄 11 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 11 — Risk Management & Money Management</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-12-risk-management/index.html">
+        <span><strong>Risk Management & Money Management</strong><br><small>Kunci bertahan di market: kalkulasi lot, batas rugi harian (daily loss limit), risk-to-reward ratio, dan position sizing.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 1, Pemula, Risk & Psikologi" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 12 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~50 Menit • 📄 11 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 12 — Psikologi Trading Dasar</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-13-psikologi-trading/index.html">
+        <span><strong>Psikologi Trading Dasar</strong><br><small>Fondasi mental: mengatasi FOMO, balas dendam (revenge trade), melatih kesabaran menunggu setup, dan menerima loss.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>
+  <div class="semester-divider" data-semester="Semester 2" style="margin: 36px 0 20px; padding: 18px 24px; background: linear-gradient(135deg, rgba(212,168,50,0.1), rgba(7,11,18,0.9)); border-left: 4px solid #3b82f6; border-radius: 12px;">
+    <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #3b82f6; text-transform: uppercase;">SEMESTER 2 • TINGKAT MEDIUM</div>
+    <h2 style="margin: 4px 0 6px; font-size: 20px; color: #fff;">Advanced Execution & ICT Masterclass</h2>
+    <p style="margin: 0; font-size: 13px; color: var(--muted, #94a3b8);">13 Pertemuan • Estimasi 12.5 Jam Belajar (13 SKS) • Target: Menguasai struktur market lanjutan, POI selection, decision model, timing sesi, dan validasi backtest.</p>
+  </div>
+  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 13 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~55 Menit • 📄 14 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 13 — Advanced ICT Overview</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-11-advanced-ict/index.html">
+        <span><strong>Advanced ICT Overview</strong><br><small>Konsep lanjutan ICT: Market Maker Model (MMXM), Smart Money Reversal (SMR), Unicorn Model, dan Standard Deviation.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 14 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 22 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 14 — Advanced Market Structure Reading</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-16-advanced-entry-logic/index.html">
+        <span><strong>Advanced Market Structure Reading</strong><br><small>Membaca struktur multi-layer: minor vs major structure, validasi MSS vs false MSS, complex pullback, dan HRLR vs LRLR.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 15 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 19 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 15 — Advanced Liquidity Mapping</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-17-fvg-masterclass/index.html">
+        <span><strong>Advanced Liquidity Mapping</strong><br><small>Memetakan Internal vs External Liquidity (IRL/ERL), trendline liquidity retail trap, liquidity void, dan prioritas DoL.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 16 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 21 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 16 — Advanced Sweep & Delivery Model</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-18-order-block-masterclass/index.html">
+        <span><strong>Advanced Sweep & Delivery Model</strong><br><small>Membedakan sweep vs grab vs run, false displacement, CISD lanjutan, delivery sequence, dan mean threshold.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 17 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 26 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 17 — POI Selection Masterclass</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-19-liquidity-masterclass/index.html">
+        <span><strong>POI Selection Masterclass</strong><br><small>Hierarki peluang: POI utama vs sekunder, HTF vs LTF POI, tumpang tindih level, mitigasi, dan kapan POI wajib diabaikan.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 18 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~50 Menit • 📄 21 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 18 — Decision Model (FVG, OB, CE & IFVG)</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-20-idm-inducement-masterclass/index.html">
+        <span><strong>Decision Model (FVG, OB, CE & IFVG)</strong><br><small>Menentukan senjata masuk: kapan FVG lebih kuat dari OB, Consequent Encroachment (CE), full fill vs CE, dan IFVG model.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 19 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 23 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 19 — Session Timing Advanced</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-21-ifvg-inversion-model/index.html">
+        <span><strong>Session Timing Advanced</strong><br><small>Asia build vs direction, Asia trap untuk London, London reversal vs continuation, dan New York confirm vs cancel.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 20 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~55 Menit • 📄 20 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 20 — Daily Bias & Weekly Profile Advanced</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-22-block-advanced/index.html">
+        <span><strong>Daily Bias & Weekly Profile Advanced</strong><br><small>Siklus mingguan ICT: Monday range, Tuesday/Wednesday high/low of week, TGIF, OHLC/OLHC harian, dan bias yang batal.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 21 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~55 Menit • 📄 20 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 21 — ICT Macro & Silver Bullet Model</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-23-premium-discount-advanced/index.html">
+        <span><strong>ICT Macro & Silver Bullet Model</strong><br><small>Jendela waktu algoritmik (macro time window), setup Silver Bullet London & New York, dan time-price alignment.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 22 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~55 Menit • 📄 14 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 22 — Opening Gap Model</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-24-market-structure-advanced/index.html">
+        <span><strong>Opening Gap Model</strong><br><small>New Day Opening Gap (NDOG), New Week Opening Gap (NWOG), gap fill vs gap respect, dan kapan gap menjadi POI atau DoL.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 23 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 23 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 23 — Turtle Soup & Smart Money Reversal</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-25-session-entry-model/index.html">
+        <span><strong>Turtle Soup & Smart Money Reversal</strong><br><small>Model reversal spesifik setelah sapuan liquidity: Turtle Soup Model A & Model B, SMR, failed breakout, dan target aman.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 24 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~50 Menit • 📄 11 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 24 — Backtesting & Jurnal Trading</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-14-backtesting-dan-jurnal/index.html">
+        <span><strong>Backtesting & Jurnal Trading</strong><br><small>Metode validasi strategi: backtest manual, forward test, mencatat metrik winrate, risk-to-reward expectancy, dan evaluasi mingguan.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 2, Medium" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 25 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~45 Menit • 📄 9 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 25 — Menjadi Trader Mandiri</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-15-menjadi-trader-mandiri/index.html">
+        <span><strong>Menjadi Trader Mandiri</strong><br><small>Menyusun trading plan profesional, merancang playbook pribadi, membangun rutinitas konsisten, dan roadmap live trading.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>
+  <div class="semester-divider" data-semester="Semester 3" style="margin: 36px 0 20px; padding: 18px 24px; background: linear-gradient(135deg, rgba(212,168,50,0.1), rgba(7,11,18,0.9)); border-left: 4px solid #10b981; border-radius: 12px;">
+    <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #10b981; text-transform: uppercase;">SEMESTER 3 • TINGKAT ADVANCED</div>
+    <h2 style="margin: 4px 0 6px; font-size: 20px; color: #fff;">Professional Playbook, Prop Firm & Mastery</h2>
+    <p style="margin: 0; font-size: 13px; color: var(--muted, #94a3b8);">11 Pertemuan • Estimasi 8 Jam Belajar (11 SKS) • Target: Eksekusi live presisi, manajemen posisi profesional, lulus evaluasi prop firm, dan mindset institusional.</p>
+  </div>
+  <section class="panel" data-category="Semester 3, Advanced, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 26 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 23 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 26 — XAUUSD Advanced Playbook & STDV</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-26-xauusd-advanced-playbook/index.html">
+        <span><strong>XAUUSD Advanced Playbook & STDV</strong><br><small>Optimal Trade Entry (OTE) presisi, proyeksi Standard Deviation (STDV 1, 2, 3), dan skenario khusus emas.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 27 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~55 Menit • 📄 17 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 27 — Intermarket & SMT Confirmation</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-27-no-trade-advanced/index.html">
+        <span><strong>Intermarket & SMT Confirmation</strong><br><small>SMT Divergence (korelasi DXY dan Gold), filter konfirmasi lintas instrumen, dan checklist ketat kapan dilarang entry.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 28 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 20 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 28 — Advanced Entry Workflow</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-28-trade-management-advanced/index.html">
+        <span><strong>Advanced Entry Workflow</strong><br><small>Alur eksekusi presisi: validasi context, trigger konfirmasi, order limit vs market, invalidasi logis, dan do not chase.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 29 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~60 Menit • 📄 20 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 29 — Trade Management Advanced</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-29-backtest-advanced/index.html">
+        <span><strong>Trade Management Advanced</strong><br><small>Mengelola posisi live dengan tenang: partial take profit, move SL to BE, menghindari BE trap, scale-out, dan pyramiding.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 30 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~55 Menit • 📄 20 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 30 — A+ Setup Library & Full Checklist</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-30-a-plus-setup-library/index.html">
+        <span><strong>A+ Setup Library & Full Checklist</strong><br><small>Library setup probabilitas tertinggi: A+ FVG, A+ OB, A+ Turtle Soup, A+ Silver Bullet, dan checklist lengkap sebelum eksekusi.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced, ICT Core" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 31 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~55 Menit • 📄 20 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 31 — ICT Advanced Concepts</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-31-ict-advanced-concepts/index.html">
+        <span><strong>ICT Advanced Concepts</strong><br><small>Konsep master: IPDA Data Ranges, Balanced Price Range (BPR), quarterly theory, AMDX institutional delivery, dan STDV.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 32 • 0.5 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~20 Menit • 📄 2 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 32 — Trading Tools & Workspace Setup</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-32-trading-tools-setup/index.html">
+        <span><strong>Trading Tools & Workspace Setup</strong><br><small>Setup TradingView optimal, indikator pembantu waktu/sesi, template layout, dan manajemen ruang kerja trader.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 33 • 0.5 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~20 Menit • 📄 2 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 33 — Live Case Studies XAUUSD</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-33-live-case-studies/index.html">
+        <span><strong>Live Case Studies XAUUSD</strong><br><small>Bedah chart nyata pada market live XAUUSD: membaca reaksi terhadap POI dan evaluasi setup yang berhasil maupun gagal.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 34 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~40 Menit • 📄 4 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 34 — Prop Firm Mastery</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-34-prop-firm-mastery/index.html">
+        <span><strong>Prop Firm Mastery</strong><br><small>Strategi lulus evaluasi prop firm, aturan ketat drawdown harian/maksimal, dan manajemen modal akun funded.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 35 • 0.5 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~20 Menit • 📄 2 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 35 — Trading Plan Template</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-35-trading-plan-template/index.html">
+        <span><strong>Trading Plan Template</strong><br><small>Template dokumen SOP trading satu halaman untuk menyatukan bias, setup, risiko, entry, exit, dan evaluasi harian.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>  <section class="panel" data-category="Semester 3, Advanced, Risk & Psikologi" style="padding:24px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <span class="badge" style="background:rgba(212,168,50,0.12);color:var(--gold, #d4a832);border:1px solid rgba(212,168,50,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;">PERTEMUAN 36 • 1 SKS</span>
+      <span style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;">⏱️ ~30 Menit • 📄 6 Materi</span>
+    </div>
+    <h2 style="margin-top:0;font-size:18px;">Pertemuan 36 — Psikologi ICT Lanjutan (Mindset Institusional)</h2>
+    <div class="chapter-list">
+      <a class="chapter-row" href="bagian-36-psikologi-ict-lanjutan/index.html">
+        <span><strong>Psikologi ICT Lanjutan (Mindset Institusional)</strong><br><small>Menghilangkan analysis freeze, backtest bias, narrative bias, overexplaining market, dan menghentikan kebiasaan berganti sistem.</small></span>
+        <span style="color:var(--accent,#d4a832);font-weight:700;">Buka Modul →</span>
+      </a>
+    </div>
+  </section>
 </main>
-<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Belajar Trading dari Nol sampai Mandiri.</footer>
+<footer class="footer hide-until-auth">© 2026 Amy FX Academy. Sistem Kuliah Trading dari Nol sampai Mandiri.</footer>
 <script>
 /* AMYFX_NOTIFY_GUARD_START */
 (function(){

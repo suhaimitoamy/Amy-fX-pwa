@@ -36,17 +36,21 @@ export function buildMappingSnapshot(result, {
   livePrice = null,
   capturedAt = Date.now()
 } = {}) {
+  const d = result?.amySmcD || null;
   const concepts = result?.marketConcepts || {};
   const structure = concepts.structure || result?.st || {};
   const validated = result?.validatedMarketContext || {};
   const entryMap = result?.entryMap || {};
   const scenario = entryMap.scenario || result?.entryWatch?.scenario || {};
   const execution = result?.setupExecution || {};
-  const lastClosedCandle = sourceCandle(candles);
+  const lastClosedCandle = d?.sourceCandle
+    ? clone(d.sourceCandle, null)
+    : sourceCandle(candles);
 
   const snapshot = {
-    version: '3.0.0',
-    source: 'AMY_MAPPING_SINGLE_AUTHORITY_V3',
+    version: '4.0.0',
+    source: 'AMY_SMC_D_SINGLE_MAPPING_AUTHORITY',
+    baselineSha: d?.baselineSha || result?.baselineSha || null,
     timeframe: result?.tf || null,
     capturedAt,
     sourceCandle: lastClosedCandle,
@@ -55,9 +59,21 @@ export function buildMappingSnapshot(result, {
       degraded: Boolean(result?.dataDegraded),
       warnings: clone(result?.dataWarnings || [], []),
       closedCandleOnly: true,
+      sequentialReplay: true,
+      noFutureCandle: true,
+      noInterpolation: true,
+      noSyntheticCandles: true,
       candleCount: Array.isArray(candles) ? candles.length : 0
     },
     facts: {
+      descriptive: clone(d?.descriptive || {}, {}),
+      freshStructuralEvidence: {
+        htfSwing: d?.descriptive?.htfSwing?.fresh ? clone(d.descriptive.htfSwing, null) : null,
+        swingStructure: d?.descriptive?.swingStructure?.fresh ? clone(d.descriptive.swingStructure, null) : null,
+        internalStructure: d?.descriptive?.internalStructure?.fresh ? clone(d.descriptive.internalStructure, null) : null,
+        sourceCandleTime: d?.sourceCandle?.time || null
+      },
+      predictive: clone(d?.predictive || {}, {}),
       structure: {
         trend: structure.trend || 'NEUTRAL',
         confirmedTrend: structure.confirmedTrend || 'NEUTRAL',
@@ -87,7 +103,7 @@ export function buildMappingSnapshot(result, {
       directionForecast: clone(validated.directionForecast || {}, {}),
       directionDecision: clone(result?.directionDecision || {}, {}),
       htfNarrative: clone(result?.htfNarrative || {}, {}),
-      dealingRange: clone(result?.dealingRange || {}, {}),
+      dealingRange: clone(d?.descriptive?.dealingRange || result?.dealingRange || {}, {}),
       session: clone(result?.sessionContext || {}, {})
     },
     scenario: clone(scenario, {}),
@@ -104,9 +120,12 @@ export function buildMappingSnapshot(result, {
       mayRewriteClosedCandleFacts: false
     },
     authority: {
-      facts: 'AMY_CONCEPT_ENGINE_V3',
-      direction: validated.source || 'AMY_MAPPING_CONTEXT_V3',
+      facts: 'AMY_SMC_D',
+      direction: 'AMY_SMC_D_NEXT_MOVE',
+      finalBias: 'AMY_SMC_D_FINAL_BIAS',
+      dealingRange: 'AMY_SMC_D_DESCRIPTIVE_ONLY',
       entry: entryMap.source || 'AMY_CAUSAL_ENTRY_MAP_V3',
+      executionRole: 'READ_ONLY_CONSUMER',
       uiMayMutate: false
     }
   };

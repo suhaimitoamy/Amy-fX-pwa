@@ -37,10 +37,12 @@
       var target = new URL(url || location.href, location.href);
       var rootPath = decodeURIComponent(root.pathname || '');
       var targetPath = decodeURIComponent(target.pathname || '');
-      if (rootPath && targetPath.indexOf(rootPath) === 0) return targetPath.slice(rootPath.length).replace(/^\/+/, '');
+      var lessonQuery = /\/backtest-learning\/lesson\.html$/i.test(targetPath) && target.searchParams.get('lesson')
+        ? '?lesson=' + encodeURIComponent(target.searchParams.get('lesson')) : '';
+      if (rootPath && targetPath.indexOf(rootPath) === 0) return targetPath.slice(rootPath.length).replace(/^\/+/, '') + lessonQuery;
       var marker = '/apps/academy/';
       var index = targetPath.indexOf(marker);
-      return index >= 0 ? targetPath.slice(index + marker.length) : targetPath.replace(/^\/+/, '');
+      return (index >= 0 ? targetPath.slice(index + marker.length) : targetPath.replace(/^\/+/, '')) + lessonQuery;
     } catch (_) {
       return String(url || '').replace(/^.*\/apps\/academy\//, '').replace(/^\/+/, '');
     }
@@ -59,20 +61,22 @@
   }
 
   function sectionLabel(path) {
-    var eyebrow = document.querySelector('.article .eyebrow, .article-layout .eyebrow');
+    var eyebrow = document.querySelector('.article .eyebrow, .article-layout .eyebrow, .lesson-content .eyebrow');
     if (eyebrow && eyebrow.textContent.trim()) return eyebrow.textContent.trim();
+    if (/^backtest-learning\/lesson\.html\?lesson=\d{2}$/i.test(String(path || ''))) return 'ICT Berbasis Backtest';
     var match = String(path || '').match(/bagian-(\d+)-([^/]+)/i);
     if (!match) return 'Amy FX Academy';
     return 'Bagian ' + match[1] + ' — ' + match[2].replace(/-/g, ' ');
   }
 
   function isLessonPage(path) {
+    if (/^backtest-learning\/lesson\.html\?lesson=\d{2}$/i.test(String(path || ''))) return true;
     if (!/bagian-\d+[^/]+\/.+\.html$/i.test(String(path || ''))) return false;
     return Boolean(document.querySelector('.article, .article-layout'));
   }
 
   function currentHeading() {
-    var headings = Array.prototype.slice.call(document.querySelectorAll('.article h2, .article h3, .article-layout h2, .article-layout h3'));
+    var headings = Array.prototype.slice.call(document.querySelectorAll('.article h2, .article h3, .article-layout h2, .article-layout h3, .lesson-content h2, .lesson-content h3'));
     var current = null;
     headings.forEach(function (heading, index) {
       var top = heading.getBoundingClientRect().top;
@@ -90,25 +94,31 @@
     var path = relativePath(location.href);
     if (!isLessonPage(path)) return;
     var previous = readJson(LAST_KEY, {});
+    var positions = readJson(POSITION_KEY, {});
+    var priorPosition = positions[path] || {};
     var heading = currentHeading();
+    var progress = progressPercent();
     var record = {
       version: 2,
       path: path,
       title: cleanTitle(),
       section: sectionLabel(path),
       scrollY: Math.max(0, Math.round(window.scrollY || 0)),
-      progress: progressPercent(),
+      progress: progress,
       headingIndex: heading ? heading.index : null,
       headingText: heading ? heading.text : null,
+      namespace: /^backtest-learning\//i.test(path) ? 'ict-backtest' : 'academy-main',
+      status: priorPosition.completed || progress >= 95 ? 'completed' : (progress > 0 ? 'reading' : 'unread'),
+      completed: Boolean(priorPosition.completed || progress >= 95),
       updatedAt: Date.now()
     };
     if (previous.path === path && previous.updatedAt && Date.now() - previous.updatedAt < 250 && previous.scrollY === record.scrollY) return;
     writeJson(LAST_KEY, record);
 
-    var positions = readJson(POSITION_KEY, {});
-    positions[path] = { scrollY: record.scrollY, progress: record.progress, headingIndex: record.headingIndex, updatedAt: record.updatedAt };
+    positions[path] = { scrollY: record.scrollY, progress: record.progress, headingIndex: record.headingIndex, completed: record.completed, status: record.status, namespace: record.namespace, updatedAt: record.updatedAt };
     var positionKeys = Object.keys(positions).sort(function (a, b) { return Number(positions[b].updatedAt || 0) - Number(positions[a].updatedAt || 0); });
-    positionKeys.slice(30).forEach(function (key) { delete positions[key]; });
+    // Keep enough positions for all 36 main sections plus the separate 00–08 track.
+    positionKeys.slice(80).forEach(function (key) { delete positions[key]; });
     writeJson(POSITION_KEY, positions);
 
     var history = readJson(HISTORY_KEY, []);
@@ -118,6 +128,14 @@
 
     localStorage.setItem('amy_last_opened_title', record.title);
     localStorage.setItem('amy_last_opened_url', absolutePath(record.path));
+
+    try {
+      if (window.AmyLearningReminder && typeof window.AmyLearningReminder.recordLesson === 'function') {
+        window.AmyLearningReminder.recordLesson(record.title, absolutePath(record.path), record.section || '');
+      } else if (window.Android && typeof window.Android.recordLastStudiedLesson === 'function') {
+        window.Android.recordLastStudiedLesson(record.title, absolutePath(record.path), record.section || '');
+      }
+    } catch (_) {}
   }
 
   function queueSave() {
@@ -180,6 +198,8 @@
   }
 
   function renderResumeCard() {
+    var page = relativePath(location.href);
+    if (!/^(?:index\.html)?$/i.test(page)) return;
     var last = readJson(LAST_KEY, null);
     if (!last || !last.path || !last.title) return;
     var history = readJson(HISTORY_KEY, []);
@@ -190,8 +210,6 @@
       container.innerHTML = resumeCardHtml(last, history);
       return;
     }
-    var homeLike = /(?:^|\/)(?:index\.html|daftar-materi\.html)?$/i.test(relativePath(location.href));
-    if (!homeLike) return;
     var host = document.querySelector('main.container');
     var hero = host && host.querySelector('.hero, .section-heading');
     if (!host) return;
@@ -203,6 +221,44 @@
     else host.insertAdjacentElement('afterbegin', container);
   }
 
+  function getRecord(path) {
+    var resolved = path || relativePath(location.href);
+    var positions = readJson(POSITION_KEY, {});
+    var history = readJson(HISTORY_KEY, []);
+    var item = Array.isArray(history) ? history.find(function (entry) { return entry && entry.path === resolved; }) : null;
+    return Object.assign({}, item || {}, positions[resolved] || {}, { path: resolved });
+  }
+
+  function markCompleted(path) {
+    saveLessonPosition();
+    var resolved = path || relativePath(location.href);
+    var positions = readJson(POSITION_KEY, {});
+    var current = Object.assign({}, positions[resolved] || {}, {
+      completed: true, status: 'completed', progress: 100,
+      namespace: /^backtest-learning\//i.test(resolved) ? 'ict-backtest' : 'academy-main', updatedAt: Date.now()
+    });
+    positions[resolved] = current;
+    writeJson(POSITION_KEY, positions);
+    var history = readJson(HISTORY_KEY, []);
+    history = Array.isArray(history) ? history : [];
+    history = history.map(function (item) {
+      return item && item.path === resolved ? Object.assign({}, item, current) : item;
+    });
+    writeJson(HISTORY_KEY, history);
+    var last = readJson(LAST_KEY, null);
+    if (last && last.path === resolved) writeJson(LAST_KEY, Object.assign({}, last, current));
+    document.dispatchEvent(new CustomEvent('amy:reading-progress-changed', { detail: { path: resolved, record: current } }));
+    return current;
+  }
+
+  function getTrackProgress(namespace) {
+    var positions = readJson(POSITION_KEY, {});
+    return Object.keys(positions).filter(function (path) {
+      var item = positions[path] || {};
+      return item.namespace === namespace || (namespace === 'ict-backtest' && /^backtest-learning\//i.test(path));
+    }).reduce(function (result, path) { result[path] = Object.assign({}, positions[path]); return result; }, {});
+  }
+
   function init() {
     restorePosition();
     renderResumeCard();
@@ -210,7 +266,17 @@
     window.addEventListener('scroll', queueSave, { passive: true });
     window.addEventListener('pagehide', saveLessonPosition);
     document.addEventListener('visibilitychange', function () { if (document.hidden) saveLessonPosition(); });
+    document.addEventListener('amy:lesson-ready', function () { restorePosition(); saveLessonPosition(); });
   }
+
+  window.AmyAcademyReading = Object.freeze({
+    capture: saveLessonPosition,
+    markCompleted: markCompleted,
+    getRecord: getRecord,
+    getTrackProgress: getTrackProgress,
+    relativePath: relativePath
+  });
+  document.dispatchEvent(new CustomEvent('amy:reading-history-ready'));
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();

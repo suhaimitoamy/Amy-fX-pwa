@@ -82,6 +82,11 @@ const dom = {
   libraryEmpty: document.querySelector("#libraryEmpty"),
   codeEmpty: document.querySelector("#codeEmpty"),
   mediaEmpty: document.querySelector("#mediaEmpty"),
+  uploadMediaBtn: document.querySelector("#uploadMediaBtn"),
+  emptyMediaUploadBtn: document.querySelector("#emptyMediaUploadBtn"),
+  mediaDirectFileInput: document.querySelector("#mediaDirectFileInput"),
+  fileDropLabel: document.querySelector("#fileDropLabel"),
+  journalFileDropLabel: document.querySelector("#journalFileDropLabel"),
   libraryCount: document.querySelector("#libraryCount"),
   codeCount: document.querySelector("#codeCount"),
   mediaCount: document.querySelector("#mediaCount"),
@@ -168,8 +173,8 @@ const dom = {
     journal: document.querySelector("#journalView"),
     assistant: document.querySelector("#assistantView"),
     statistics: document.querySelector("#statisticsView"),
-
-    notes: document.querySelector("#notesView")
+    notes: document.querySelector("#notesView"),
+    habits: document.querySelector("#habitsView")
   },
   dialog: document.querySelector("#itemDialog"),
   form: document.querySelector("#itemForm"),
@@ -289,6 +294,9 @@ function publishAmyFxJournalState() {
 }
 
 async function boot() {
+  document.documentElement.classList.remove("is-video-feed-open");
+  document.body.classList.remove("is-video-feed-open");
+  dom.fullscreenDialog?.classList.remove("is-video-feed");
   await requestPersistentStorage();
   await enforcePinLock();
   state.items = normalizeItems(await loadItems());
@@ -303,14 +311,36 @@ async function boot() {
   bindEvents();
   if (dom.journalDateInput && !dom.journalDateInput.value) dom.journalDateInput.value = new Date().toISOString().slice(0, 10);
   render();
+  initJournalHabitsListeners();
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialView = urlParams.get("view");
+    if (initialView) {
+      setView(initialView);
+    }
+  } catch (_) {}
   initBackGuard();
   await migrateLegacyFiles();
   disableServiceWorkerForWebPage();
 }
 
+function debounce(callback, wait = 120) {
+  let timeoutId = 0;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => callback(...args), wait);
+  };
+}
+
 function bindEvents() {
+  // Bind primary bottom navigation immediately with full resilience
+  const navBtns = dom.navButtons?.length ? dom.navButtons : document.querySelectorAll(".bottom-nav .nav-button");
+  navBtns.forEach((button) => {
+    button.addEventListener("click", () => setView(button.dataset.view));
+  });
+
   const debouncedSearchRender = debounce(() => {
-    state.query = dom.searchInput.value.trim();
+    state.query = dom.searchInput?.value.trim() || "";
     resetGridLimits();
     saveSettings();
     render();
@@ -323,12 +353,12 @@ function bindEvents() {
     render();
   }, 220);
 
-  dom.searchInput.addEventListener("input", () => {
+  dom.searchInput?.addEventListener("input", () => {
     debouncedSearchRender();
   });
 
-  dom.focusSearchBtn.addEventListener("click", () => {
-    dom.searchInput.focus();
+  dom.focusSearchBtn?.addEventListener("click", () => {
+    dom.searchInput?.focus();
   });
 
   dom.filterToggleBtn?.addEventListener("click", () => {
@@ -340,6 +370,7 @@ function bindEvents() {
   });
 
   dom.openSidebarBtn?.addEventListener("click", openSidebar);
+  document.getElementById("bottomNavMenuBtn")?.addEventListener("click", openSidebar);
   dom.closeSidebarBtn?.addEventListener("click", closeSidebar);
   dom.sidebarBackdrop?.addEventListener("click", closeSidebar);
   dom.sideNavButtons?.forEach((button) => {
@@ -349,10 +380,19 @@ function bindEvents() {
     });
   });
 
-  dom.openFormBtn.addEventListener("click", () => openForm());
-  dom.emptyAddBtn.addEventListener("click", () => openForm());
+  dom.openFormBtn?.addEventListener("click", () => openForm());
+  dom.emptyAddBtn?.addEventListener("click", () => openForm());
+  dom.uploadMediaBtn?.addEventListener("click", () => dom.mediaDirectFileInput?.click());
+  dom.emptyMediaUploadBtn?.addEventListener("click", () => dom.mediaDirectFileInput?.click());
+  dom.mediaDirectFileInput?.addEventListener("change", handleMediaDirectUpload);
+  dom.fileDropLabel?.addEventListener("click", (e) => {
+    if (e.target !== dom.fileInput) dom.fileInput?.click();
+  });
+  dom.journalFileDropLabel?.addEventListener("click", (e) => {
+    if (e.target !== dom.journalFileInput) dom.journalFileInput?.click();
+  });
 
-  dom.clearFiltersBtn.addEventListener("click", () => {
+  dom.clearFiltersBtn?.addEventListener("click", () => {
     state.category = "Semua";
     state.status = "Semua";
     state.fileType = "Semua";
@@ -389,6 +429,25 @@ function bindEvents() {
 
   dom.exportAllBtn?.addEventListener("click", exportBackup);
   dom.importBackupInput?.addEventListener("change", importBackup);
+
+  // Quick Backup, Restore & PIN forwards from Header and Drawer
+  document.getElementById("headBackupBtn")?.addEventListener("click", () => dom.exportAllBtn?.click());
+  document.getElementById("headRestoreInput")?.addEventListener("change", (e) => {
+    if (dom.importBackupInput && e.target.files?.length) {
+      dom.importBackupInput.files = e.target.files;
+      dom.importBackupInput.dispatchEvent(new Event("change"));
+    }
+  });
+  document.getElementById("drawerBackupBtn")?.addEventListener("click", () => dom.exportAllBtn?.click());
+  document.getElementById("drawerRestoreInput")?.addEventListener("change", (e) => {
+    if (dom.importBackupInput && e.target.files?.length) {
+      dom.importBackupInput.files = e.target.files;
+      dom.importBackupInput.dispatchEvent(new Event("change"));
+    }
+  });
+  document.getElementById("drawerPinBtn")?.addEventListener("click", () => dom.setPinBtn?.click());
+  document.getElementById("drawerClearPinBtn")?.addEventListener("click", () => dom.clearPinBtn?.click());
+
   dom.scanStorageBtn?.addEventListener("click", scanStorageFiles);
   dom.storageScanInput?.addEventListener("change", handleStorageScanInput);
   window.addEventListener("amyNativeStorageScanResult", handleNativeStorageScanResult);
@@ -446,48 +505,43 @@ function bindEvents() {
   dom.fullscreenAnalyzeBtn?.addEventListener("click", analyzeActiveChart);
   dom.fullscreenDeleteBtn?.addEventListener("click", deleteActiveFullscreenItem);
   document.addEventListener("click", closeOpenCardMenus);
-  document.addEventListener("click", () => closeOpenFilterMenus());
-  dom.selectModeBtn.addEventListener("click", enterSelectMode);
-  dom.cancelSelectBtn.addEventListener("click", exitSelectMode);
-  dom.bulkDeleteBtn.addEventListener("click", deleteSelectedItems);
+  dom.selectModeBtn?.addEventListener("click", enterSelectMode);
+  dom.cancelSelectBtn?.addEventListener("click", exitSelectMode);
+  dom.bulkDeleteBtn?.addEventListener("click", deleteSelectedItems);
 
-  dom.navButtons.forEach((button) => {
-    button.addEventListener("click", () => setView(button.dataset.view));
-  });
+  dom.closeFormBtn?.addEventListener("click", () => closeForm());
 
-  dom.closeFormBtn.addEventListener("click", () => closeForm());
-
-  dom.dialog.addEventListener("cancel", (event) => {
+  dom.dialog?.addEventListener("cancel", (event) => {
     event.preventDefault();
     closeForm();
   });
 
-  dom.form.addEventListener("submit", saveForm);
-  dom.titleInput.addEventListener("input", () => {
+  dom.form?.addEventListener("submit", saveForm);
+  dom.titleInput?.addEventListener("input", () => {
     state.autoTitleFromFile = false;
   });
-  dom.deleteCurrentBtn.addEventListener("click", deleteCurrentItem);
-  dom.typeInput.addEventListener("change", syncTypeFields);
-  dom.mediaUrlInput.addEventListener("input", () => updatePreviewFromUrl());
-  dom.fileInput.addEventListener("change", handleFilePick);
-  dom.closeDocumentBtn.addEventListener("click", closeDocumentDialog);
-  dom.downloadDocumentBtn.addEventListener("click", downloadActiveDocument);
-  dom.openDocumentBtn.addEventListener("click", openActiveDocumentInNewTab);
-  dom.fullscreenBackBtn.addEventListener("click", closeFullscreenViewer);
-  dom.fullscreenCloseBtn.addEventListener("click", closeFullscreenViewer);
-  dom.fullscreenExitBtn.addEventListener("click", closeFullscreenViewer);
+  dom.deleteCurrentBtn?.addEventListener("click", deleteCurrentItem);
+  dom.typeInput?.addEventListener("change", syncTypeFields);
+  dom.mediaUrlInput?.addEventListener("input", () => updatePreviewFromUrl());
+  dom.fileInput?.addEventListener("change", handleFilePick);
+  dom.closeDocumentBtn?.addEventListener("click", closeDocumentDialog);
+  dom.downloadDocumentBtn?.addEventListener("click", downloadActiveDocument);
+  dom.openDocumentBtn?.addEventListener("click", openActiveDocumentInNewTab);
+  dom.fullscreenBackBtn?.addEventListener("click", closeFullscreenViewer);
+  dom.fullscreenCloseBtn?.addEventListener("click", closeFullscreenViewer);
+  dom.fullscreenExitBtn?.addEventListener("click", closeFullscreenViewer);
   document.addEventListener("click", handleGlobalFullscreenControlClick, true);
-  dom.fullscreenPrevBtn.addEventListener("click", () => showAdjacentImage(-1));
-  dom.fullscreenNextBtn.addEventListener("click", () => showAdjacentImage(1));
-  dom.fullscreenStage.addEventListener("touchstart", handleFullscreenTouchStart, { passive: true });
-  dom.fullscreenStage.addEventListener("touchend", handleFullscreenTouchEnd, { passive: true });
+  dom.fullscreenPrevBtn?.addEventListener("click", () => showAdjacentImage(-1));
+  dom.fullscreenNextBtn?.addEventListener("click", () => showAdjacentImage(1));
+  dom.fullscreenStage?.addEventListener("touchstart", handleFullscreenTouchStart, { passive: true });
+  dom.fullscreenStage?.addEventListener("touchend", handleFullscreenTouchEnd, { passive: true });
 
-  dom.documentDialog.addEventListener("cancel", (event) => {
+  dom.documentDialog?.addEventListener("cancel", (event) => {
     event.preventDefault();
     closeDocumentDialog();
   });
 
-  dom.fullscreenDialog.addEventListener("cancel", (event) => {
+  dom.fullscreenDialog?.addEventListener("cancel", (event) => {
     event.preventDefault();
     closeFullscreenViewer();
   });
@@ -532,16 +586,9 @@ function handleAppBack() {
   }
   if (state.view !== "library") {
     setView("library");
-    pushBackGuard();
     return;
   }
-  const now = Date.now();
-  if (now - state.lastBackAt < 1600) {
-    history.back();
-    return;
-  }
-  state.lastBackAt = now;
-  pushBackGuard();
+  window.location.assign('/index.html');
 }
 
 function pushBackGuard() {
@@ -778,9 +825,42 @@ function getGridKey(container) {
   return container?.id || "grid";
 }
 
+function switchPerformaSubtab(tab) {
+  const isHabits = tab === 'habits';
+  const habitsBtn = document.getElementById('subtabHabitsBtn');
+  const statsBtn = document.getElementById('subtabStatsBtn');
+  const subpaneHabits = document.getElementById('subpaneHabits');
+  const subpaneStats = document.getElementById('subpaneStats');
+
+  if (habitsBtn) {
+    habitsBtn.classList.toggle('is-active', isHabits);
+    habitsBtn.setAttribute('aria-selected', isHabits ? 'true' : 'false');
+  }
+  if (statsBtn) {
+    statsBtn.classList.toggle('is-active', !isHabits);
+    statsBtn.setAttribute('aria-selected', !isHabits ? 'true' : 'false');
+  }
+  if (subpaneHabits) subpaneHabits.hidden = !isHabits;
+  if (subpaneStats) subpaneStats.hidden = isHabits;
+
+  if (!isHabits) {
+    renderStatistics(getFilteredItems(state.items));
+    renderDashboard(state.items);
+  } else {
+    renderJournalHabits();
+  }
+}
+
 function setView(view, shouldRender = true) {
-  state.view = ["library", "code", "media", "journal", "assistant", "statistics", "notes"].includes(view) ? view : "library";
+  if (view === "statistics") {
+    view = "habits";
+    switchPerformaSubtab("stats");
+  } else if (view === "habits") {
+    switchPerformaSubtab("habits");
+  }
+  state.view = ["library", "code", "media", "journal", "assistant", "statistics", "notes", "habits"].includes(view) ? view : "library";
   Object.entries(dom.views).forEach(([key, section]) => {
+    if (!section) return;
     const isActive = key === state.view;
     section.hidden = !isActive;
     section.classList.toggle("is-active", isActive);
@@ -793,6 +873,472 @@ function setView(view, shouldRender = true) {
   });
   saveSettings();
   if (shouldRender) scheduleRender();
+  if (state.view === "habits") {
+    renderJournalHabits();
+    renderStatistics(getFilteredItems(state.items));
+    renderDashboard(state.items);
+  }
+}
+
+/* ========================================================
+   RUTINITAS TRADING HARIAN — ALUR DISIPLIN PERSONAL
+   ======================================================== */
+const DEFAULT_JOURNAL_HABITS = [
+  {
+    id: 'h1',
+    title: 'Aktivitas Pagi & Kesiapan Diri',
+    desc: 'Mandi, sarapan, beberes, memasak, dan aktivitas kerja pagi agar fokus dan tenang.',
+    target: 'Pagi Hari',
+    streak: 0
+  },
+  {
+    id: 'h2',
+    title: 'Cek Harga MT5 & Mapping TradingView',
+    desc: 'Buka MT5 cek pergerakan harga, buka TradingView: tandai PDH, PDL, dan gambar area POI.',
+    target: 'Pra-Market',
+    streak: 0
+  },
+  {
+    id: 'h3',
+    title: 'Jendela Entry Pagi (Disiplin Waktu)',
+    desc: 'Dilarang keras entry 06:00–07:00 WITA. Entry HANYA jam 07:00–11:00 WITA jika setup valid.',
+    target: '07:00 - 11:00 WITA',
+    streak: 0
+  },
+  {
+    id: 'h4',
+    title: 'Istirahat & Tidur Siang',
+    desc: 'Jeda market, tidur/istirahat sejenak untuk reset fokus emosi dan cegah overtrading.',
+    target: 'Siang Hari',
+    streak: 0
+  },
+  {
+    id: 'h5',
+    title: 'Analisa Sesi London & Eksekusi',
+    desc: 'Jam 12:00/13:00 buka MT5 & TV: tandai Asia High/Low & POI. Entry hanya jika break/sweep terkonfirmasi PDH/PDL.',
+    target: '12:00 - 13:00 WITA',
+    streak: 0
+  },
+  {
+    id: 'h6',
+    title: 'Disiplin Cut-Off Sore (Off Trade)',
+    desc: 'Tepat jam 16:00 WITA stop trading/off trade. Ambil jeda santai menunggu sesi New York.',
+    target: '16:00 WITA Stop',
+    streak: 0
+  },
+  {
+    id: 'h7',
+    title: 'Fokus Sesi New York & Istirahat Malam',
+    desc: 'Fokus setup A+ jam 20:30–22:00 WITA. Setelah selesai, rekap singkat lalu istirahat tidur.',
+    target: '20:30 - 22:00 WITA',
+    streak: 0
+  }
+];
+
+let jHabitsCurrentDate = new Date();
+
+function getStoredJournalHabits() {
+  try {
+    const stored = JSON.parse(localStorage.getItem('amy_habits_v2') || 'null');
+    if (stored && (!stored[0] || !stored[0].desc || stored.length !== DEFAULT_JOURNAL_HABITS.length || stored[0].title.includes('Morning Meditation') || stored[0].title.includes('Minum 2L'))) {
+      localStorage.setItem('amy_habits_v2', JSON.stringify(DEFAULT_JOURNAL_HABITS));
+      return DEFAULT_JOURNAL_HABITS;
+    }
+    return stored || DEFAULT_JOURNAL_HABITS;
+  } catch (_) {
+    return DEFAULT_JOURNAL_HABITS;
+  }
+}
+
+function getStoredCompletedHabits() {
+  try {
+    return JSON.parse(localStorage.getItem('amy_completed_dates_v2') || '{}');
+  } catch (_) {
+    return {};
+  }
+}
+
+function formatJDate(d) {
+  return d.toISOString().split('T')[0];
+}
+
+function getDisciplineStartDate() {
+  let saved = localStorage.getItem('amy_discipline_start_date');
+  if (!saved) {
+    const d = new Date();
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    const monday = new Date(d);
+    monday.setDate(diff);
+    saved = formatJDate(monday);
+    localStorage.setItem('amy_discipline_start_date', saved);
+  }
+  return saved;
+}
+
+function getEffectiveDisciplineStartDate() {
+  let startDate = getDisciplineStartDate();
+  const completedMap = getStoredCompletedHabits();
+  const completedDates = Object.keys(completedMap).filter(k => (completedMap[k] || []).length > 0);
+  const journalDates = (state?.journals || []).map(j => j.date).filter(Boolean);
+  const allRecordedDates = [...completedDates, ...journalDates].sort();
+  if (allRecordedDates.length > 0 && allRecordedDates[0] < startDate) {
+    startDate = allRecordedDates[0];
+    localStorage.setItem('amy_discipline_start_date', startDate);
+  }
+  return startDate;
+}
+
+function renderJournalHabits() {
+  const monthLabel = document.getElementById('jHabitMonthLabel');
+  const dayLabel = document.getElementById('jHabitDayLabel');
+  const heatmapGrid = document.getElementById('jHabitHeatmapGrid');
+  const cardsList = document.getElementById('jHabitsCardsList');
+  const progressBadge = document.getElementById('jHabitProgressText');
+  const streakText = document.getElementById('jHabitStreakText');
+  const penaltyPill = document.getElementById('jHabitPenalty');
+  const penaltyText = document.getElementById('jHabitPenaltyText');
+  const penaltyBanner = document.getElementById('jHabitPenaltyBanner');
+
+  if (!monthLabel || !heatmapGrid || !cardsList) return;
+
+  const monthYear = jHabitsCurrentDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }).toUpperCase();
+  const dayDate = jHabitsCurrentDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
+  monthLabel.textContent = monthYear;
+  dayLabel.textContent = dayDate;
+
+  const habits = getStoredJournalHabits();
+  const completedMap = getStoredCompletedHabits();
+  const curDateStr = formatJDate(jHabitsCurrentDate);
+  const curCompleted = completedMap[curDateStr] || [];
+
+  const today = new Date();
+  const todayStr = formatJDate(today);
+  const effectiveStartDate = getEffectiveDisciplineStartDate();
+  let penaltyCount = 0;
+
+  // Render 35-day Heatmap Matrix (murni dari data riil, merah jika hari trading terlewat / penalti)
+  heatmapGrid.innerHTML = '';
+
+  for (let i = 34; i >= 0; i--) {
+    const d = new Date(jHabitsCurrentDate);
+    d.setDate(d.getDate() - i);
+    const dStr = formatJDate(d);
+    const dayOfWeek = d.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const isTradingDay = !isWeekend;
+    const isPast = dStr < todayStr;
+    const isToday = dStr === todayStr;
+
+    const dayCompleted = completedMap[dStr] || [];
+    const hasJournal = Array.isArray(state?.journals) && state.journals.some(j => j.date === dStr);
+    const isFilled = dayCompleted.length > 0 || hasJournal;
+
+    let ratio = 0;
+    if (dayCompleted.length > 0 && habits.length > 0) {
+      ratio = dayCompleted.length / habits.length;
+    }
+
+    let lvl = 'lvl-0';
+    let tileTitle = '';
+
+    if (isWeekend) {
+      lvl = 'lvl-0 is-weekend';
+      tileTitle = `${dStr}: 🌴 Akhir Pekan (Market Tutup - Bebas Trade)`;
+    } else if (isFilled) {
+      if (ratio >= 0.85) lvl = 'lvl-4';
+      else if (ratio >= 0.6) lvl = 'lvl-3';
+      else if (ratio >= 0.4) lvl = 'lvl-2';
+      else lvl = 'lvl-1';
+      tileTitle = `${dStr}: ✅ Disiplin (${Math.round(ratio * 100)}% checklist${hasJournal ? ', Jurnal ada' : ''})`;
+    } else if (isPast && dStr >= effectiveStartDate) {
+      // Hari trading di masa lalu sejak pelacakan aktif tapi TIDAK DIISI -> PENALTI (MERAH)!
+      lvl = 'lvl-penalty';
+      penaltyCount++;
+      tileTitle = `${dStr}: ⚠️ PENALTI (Hari trading terlewat - Jurnal / Rutinitas tidak diisi!)`;
+    } else if (isToday) {
+      lvl = 'lvl-0';
+      tileTitle = `${dStr}: ⏳ Hari Ini (Silakan isi jurnal & checklist)`;
+    } else {
+      lvl = 'lvl-0';
+      tileTitle = `${dStr}: Belum diisi`;
+    }
+
+    const tile = document.createElement('button');
+    tile.type = 'button';
+    tile.className = `j-heatmap-tile ${lvl} ${dStr === curDateStr ? 'is-active-day' : ''}`;
+    tile.title = tileTitle;
+    tile.onclick = () => {
+      jHabitsCurrentDate = new Date(d);
+      renderJournalHabits();
+    };
+    heatmapGrid.appendChild(tile);
+  }
+
+  // Update Penalty Pill & Counter
+  if (penaltyText) {
+    penaltyText.textContent = `${penaltyCount} Penalti`;
+  }
+  if (penaltyPill) {
+    if (penaltyCount > 0) {
+      penaltyPill.classList.remove('zero');
+    } else {
+      penaltyPill.classList.add('zero');
+    }
+  }
+
+  // Banner Peringatan Penalti jika melihat tanggal hari trading yang terlewat
+  if (penaltyBanner) {
+    const curDayOfWeek = jHabitsCurrentDate.getDay();
+    const isCurTradingDay = curDayOfWeek >= 1 && curDayOfWeek <= 5;
+    const isCurPast = curDateStr < todayStr;
+    const curHasJournal = Array.isArray(state?.journals) && state.journals.some(j => j.date === curDateStr);
+    const isCurMissed = isCurTradingDay && isCurPast && curDateStr >= effectiveStartDate && curCompleted.length === 0 && !curHasJournal;
+
+    if (isCurMissed) {
+      penaltyBanner.style.display = 'flex';
+      penaltyBanner.innerHTML = `
+        <span style="font-size: 20px;">⚠️</span>
+        <div>
+          <strong>Hari Trading Terlewat (Kena Penalti)</strong>: Anda tidak mengisi jurnal atau checklist rutinitas pada hari trading ini (${dayDate}). Silakan centang checklist di bawah ini untuk memulihkan kedisiplinan dan menghapus warna merah penalti!
+        </div>
+      `;
+    } else {
+      penaltyBanner.style.display = 'none';
+      penaltyBanner.innerHTML = '';
+    }
+  }
+
+  // Subtitle matriks disiplin dengan tautan reset
+  const matrixSubtitle = document.getElementById('jHabitMatrixSubtitle');
+  if (matrixSubtitle) {
+    matrixSubtitle.innerHTML = `Tingkat kepatuhan checklist harian (Senin–Jumat) · Pelacakan aktif: <strong>${effectiveStartDate}</strong> · <a href="javascript:void(0)" id="jHabitStartTodayBtn" style="color:var(--info); text-decoration:underline;">Mulai dari Hari Ini</a>`;
+    const startTodayBtn = document.getElementById('jHabitStartTodayBtn');
+    if (startTodayBtn) {
+      startTodayBtn.onclick = (e) => {
+        e.preventDefault();
+        localStorage.setItem('amy_discipline_start_date', todayStr);
+        renderJournalHabits();
+      };
+    }
+  }
+
+  // Render Habits Cards List
+  cardsList.innerHTML = '';
+  let doneCount = 0;
+
+  habits.forEach(h => {
+    const isDone = curCompleted.includes(h.id);
+    if (isDone) doneCount++;
+
+    // Hitung streak individual per habit (Senin–Jumat, abaikan weekend)
+    let habitStreak = 0;
+    for (let s = 0; s < 60; s++) {
+      const cd = new Date(today);
+      cd.setDate(cd.getDate() - s);
+      const dow = cd.getDay();
+      if (dow === 0 || dow === 6) continue;
+      const ds = formatJDate(cd);
+      const listDone = completedMap[ds] || [];
+      if (listDone.includes(h.id)) {
+        habitStreak++;
+      } else {
+        if (s === 0) continue;
+        break;
+      }
+    }
+
+    const card = document.createElement('div');
+    card.className = `habit-item-card ${isDone ? 'is-done' : ''}`;
+    card.innerHTML = `
+      <div class="habit-check-circle">
+        ${isDone ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+      </div>
+      <div class="habit-item-info">
+        <h4 class="habit-item-title">${h.title}</h4>
+        ${h.desc ? `<p class="habit-item-desc">${h.desc}</p>` : ''}
+        <div class="habit-item-meta">
+          <span class="meta-target">${h.target}</span>
+          ${habitStreak > 0 ? `<span class="meta-streak">🔥 ${habitStreak}D Streak</span>` : ''}
+        </div>
+      </div>
+    `;
+
+    card.onclick = () => toggleJournalHabit(h.id);
+    cardsList.appendChild(card);
+  });
+
+  if (progressBadge) {
+    progressBadge.textContent = `${doneCount} / ${habits.length} Selesai`;
+    progressBadge.style.color = doneCount === habits.length ? 'var(--success)' : 'var(--muted)';
+  }
+
+  // Hitung streak riil keseluruhan dari completedMap (Senin–Jumat, Sabtu & Minggu tidak merusak streak)
+  let realStreak = 0;
+  for (let i = 0; i < 90; i++) {
+    const checkD = new Date(today);
+    checkD.setDate(checkD.getDate() - i);
+    const dayOfWeek = checkD.getDay(); // 0 = Minggu, 6 = Sabtu
+    if (dayOfWeek === 0 || dayOfWeek === 6) continue; // Pasar tutup di akhir pekan
+    const ds = formatJDate(checkD);
+    const dayDone = completedMap[ds] || [];
+    if (dayDone.length > 0) {
+      realStreak++;
+    } else {
+      if (i === 0) continue; // Hari trading yang sedang berjalan belum selesai
+      break;
+    }
+  }
+
+  if (streakText) {
+    streakText.textContent = `Streak: ${realStreak} Hari`;
+  }
+
+  // Update Executive KPI Stats Strip (matching Dasbor & Statistik UI style)
+  const kpiStreak = document.getElementById('kpiHabitStreak');
+  const kpiDone = document.getElementById('kpiHabitDone');
+  const kpiConsistency = document.getElementById('kpiHabitConsistency');
+  const kpiRisk = document.getElementById('kpiHabitRisk');
+
+  if (kpiStreak) kpiStreak.textContent = `${realStreak} Hari`;
+  if (kpiDone) kpiDone.textContent = `${doneCount} / ${habits.length} Selesai`;
+
+  if (kpiConsistency) {
+    // Konsistensi 35 hari trading riil (hanya hari Senin–Jumat)
+    let tradingDaysCount = 0;
+    let habitsDoneCount35D = 0;
+    for (let i = 0; i < 60; i++) {
+      const checkD = new Date(today);
+      checkD.setDate(checkD.getDate() - i);
+      const dayOfWeek = checkD.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+      tradingDaysCount++;
+      const ds = formatJDate(checkD);
+      const dayDone = completedMap[ds] || [];
+      habitsDoneCount35D += dayDone.length;
+      if (tradingDaysCount >= 35) break;
+    }
+    const maxPossible = tradingDaysCount * habits.length;
+    const consistencyPct = maxPossible > 0 ? Math.round((habitsDoneCount35D / maxPossible) * 100) : 0;
+    kpiConsistency.textContent = `${consistencyPct}% Konsisten`;
+  }
+
+  if (kpiRisk) {
+    const savedRisk = localStorage.getItem('amy_default_risk') || '1.5';
+    kpiRisk.textContent = `${savedRisk}% SL`;
+  }
+}
+
+function toggleJournalHabit(id) {
+  const curDateStr = formatJDate(jHabitsCurrentDate);
+  const completedMap = getStoredCompletedHabits();
+  let list = completedMap[curDateStr] ? [...completedMap[curDateStr]] : [];
+
+  if (list.includes(id)) {
+    list = list.filter(x => x !== id);
+  } else {
+    list.push(id);
+  }
+
+  completedMap[curDateStr] = list;
+  localStorage.setItem('amy_completed_dates_v2', JSON.stringify(completedMap));
+  renderJournalHabits();
+}
+
+function initJournalHabitsListeners() {
+  const prevBtn = document.getElementById('jHabitPrevDay');
+  const nextBtn = document.getElementById('jHabitNextDay');
+  const todayBtn = document.getElementById('jHabitTodayBtn');
+  const addBtn = document.getElementById('journalNewHabitBtn');
+  const dialog = document.getElementById('jHabitDialog');
+  const closeBtn = document.getElementById('closeJHabitDialogBtn');
+  const cancelBtn = document.getElementById('cancelJHabitBtn');
+  const form = document.getElementById('jHabitForm');
+
+  prevBtn?.addEventListener('click', () => {
+    jHabitsCurrentDate.setDate(jHabitsCurrentDate.getDate() - 1);
+    renderJournalHabits();
+  });
+  nextBtn?.addEventListener('click', () => {
+    jHabitsCurrentDate.setDate(jHabitsCurrentDate.getDate() + 1);
+    renderJournalHabits();
+  });
+  todayBtn?.addEventListener('click', () => {
+    jHabitsCurrentDate = new Date();
+    renderJournalHabits();
+  });
+
+  addBtn?.addEventListener('click', () => {
+    dialog?.showModal ? dialog.showModal() : dialog?.setAttribute('open', '');
+  });
+  closeBtn?.addEventListener('click', () => {
+    dialog?.close ? dialog.close() : dialog?.removeAttribute('open');
+  });
+  cancelBtn?.addEventListener('click', () => {
+    dialog?.close ? dialog.close() : dialog?.removeAttribute('open');
+  });
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const titleInput = document.getElementById('jNewHabitTitle');
+    const targetInput = document.getElementById('jNewHabitTarget');
+    const title = titleInput?.value.trim();
+    const target = targetInput?.value.trim() || '15 Mins';
+    if (!title) return;
+
+    const habits = getStoredJournalHabits();
+    habits.push({ id: 'h_' + Date.now(), title, target, streak: 1 });
+    localStorage.setItem('amy_habits_v2', JSON.stringify(habits));
+
+    if (titleInput) titleInput.value = '';
+    dialog?.close ? dialog.close() : dialog?.removeAttribute('open');
+    renderJournalHabits();
+  });
+
+  // Lot Calculator listeners
+  function updateJCalc() {
+    const bal = parseFloat(document.getElementById('jCalcBal')?.value) || 5000;
+    const risk = parseFloat(document.getElementById('jCalcRisk')?.value) || 1.5;
+    const sl = parseFloat(document.getElementById('jCalcSL')?.value) || 8;
+    const res = document.getElementById('jCalcLotResult');
+    if (!res) return;
+    const riskAmt = (bal * risk) / 100;
+    const lot = sl > 0 ? (riskAmt / (sl * 100)).toFixed(2) : 0.01;
+    res.textContent = Math.max(0.01, lot) + ' Lot';
+  }
+
+  const savedBal = localStorage.getItem('amy_default_balance');
+  const savedRisk = localStorage.getItem('amy_default_risk');
+  const balInput = document.getElementById('jCalcBal');
+  const riskInput = document.getElementById('jCalcRisk');
+  if (balInput && savedBal) balInput.value = savedBal;
+  if (riskInput && savedRisk) riskInput.value = savedRisk;
+
+  document.getElementById('jCalcBal')?.addEventListener('input', updateJCalc);
+  document.getElementById('jCalcRisk')?.addEventListener('input', updateJCalc);
+  document.getElementById('jCalcSL')?.addEventListener('input', updateJCalc);
+  updateJCalc();
+
+  const subtabHabitsBtn = document.getElementById('subtabHabitsBtn');
+  const subtabStatsBtn = document.getElementById('subtabStatsBtn');
+  subtabHabitsBtn?.addEventListener('click', () => switchPerformaSubtab('habits'));
+  subtabStatsBtn?.addEventListener('click', () => switchPerformaSubtab('stats'));
+
+  document.getElementById('exportAllBtnHabits')?.addEventListener('click', () => {
+    dom.exportAllBtn?.click();
+  });
+  document.getElementById('importBackupInputHabits')?.addEventListener('change', (e) => {
+    if (dom.importBackupInput && e.target.files?.length) {
+      dom.importBackupInput.files = e.target.files;
+      dom.importBackupInput.dispatchEvent(new Event('change'));
+    }
+  });
+  document.getElementById('setPinBtnHabits')?.addEventListener('click', () => {
+    dom.setPinBtn?.click();
+  });
+  document.getElementById('clearPinBtnHabits')?.addEventListener('click', () => {
+    dom.clearPinBtn?.click();
+  });
 }
 
 let renderFrameId = 0;
@@ -1239,24 +1785,24 @@ function calculateStreak() {
   const dates = new Set();
   state.journals.forEach(j => { if(j && j.date) dates.add(j.date); });
   state.personalNotes.forEach(n => { if(n && n.date) dates.add(n.date); });
-
+  
   const sortedDates = Array.from(dates).sort().reverse();
   if (sortedDates.length === 0) return 0;
-
+  
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
+  
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
 
   let streak = 0;
   let currentDate = new Date(sortedDates[0]);
-
+  
   if (sortedDates[0] !== todayStr && sortedDates[0] !== yesterdayStr) {
     return 0;
   }
-
+  
   for (let i = 0; i < sortedDates.length; i++) {
     const dStr = sortedDates[i];
     const expectedStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
@@ -1271,7 +1817,8 @@ function calculateStreak() {
 }
 
 function renderDashboard(items) {
-  if (!dom.dashboardGrid) return;
+  const containers = [dom.dashboardGrid, document.getElementById('dashboardGridHabits')].filter(Boolean);
+  if (!containers.length) return;
   const totals = {
     total: items.length,
     code: items.filter((item) => getItemFileType(item) === "Kode").length,
@@ -1284,15 +1831,17 @@ function renderDashboard(items) {
     journal: state.journals.length
   };
 
-  dom.dashboardGrid.replaceChildren(
-    makeStatCard("🔥 Streak", calculateStreak() + " Hari"),
-    makeStatCard("Total File", totals.total),
-    makeStatCard("Kode", totals.code),
-    makeStatCard("Gambar", totals.image),
-    makeStatCard("Video", totals.video),
-    makeStatCard("PDF", totals.pdf),
-    makeStatCard("Jurnal", totals.journal)
-  );
+  containers.forEach(container => {
+    container.replaceChildren(
+      makeStatCard("🔥 Streak", calculateStreak() + " Hari"),
+      makeStatCard("Total File", totals.total),
+      makeStatCard("Kode", totals.code),
+      makeStatCard("Gambar", totals.image),
+      makeStatCard("Video", totals.video),
+      makeStatCard("PDF", totals.pdf),
+      makeStatCard("Jurnal", totals.journal)
+    );
+  });
 }
 
 function makeStatCard(label, value) {
@@ -1311,7 +1860,8 @@ function makeStatCard(label, value) {
 
 
 function renderStatistics(items) {
-  if (!dom.statisticsViewContent) return;
+  const targetContainers = [dom.statisticsViewContent, document.getElementById('statisticsViewContentHabits')].filter(Boolean);
+  if (!targetContainers.length) return;
   const total = items.length;
   const totals = {
     video: items.filter((item) => getItemFileType(item) === "Video").length,
@@ -1333,7 +1883,7 @@ function renderStatistics(items) {
   const calendarHtml = buildStatisticsCalendar(monthInfo.year, monthInfo.month);
   const performanceRing = journalStats.entryCount ? Math.round((journalStats.win / journalStats.entryCount) * 100) : 0;
 
-  dom.statisticsViewContent.innerHTML = `
+  const statsHtml = `
     <div class="stats-summary-grid">
       ${makeStatisticsCard("Total Materi", total, "stack")}
       ${makeStatisticsCard("Video", totals.video, "video")}
@@ -1360,6 +1910,7 @@ function renderStatistics(items) {
         ${makeJournalStat("Total Loss", formatTradeAmount(journalStats.totalLoss), "money")}
         ${makeJournalStat("Net P/L", formatTradeAmount(journalStats.netProfit), "target")}
       </div>
+      ${window.AmyJournalAnalytics?.renderEquitySVG ? window.AmyJournalAnalytics.renderEquitySVG(state.journals) : ''}
     </section>
 
     <section class="stats-panel calendar-panel">
@@ -1400,6 +1951,11 @@ function renderStatistics(items) {
       </section>
     </div>
   `;
+
+  targetContainers.forEach(container => {
+    container.innerHTML = statsHtml;
+  });
+
   bindStatisticsCalendarEvents();
   bindDashboardInteractions();
   requestAnimationFrame(() => animateDashboard());
@@ -1420,7 +1976,7 @@ function makeJournalStat(label, value, type) {
 
 function animateDashboard() {
   const duration = 1200;
-  dom.statisticsViewContent.querySelectorAll(".animate-count-up").forEach(el => {
+  document.querySelectorAll(".statistics-page .animate-count-up").forEach(el => {
     const target = parseFloat(el.dataset.target);
     if (isNaN(target)) {
       el.textContent = el.dataset.target;
@@ -1437,7 +1993,7 @@ function animateDashboard() {
     });
   });
 
-  dom.statisticsViewContent.querySelectorAll(".mini-ring, .donut-ring").forEach(el => {
+  document.querySelectorAll(".statistics-page .mini-ring, .statistics-page .donut-ring").forEach(el => {
     const targetVal = parseFloat(el.style.getPropertyValue('--value')) || 0;
     el.style.setProperty('--value', 0);
     const start = performance.now();
@@ -1450,8 +2006,8 @@ function animateDashboard() {
       else el.style.setProperty('--value', targetVal);
     });
   });
-
-  dom.statisticsViewContent.querySelectorAll(".learning-progress i").forEach(el => {
+  
+  document.querySelectorAll(".statistics-page .learning-progress i").forEach(el => {
     const targetWidth = parseFloat(el.style.width) || 0;
     el.style.width = '0%';
     const start = performance.now();
@@ -1467,7 +2023,7 @@ function animateDashboard() {
 }
 
 function bindDashboardInteractions() {
-  dom.statisticsViewContent.querySelectorAll("[data-dashboard-filter]").forEach(card => {
+  document.querySelectorAll(".statistics-page [data-dashboard-filter]").forEach(card => {
     card.addEventListener("click", () => {
       const filter = card.dataset.dashboardFilter;
       if (filter === "Jurnal") {
@@ -1600,10 +2156,10 @@ function makeCalendarCell(cell) {
 }
 
 function bindStatisticsCalendarEvents() {
-  dom.statisticsViewContent?.querySelectorAll("[data-journal-date]").forEach((button) => {
+  document.querySelectorAll(".statistics-page [data-journal-date]").forEach((button) => {
     button.addEventListener("click", () => openJournalDate(button.dataset.journalDate));
   });
-  dom.statisticsViewContent?.querySelectorAll("[data-stats-month-nav]").forEach((button) => {
+  document.querySelectorAll(".statistics-page [data-stats-month-nav]").forEach((button) => {
     button.addEventListener("click", () => shiftStatisticsMonth(Number(button.dataset.statsMonthNav) || 0));
   });
 }
@@ -1642,6 +2198,11 @@ function openForm(id = null) {
     updatePreviewForItem(item);
   } else {
     dom.formMode.textContent = "Tambah";
+    if (state.view === "media") {
+      dom.formMode.textContent = "Tambah Media";
+      dom.typeInput.value = state.mediaType === "Gambar" ? "Gambar Chart" : "Video Pembelajaran";
+      dom.categoryInput.value = state.mediaType === "Gambar" ? "Chart Setup" : "Video";
+    }
   }
 
   syncTypeFields();
@@ -2094,8 +2655,10 @@ async function handleFilePick() {
     for (const file of files) {
       const pending = await makePendingMedia(file, { compressImage: dom.compressImageInput?.checked });
       if (!pending) continue;
-      if (pending.fileHash && (findDuplicateByHash(pending.fileHash) || batchHashes.has(pending.fileHash))) {
+      const duplicate = findDuplicateByHash(pending.fileHash);
+      if (pending.fileHash && ((duplicate && duplicate.id !== dom.itemId.value) || batchHashes.has(pending.fileHash))) {
         dom.formMessage.textContent = `File "${file.name}" sudah ada di Library.`;
+        window.showToast?.(`File "${file.name}" sudah ada di library.`);
         dom.fileInput.value = "";
         return;
       }
@@ -2107,6 +2670,7 @@ async function handleFilePick() {
       state.pendingMedia = null;
       clearPreview();
       dom.formMessage.textContent = "Format file belum didukung.";
+      window.showToast?.("Format file belum didukung.");
       return;
     }
 
@@ -2126,10 +2690,121 @@ async function handleFilePick() {
     }
     updatePreview(pendingFiles[0].objectUrl, pendingFiles[0].kind, pendingFiles[0]);
     applyPendingMediaType(pendingFiles[0]);
-  } catch {
+    window.showToast?.(`File "${pendingFiles[0].name}" siap disimpan.`);
+  } catch (err) {
+    console.error("handleFilePick error:", err);
     state.pendingMedia = null;
     clearPreview();
     dom.formMessage.textContent = "File tidak bisa dibaca.";
+    window.showToast?.("File tidak bisa dibaca.");
+  }
+}
+
+async function handleMediaDirectUpload(event) {
+  const files = [...(event.target.files || [])];
+  if (!files.length) return;
+
+  window.showToast?.("Memproses upload media...");
+  let uploadedCount = 0;
+  let skippedDuplicates = 0;
+  const now = new Date().toISOString();
+  const createdItems = [];
+  const createdFileIds = [];
+
+  try {
+    for (const file of files) {
+      if (file.size > 200 * 1024 * 1024) {
+        window.showToast?.(`⚠️ File "${file.name}" terlalu besar (>200MB) untuk penyimpanan web browser.`);
+        continue;
+      }
+      const pending = await makePendingMedia(file, { compressImage: dom.compressImageInput?.checked });
+      if (!pending) continue;
+
+      if (pending.fileHash && findDuplicateByHash(pending.fileHash)) {
+        skippedDuplicates++;
+        continue;
+      }
+
+      const id = createId();
+      const fileId = createId();
+      const itemType = getTypeForPendingMedia(pending);
+      const category = getCategoryForPendingMedia(pending);
+      const title = fileTitleFromName(pending.name);
+
+      const item = {
+        id,
+        title,
+        type: itemType,
+        category,
+        status: "Selesai dibaca",
+        collection: "Media",
+        tags: [itemType.toLowerCase(), "media"],
+        notes: `File ${pending.name} diupload ke Media.`,
+        checklist: [],
+        code: "",
+        mediaUrl: "",
+        fileId,
+        mediaKind: pending.kind,
+        mediaName: pending.name,
+        mediaType: pending.type,
+        mediaSize: pending.size,
+        documentType: pending.documentType || "",
+        documentText: pending.documentText || "",
+        fileHash: pending.fileHash || "",
+        favorite: false,
+        archived: false,
+        revisionHistory: [],
+        uploadedAt: now,
+        createdAt: now,
+        updatedAt: now
+      };
+
+      await putFileRecord({
+        id: fileId,
+        itemId: id,
+        blob: pending.file,
+        name: pending.name,
+        type: pending.type,
+        size: pending.size,
+        kind: pending.kind,
+        documentType: pending.documentType || "",
+        documentText: pending.documentText || "",
+        fileHash: pending.fileHash || "",
+        uploadedAt: now
+      });
+
+      createdFileIds.push(fileId);
+      createdItems.push(item);
+      uploadedCount++;
+    }
+
+    if (createdItems.length > 0) {
+      state.items = [...createdItems, ...state.items];
+      if (state.mediaType !== "Semua") {
+        const firstType = getItemFileType(createdItems[0]);
+        if (firstType !== state.mediaType) {
+          state.mediaType = "Semua";
+          renderPills();
+        }
+      }
+      await saveItems();
+      render();
+      window.showToast?.(`✅ ${uploadedCount} media berhasil ditambahkan!`);
+    } else if (skippedDuplicates > 0) {
+      window.showToast?.("⚠️ File sudah pernah ada di media/library.");
+    } else {
+      window.showToast?.("Format file belum didukung.");
+    }
+  } catch (error) {
+    console.error("Direct media upload error:", error);
+    await Promise.all(createdFileIds.map((fileId) => deleteFileRecord(fileId).catch(() => {})));
+    const isQuota = error?.name === "QuotaExceededError" || /quota|storage/i.test(error?.message || "");
+    const msg = isQuota
+      ? "❌ Gagal: Memori browser web lokal penuh. Coba gunakan video lebih kecil (<50MB)."
+      : "❌ Gagal menyimpan media. Pastikan format video MP4 (H.264).";
+    window.showToast?.(msg);
+  } finally {
+    if (dom.mediaDirectFileInput) dom.mediaDirectFileInput.value = "";
   }
 }
 
@@ -2575,6 +3250,13 @@ function closeFullscreenViewer() {
   if (media) media.pause();
   dom.fullscreenStage.replaceChildren();
   dom.fullscreenStage.classList.remove("is-reader-stage");
+  dom.fullscreenDialog.classList.remove("is-video-feed");
+  document.documentElement.classList.remove("is-video-feed-open");
+  document.body.classList.remove("is-video-feed-open");
+  if (window.__videoFeedObserver) {
+    window.__videoFeedObserver.disconnect();
+    window.__videoFeedObserver = null;
+  }
   if (dom.fullscreenAnalysis) { dom.fullscreenAnalysis.hidden = true; dom.fullscreenAnalysis.textContent = ""; }
   state.activeFullscreenItem = null;
   state.touchStartX = 0;
@@ -2787,6 +3469,10 @@ function getVideoThumbnailObserver() {
 
 async function processVideoThumbnailQueue() {
   if (state.videoThumbnailBusy) return;
+  if (dom.fullscreenDialog?.open) {
+    window.setTimeout(processVideoThumbnailQueue, 2000);
+    return;
+  }
   const nextId = state.videoThumbnailQueue.values().next().value;
   if (!nextId) return;
   state.videoThumbnailQueue.delete(nextId);
@@ -2917,103 +3603,351 @@ function applyVideoThumbnail(video, source) {
   window.setTimeout(capture, 1800);
 }
 
+function shuffleArray(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 function getVisibleVideoItems() {
   return getFilteredItems(state.items).filter((item) => (item.mediaKind || inferMediaKind(item)) === "video");
 }
 
 async function renderVideoFeed(activeItem) {
-  const videoItems = getVisibleVideoItems();
-  const items = videoItems.length ? videoItems : [activeItem];
+  dom.fullscreenDialog.classList.add("is-video-feed");
+  document.documentElement.classList.add("is-video-feed-open");
+  document.body.classList.add("is-video-feed-open");
+
+  const allVideos = getVisibleVideoItems();
+  const otherVideos = allVideos.filter((v) => v.id !== activeItem.id);
+  // Acak video selanjutnya secara random ala algoritma TikTok (maksimal 20 agar memori GPU tetap ringan)
+  const shuffledOthers = shuffleArray(otherVideos).slice(0, 20);
+  const feedItems = [activeItem, ...shuffledOthers];
+
   const feed = document.createElement("div");
   feed.className = "fullscreen-video-feed";
 
-  for (const videoItem of items) {
+  // Mencegah bug reload / refresh halaman saat swipe ke bawah di mobile
+  let touchStartY = 0;
+  let touchStartX = 0;
+
+  feed.addEventListener("touchstart", (e) => {
+    if (e.touches && e.touches.length === 1) {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+    }
+  }, { passive: true });
+
+  feed.addEventListener("touchmove", (e) => {
+    if (e.touches && e.touches.length === 1) {
+      const deltaY = e.touches[0].clientY - touchStartY;
+      const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+      if (Math.abs(deltaY) > deltaX) {
+        if (feed.scrollTop <= 0 && deltaY > 0) {
+          e.preventDefault();
+        }
+      }
+    }
+  }, { passive: false });
+
+  const panelMap = new Map();
+
+  async function loadAndPlayPanelVideo(panel, videoItem, shouldPlay = true) {
+    const video = panel.querySelector("video");
+    if (!video) return;
+
+    if (panel.dataset.sourceLoaded === "1") {
+      if (shouldPlay && panel.dataset.userPaused !== "1") {
+        const p = video.play();
+        if (p !== undefined) {
+          p.catch(() => {
+            video.muted = true;
+            const st = panel.querySelector(".video-sound-toggle");
+            if (st) st.innerHTML = "🔇";
+            video.play().catch(() => {});
+          });
+        }
+      }
+      return;
+    }
+
+    panel.dataset.sourceLoaded = "1";
+    panel.classList.add("is-buffering");
+
+    try {
+      const source = await getFullscreenFeedSource(videoItem);
+      if (!source) {
+        panel.classList.remove("is-buffering");
+        const error = panel.querySelector(".fullscreen-error") || document.createElement("div");
+        error.className = "fullscreen-error";
+        error.textContent = "Video belum bisa dimuat.";
+        panel.append(error);
+        return;
+      }
+
+      video.src = source;
+      video.load();
+      setupVideoCompletionTracking(video, videoItem);
+
+      const playAttempt = () => {
+        panel.classList.remove("is-buffering");
+        if (panel.dataset.isActive === "1" && panel.dataset.userPaused !== "1" && shouldPlay) {
+          const p = video.play();
+          if (p !== undefined) {
+            p.catch(() => {
+              video.muted = true;
+              const st = panel.querySelector(".video-sound-toggle");
+              if (st) st.innerHTML = "🔇";
+              video.play().catch(() => {});
+            });
+          }
+        }
+      };
+
+      if (video.readyState >= 2) {
+        playAttempt();
+      } else {
+        video.addEventListener("canplay", playAttempt, { once: true });
+        video.addEventListener("loadeddata", playAttempt, { once: true });
+      }
+    } catch (err) {
+      panel.classList.remove("is-buffering");
+      console.warn("loadAndPlayPanelVideo error:", err);
+    }
+  }
+
+  function unloadPanelVideo(panel) {
+    const video = panel.querySelector("video");
+    if (video) {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+      panel.dataset.sourceLoaded = "0";
+      panel.classList.remove("is-buffering");
+    }
+  }
+
+  function createVideoPanel(videoItem) {
     const panel = document.createElement("section");
     panel.className = "fullscreen-video-panel";
     panel.dataset.id = videoItem.id;
+    panel.dataset.userPaused = "0";
 
-    const source = await getFullscreenFeedSource(videoItem);
-    if (source) {
-      const video = document.createElement("video");
-      video.className = "fullscreen-video feed-video";
-      video.controls = true;
-      video.playsInline = true;
-      video.preload = "metadata";
-      video.src = source;
-      setupVideoCompletionTracking(video, videoItem);
-      panel.append(video);
-    } else {
-      const error = document.createElement("div");
-      error.className = "fullscreen-error";
-      error.textContent = "Video belum bisa dimuat.";
-      panel.append(error);
+    const video = document.createElement("video");
+    video.className = "fullscreen-video feed-video";
+    video.playsInline = true;
+    video.setAttribute("webkit-playsinline", "true");
+    video.setAttribute("x5-playsinline", "true");
+    video.setAttribute("playsinline", "true");
+    video.loop = true;
+    video.preload = "none";
+    video.controls = false;
+    video.removeAttribute("controls");
+
+    const thumbSource = getThumbnailSource(videoItem);
+    if (thumbSource) {
+      video.poster = thumbSource;
     }
 
-    const caption = document.createElement("div");
-    caption.className = "fullscreen-video-caption";
-    caption.textContent = videoItem.title || videoItem.mediaName || "Video";
-    panel.append(caption);
-    feed.append(panel);
+    // Buffering spinner
+    const spinner = document.createElement("div");
+    spinner.className = "video-buffering-spinner";
+
+    // Center play indicator icon
+    const playIndicator = document.createElement("div");
+    playIndicator.className = "video-play-indicator";
+    playIndicator.innerHTML = `▶`;
+
+    // Overlay Caption & Meta
+    const overlay = document.createElement("div");
+    overlay.className = "fullscreen-video-overlay";
+
+    const title = videoItem.title || videoItem.mediaName || "Video Edukasi";
+    const category = videoItem.category || "Media";
+    const tags = Array.isArray(videoItem.tags) && videoItem.tags.length ? `#${videoItem.tags.slice(0, 3).join(" #")}` : "";
+
+    overlay.innerHTML = `
+      <div class="video-overlay-info">
+        <h3 class="video-overlay-title">${escapeHtml(title)}</h3>
+        <div class="video-overlay-meta">
+          <span class="video-overlay-tag">${escapeHtml(category)}</span>
+          ${tags ? `<span>${escapeHtml(tags)}</span>` : ""}
+        </div>
+      </div>
+    `;
+
+    // Slim bottom progress bar
+    const progressBar = document.createElement("div");
+    progressBar.className = "video-progress-bar";
+    const progressFill = document.createElement("div");
+    progressFill.className = "video-progress-fill";
+    progressBar.append(progressFill);
+
+    progressBar.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const rect = progressBar.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+      if (Number.isFinite(video.duration) && video.duration > 0) {
+        video.currentTime = ratio * video.duration;
+      }
+    });
+
+    // Floating Sound Toggle
+    const soundToggle = document.createElement("button");
+    soundToggle.type = "button";
+    soundToggle.className = "video-sound-toggle";
+    soundToggle.setAttribute("aria-label", "Toggle Suara");
+    soundToggle.innerHTML = "🔊";
+
+    soundToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      video.muted = !video.muted;
+      soundToggle.innerHTML = video.muted ? "🔇" : "🔊";
+    });
+
+    video.addEventListener("volumechange", () => {
+      soundToggle.innerHTML = video.muted ? "🔇" : "🔊";
+    });
+
+    video.addEventListener("waiting", () => {
+      panel.classList.add("is-buffering");
+    });
+
+    video.addEventListener("playing", () => {
+      panel.classList.remove("is-buffering");
+      playIndicator.classList.remove("is-visible");
+    });
+
+    video.addEventListener("play", () => {
+      playIndicator.classList.remove("is-visible");
+    });
+
+    video.addEventListener("pause", () => {
+      if (panel.dataset.isActive === "1" && panel.dataset.userPaused === "1") {
+        playIndicator.classList.add("is-visible");
+      }
+    });
+
+    // Tap to Play/Pause with swipe detection
+    let touchMoved = false;
+    let startY = 0;
+    let startX = 0;
+
+    panel.addEventListener("touchstart", (e) => {
+      if (e.touches && e.touches.length === 1) {
+        touchMoved = false;
+        startY = e.touches[0].clientY;
+        startX = e.touches[0].clientX;
+      }
+    }, { passive: true });
+
+    panel.addEventListener("touchmove", (e) => {
+      if (e.touches && e.touches.length === 1) {
+        const dy = Math.abs(e.touches[0].clientY - startY);
+        const dx = Math.abs(e.touches[0].clientX - startX);
+        if (dy > 10 || dx > 10) {
+          touchMoved = true;
+        }
+      }
+    }, { passive: true });
+
+    // ONLY one click listener on panel (never on both video and panel to avoid double-activation)
+    panel.addEventListener("click", (e) => {
+      if (touchMoved) return;
+      if (e.target.closest(".video-sound-toggle, .fullscreen-bar, .video-progress-bar, button")) return;
+      e.stopPropagation();
+
+      if (video.paused) {
+        panel.dataset.userPaused = "0";
+        const p = video.play();
+        if (p !== undefined) p.catch(() => {});
+        playIndicator.classList.remove("is-visible");
+      } else {
+        panel.dataset.userPaused = "1";
+        video.pause();
+        playIndicator.classList.add("is-visible");
+      }
+    });
+
+    video.addEventListener("timeupdate", () => {
+      if (video.duration && Number.isFinite(video.duration)) {
+        const pct = (video.currentTime / video.duration) * 100;
+        progressFill.style.width = `${pct}%`;
+      }
+    });
+
+    panel.append(video, spinner, playIndicator, overlay, progressBar, soundToggle);
+    panelMap.set(panel, videoItem);
+    return panel;
   }
+
+  // Buat panel-panel video
+  feedItems.forEach((item, index) => {
+    const p = createVideoPanel(item);
+    if (index === 0) p.dataset.isActive = "1";
+    feed.append(p);
+  });
 
   dom.fullscreenStage.replaceChildren(feed);
 
-  const activePanel = feed.querySelector(`[data-id="${CSS.escape(activeItem.id)}"]`);
-  if (activePanel) {
-    requestAnimationFrame(() => {
-      activePanel.scrollIntoView({ block: "start" });
-      playVisibleFeedVideo(feed);
+  // Load and play video pertama secara halus
+  const initialPanel = feed.children[0];
+  if (initialPanel) {
+    loadAndPlayPanelVideo(initialPanel, activeItem, true);
+  }
+
+  // IntersectionObserver untuk auto play/pause saat swipe
+  if (window.__videoFeedObserver) {
+    window.__videoFeedObserver.disconnect();
+  }
+
+  let activeIndex = 0;
+
+  window.__videoFeedObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const panel = entry.target;
+      const video = panel.querySelector("video");
+      const vItem = panelMap.get(panel);
+      const panelIndex = Array.prototype.indexOf.call(feed.children, panel);
+
+      if (entry.isIntersecting) {
+        panel.dataset.isActive = "1";
+        activeIndex = panelIndex;
+
+        if (vItem) {
+          state.activeFullscreenItem = vItem;
+          dom.fullscreenTitle.textContent = vItem.title || "Video";
+          dom.fullscreenMeta.textContent = getFullscreenMeta(vItem);
+        }
+
+        loadAndPlayPanelVideo(panel, vItem, true);
+      } else {
+        panel.dataset.isActive = "0";
+        panel.dataset.userPaused = "0";
+        if (video) {
+          video.pause();
+        }
+        const indicator = panel.querySelector(".video-play-indicator");
+        if (indicator) indicator.classList.remove("is-visible");
+
+        // Jika jarak panel > 2 dari video yang sedang aktif, lepaskan source untuk menghemat decoder GPU hardware!
+        if (Math.abs(panelIndex - activeIndex) > 2) {
+          unloadPanelVideo(panel);
+        }
+      }
     });
-  } else {
-    playVisibleFeedVideo(feed);
-  }
-
-  feed.addEventListener("scroll", debounce(() => {
-    playVisibleFeedVideo(feed);
-  }, 120), { passive: true });
-}
-
-function playVisibleFeedVideo(feed) {
-  const panels = [...feed.querySelectorAll(".fullscreen-video-panel")];
-  if (!panels.length) return;
-
-  const feedRect = feed.getBoundingClientRect();
-  let activePanel = panels[0];
-  let activeDistance = Infinity;
-
-  panels.forEach((panel) => {
-    const rect = panel.getBoundingClientRect();
-    const distance = Math.abs(rect.top - feedRect.top);
-    if (distance < activeDistance) {
-      activeDistance = distance;
-      activePanel = panel;
-    }
+  }, {
+    root: feed,
+    threshold: 0.65
   });
 
-  panels.forEach((panel) => {
-    const video = panel.querySelector("video");
-    if (!video) return;
-    if (panel === activePanel) {
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
+  Array.from(feed.children).forEach((panel) => {
+    window.__videoFeedObserver.observe(panel);
   });
-
-  const activeItem = state.items.find((item) => item.id === activePanel.dataset.id);
-  if (activeItem) {
-    state.activeFullscreenItem = activeItem;
-    dom.fullscreenTitle.textContent = activeItem.title || "Video";
-    dom.fullscreenMeta.textContent = getFullscreenMeta(activeItem);
-  }
-}
-
-function debounce(callback, wait = 120) {
-  let timeoutId = 0;
-  return (...args) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => callback(...args), wait);
-  };
 }
 
 async function getFullscreenFeedSource(item) {
@@ -3024,7 +3958,12 @@ async function getFullscreenFeedSource(item) {
   if (!item.fileId) return "";
   const record = await getFileRecord(item.fileId);
   if (!record?.blob) return "";
-  const url = URL.createObjectURL(record.blob);
+  let blob = record.blob;
+  const mime = record.type || item.mediaType || "video/mp4";
+  if (!blob.type || blob.type === "application/octet-stream") {
+    blob = new Blob([blob], { type: mime });
+  }
+  const url = URL.createObjectURL(blob);
   state.fullscreenFeedObjectUrls.add(url);
   return url;
 }
@@ -4698,6 +5637,9 @@ function loadJournals() {
 async function saveJournals(journals = state.journals, options = {}) {
   const saved = await saveMetadataArray(JOURNALS_META_RECORD, JOURNAL_STORAGE_KEY, journals, options);
   refreshInsightCache();
+  if (state.view === "habits") {
+    renderJournalHabits();
+  }
   return saved;
 }
 
@@ -5651,7 +6593,7 @@ function createAssistantMessageNode(message) {
 
   const text = document.createElement("div");
   text.className = "assistant-message-text";
-
+  
   let formattedText = escapeHtml(message.text || "");
   formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   formattedText = formattedText.replace(/\n\* (.*?)/g, '<br>• $1');
@@ -5662,7 +6604,7 @@ function createAssistantMessageNode(message) {
   if (message.kind === "materials" && Array.isArray(message.itemIds)) {
     bubble.append(createMaterialResultList(message.itemIds));
   }
-
+  
   if (message.role !== "user") {
     if (message.isFakeLoading) {
       text.classList.add("ai-loading-text");
@@ -5678,7 +6620,7 @@ function createAssistantMessageNode(message) {
       bubble.append(saveBtn);
     }
   }
-
+  
   wrapper.append(avatar, bubble);
   return wrapper;
 }
@@ -6678,7 +7620,7 @@ async function callAI(parts, options = {}) {
 async function callGeminiProvider(parts, options = {}) {
   const model = encodeURIComponent(state.geminiModel || getDefaultModelForProvider("gemini"));
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(state.geminiApiKey)}`;
-
+  
   const generationConfig = { temperature: 0.35, topP: 0.9, maxOutputTokens: 1400 };
   if (options.json) generationConfig.responseMimeType = "application/json";
 
@@ -6701,7 +7643,7 @@ async function callOpenAICompatibleProvider(parts, provider, options = {}) {
   const endpoint = getChatCompletionEndpoint(provider);
   const content = partsToOpenAIContent(parts);
   const model = state.geminiModel || getDefaultModelForProvider(provider);
-
+  
   const payload = {
     model,
     messages: [
@@ -6943,9 +7885,9 @@ function handleNoteActions(e) {
 function roastNote(id) {
   const note = state.personalNotes.find(n => n.id === id);
   if (!note) return;
-
+  
   const prompt = `Ini adalah catatan pribadi saya:\nJudul: ${note.title}\nIsi: ${note.content}\n\nInstruksi: Anda adalah pelatih trading/mentor yang SANGAT GALAK, SARKASTIK, TEGAS, dan KEJAM. Evaluasi tulisan saya ini. Maki kesalahan saya agar mental saya kuat, dan berikan motivasi negatif agar saya disiplin. Jangan bersikap sopan, jadilah brutal tapi membangun (Tough Love).`;
-
+  
   dom.assistantQuestionInput.value = prompt;
   setView("assistant");
   if (typeof askAssistant === "function") {
@@ -6957,7 +7899,7 @@ function roastNote(id) {
 
 function renderNotes() {
   if (!dom.notesList || state.view !== "notes") return;
-
+  
   dom.notesCount.textContent = `${state.personalNotes.length} catatan`;
   dom.notesList.replaceChildren();
 

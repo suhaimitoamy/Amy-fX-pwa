@@ -1,4 +1,5 @@
 import { state, p2 } from './main.js';
+import { inspectClosedCandleSource } from './engine/closed-candle-source-state.js';
 
 let queued = false;
 let busy = false;
@@ -28,9 +29,23 @@ function sourceContext(snapshot) {
 
   for (const timeframe of [...new Set(candidates)]) {
     const candle = closedCandle(timeframe);
-    if (candle) return { sourceTf: timeframe, candle };
+    if (candle) {
+      return {
+        sourceTf: timeframe,
+        candle,
+        sourceState: inspectClosedCandleSource(
+          timeframe,
+          state.candles?.[timeframe] || []
+        )
+      };
+    }
   }
-  return { sourceTf: state.tf || 'M15', candle: null };
+  const sourceTf = state.tf || 'M15';
+  return {
+    sourceTf,
+    candle: null,
+    sourceState: inspectClosedCandleSource(sourceTf, [])
+  };
 }
 
 function wita(candle) {
@@ -65,7 +80,7 @@ function normalizedContext() {
     : structure.direction === 'BEARISH'
       ? 'SELL'
       : null;
-  const { sourceTf, candle } = sourceContext(snapshot);
+  const { sourceTf, candle, sourceState } = sourceContext(snapshot);
   const result = state.result || {};
   const invalidation = positive(structure.invalidation);
   const bsl = positive(result.bsl);
@@ -95,7 +110,10 @@ function normalizedContext() {
     sourceTf,
     sourceText: wita(candle),
     sourceCandle: candle,
+    sourceState,
     hasClosedCandle: Boolean(candle),
+    sourceCurrent: Boolean(candle && sourceState?.current),
+    sourceDelayed: Boolean(candle && sourceState?.delayed),
     currentPrice,
     watchLevel,
     watchType,
@@ -110,20 +128,27 @@ function normalizedContext() {
 function patchFreshnessLabels(context) {
   const connection = document.getElementById('conn');
   if (connection) {
-    connection.dataset.analysisFreshness = context.hasClosedCandle
-      ? 'CLOSED_CANDLE'
-      : 'UNAVAILABLE';
-    connection.classList.toggle('stale', false);
+    connection.dataset.analysisFreshness = context.sourceDelayed
+      ? 'PROVIDER_DELAYED'
+      : context.hasClosedCandle
+        ? 'CLOSED_CANDLE'
+        : 'UNAVAILABLE';
+    connection.classList.toggle('stale', context.sourceDelayed);
   }
 
   document.querySelectorAll('#mapping-command-strip *').forEach(node => {
     if (node.children.length) return;
     const text = String(node.textContent || '').trim().toUpperCase();
     if (!['STALE', 'EXPIRED', 'DATA USANG'].includes(text)) return;
-    node.textContent = context.hasClosedCandle ? 'CANDLE TERTUTUP' : 'MENUNGGU DATA';
-    node.classList.remove('stale', 'expired');
-    node.classList.toggle('live', context.hasClosedCandle);
-    node.classList.toggle('waiting', !context.hasClosedCandle);
+    node.textContent = context.sourceDelayed
+      ? `CANDLE TERTUNDA ${context.sourceState?.lagBars || '?'} BAR`
+      : context.hasClosedCandle
+        ? 'CANDLE TERTUTUP'
+        : 'MENUNGGU DATA';
+    node.classList.remove('expired');
+    node.classList.toggle('stale', context.sourceDelayed);
+    node.classList.toggle('live', context.sourceCurrent);
+    node.classList.toggle('waiting', !context.sourceCurrent);
   });
 }
 
@@ -133,9 +158,11 @@ function compactMarkup(context) {
   const watch = context.watchLevel
     ? `${context.watchType} ${p2(context.watchLevel)}`
     : 'Belum tersedia dari liquidity Mapping.';
-  const source = context.hasClosedCandle
-    ? `Basis candle terakhir tertutup · ${context.sourceTf} · ${context.sourceText}`
-    : 'Belum ada candle tertutup yang dapat digunakan.';
+  const source = context.sourceDelayed
+    ? `Basis candle terakhir tertutup · ${context.sourceTf} · ${context.sourceText} · provider tertinggal ${context.sourceState?.lagBars || '?'} bar`
+    : context.hasClosedCandle
+      ? `Basis candle terakhir tertutup · ${context.sourceTf} · ${context.sourceText}`
+      : 'Belum ada candle tertutup yang dapat digunakan.';
 
   return `<div class="execution-plan__head">
       <div><div class="kicker">RENCANA EKSEKUSI</div><h2>WAIT — ${context.direction ? `PANTAU ${context.direction}` : 'MENUNGGU ARAH'}</h2></div>
@@ -148,7 +175,7 @@ function compactMarkup(context) {
       <div><span>Arah scalping</span><strong>${esc(context.directionLabel)}</strong></div>
       <div><span>Invalidasi</span><strong>${esc(context.invalidationText)}</strong></div>
     </div>
-    <div class="execution-freshness execution-freshness--${context.hasClosedCandle ? 'live' : 'waiting'}">${esc(source)}</div>
+    <div class="execution-freshness execution-freshness--${context.sourceCurrent ? 'live' : 'waiting'}">${esc(source)}</div>
     <div class="execution-actions">
       <button type="button" class="action execution-action" data-execution-plan-action="detail">Lihat Rencana Lengkap</button>
       <button type="button" class="action execution-action execution-action--amy" data-execution-plan-action="ask-amy">Tanya Amy Kenapa Masih WAIT</button>
@@ -164,9 +191,11 @@ function detailMarkup(context) {
   const target = context.targetLevel
     ? `${context.targetType} ${p2(context.targetLevel)}`
     : 'Belum tersedia dari target struktural Mapping.';
-  const source = context.hasClosedCandle
-    ? `Basis candle terakhir tertutup · ${context.sourceTf} · ${context.sourceText}`
-    : 'Belum ada candle tertutup yang dapat digunakan.';
+  const source = context.sourceDelayed
+    ? `Basis candle terakhir tertutup · ${context.sourceTf} · ${context.sourceText} · provider tertinggal ${context.sourceState?.lagBars || '?'} bar`
+    : context.hasClosedCandle
+      ? `Basis candle terakhir tertutup · ${context.sourceTf} · ${context.sourceText}`
+      : 'Belum ada candle tertutup yang dapat digunakan.';
 
   return `<div class="execution-plan__head">
       <div><div class="kicker">RENCANA EKSEKUSI</div><h2>WAIT — ${context.direction ? `PANTAU ${context.direction}` : 'MENUNGGU ARAH'}</h2></div>
@@ -190,7 +219,7 @@ function detailMarkup(context) {
     <div class="execution-invalidation"><h3>Invalidasi</h3><p>${esc(context.invalidationText)}</p></div>
     <div class="execution-list-block"><h3>Alasan masih WAIT</h3><ul><li>Arah scalping tetap ditampilkan dari candle terakhir yang sudah close.</li><li>Belum ada entry, SL, dan target resmi yang terkunci.</li><li>Freshness tetap menjadi proteksi internal, tetapi tidak menghapus analisis terakhir dari UI.</li></ul></div>
     <div class="execution-conclusion"><small>KESIMPULAN SEDERHANA</small><strong>${esc(context.direction ? `Fokus ${context.direction}, tetapi tunggu trigger resmi.` : 'Tunggu arah M15/M5/M1 menjadi jelas.')}</strong></div>
-    <div class="execution-freshness execution-freshness--${context.hasClosedCandle ? 'live' : 'waiting'}">${esc(source)}</div>
+    <div class="execution-freshness execution-freshness--${context.sourceCurrent ? 'live' : 'waiting'}">${esc(source)}</div>
     <div class="execution-actions"><button type="button" class="action execution-action execution-action--amy" data-execution-plan-action="ask-amy">Tanya Amy Kenapa Masih WAIT</button></div>`;
 }
 
@@ -205,7 +234,9 @@ function patchCard(card, context) {
     context.watchLevel,
     context.targetLevel,
     context.invalidation,
-    context.hasClosedCandle
+    context.hasClosedCandle,
+    context.sourceCurrent,
+    context.sourceState?.lagBars
   ]);
   if (card.dataset.closedCandleSignature === signature) return;
   card.dataset.closedCandleSignature = signature;

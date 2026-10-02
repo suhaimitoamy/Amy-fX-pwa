@@ -1,0 +1,452 @@
+/*
+ * Amy FX Pro — Natural UI Overhaul (pro355)
+ * Audit fix: kurangi tampilan "AI", natural seperti MyTelkomsel / BRI Mobile.
+ * Hanya perubahan visual. Tidak ada logika trading / data yang diubah.
+ *
+ * Fix yang diterapkan:
+ *  1. Warna & palette — lebih warm, kurangi neon glow biru
+ *  2. Background — 1 gradient sederhana, hapus lapis grid/repeating
+ *  3. Glass morphism — hanya header & nav, card pakai solid surface
+ *  4. Bottom nav — full-width, flat, menempel ke bawah layar
+ *  5. Border radius — lebih realistis (12–16px, bukan 20–24px)
+ *  6. Tipografi — font-weight max 700, hapus letter-spacing ekstrem
+ *  7. Section label — hapus text-transform uppercase & huruf besar kaku
+ *  8. Logo / header — lebih clean, hapus glow
+ */
+
+/* ═══════════════════════════════════════════════════
+   1. PALETTE OVERRIDE — kurangi neon, lebih natural
+   ═══════════════════════════════════════════════════ */
+:root,
+html[data-amyfx-theme="dark"] {
+  /* Background lebih dalam & netral, bukan biru gelap "sci-fi" */
+  --amy-bg: #0e1118;
+  --amy-bg-secondary: #141820;
+
+  /* Surface lebih solid, kurangi transparency */
+  --amy-surface: rgba(28, 33, 44, 0.92);
+  --amy-surface-strong: rgba(32, 38, 52, 0.96);
+  --amy-surface-solid: #1c2130;
+  --amy-surface-soft: rgba(120, 145, 190, 0.06);
+
+  /* Border lebih subtle — tidak glow */
+  --amy-border: rgba(180, 200, 240, 0.14);
+  --amy-border-strong: rgba(180, 200, 240, 0.24);
+  --amy-highlight: rgba(255, 255, 255, 0.06);
+
+  /* Teks — lebih warm */
+  --amy-text: #eef1f7;
+  --amy-text-secondary: #8e9ab0;
+  --amy-text-muted: #5e6b80;
+
+  /* Accent — tetap biru tapi lebih redup */
+  --amy-accent: #5b9cf6;
+  --amy-accent-strong: #3a7de8;
+
+  /* Status warna lebih natural (tidak neon) */
+  --amy-buy: #3ec87e;
+  --amy-sell: #f05568;
+  --amy-wait: #e8a93a;
+
+  /* Shadow lebih natural */
+  --amy-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+  --amy-shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.18);
+
+  /* Blur — dikurangi drastis */
+  --amy-blur: 10px;
+  --amy-blur-strong: 14px;
+
+  /* Border radius lebih natural */
+  --amy-radius-xs: 8px;
+  --amy-radius-sm: 10px;
+  --amy-radius-md: 12px;
+  --amy-radius-lg: 14px;
+  --amy-radius-xl: 16px;
+}
+
+html[data-amyfx-theme="light"] {
+  --amy-bg: #f0f2f7;
+  --amy-bg-secondary: #f8f9fc;
+  --amy-surface: #ffffff;
+  --amy-surface-strong: rgba(255, 255, 255, 0.98);
+  --amy-surface-solid: #ffffff;
+  --amy-surface-soft: rgba(33, 107, 219, 0.04);
+  --amy-border: rgba(50, 80, 130, 0.12);
+  --amy-border-strong: rgba(50, 80, 130, 0.22);
+  --amy-highlight: rgba(255, 255, 255, 0.9);
+  --amy-text: #111825;
+  --amy-text-secondary: #4a5568;
+  --amy-text-muted: #718096;
+  --amy-accent: #1a5ecb;
+  --amy-accent-strong: #1348a8;
+  --amy-buy: #1a7a50;
+  --amy-sell: #c0253a;
+  --amy-wait: #b07020;
+  --amy-shadow: 0 2px 12px rgba(20, 40, 80, 0.10);
+  --amy-shadow-soft: 0 1px 6px rgba(20, 40, 80, 0.08);
+  --amy-radius-xs: 8px;
+  --amy-radius-sm: 10px;
+  --amy-radius-md: 12px;
+  --amy-radius-lg: 14px;
+  --amy-radius-xl: 16px;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   2. BACKGROUND — 1 gradient simple, hapus semua lapis
+   ═══════════════════════════════════════════════════ */
+body.amyfx-module {
+  /* Hapus 6 lapis gradient sebelumnya — ganti 1 gradient simple */
+  background:
+    linear-gradient(160deg, var(--amy-bg-secondary) 0%, var(--amy-bg) 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* Hapus pseudo-element grid overlay yang "AI" */
+body.amyfx-module::before {
+  content: "" !important;
+  display: none !important;
+}
+
+html[data-amyfx-theme="light"] body.amyfx-module {
+  background:
+    linear-gradient(160deg, #f8f9fc 0%, #eef1f8 100%) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   3. CARD / SURFACE — solid, tidak glass semua
+   ═══════════════════════════════════════════════════ */
+
+/* Override glass effect yang terlalu agresif */
+body.amyfx-module :is(
+  .card, .quick-card, .course-card, .news-item,
+  .dashboard-card, .library-card, .journal-card,
+  .workspace-card, .profile-summary, .profile-list,
+  .execution-plan, .scalper-watch, .practice-card,
+  .practice-panel, .amy-command-strip, .amy-briefing
+),
+body.amyfx-module--ict article {
+  background: var(--amy-surface-solid) !important;
+  border: 1px solid var(--amy-border) !important;
+  border-top-color: var(--amy-border) !important;
+  border-radius: var(--amy-radius-md) !important;
+  box-shadow: var(--amy-shadow-soft) !important;
+  /* Hapus backdrop-filter dari card — hanya header & nav yang boleh */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-amyfx-theme="light"] body.amyfx-module :is(
+  .card, .quick-card, .course-card, .news-item,
+  .dashboard-card, .library-card, .journal-card,
+  .workspace-card, .profile-summary, .profile-list,
+  .execution-plan, .scalper-watch, .practice-card,
+  .practice-panel, .amy-command-strip, .amy-briefing
+) {
+  background: #ffffff !important;
+  box-shadow: 0 1px 8px rgba(20, 40, 80, 0.09) !important;
+  border-color: rgba(50, 80, 130, 0.1) !important;
+}
+
+/* Home hero — subtle, bukan hologram */
+body.amyfx-module--home .home-hero {
+  background: var(--amy-surface-solid) !important;
+  border-radius: var(--amy-radius-lg) !important;
+}
+
+/* Hapus dekorasi "AMY" ghost text di hero */
+body.amyfx-module--home .home-hero::after {
+  display: none !important;
+}
+
+/* Hapus circle glow di hero */
+body.amyfx-module--home .home-hero::before {
+  display: none !important;
+}
+
+/* Quick cards & project cards */
+body.amyfx-module--home .quick-card,
+body.amyfx-module--home .project-card {
+  border-radius: var(--amy-radius-md) !important;
+  background: var(--amy-surface-solid) !important;
+  box-shadow: var(--amy-shadow-soft) !important;
+  border: 1px solid var(--amy-border) !important;
+}
+
+body.amyfx-module--home .quick-card:hover,
+body.amyfx-module--home .project-card:hover {
+  border-color: var(--amy-border-strong) !important;
+  background: var(--amy-surface-strong) !important;
+  box-shadow: var(--amy-shadow) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   4. BOTTOM NAV — full-width, flat, tidak floating pill
+   ═══════════════════════════════════════════════════ */
+body.amyfx-module--home .bottom-nav {
+  /* Hapus floating pill style */
+  position: fixed !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+
+  /* Flat, tidak float, tidak rounded */
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--amy-border) !important;
+
+  /* Background solid — tidak glass */
+  background: var(--amy-surface-solid) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 -1px 0 var(--amy-border) !important;
+
+  /* Height natural seperti app mobile standard */
+  height: calc(56px + var(--amy-safe-bottom)) !important;
+  padding: 4px 0 var(--amy-safe-bottom) !important;
+  align-items: flex-start !important;
+}
+
+html[data-amyfx-theme="light"] body.amyfx-module--home .bottom-nav {
+  background: #ffffff !important;
+  border-top-color: rgba(50, 80, 130, 0.12) !important;
+}
+
+/* Nav button di dalam nav full-width */
+body.amyfx-module--home .nav-btn {
+  border-radius: 0 !important;
+  min-height: 48px !important;
+  font-size: 10px !important;
+  font-weight: 500 !important; /* Hapus font-weight 650 yang berlebihan */
+  color: var(--amy-text-muted) !important;
+  gap: 2px !important;
+}
+
+body.amyfx-module--home .nav-btn.active {
+  background: transparent !important;
+  color: var(--amy-accent) !important;
+}
+
+/* Hapus glow indicator di atas nav — ganti dengan bawah icon */
+body.amyfx-module--home .nav-btn.active::before {
+  display: none !important;
+}
+
+/* Padding main content menyesuaikan nav height baru */
+body.amyfx-module--home main {
+  padding-bottom: calc(56px + var(--amy-safe-bottom) + 12px) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   5. HEADER — tetap glass (wajar), tapi lebih subtle
+   ═══════════════════════════════════════════════════ */
+body.amyfx-module--home .app-header,
+body.amyfx-module :is(.bottom-nav, .intel-tabs, .app-header) {
+  background: color-mix(in srgb, var(--amy-surface-solid) 88%, transparent) !important;
+  backdrop-filter: blur(var(--amy-blur-strong)) !important;
+  -webkit-backdrop-filter: blur(var(--amy-blur-strong)) !important;
+  border-color: var(--amy-border) !important;
+  box-shadow: none !important;
+}
+
+/* Logo — lebih clean */
+.app-logo,
+.profile-avatar,
+.amyfx-monogram {
+  background: var(--amy-surface-soft) !important;
+  border-color: var(--amy-border) !important;
+  box-shadow: none !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   6. TIPOGRAFI — natural, hapus kaku-kaku robotik
+   ═══════════════════════════════════════════════════ */
+
+/* Hapus letter-spacing ekstrem di section label */
+.section-kicker,
+.eyebrow {
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important; /* Dari 0.14em → wajar */
+  text-transform: none !important; /* Hapus uppercase */
+  font-size: 12px !important;
+}
+
+/* Header app copy — normal */
+.app-header__copy strong {
+  font-size: 16px !important;
+  letter-spacing: 0 !important; /* Hapus 0.04em */
+  font-weight: 600 !important;
+}
+
+.app-header__copy small {
+  font-size: 11px !important;
+  letter-spacing: 0.04em !important; /* Dari 0.12em */
+  text-transform: none !important; /* Hapus uppercase */
+}
+
+/* Button — weight normal */
+body.amyfx-module :is(button, .btn, [role="button"]) {
+  font-weight: 600 !important; /* Dari 680/750/900 */
+}
+
+/* Page heading */
+body.amyfx-module--home .page-header h2 {
+  font-size: 22px !important; /* Dari 25–32px */
+  letter-spacing: -0.01em !important;
+  font-weight: 700 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   7. BORDERS & GLOW — hapus neon accent border
+   ═══════════════════════════════════════════════════ */
+
+/* Button primary — tidak terlalu glow */
+.amyfx-button,
+.action-btn,
+.primary-button,
+.btn.primary,
+.execution-action,
+.action {
+  background: var(--amy-accent) !important;
+  border: 1px solid var(--amy-accent-strong) !important;
+  color: #fff !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+  border-radius: var(--amy-radius-sm) !important;
+  font-weight: 600 !important;
+}
+
+/* Input fields */
+input,
+textarea,
+select,
+.search-box,
+.search-input,
+.amyfx-search {
+  background: var(--amy-surface-solid) !important;
+  border: 1px solid var(--amy-border-strong) !important;
+  border-radius: var(--amy-radius-sm) !important;
+  box-shadow: none !important;
+}
+
+/* App icon chips — kurangi glow */
+body.amyfx-module--home .app-icon {
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+/* Status dot — hapus glow */
+.home-status .status-dot {
+  box-shadow: none !important;
+}
+
+/* Nav active glow — hapus */
+body.amyfx-module--home .nav-btn.active {
+  box-shadow: none !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   8. SECTION HEADING & CARD META — lebih rapi
+   ═══════════════════════════════════════════════════ */
+body.amyfx-module--home .section-heading {
+  margin: 20px 0 10px !important;
+}
+
+body.amyfx-module--home .section-heading h2 {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: var(--amy-text) !important;
+  letter-spacing: 0 !important;
+}
+
+/* Card content sizing */
+body.amyfx-module--home .quick-card strong {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+body.amyfx-module--home .quick-card small,
+body.amyfx-module--home .project-card p {
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+}
+
+/* Badges & chips — lebih flat */
+.badge,
+.chip,
+.pill,
+.status-badge,
+.category-tag,
+.status-tag,
+.session-pill,
+.entry-watch-badge,
+.execution-badge {
+  border-radius: 6px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 3px 8px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   9. EMPTY STATE & ERROR — lebih clean
+   ═══════════════════════════════════════════════════ */
+body.amyfx-module :is(.empty-state, .empty-state-card, #error[role="alert"]) {
+  background: var(--amy-surface-soft) !important;
+  border-color: var(--amy-border) !important;
+  border-radius: var(--amy-radius-md) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   10. OS PANEL (Amy AI) — lebih natural
+   ═══════════════════════════════════════════════════ */
+.amy-os-panel {
+  border-radius: 14px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36) !important;
+  border-color: var(--amy-border) !important;
+}
+
+.amy-os-fab {
+  border-radius: 14px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32) !important;
+  border-color: var(--amy-border-strong) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   HAPUS GRADIENT BODY::BEFORE YANG AI
+   ═══════════════════════════════════════════════════ */
+body::before {
+  display: none !important;
+}
+
+/* Styles.css body::before juga dihapus */
+html body::before {
+  display: none !important;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE — pastikan nav tetap natural di semua layar
+   ═══════════════════════════════════════════════════ */
+@media (min-width: 680px) {
+  body.amyfx-module--home .bottom-nav {
+    /* Di layar lebar pun tetap full-width tapi max-width sesuai container */
+    max-width: 680px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    border-radius: 0 !important;
+  }
+}

@@ -4,6 +4,7 @@ import { detectFvgConcepts } from './concept-fvg.js';
 import { detectLiquidityConcepts, evaluateLiquidityReclaim } from './concept-liquidity.js';
 import { detectOrderBlockConcepts } from './concept-ob.js';
 import { detectPreviousPeriodLevels, previousPeriodSnapshot } from './concept-reference-levels.js';
+import { buildMappingContextEnhancements } from './concept-context-enhancements.js';
 import { structureDisplacementMetrics } from './concept-structure-metrics.js';
 import { detectStructureConcepts } from './concept-structure.js';
 import {
@@ -230,6 +231,18 @@ export function detectMarketConcepts(candles, {
   const latestConfirmedSweep = liquidityHierarchy.confirmedSweeps[0]
     || structureSnapshot.sweepEvents?.filter(event => event.valid).at(-1)
     || null;
+  const contextEnhancements = buildMappingContextEnhancements({
+    tf,
+    candles: values,
+    dailyCandles: htfCandles?.D1 || [],
+    m5Candles: htfCandles?.M5 || [],
+    currentPrice: price,
+    structureSnapshot,
+    liquidityLevels,
+    liquidityHierarchy,
+    fairValueGaps,
+    orderBlocks
+  });
 
   const previousDayText = previousPeriods.pdh > 0
     ? `PDH ${previousPeriods.pdh.toFixed(2)} (${previousPeriods.pdhStatus}) · PDL ${previousPeriods.pdl.toFixed(2)} (${previousPeriods.pdlStatus})`
@@ -251,6 +264,7 @@ export function detectMarketConcepts(candles, {
     ['BSL / SSL Sweep', latestConfirmedSweep?.status || 'WAIT', latestConfirmedSweep
       ? `${latestConfirmedSweep.type || latestConfirmedSweep.concept} @ ${Number(latestConfirmedSweep.level).toFixed(2)} · reclaim ${conceptNumber(latestConfirmedSweep.reclaimDepthAtr, 0).toFixed(2)} ATR`
       : `Belum ada sweep terkonfirmasi dengan reclaim minimum ${CONCEPT_THRESHOLDS.liquidityReclaimAtr.toFixed(2)} ATR.`],
+    ...contextEnhancements.conceptRows,
     ['Concept Filter', 'CONFIRMATION REQUIRED', `BOS/MSS valid memakai close swing 4/4 + buffer ${CONCEPT_THRESHOLDS.structurePenetrationAtr.toFixed(2)} ATR + displacement body ${CONCEPT_THRESHOLDS.displacementBodyAtr.toFixed(2)} ATR · reclaim sweep ≥ ${CONCEPT_THRESHOLDS.liquidityReclaimAtr.toFixed(2)} ATR`]
   ];
 
@@ -272,6 +286,15 @@ export function detectMarketConcepts(candles, {
     pdl: previousPeriods.pdl,
     pwh: previousPeriods.pwh,
     pwl: previousPeriods.pwl,
+    pmh: contextEnhancements.monthlySnapshot.pmh,
+    pml: contextEnhancements.monthlySnapshot.pml,
+    contextEnhancements,
+    evidenceContract: contextEnhancements.evidenceContract,
+    evidenceCatalog: contextEnhancements.evidenceCatalog,
+    strongWeakStructure: contextEnhancements.strongWeak,
+    midnightOpen: contextEnhancements.midnightOpen,
+    adaptiveEqualHighLow: contextEnhancements.adaptiveEqualHighLow,
+    monthlyLevels: contextEnhancements.monthlyLevels,
     liquidityHierarchy,
     nearestFairValueGaps,
     nearestOrderBlocks,
@@ -284,7 +307,9 @@ export function detectMarketConcepts(candles, {
       nearestFairValueGaps,
       nearestOrderBlocks,
       allFairValueGaps: fairValueGaps,
-      allOrderBlocks: orderBlocks
+      allOrderBlocks: orderBlocks,
+      freshnessAudit: contextEnhancements.zoneFreshnessAudit,
+      orderBlockOriginReview: contextEnhancements.orderBlockOriginReview
     }
   };
 }

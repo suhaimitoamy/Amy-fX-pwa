@@ -193,6 +193,7 @@
     if (!nativeState?.active || !nativeState.sourceKey) return;
     const video = findVideoForSourceKey(nativeState.sourceKey);
     if (!video) return;
+    if (video.closest(".fullscreen-video-panel")?.dataset?.userPaused === "1") return;
 
     restoreInProgress = true;
     try {
@@ -232,6 +233,9 @@
 
   function enhanceVideo(video) {
     if (!video || controlsByVideo.has(video)) return;
+    if (video.classList.contains("feed-video") || video.closest(".fullscreen-video-panel, .fullscreen-video-feed")) {
+      return;
+    }
     video.controls = true;
     video.playsInline = true;
     video.autoplay = true;

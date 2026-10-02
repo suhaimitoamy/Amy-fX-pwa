@@ -1,5 +1,4 @@
 const CARD_ID = 'amy-entry-watch-card';
-const SYNC_MS = 1000;
 
 let lastSignature = '';
 
@@ -45,10 +44,9 @@ function syncEntryWatch() {
 
 function start() {
   syncEntryWatch();
-  setInterval(syncEntryWatch, SYNC_MS);
   window.addEventListener('amyfx:candles-updated', syncEntryWatch);
-  window.addEventListener('amyfx:market-update', syncEntryWatch);
-  document.addEventListener('click', () => setTimeout(syncEntryWatch, 20), true);
+  window.addEventListener('amyfx:mapping-state-change', syncEntryWatch);
+  window.addEventListener('amyfx:execution-authority-updated', syncEntryWatch);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) syncEntryWatch();
   });

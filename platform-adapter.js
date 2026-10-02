@@ -275,9 +275,42 @@
     saveFile,
     downloadTextFile: (name, text) => saveFile(name, text, 'text/plain;charset=utf-8'),
     showNotification: (title, body) => notify(title, body, { requestPermission: false }),
+    showNotificationWithUrl: (title, body, url) => notify(title, body, { url, requestPermission: false }),
+    recordLastStudiedLesson: (title, url, section) => {
+      try {
+        localStorage.setItem('amy_last_opened_title', title || '');
+        localStorage.setItem('amy_last_opened_url', url || '');
+        localStorage.setItem('amy_last_opened_section', section || '');
+        localStorage.setItem('amy_last_opened_time', String(Date.now()));
+      } catch (_) {}
+    },
+    saveLearningReminderConfig: (enabled, timeOfDay) => {
+      try {
+        localStorage.setItem('amy_learning_reminder_enabled', enabled ? 'true' : 'false');
+        localStorage.setItem('amy_learning_reminder_time', timeOfDay || '20:00');
+        return true;
+      } catch (_) { return false; }
+    },
+    getLearningReminderConfig: () => {
+      try {
+        return JSON.stringify({
+          enabled: localStorage.getItem('amy_learning_reminder_enabled') !== 'false',
+          time: localStorage.getItem('amy_learning_reminder_time') || '20:00',
+          lastTitle: localStorage.getItem('amy_last_opened_title') || '',
+          lastUrl: localStorage.getItem('amy_last_opened_url') || ''
+        });
+      } catch (_) { return '{}'; }
+    },
+    triggerLearningReminderNotification: () => {
+      const title = '📚 Waktunya Tingkatkan Skill Trading-mu!';
+      const last = localStorage.getItem('amy_last_opened_title') || 'Fondasi ICT & Market Structure Dasar';
+      const msg = `Materi terakhir yang kamu pelajari: "${last}". Yuk lanjutkan belajar sekarang!`;
+      const url = localStorage.getItem('amy_last_opened_url') || './apps/academy/index.html';
+      return notify(title, msg, { url, requestPermission: true });
+    },
     notify: (title, body) => notify(title, body, { requestPermission: false }),
     clearCache: clearRuntimeCache,
-    getAppVersion: () => 'PWA 1.1.0',
+    getAppVersion: () => '2.0.0-pro.390',
     getPlatform: () => 'pwa',
     isPwa: () => true
   };

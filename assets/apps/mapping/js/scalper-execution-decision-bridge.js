@@ -4,41 +4,49 @@ let lastFingerprint = '';
 
 function syncExecutionDecision() {
   const result = window.state?.result || window.AmyFXMarketState?.result || null;
-  const decision = result?.executionDirectionDecision || result?.scalperExecutionAuthority?.directionDecision || null;
-  if (!result || decision?.source !== AUTHORITY) return false;
+  const executionDecision = result?.executionDirectionDecision
+    || result?.scalperExecutionAuthority?.directionDecision
+    || null;
+  if (!result || executionDecision?.source !== AUTHORITY) return false;
 
+  const mappingDecision = result.directionDecision || result.mappingContextBeforeScalper?.directionDecision || null;
   const fingerprint = JSON.stringify({
-    result,
-    signal: decision.signal,
-    status: decision.status,
-    invalidated: decision.invalidated,
-  }, (key, value) => key === 'result' ? undefined : value);
-  if (lastFingerprint === fingerprint && result.directionDecision === decision) return false;
+    executionSignal: executionDecision.signal,
+    executionStatus: executionDecision.status,
+    executionInvalidated: executionDecision.invalidated,
+    mappingSignal: mappingDecision?.signal,
+    mappingSource: mappingDecision?.source,
+    sourceCandleTime: result?.amySmcD?.sourceCandle?.time || 0
+  });
+  if (fingerprint === lastFingerprint) return false;
 
-  if (!result.mappingDirectionDecision) {
-    result.mappingDirectionDecision = result.mappingContextBeforeScalper?.directionDecision
-      || result.directionDecision
-      || null;
-  }
-  result.directionDecision = decision;
+  result.mappingDirectionDecision = mappingDecision;
+  result.executionDirectionDecision = executionDecision;
+  result.mappingExecutionConsumer = {
+    source: AUTHORITY,
+    readOnly: true,
+    mayOverrideMapping: false,
+    mappingSource: mappingDecision?.source || 'AMY_SMC_D_NEXT_MOVE'
+  };
   lastFingerprint = fingerprint;
   return true;
 }
 
-function syncAndRender() {
-  if (syncExecutionDecision()) window.render?.();
+function scheduleSync() {
+  queueMicrotask(syncExecutionDecision);
 }
 
-window.addEventListener('amyfx:execution-authority-updated', syncAndRender);
-window.addEventListener('amyfx:scalper-state-change', () => setTimeout(syncAndRender, 20));
-window.addEventListener('amyfx:mapping-state-change', () => setTimeout(syncAndRender, 40));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) syncAndRender(); });
-setInterval(syncExecutionDecision, 1_500);
+window.addEventListener('amyfx:execution-authority-updated', scheduleSync);
+window.addEventListener('amyfx:scalper-state-change', scheduleSync);
+window.addEventListener('amyfx:mapping-state-change', scheduleSync);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) scheduleSync();
+});
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', syncAndRender, { once: true });
+  document.addEventListener('DOMContentLoaded', scheduleSync, { once: true });
 } else {
-  syncAndRender();
+  scheduleSync();
 }
 
 export { syncExecutionDecision };
