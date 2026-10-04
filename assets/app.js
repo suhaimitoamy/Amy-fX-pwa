@@ -11,6 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const practiceItems = [
     {
+      id: 'fractal-advisor',
+      title: 'Fractal Advisor & Laya AI',
+      badge: 'System 1',
+      icon: 'indicator',
+      desc: 'Pencocokan fraktal 187k candle & audit gerbang AI Laya sebelum entry.',
+      target: 'apps/fractal-advisor/index.html'
+    },
+    {
       id: 'chart-analysis',
       title: 'Chart Analysis',
       badge: 'Praktik',
@@ -181,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Replay: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`,
     Latihan: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>`,
     Riwayat: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>`,
+    'System 1': `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>`,
     'Jalur 03': `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
   };
 
@@ -191,7 +200,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let disposeHomeChart=null;
   function setActive(target) {
     disposeHomeChart?.();disposeHomeChart=null;
-    navBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.target === target));
+    const isVideo = t => t === 'video' || t === 'media';
+    navBtns.forEach(btn => {
+      const match = btn.dataset.target === target || (isVideo(target) && isVideo(btn.dataset.target));
+      btn.classList.toggle('active', Boolean(match));
+    });
     try { localStorage.setItem('amy_root_tab', target); } catch (_) {}
   }
 
@@ -224,21 +237,454 @@ document.addEventListener('DOMContentLoaded', () => {
     mainContent.innerHTML = `<div class="page-header"><div><span class="section-kicker">JALUR 03</span><h2>${title || 'Backtest'}</h2></div></div><div class="project-grid slide-up">${practiceItems.map(projectCard).join('')}</div>`;
   }
 
-  function renderKoleksi() {
-    setActive('koleksi');
+  // ─── AMY FX PRO ROOT MEDIA HUB & VAULT ──────────────────────────────
+  const MEDIA_DB_NAME = 'tradingLibraryManager.files';
+  const MEDIA_DB_VERSION = 2;
+  const MEDIA_FILE_STORE = 'files';
+  const MEDIA_META_STORE = 'metadata';
+  const MEDIA_ITEMS_META_RECORD = 'items.v2';
+  const MEDIA_LEGACY_KEY = 'tradingLibraryManager.items.v1';
+
+  let mediaDbPromise = null;
+  function openMediaDb() {
+    if (!('indexedDB' in window)) return Promise.reject(new Error('IndexedDB tidak tersedia'));
+    if (mediaDbPromise) return mediaDbPromise;
+    mediaDbPromise = new Promise((resolve, reject) => {
+      const req = indexedDB.open(MEDIA_DB_NAME, MEDIA_DB_VERSION);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(MEDIA_FILE_STORE)) db.createObjectStore(MEDIA_FILE_STORE, { keyPath: 'id' });
+        if (!db.objectStoreNames.contains(MEDIA_META_STORE)) db.createObjectStore(MEDIA_META_STORE, { keyPath: 'id' });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    return mediaDbPromise;
+  }
+
+  async function getMediaMetadataRecord(recordId) {
+    try {
+      const db = await openMediaDb();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(MEDIA_META_STORE, 'readonly');
+        const req = tx.objectStore(MEDIA_META_STORE).get(recordId);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    } catch (_) { return null; }
+  }
+
+  async function putMediaMetadataRecord(record) {
+    try {
+      const db = await openMediaDb();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(MEDIA_META_STORE, 'readwrite');
+        const req = tx.objectStore(MEDIA_META_STORE).put(record);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    } catch (_) { return false; }
+  }
+
+  async function getMediaFileRecord(fileId) {
+    if (!fileId) return null;
+    try {
+      const db = await openMediaDb();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(MEDIA_FILE_STORE, 'readonly');
+        const req = tx.objectStore(MEDIA_FILE_STORE).get(fileId);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    } catch (_) { return null; }
+  }
+
+  async function putMediaFileRecord(record) {
+    try {
+      const db = await openMediaDb();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(MEDIA_FILE_STORE, 'readwrite');
+        const req = tx.objectStore(MEDIA_FILE_STORE).put(record);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    } catch (_) { return false; }
+  }
+
+  async function deleteMediaFileRecord(fileId) {
+    if (!fileId) return;
+    try {
+      const db = await openMediaDb();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(MEDIA_FILE_STORE, 'readwrite');
+        const req = tx.objectStore(MEDIA_FILE_STORE).delete(fileId);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    } catch (_) {}
+  }
+
+  async function loadAllMediaItems() {
+    let items = [];
+    try {
+      const rec = await getMediaMetadataRecord(MEDIA_ITEMS_META_RECORD);
+      if (Array.isArray(rec?.value)) items = rec.value;
+    } catch (_) {}
+    if (!items.length) {
+      try {
+        const legacy = JSON.parse(localStorage.getItem(MEDIA_LEGACY_KEY) || '[]');
+        if (Array.isArray(legacy) && legacy.length) items = legacy;
+      } catch (_) {}
+    }
+    return items;
+  }
+
+  async function saveAllMediaItems(items) {
+    const cleaned = items.map(it => {
+      const { data, file, blob, objectUrl, textPreview, ...meta } = it;
+      return meta;
+    });
+    await putMediaMetadataRecord({ id: MEDIA_ITEMS_META_RECORD, value: cleaned, updatedAt: new Date().toISOString() });
+    try { localStorage.setItem(MEDIA_LEGACY_KEY, JSON.stringify(cleaned)); } catch (_) {}
+  }
+
+  function formatBytes(bytes) {
+    if (!bytes || isNaN(bytes)) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  let currentMediaFilter = 'Semua';
+
+  async function renderMedia() {
+    setActive('video');
+    const allItems = await loadAllMediaItems();
     const hasSavedCode = Boolean(localStorage.getItem('amy_saved_code'));
     const favoriteIndicators = readJsonArray('amy_indicator_favorites');
-    const items = [];
-    if (hasSavedCode) {
-      items.push(`<button class="collection-item" data-koleksi="kode"><span class="app-icon code">${svgs.code}</span><span><strong>Kode indikator tersimpan</strong><small>Buka kembali Pine Script yang disimpan di perangkat ini.</small></span><span class="chevron" aria-hidden="true">›</span></button>`);
+
+    const isMediaItem = item => {
+      return item.mediaKind === 'image' || item.mediaKind === 'video' || item.mediaKind === 'audio' ||
+             item.type === 'Gambar Chart' || item.type === 'Video Pembelajaran' ||
+             item.collection === 'Media' || Boolean(item.fileId && item.mediaName);
+    };
+
+    const isDocItem = item => {
+      return item.mediaKind === 'document' || item.type === 'Dokumen' || Boolean(item.documentType);
+    };
+
+    let filteredItems = [];
+    if (currentMediaFilter === 'Video') {
+      filteredItems = allItems.filter(it => it.mediaKind === 'video' || it.type === 'Video Pembelajaran' || (it.mediaType && it.mediaType.startsWith('video/')));
+    } else if (currentMediaFilter === 'Gambar') {
+      filteredItems = allItems.filter(it => it.mediaKind === 'image' || it.type === 'Gambar Chart' || (it.mediaType && it.mediaType.startsWith('image/')));
+    } else if (currentMediaFilter === 'Dokumen') {
+      filteredItems = allItems.filter(isDocItem);
+    } else if (currentMediaFilter === 'Kode') {
+      filteredItems = [];
+    } else {
+      // 'Semua'
+      filteredItems = allItems.filter(it => isMediaItem(it) || isDocItem(it));
     }
-    if (favoriteIndicators.length) {
-      items.push(`<button class="collection-item" data-open="indikator"><span class="app-icon indicator">${svgs.indicator}</span><span><strong>${favoriteIndicators.length} indikator favorit</strong><small>Favorit aktual dari library indikator perangkat ini.</small></span><span class="chevron" aria-hidden="true">›</span></button>`);
+
+    const totalMediaCount = allItems.filter(it => isMediaItem(it) || isDocItem(it)).length;
+    const countLabel = totalMediaCount > 0 ? `${totalMediaCount} video &amp; media tersimpan` : 'Belum ada video tersimpan';
+
+    const pillsHTML = [
+      { id: 'Semua', label: `Semua (${totalMediaCount})` },
+      { id: 'Video', label: 'Video Replay' },
+      { id: 'Gambar', label: 'Gambar & Chart' },
+      { id: 'Dokumen', label: 'Dokumen PDF' },
+      { id: 'Kode', label: 'Kode Tersimpan' }
+    ].map(p => `
+      <button class="pill ${currentMediaFilter === p.id ? 'active' : ''}" data-media-filter="${p.id}" type="button">${p.label}</button>
+    `).join('');
+
+    let contentHTML = '';
+
+    if (currentMediaFilter === 'Kode') {
+      const codeItems = [];
+      if (hasSavedCode) {
+        codeItems.push(`<button class="collection-item" data-koleksi="kode"><span class="app-icon code">${svgs.code}</span><span><strong>Kode indikator tersimpan</strong><small>Buka kembali Pine Script yang disimpan di perangkat ini.</small></span><span class="chevron" aria-hidden="true">›</span></button>`);
+      }
+      if (favoriteIndicators.length) {
+        codeItems.push(`<button class="collection-item" data-open="indikator"><span class="app-icon indicator">${svgs.indicator}</span><span><strong>${favoriteIndicators.length} indikator favorit</strong><small>Favorit aktual dari library indikator perangkat ini.</small></span><span class="chevron" aria-hidden="true">›</span></button>`);
+      }
+      contentHTML = codeItems.length
+        ? `<div class="collection-list slide-up">${codeItems.join('')}</div>`
+        : `<div class="empty-state-card slide-up"><div style="font-size:32px; margin-bottom:8px;">💻</div><strong>Belum ada item tersimpan</strong><span>Simpan kode Pine Script dari menu Indikator agar muncul di sini.</span></div>`;
+    } else if (filteredItems.length === 0) {
+      contentHTML = `
+        <div class="empty-state-card slide-up" style="text-align:center; padding:36px 20px; border-radius:20px; background:var(--surface-color); border:1px solid var(--border-color); margin-top:10px;">
+          <div style="font-size:42px; margin-bottom:12px;">🎬</div>
+          <strong style="display:block; font-size:16px; margin-bottom:6px; color:var(--text-main);">Belum Ada Video di Kategori Ini</strong>
+          <span style="display:block; font-size:13px; color:var(--text-muted); max-width:340px; margin:0 auto 18px;">Simpan rekaman video replay setup XAU/USD, video materi, screenshot chart, atau dokumen trading Anda.</span>
+          <button type="button" id="rootEmptyUploadMediaBtn" class="media-upload-btn" style="padding:10px 20px; font-size:13px;">+ Upload Video Pertama</button>
+        </div>
+      `;
+    } else {
+      const cardsHTML = filteredItems.map(item => {
+        const isVid = item.mediaKind === 'video' || item.type === 'Video Pembelajaran' || (item.mediaType && item.mediaType.startsWith('video/'));
+        const isDoc = isDocItem(item);
+        const itemSize = formatBytes(item.mediaSize || item.fileSize || 0);
+
+        let thumbMarkup = '';
+        if (isVid) {
+          thumbMarkup = `
+            <div class="media-play-overlay" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19 8 5"></polygon></svg></div>
+            <span class="media-video-badge">▶ Video</span>
+            <video class="media-thumb-video" data-media-video="${item.fileId || ''}" preload="metadata"></video>
+          `;
+        } else if (isDoc) {
+          const docLabel = (item.documentType || (item.mediaName ? item.mediaName.split('.').pop() : 'DOC')).toUpperCase();
+          thumbMarkup = `
+            <div class="media-doc-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              <strong style="font-size:11px; letter-spacing:0.05em;">${escapeHtml(docLabel)}</strong>
+            </div>
+          `;
+        } else {
+          thumbMarkup = `<img class="media-thumb-img" data-media-thumb="${item.fileId || ''}" alt="${escapeHtml(item.title)}" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Crect width='16' height='10' fill='%230b1020'/%3E%3C/svg%3E">`;
+        }
+
+        return `
+          <article class="media-card slide-up" data-item-id="${escapeHtml(item.id)}">
+            <div class="media-thumb-box" data-view-media="${escapeHtml(item.id)}">
+              ${thumbMarkup}
+            </div>
+            <div class="media-card-body">
+              <div class="media-card-meta">
+                <span class="media-card-badge">${escapeHtml(item.category || item.type || 'Media')}</span>
+                <span>${itemSize}</span>
+              </div>
+              <strong class="media-card-title" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</strong>
+              <div class="media-card-actions">
+                <button type="button" class="media-card-btn" data-view-media="${escapeHtml(item.id)}">
+                  <span>Lihat Full</span>
+                </button>
+                <button type="button" class="media-card-btn danger-btn" data-delete-media="${escapeHtml(item.id)}" title="Hapus Media">
+                  <span>🗑️</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      contentHTML = `<div class="media-grid">${cardsHTML}</div>`;
     }
-    const content = items.length
-      ? `<div class="collection-list">${items.join('')}</div>`
-      : `<div class="empty-state-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 4h14v16l-7-4-7 4z"></path></svg><strong>Belum ada item tersimpan</strong><span>Simpan kode atau tandai indikator favorit agar muncul di sini.</span></div>`;
-    mainContent.innerHTML = `<div class="page-header"><div><span class="section-kicker">DATA PERANGKAT</span><h2>Koleksi</h2></div></div>${content}`;
+
+    mainContent.innerHTML = `
+      <div class="media-section-head">
+        <div class="page-title-group">
+          <span class="section-kicker">GALERI &amp; VIDEO TRADING</span>
+          <h2>Video</h2>
+          <small style="color:var(--text-muted); font-size:12px; font-weight:600;">${countLabel}</small>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input type="file" id="rootMediaFileInput" multiple accept="video/*,image/*,.mp4,.mkv,.webm,.ogg,.mov,.m4v,.png,.jpg,.jpeg,.webp,.gif,.pdf,.doc,.docx,.txt" style="display:none;">
+          <button type="button" id="rootUploadMediaBtn" class="media-upload-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <span>+ Upload Video</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="media-filter-pills">${pillsHTML}</div>
+
+      ${contentHTML}
+
+      <a href="apps/journal/index.html" class="media-journal-shortcut" style="margin-top:18px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:18px;">📖</span>
+          <div>
+            <strong style="display:block; color:var(--text-main); font-size:13px;">Buka Jurnal Trading &amp; Habits Lengkap</strong>
+            <small style="color:var(--text-muted); font-size:11px;">Analisis performa, win rate, dan catatan disiplin trading harian</small>
+          </div>
+        </div>
+        <span class="chevron" aria-hidden="true">›</span>
+      </a>
+    `;
+
+    // Asynchronously load actual blob contents for image and video cards
+    const thumbImgs = mainContent.querySelectorAll('[data-media-thumb]');
+    thumbImgs.forEach(async img => {
+      const fileId = img.dataset.mediaThumb;
+      if (!fileId) return;
+      const fileRec = await getMediaFileRecord(fileId);
+      if (fileRec?.blob) {
+        img.src = URL.createObjectURL(fileRec.blob);
+      }
+    });
+
+    const thumbVids = mainContent.querySelectorAll('[data-media-video]');
+    thumbVids.forEach(async vid => {
+      const fileId = vid.dataset.mediaVideo;
+      if (!fileId) return;
+      const fileRec = await getMediaFileRecord(fileId);
+      if (fileRec?.blob) {
+        vid.src = URL.createObjectURL(fileRec.blob);
+      }
+    });
+
+    // Bind file input handler
+    const fileInput = document.getElementById('rootMediaFileInput');
+    fileInput?.addEventListener('change', handleRootMediaUpload);
+  }
+
+  async function showMediaFullscreen(item) {
+    let dialog = document.getElementById('rootMediaViewerDialog');
+    if (!dialog) {
+      dialog = document.createElement('dialog');
+      dialog.id = 'rootMediaViewerDialog';
+      dialog.className = 'media-fullscreen-dialog';
+      document.body.appendChild(dialog);
+    }
+    const fileRec = item.fileId ? await getMediaFileRecord(item.fileId) : null;
+    let blobUrl = fileRec?.blob ? URL.createObjectURL(fileRec.blob) : (item.mediaUrl || '');
+
+    const isVid = item.mediaKind === 'video' || item.type === 'Video Pembelajaran' || (item.mediaType && item.mediaType.startsWith('video/')) || (fileRec?.blob?.type || '').startsWith('video/');
+    const isDoc = item.mediaKind === 'document' || item.type === 'Dokumen';
+
+    let stageContent = '';
+    if (isVid) {
+      stageContent = `<video src="${blobUrl}" controls autoplay playsinline style="max-width:100%; max-height:80vh; border-radius:12px;"></video>`;
+    } else if (isDoc) {
+      stageContent = `
+        <div style="text-align:center; padding:32px 20px; background:var(--surface-color); border-radius:20px; border:1px solid var(--border-color); max-width:400px; margin:auto;">
+          <div style="font-size:52px; margin-bottom:12px;">📄</div>
+          <h3 style="color:#fff; margin-bottom:8px; font-size:16px;">${escapeHtml(item.title)}</h3>
+          <p style="color:var(--text-muted); font-size:12px; margin-bottom:20px;">${escapeHtml(item.mediaName || item.title)} • ${formatBytes(item.mediaSize || fileRec?.size)}</p>
+          ${blobUrl ? `<a href="${blobUrl}" download="${escapeHtml(item.mediaName || item.title)}" class="media-upload-btn" style="text-decoration:none; display:inline-flex;">💾 Unduh / Buka Dokumen</a>` : ''}
+        </div>
+      `;
+    } else {
+      stageContent = `<img src="${blobUrl}" alt="${escapeHtml(item.title)}" style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:12px;">`;
+    }
+
+    dialog.innerHTML = `
+      <div class="media-fullscreen-bar">
+        <div class="media-fullscreen-title-box">
+          <small>${escapeHtml(item.category || item.type || 'Media')} • ${formatBytes(item.mediaSize || fileRec?.size)}</small>
+          <h3>${escapeHtml(item.title)}</h3>
+        </div>
+        <div class="media-fullscreen-actions">
+          ${blobUrl ? `<a href="${blobUrl}" download="${escapeHtml(item.mediaName || item.title)}" class="media-fullscreen-close-btn" style="text-decoration:none;" title="Unduh File">💾</a>` : ''}
+          <button type="button" class="media-fullscreen-close-btn" id="closeMediaViewerBtn" title="Tutup">×</button>
+        </div>
+      </div>
+      <div class="media-fullscreen-stage">${stageContent}</div>
+    `;
+
+    dialog.showModal();
+    const closeBtn = dialog.querySelector('#closeMediaViewerBtn');
+    const closeDialog = () => {
+      dialog.close();
+      const vid = dialog.querySelector('video');
+      if (vid) { vid.pause(); vid.src = ''; }
+    };
+    closeBtn?.addEventListener('click', closeDialog);
+    dialog.addEventListener('click', e => {
+      if (e.target === dialog) closeDialog();
+    });
+  }
+
+  async function handleRootMediaUpload(event) {
+    const files = [...(event.target.files || [])];
+    if (!files.length) return;
+    showToast('Memproses upload media...');
+    let uploadedCount = 0;
+    const now = new Date().toISOString();
+
+    for (const file of files) {
+      if (file.size > 200 * 1024 * 1024) {
+        showToast(`File "${file.name}" terlalu besar (>200MB).`);
+        continue;
+      }
+      let kind = 'document';
+      let itemType = 'Dokumen';
+      if (file.type.startsWith('image/')) {
+        kind = 'image';
+        itemType = 'Gambar Chart';
+      } else if (file.type.startsWith('video/')) {
+        kind = 'video';
+        itemType = 'Video Pembelajaran';
+      } else if (file.type.startsWith('audio/')) {
+        kind = 'audio';
+        itemType = 'Audio';
+      }
+
+      const id = 'media_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+      const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+      const title = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+
+      const item = {
+        id,
+        title,
+        type: itemType,
+        category: 'Setup XAU',
+        status: 'Selesai dibaca',
+        collection: 'Media',
+        tags: [itemType.toLowerCase(), 'media'],
+        notes: `File ${file.name} diupload ke Media Utama.`,
+        checklist: [],
+        code: '',
+        mediaUrl: '',
+        fileId,
+        mediaKind: kind,
+        mediaName: file.name,
+        mediaType: file.type,
+        mediaSize: file.size,
+        documentType: kind === 'document' ? (file.name.split('.').pop() || 'doc').toUpperCase() : '',
+        documentText: '',
+        favorite: false,
+        archived: false,
+        revisionHistory: [],
+        uploadedAt: now,
+        createdAt: now,
+        updatedAt: now
+      };
+
+      await putMediaFileRecord({
+        id: fileId,
+        itemId: id,
+        blob: file,
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        kind,
+        uploadedAt: now
+      });
+
+      const currentItems = await loadAllMediaItems();
+      await saveAllMediaItems([item, ...currentItems]);
+      uploadedCount++;
+    }
+
+    if (uploadedCount > 0) {
+      showToast(`${uploadedCount} media berhasil ditambahkan!`);
+      renderMedia();
+    }
+  }
+
+  async function handleRootMediaDelete(itemId) {
+    const allItems = await loadAllMediaItems();
+    const item = allItems.find(it => it.id === itemId);
+    if (!item) return;
+    if (!window.confirm(`Hapus media "${item.title}" dari perangkat?`)) return;
+
+    if (item.fileId) {
+      await deleteMediaFileRecord(item.fileId);
+    }
+    const updated = allItems.filter(it => it.id !== itemId);
+    await saveAllMediaItems(updated);
+    showToast(`Media "${item.title}" berhasil dihapus.`);
+    renderMedia();
+  }
+
+  function renderKoleksi() {
+    renderMedia();
   }
 
   function renderProfile() {
@@ -677,7 +1123,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function navigate(target) {
     if (target === 'beranda') renderHome();
     if (target === 'proyek' || target === 'backtest') renderProjectList('Backtest');
-    if (target === 'koleksi') renderKoleksi();
+    if (target === 'video' || target === 'media' || target === 'koleksi') renderMedia();
     if (target === 'profil') renderProfile();
   }
 
@@ -715,6 +1161,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const koleksiBtn = event.target.closest('[data-koleksi]');
     const copyKoleksiBtn = event.target.closest('[data-copy-koleksi]');
     const profileBtn = event.target.closest('[data-profile-action]');
+    const mediaFilterBtn = event.target.closest('[data-media-filter]');
+    const viewMediaBtn = event.target.closest('[data-view-media]');
+    const deleteMediaBtn = event.target.closest('[data-delete-media]');
+    const uploadMediaBtn = event.target.closest('#rootUploadMediaBtn, #rootEmptyUploadMediaBtn');
+
     if (openBtn) openProject(openBtn.dataset.open);
     if (navBtn) navigate(navBtn.dataset.nav);
     if (indicatorBtn) { selectedIndicator = indicators[Number(indicatorBtn.dataset.selectIndicator)]; renderIndikator(); }
@@ -726,6 +1177,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (saveBtn) { localStorage.setItem('amy_saved_code', selectedIndicator.code || ''); saveBtn.textContent = 'Tersimpan'; }
     if (koleksiBtn) handleKoleksi(koleksiBtn.dataset.koleksi);
+    if (mediaFilterBtn) {
+      currentMediaFilter = mediaFilterBtn.dataset.mediaFilter;
+      renderMedia();
+    }
+    if (viewMediaBtn) {
+      const itemId = viewMediaBtn.dataset.viewMedia;
+      const all = await loadAllMediaItems();
+      const targetItem = all.find(it => it.id === itemId);
+      if (targetItem) showMediaFullscreen(targetItem);
+    }
+    if (deleteMediaBtn) {
+      event.stopPropagation();
+      await handleRootMediaDelete(deleteMediaBtn.dataset.deleteMedia);
+    }
+    if (uploadMediaBtn) {
+      document.getElementById('rootMediaFileInput')?.click();
+    }
     if (profileBtn && profileBtn.dataset.profileAction === 'clear') {
       if (window.confirm('Hapus riwayat analisis, jurnal, library, dan koleksi lokal? API key tidak ikut dihapus.')) {
         await clearPersonalLocalData();
@@ -750,7 +1218,8 @@ document.addEventListener('DOMContentLoaded', () => {
   navBtns.forEach(btn => btn.addEventListener('click', () => navigate(btn.dataset.target)));
   let initialTab = 'beranda';
   try { initialTab = localStorage.getItem('amy_root_tab') || initialTab; } catch (_) {}
-  navigate(['beranda', 'proyek', 'koleksi', 'profil'].includes(initialTab) ? initialTab : 'beranda');
+  if (initialTab === 'koleksi' || initialTab === 'media') initialTab = 'video';
+  navigate(['beranda', 'proyek', 'video', 'media', 'profil'].includes(initialTab) ? initialTab : 'beranda');
 });
 
 

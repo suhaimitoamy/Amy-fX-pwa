@@ -1,8 +1,9 @@
 (function () {
-  const VERSION = window.AmyFXAppVersion || { name: '1.4.11', code: 34 };
-  const CURRENT_VERSION_CODE = Number(VERSION.code) || 34;
-  const CURRENT_VERSION_NAME = String(VERSION.name || '1.4.11');
-  const UPDATE_URL = 'https://raw.githubusercontent.com/suhaimitoamy/Amy-fx/main/update.json';
+  const VERSION = window.AmyFXAppVersion || { name: '2.0.0-pro.395', code: 950395 };
+  const CURRENT_VERSION_CODE = Number(VERSION.code) || 950395;
+  const CURRENT_VERSION_NAME = String(VERSION.name || '2.0.0-pro.395');
+  const UPDATE_URL = window.AmyFXUpdateManifestUrl
+    || 'https://raw.githubusercontent.com/suhaimitoamy/Amy-fx-pro/main/update.json';
   const CHECK_INTERVAL_MS = 15 * 60 * 1000;
   const RESUME_DELAY_MS = 900;
 
@@ -27,12 +28,12 @@
     btn.textContent = text;
     css(btn, {
       flex: '1',
-      border: primary ? '1px solid #d4af37' : '1px solid rgba(255,255,255,.18)',
+      border: primary ? '1px solid var(--amy-accent, #69B7FF)' : '1px solid var(--amy-border, rgba(255,255,255,.18))',
       borderRadius: '14px',
       padding: '13px 10px',
       fontWeight: '900',
-      background: primary ? '#d4af37' : 'rgba(255,255,255,.06)',
-      color: primary ? '#111' : '#fff'
+      background: primary ? 'var(--amy-accent, #69B7FF)' : 'var(--amy-surface-soft, rgba(255,255,255,.06))',
+      color: primary ? '#07111d' : 'var(--amy-text, #fff)'
     });
     return btn;
   }
@@ -46,6 +47,10 @@
   function notify(message) {
     if (window.showToast) window.showToast(message);
     else console.log(message);
+  }
+
+  function displayVersionName(name) {
+    return String(name || '').replace(/-(?:preview|pro)(?:\.|-)?/i, ' · build ');
   }
 
   function humanBytes(value) {
@@ -128,6 +133,24 @@
     }
   };
 
+  function announceNativeUpdate(latestCode, latestName) {
+    const key = 'amy_fx_update_notified_' + latestCode;
+    try {
+      if (localStorage.getItem(key) === '1') return;
+    } catch (_) {}
+    const message = 'Amy FX ' + displayVersionName(latestName) + ' siap dipasang.';
+    try {
+      if (window.Android && typeof window.Android.showNotification === 'function') {
+        window.Android.showNotification('Update Amy FX Pro Tersedia', message);
+      } else {
+        notify(message);
+      }
+      try { localStorage.setItem(key, '1'); } catch (_) {}
+    } catch (_) {
+      notify(message);
+    }
+  }
+
   function showUpdatePopup(data, latestCode, latestName) {
     if (popupOpen) return;
     popupOpen = true;
@@ -151,9 +174,9 @@
     css(box, {
       width: '100%',
       maxWidth: '420px',
-      background: '#101010',
-      color: '#fff',
-      border: '1px solid rgba(212,175,55,.32)',
+      background: 'var(--amy-surface-strong, #101925)',
+      color: 'var(--amy-text, #fff)',
+      border: '1px solid var(--amy-border-strong, rgba(177,214,255,.26))',
       borderRadius: '22px',
       padding: '20px',
       boxShadow: '0 20px 60px rgba(0,0,0,.55)'
@@ -164,12 +187,12 @@
       : (Array.isArray(data.changelog) ? data.changelog : []);
 
     box.innerHTML = `
-      <div style="color:#d4af37;font-weight:950;font-size:20px;margin-bottom:8px">Update Amy FX Tersedia</div>
+      <div style="color:var(--amy-accent, #69B7FF);font-weight:850;font-size:20px;margin-bottom:8px">Pembaruan Amy FX Pro Tersedia</div>
       <div style="color:#ddd;line-height:1.5;margin-bottom:14px">
-        Versi kamu: <b>${escapeHtml(CURRENT_VERSION_NAME)}</b> (${CURRENT_VERSION_CODE})<br>
-        Versi terbaru: <b>${escapeHtml(latestName || latestCode)}</b> (${latestCode})
+        Versi kamu: <b>${escapeHtml(displayVersionName(CURRENT_VERSION_NAME))}</b> (${CURRENT_VERSION_CODE})<br>
+        Versi terbaru: <b>${escapeHtml(displayVersionName(latestName || latestCode))}</b> (${latestCode})
       </div>
-      <div style="background:#171717;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;margin-bottom:12px">
+      <div style="background:var(--amy-surface-soft, #162131);border:1px solid var(--amy-border, rgba(255,255,255,.08));border-radius:14px;padding:12px;margin-bottom:12px">
         <div style="font-weight:900;margin-bottom:6px">Perubahan:</div>
         ${notes.length ? '<ul style="margin:0;padding-left:18px;color:#ddd;line-height:1.5">' + notes.map(x => `<li>${escapeHtml(x)}</li>`).join('') + '</ul>' : '<div style="color:#aaa">Tidak ada catatan perubahan.</div>'}
       </div>`;
@@ -177,8 +200,8 @@
     const progressWrap = document.createElement('div');
     css(progressWrap, {
       display: 'none',
-      background: '#171717',
-      border: '1px solid rgba(212,175,55,.24)',
+      background: 'var(--amy-surface-soft, #162131)',
+      border: '1px solid var(--amy-border, rgba(177,214,255,.16))',
       borderRadius: '14px',
       padding: '12px',
       marginBottom: '12px'
@@ -189,7 +212,7 @@
     const track = document.createElement('div');
     css(track, { height: '10px', background: '#2a2a2a', borderRadius: '999px', overflow: 'hidden' });
     const bar = document.createElement('div');
-    css(bar, { width: '0%', height: '100%', background: '#d4af37', borderRadius: '999px', transition: 'width .18s ease' });
+    css(bar, { width: '0%', height: '100%', background: 'var(--amy-accent, #69B7FF)', borderRadius: '999px', transition: 'width .18s ease' });
     track.appendChild(bar);
     const details = document.createElement('div');
     css(details, { display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '8px', color: '#aaa', fontSize: '12px' });
@@ -197,7 +220,7 @@
     bytes.textContent = '0 MB';
     const percent = document.createElement('strong');
     percent.textContent = '0%';
-    percent.style.color = '#d4af37';
+    percent.style.color = 'var(--amy-accent, #69B7FF)';
     details.appendChild(bytes);
     details.appendChild(percent);
     progressWrap.appendChild(status);
@@ -208,7 +231,7 @@
     const note = document.createElement('div');
     note.textContent = hasNativeUpdater()
       ? 'APK diunduh ke cache Amy FX, diverifikasi, lalu Android meminta konfirmasi instalasi. File tidak menumpuk di folder Download.'
-      : 'Versi Amy FX ini masih memakai unduhan browser. Setelah versi 1.4.11 terpasang, update berikutnya akan berlangsung di dalam aplikasi.';
+      : 'Versi Amy FX ini masih memakai unduhan browser. Setelah pembaruan terpasang, update berikutnya akan berlangsung di dalam aplikasi.';
     css(note, { color: '#aaa', fontSize: '12px', lineHeight: '1.45', marginBottom: '16px' });
     box.appendChild(note);
 
@@ -225,7 +248,7 @@
     }
 
     function startDownload() {
-      const downloadUrl = data.apk_url || data.downloadUrl || 'https://github.com/suhaimitoamy/Amy-fx/releases/latest';
+      const downloadUrl = data.apk_url || data.downloadUrl || 'https://github.com/suhaimitoamy/Amy-fx-pro/releases/latest';
       status.style.color = '#ddd';
       if (hasNativeUpdater()) {
         nativeUi = {
@@ -239,7 +262,7 @@
           cancelBtn,
           downloading: true
         };
-        setNativeState('starting', `Menyiapkan unduhan Amy FX ${latestName}...`);
+        setNativeState('starting', `Menyiapkan unduhan Amy FX ${displayVersionName(latestName)}...`);
         try {
           window.Android.startAppUpdate(String(downloadUrl), String(latestName), Number(latestCode));
         } catch (error) {
@@ -277,14 +300,13 @@
     const now = Date.now();
 
     if (checkingPromise) return checkingPromise;
-    if (!force && now - lastCheckAt < CHECK_INTERVAL_MS) return { status: 'throttled' };
+    if (!force && now - lastCheckAt < 10000) return { status: 'throttled' };
     lastCheckAt = now;
 
     checkingPromise = (async () => {
       try {
-        const cacheKey = force ? now : Math.floor(now / CHECK_INTERVAL_MS);
-        const res = await fetch(`${UPDATE_URL}?v=${cacheKey}`, {
-          cache: force ? 'no-store' : 'default'
+        const res = await fetch(`${UPDATE_URL}?_=${now}`, {
+          cache: 'no-store'
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
@@ -293,11 +315,12 @@
         const latestName = data.latest_version_name ?? data.version ?? latestCode;
 
         if (latestCode > CURRENT_VERSION_CODE) {
+          announceNativeUpdate(latestCode, latestName);
           showUpdatePopup(data, latestCode, latestName);
           return { status: 'update_available', latestCode, latestName };
         }
 
-        if (announce) notify(`Amy FX v${CURRENT_VERSION_NAME} (${CURRENT_VERSION_CODE}) sudah versi terbaru.`);
+        if (announce) notify(`Amy FX v${displayVersionName(CURRENT_VERSION_NAME)} (${CURRENT_VERSION_CODE}) sudah versi terbaru.`);
         return { status: 'up_to_date', latestCode, latestName };
       } catch (error) {
         if (announce) notify('Gagal memeriksa pembaruan. Coba lagi saat koneksi stabil.');

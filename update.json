@@ -1,25 +1,23 @@
 {
-  "latest_version_code": 36,
-  "latest_version_name": "1.4.13",
-  "versionCode": 36,
-  "version": "1.4.13",
-  "releaseDate": "2026-07-18",
-  "apk_url": "https://github.com/suhaimitoamy/Amy-fx/releases/download/amyfx-latest/AmyFX-latest.apk",
-  "downloadUrl": "https://github.com/suhaimitoamy/Amy-fx/releases/download/amyfx-latest/AmyFX-latest.apk",
-  "force_update": false,
-  "mandatory": false,
-  "release_notes": [
-    "Menambahkan contoh edukasi langsung di dalam 645 halaman Amy FX Academy tanpa memindahkan pengguna ke Mapping",
-    "Setiap halaman memakai topic spesifik agar contoh yang ditampilkan sesuai dengan materi yang sedang dibaca",
-    "Menambahkan backend rule-based untuk konteks XAUUSD seperti risk, liquidity, FVG, Order Block, sesi, volatilitas, dan struktur",
-    "Jika layanan data live belum tersedia, Academy menampilkan contoh latihan lokal yang relevan tanpa pesan error dan tanpa mengaku sebagai data real-time",
-    "Fitur ini bersifat edukasi, bukan AI chatbot dan bukan sinyal Buy/Sell"
-  ],
+  "apk_url": "https://github.com/suhaimitoamy/Amy-fx-pro/releases/download/amyfx-pro-2.0.0-pro.395/AmyFX-Pro-latest.apk",
   "changelog": [
-    "Menambahkan contoh edukasi langsung di dalam 645 halaman Amy FX Academy tanpa memindahkan pengguna ke Mapping",
-    "Setiap halaman memakai topic spesifik agar contoh yang ditampilkan sesuai dengan materi yang sedang dibaca",
-    "Menambahkan backend rule-based untuk konteks XAUUSD seperti risk, liquidity, FVG, Order Block, sesi, volatilitas, dan struktur",
-    "Jika layanan data live belum tersedia, Academy menampilkan contoh latihan lokal yang relevan tanpa pesan error dan tanpa mengaku sebagai data real-time",
-    "Fitur ini bersifat edukasi, bukan AI chatbot dan bukan sinyal Buy/Sell"
-  ]
+    "Menu Utama Video: Tab Media & Video mandiri di navigasi utama [Beranda | Backtest | Video | Profil] menggantikan Koleksi.",
+    "Video & Media Vault Terintegrasi: Galeri video replay setup XAU/USD, gambar chart, dan dokumen trading tersinkronisasi langsung dengan IndexedDB Jurnal Trading.",
+    "Navigasi Jurnal Trading Bersih: Tab ke-4 Jurnal Trading disesuaikan menjadi Catatan Pribadi [Library | Jurnal | Performa | Catatan]."
+  ],
+  "downloadUrl": "https://github.com/suhaimitoamy/Amy-fx-pro/releases/download/amyfx-pro-2.0.0-pro.395/AmyFX-Pro-latest.apk",
+  "enabled": true,
+  "force_update": false,
+  "latest_version_code": 950395,
+  "latest_version_name": "2.0.0-pro.395",
+  "mandatory": false,
+  "releaseDate": "2026-10-04",
+  "release_notes": [
+    "Menu Utama Video: Tab Media & Video mandiri di navigasi utama [Beranda | Backtest | Video | Profil] menggantikan Koleksi.",
+    "Video & Media Vault Terintegrasi: Galeri video replay setup XAU/USD, gambar chart, dan dokumen trading tersinkronisasi langsung dengan IndexedDB Jurnal Trading.",
+    "Navigasi Jurnal Trading Bersih: Tab ke-4 Jurnal Trading disesuaikan menjadi Catatan Pribadi [Library | Jurnal | Performa | Catatan]."
+  ],
+  "sha256": "cf74ca5f5e0204a0f2b555929646a955e291b8a79e9daa9a23e6bd3480b8f6d3",
+  "version": "2.0.0-pro.395",
+  "versionCode": 950395
 }

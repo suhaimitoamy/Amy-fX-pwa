@@ -5,19 +5,13 @@
 <meta name="theme-color" content="#0c1320"><title>Amy FX Pro · Konteks Gold</title>
 <script src="../shared/amyfx-theme-controller.js"></script>
 <link rel="stylesheet" href="css/ict-workspace.css">
+<link rel="stylesheet" href="css/advisor-tab.css">
 <link rel="stylesheet" href="../shared/amyfx-ui-tokens.css">
 <link rel="stylesheet" href="../shared/amyfx-theme.css">
 <link rel="stylesheet" href="../shared/amyfx-components.css">
 <link rel="stylesheet" href="../shared/amyfx-ui-polish-pro348.css" data-amyfx-ui-polish="pro348">
 <link rel="stylesheet" href="../shared/amyfx-natural-ui-pro355.css" data-amyfx-natural-ui="pro355">
 <link rel="stylesheet" href="../shared/amyfx-obsidian-glass.css" data-amyfx-obsidian-glass="v1">
-<!-- Amy FX PWA runtime overlay -->
-<script src="../../../platform-adapter.js"></script>
-<script src="../../../pwa-live-price-bridge.js"></script>
-<script src="../../../member-auth.js"></script>
-<script src="../../../pwa-bootstrap.js"></script>
-<script src="../../../pwa-update-bridge.js"></script>
-<!-- /Amy FX PWA runtime overlay -->
 </head>
 <body class="amyfx-module amyfx-module--mapping amyfx-module--ict">
 <header style="display:flex; align-items:center; justify-content:space-between; width:100%; box-sizing:border-box; padding:12px 16px;">
@@ -43,7 +37,7 @@
 </header>
 <main id="app">
 <section class="toolbar"><div><strong>XAU/USD</strong><p id="source">Menunggu candle tertutup.</p></div><label>Peta candle<select id="timeframe"><option value="M15">M15</option><option value="M5">M5</option><option value="M1">M1</option></select></label><button id="refresh">Perbarui</button></section>
-<nav aria-label="Panel Mapping"><button data-tab="Dashboard" aria-selected="true">Konteks</button><button data-tab="Analyze" aria-selected="false">Detail</button><button data-tab="History" aria-selected="false">Arsip</button></nav>
+<nav aria-label="Panel Mapping"><button data-tab="Dashboard" aria-selected="true">Konteks</button><button data-tab="Analyze" aria-selected="false">Detail</button><button data-tab="Advisor" aria-selected="false">Advisor</button><button data-tab="History" aria-selected="false">Arsip</button></nav>
 <p id="error" role="alert" hidden></p>
 <section id="Dashboard" class="panel">
   <p id="mapping-alert" role="alert" hidden></p>
@@ -62,13 +56,14 @@
     <div class="assistant-footer">
       <span id="assistant-confluence-tag" class="assistant-tag">Confluence: —</span>
       <span id="assistant-clock" class="assistant-clock">Live Sync</span>
+      <button type="button" onclick="window.setTab('Advisor')" style="margin-left:auto; display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:var(--amy-accent,#F5C451); text-decoration:none; background:rgba(245,196,81,0.12); padding:4px 8px; border-radius:6px; border:1px solid rgba(245,196,81,0.3); cursor:pointer;"><span>⚡ Laya AI Advisor</span></button>
     </div>
   </article>
+  <article class="price-map"><section id="gold-chart-workspace" aria-label="Chart Gold"><div class="section-heading chart-heading"><h2>Chart Gold</h2><span id="chart-caption">Candle tertutup</span><button type="button" id="chart-auto-price" aria-label="Kembalikan skala harga otomatis">Auto harga</button><button type="button" id="chart-fullscreen" aria-label="Buka fullscreen Chart Gold" aria-pressed="false">⛶ Fullscreen</button></div><div id="chart" aria-label="Chart candlestick dan area konteks pasar"></div></section><details class="ict-settings"><summary>Atur tampilan chart</summary><div id="ict-controls"></div><p class="muted">Pengaturan hanya mengubah tampilan. Bias M15 dan trigger M5 tetap dari server.</p></details><details class="inline-detail"><summary>Sumber level &amp; keterangan</summary><p class="muted">Geser angka harga atas/bawah untuk skala vertikal. Geser sumbu waktu kiri/kanan untuk lebar candle. Auto harga mengembalikan skala otomatis.</p><p id="ict-coverage" class="muted" role="status"></p><p class="muted">ICT dasar: referensi visual. Area dan invalidasi bukan order otomatis.</p></details></article>
   <article class="context-hero"><div class="section-heading"><h2 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--amy-accent,#F5C451);">Market Condition</h2><span id="context-state" role="status">Menghubungkan</span></div><strong id="market-state">MENUNGGU DATA</strong><details class="inline-detail"><summary>Ringkasan &amp; waktu data</summary><p id="market-story">Amy sedang memeriksa candle tertutup.</p><small id="context-source"></small></details></article>
   <article class="execution"><div class="section-heading"><h2 id="execution-status">BELUM SIAP</h2><small style="color:var(--text-muted,#94A3B8);">Context Engine · A+ Filter</small></div><p id="execution-reason">Menunggu bukti candle.</p><p id="news-awareness" class="muted" role="status"></p><details class="inline-detail"><summary>Cek syarat Dashboard A+</summary><ul id="execution-checklist"></ul></details></article>
   <article><div class="section-heading"><h2 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--amy-accent,#F5C451);">Setup Driver</h2><small>Eksekusi manual · simulasi model</small></div><p id="driver-summary">Menunggu evaluasi driver.</p><div id="driver-setups"></div></article>
   <article><div class="section-heading"><h2 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--amy-accent,#F5C451);">Trading Plan</h2><span id="primary-status">MENUNGGU</span></div><div id="primary-scenario" class="scenario"></div></article>
-  <article class="price-map"><section id="gold-chart-workspace" aria-label="Chart Gold"><div class="section-heading chart-heading"><h2>Chart Gold</h2><span id="chart-caption">Candle tertutup</span><button type="button" id="chart-auto-price" aria-label="Kembalikan skala harga otomatis">Auto harga</button><button type="button" id="chart-fullscreen" aria-label="Buka fullscreen Chart Gold" aria-pressed="false">⛶ Fullscreen</button></div><div id="chart" aria-label="Chart candlestick dan area konteks pasar"></div></section><details class="ict-settings"><summary>Atur tampilan chart</summary><div id="ict-controls"></div><p class="muted">Pengaturan hanya mengubah tampilan. Bias M15 dan trigger M5 tetap dari server.</p></details><details class="inline-detail"><summary>Sumber level &amp; keterangan</summary><p class="muted">Geser angka harga atas/bawah untuk skala vertikal. Geser sumbu waktu kiri/kanan untuk lebar candle. Auto harga mengembalikan skala otomatis.</p><p id="ict-coverage" class="muted" role="status"></p><p class="muted">ICT dasar: referensi visual. Area dan invalidasi bukan order otomatis.</p></details></article>
 </section>
 <section id="Analyze" class="panel" hidden>
   <p class="panel-hint">Buka bagian yang ingin diperiksa.</p>
@@ -80,7 +75,170 @@
   <details class="model-context"><summary>Rencana alternatif</summary><div id="alternative-scenario" class="scenario"></div></details>
   <details class="model-context driver-tournament-card"><summary>Evaluasi driver <span class="detail-count">6 driver</span></summary><p id="tournament-leader-badge" class="muted">MENUNGGU KONTEKS</p><div id="driver-tournament-list" class="driver-tournament-list"></div><div id="driver-methods"></div><p class="muted">Skor kualitas bukan peluang menang atau syarat entry tambahan. Statistik model hari UTC memakai hasil selesai; R bruto belum termasuk biaya broker.</p></details>
 </section>
-<section id="History" class="panel" hidden><article><h2>Riwayat setup</h2><p>Hasil model driver dan arsip sistem sebelumnya.</p><div id="history"></div><a href="scalper-stats.html">Buka riwayat lengkap →</a></article></section>
+<section id="Advisor" class="panel" hidden>
+  <div class="advisor-container">
+    <!-- Top Status Card -->
+    <div class="advisor-top-card">
+      <div class="advisor-title-box">
+        <h3>Laya AI &amp; Fractal Advisor</h3>
+        <span class="advisor-subtitle">Pre-Entry System 1 · 187k Pola Historis</span>
+      </div>
+      <div class="advisor-status-pill">
+        <span class="dot"></span>
+        <span>187k Pola Aktif</span>
+      </div>
+    </div>
+
+    <!-- Controls Card -->
+    <div class="advisor-control-card">
+      <div class="advisor-control-row">
+        <div class="advisor-bias-group">
+          <button type="button" id="advBiasBuy" class="advisor-btn-bias active" data-bias="BUY">BUY</button>
+          <button type="button" id="advBiasSell" class="advisor-btn-bias" data-bias="SELL">SELL</button>
+        </div>
+        <div class="advisor-chips-group">
+          <label class="advisor-chip active" id="advChipSweep">
+            <input type="checkbox" id="advChkSweep" checked style="display:none;">
+            <span>✦ Sweep Likuiditas</span>
+          </label>
+          <label class="advisor-chip active" id="advChipOte">
+            <input type="checkbox" id="advChkOte" checked style="display:none;">
+            <span>🎯 Deep OTE 78.6%</span>
+          </label>
+        </div>
+        <button type="button" id="advBtnAudit" class="advisor-btn-audit">
+          <span>⚡ Audit Fraktal</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Verdict Hero Card -->
+    <div class="advisor-verdict-card">
+      <div class="advisor-verdict-header">
+        <div>
+          <div id="advVerdictBadge" class="advisor-verdict-badge rejected">
+            <span id="advBadgeText">🔴 REJECTED</span>
+          </div>
+          <div id="advActionText" class="advisor-action-label">Aksi: WAIT AND SEE</div>
+        </div>
+        <div class="advisor-score-box">
+          <div id="advScoreVal" class="advisor-score-val">50%</div>
+          <span id="advRiskPill" class="advisor-risk-pill high">HIGH RISK</span>
+        </div>
+      </div>
+
+      <div id="advGuidance" class="advisor-guidance-box">
+        Memeriksa data fraktal pasar...
+      </div>
+
+      <!-- Regime Banner -->
+      <div class="advisor-regime-banner">
+        <div id="advRegimeTitle" class="advisor-regime-title">
+          ⚠️ WHIPSAW / ZONA KONSOLIDASI (SIDEWAYS)
+        </div>
+        <span id="advRegimeTag" class="advisor-regime-tag">SIDEWAYS 2 ARAH</span>
+      </div>
+
+      <!-- Extreme Scalper Plan (Whipsaw Harvester) -->
+      <div id="advScalperCard" class="advisor-scalper-card">
+        <div class="advisor-scalper-head">
+          <span class="advisor-scalper-title">⚡ TAKTIK SCALPER EKSTREM (WHIPSAW HARVESTER)</span>
+          <span class="advisor-scalper-badge">TARGET CEPAT 28 PIPS</span>
+        </div>
+        <div class="advisor-scalp-metrics">
+          <div class="advisor-scalp-metric-item">
+            <span class="advisor-scalp-metric-label">Win Rate Scalp</span>
+            <span id="advScalpWR" class="advisor-scalp-metric-val" style="color:#22C55E;">62.5%</span>
+          </div>
+          <div class="advisor-scalp-metric-item">
+            <span class="advisor-scalp-metric-label">Target TP Cepat</span>
+            <span id="advScalpTP" class="advisor-scalp-metric-val" style="color:#22C55E;">+2.8 pts (+28 pips)</span>
+          </div>
+          <div class="advisor-scalp-metric-item">
+            <span class="advisor-scalp-metric-label">Stop Loss Ketat</span>
+            <span id="advScalpSL" class="advisor-scalp-metric-val" style="color:#EF4444;">-2.2 pts (-22 pips)</span>
+          </div>
+        </div>
+        <div id="advScalpRule" class="advisor-scalp-rule">
+          Market sedang sideways dua arah. Dilarang hold swing! Curi lonjakan awal 25-30 pips lalu langsung cabut.
+        </div>
+      </div>
+
+      <!-- Execution Levels -->
+      <div class="advisor-levels-grid">
+        <div class="advisor-level-box">
+          <div class="advisor-level-label">Harga Entry</div>
+          <div id="advLevelEntry" class="advisor-level-val">$4,155.78</div>
+        </div>
+        <div class="advisor-level-box">
+          <div class="advisor-level-label">SL Buffer</div>
+          <div id="advLevelSL" class="advisor-level-val sl">-4.47 pts</div>
+        </div>
+        <div class="advisor-level-box">
+          <div class="advisor-level-label">Target TP (1:1.6)</div>
+          <div id="advLevelTP" class="advisor-level-val tp">+7.15 pts</div>
+        </div>
+        <div class="advisor-level-box">
+          <div class="advisor-level-label">Breakeven Lock</div>
+          <div id="advLevelBE" class="advisor-level-val be">+1.0 R</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real-time Market & Chart Gold Link -->
+    <div class="advisor-chart-card">
+      <div class="advisor-chart-head">
+        <div class="advisor-chart-title">
+          <span>📊 Siklus Harga Live &amp; Aksi Pasar (XAU/USD)</span>
+        </div>
+        <button type="button" onclick="window.setTab('Dashboard')" style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:var(--amy-accent,#F5C451); background:rgba(245,196,81,0.12); padding:5px 10px; border-radius:6px; border:1px solid rgba(245,196,81,0.3); cursor:pointer;">
+          📈 Buka Chart Gold Utama →
+        </button>
+      </div>
+      <div id="advMarketSummary" style="font-size:12px; color:#CBD5E1; line-height:1.6; padding:6px 0;">
+        Sinkronisasi langsung dengan Chart Gold: bias M15, Dealing Range 50% CE, dan zona likuiditas aktif.
+      </div>
+    </div>
+
+    <!-- Historical Twin Matches Table (187k Candle) -->
+    <div class="advisor-matches-card">
+      <div class="advisor-chart-head">
+        <div class="advisor-chart-title">
+          <span>🏛️ Kasus Kembar Masa Lalu (2019–2026 / 187k+ Candle)</span>
+        </div>
+        <span style="font-size:11px; color:var(--amy-accent,#F5C451); font-weight:700;">8 Kasus Ditemukan</span>
+      </div>
+      <div class="advisor-stats-bar">
+        <div>Kemiripan: <strong id="advStatAvgSim" style="color:var(--amy-accent,#F5C451);">84.7%</strong></div>
+        <div>Win Rate Historis: <strong id="advStatWinRate" style="color:#22C55E;">37.5%</strong></div>
+        <div>Rata-rata Ekspansi: <strong id="advStatExp" style="color:#22C55E;">+4.87 pts</strong></div>
+        <div>Rata-rata Drawdown: <strong id="advStatDD" style="color:#EF4444;">-2.48 pts</strong></div>
+      </div>
+      <table class="advisor-table">
+        <thead>
+          <tr>
+            <th>Waktu Historis</th>
+            <th>Kemiripan</th>
+            <th>MFE (+pts)</th>
+            <th>MAE (-pts)</th>
+            <th>Hasil Pola</th>
+          </tr>
+        </thead>
+        <tbody id="advMatchesTableBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section id="History" class="panel" hidden>
+  <article>
+    <h2>Riwayat setup &amp; Arsip</h2>
+    <p>Hasil model driver dan arsip sistem sebelumnya.</p>
+    <div id="history"></div>
+    <a href="scalper-stats.html" style="font-size:12px; font-weight:700; color:var(--amy-accent,#F5C451); text-decoration:none;">Buka riwayat eksekusi scalper &amp; arsip lengkap →</a>
+  </article>
+</section>
 <footer></footer>
 </main>
 <script src="../academy/trading-practice/vendor/lightweight-charts.standalone.production.js"></script>
@@ -88,6 +246,7 @@
 <script src="js/notification-route-sync.js"></script>
 <script type="module" src="js/ict-workspace/app.js"></script>
 <script type="module" src="js/ict-workspace/context-panel.js"></script>
+<script src="js/ict-workspace/advisor-panel.js"></script>
 <script src="../shared/amy-local-assistant.js"></script>
 <script src="../shared/amyfx-universal-nav.js"></script>
 </body></html>

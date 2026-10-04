@@ -55,6 +55,63 @@
     chart.setCandles(q.candles, true);
     chart.setTradeLevels(q.levels);
     chart.series.setMarkers(q.markers);
+    if (typeof chart.setStudyZone === 'function') {
+      var e = q.evidence;
+      if (e && e.pattern === 'fvg') {
+        var aCandle = q.candles[e.a];
+        var cCandle = q.candles[e.c];
+        var isBull = e.direction === 'bullish';
+        var gapLow = isBull ? aCandle.high : cCandle.high;
+        var gapHigh = isBull ? cCandle.low : aCandle.low;
+        chart.setStudyZone({
+          type: 'fvg',
+          direction: e.direction,
+          startTime: aCandle ? aCandle.time : null,
+          endTime: cCandle ? cCandle.time : null,
+          bottomPrice: Math.min(gapLow, gapHigh),
+          topPrice: Math.max(gapLow, gapHigh),
+          cePrice: (gapLow + gapHigh) / 2,
+          title: isBull ? 'FVG (Bullish) · BISI' : 'FVG (Bearish) · SIBI'
+        });
+      } else if (e && e.pattern === 'sweep') {
+        chart.setStudyZone({
+          type: 'sweep',
+          direction: e.direction,
+          level: q.levels[0].price,
+          startTime: q.candles[e.a] ? q.candles[e.a].time : null,
+          endTime: q.candles[e.c] ? q.candles[e.c].time : null
+        });
+      } else if (e && e.pattern === 'break') {
+        chart.setStudyZone({
+          type: 'break',
+          direction: e.direction,
+          level: q.levels[0].price,
+          startTime: q.candles[e.a] ? q.candles[e.a].time : null,
+          endTime: q.candles[e.c] ? q.candles[e.c].time : null
+        });
+      } else if (e && e.pattern === 'range') {
+        chart.setStudyZone({
+          type: 'range',
+          lowPrice: q.levels[0].price,
+          eqPrice: q.levels[1].price,
+          highPrice: q.levels[2].price,
+          startTime: q.candles[0] ? q.candles[0].time : null,
+          endTime: q.candles[e.closeIndex] ? q.candles[e.closeIndex].time : null
+        });
+      } else if (e && e.pattern === 'risk') {
+        chart.setStudyZone({
+          type: 'risk',
+          side: e.side,
+          entryPrice: q.levels[0].price,
+          stopPrice: q.levels[1].price,
+          targetPrice: q.levels[2].price,
+          startTime: q.candles[0] ? q.candles[0].time : null,
+          endTime: q.candles[q.candles.length - 1] ? q.candles[q.candles.length - 1].time : null
+        });
+      } else {
+        chart.setStudyZone(null);
+      }
+    }
     session.shuffle(q.choices).forEach(function (choice) {
       var button = element('button', choice, host); button.type = 'button';
       button.addEventListener('click', function () { answer(choice); });

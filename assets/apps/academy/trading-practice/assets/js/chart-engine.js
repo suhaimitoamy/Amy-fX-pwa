@@ -63,6 +63,7 @@
     this.pendingCandles = null;
     this.candles = [];
     this.priceLines = [];
+    this.studyZone = null;
     this.onCrosshair = typeof options.onCrosshair === 'function' ? options.onCrosshair : function () {};
     this.onChartTap = typeof options.onChartTap === 'function' ? options.onChartTap : function () {};
     this.onDrawingState = typeof options.onDrawingState === 'function' ? options.onDrawingState : function () {};
@@ -753,6 +754,9 @@
     defs.appendChild(marker);
     this.overlay.appendChild(defs);
     var self = this;
+    if (this.studyZone) {
+      this.renderStudyZone(this.studyZone);
+    }
     this.drawings.filter(function (drawing) { return self.isDrawingVisible(drawing); }).forEach(function (drawing) {
       var group = self.renderDrawing(drawing, false);
       if (group) self.overlay.appendChild(group);
@@ -1099,6 +1103,187 @@
         axisLabelVisible: true, title: String(level.title || level.type || '').toUpperCase()
       }));
     });
+  };
+
+  CandleChart.prototype.setStudyZone = function (zone) {
+    this.studyZone = zone || null;
+    this.renderDrawings();
+  };
+
+  CandleChart.prototype.renderStudyZone = function (zone) {
+    if (!zone || !this.overlay || !this.series) return;
+    var width = this.plotWidth();
+    var group = this.svgElement('g', { class: 'practice-study-zone', 'pointer-events': 'none' });
+
+    if (zone.type === 'fvg') {
+      var topY = this.series.priceToCoordinate(zone.topPrice);
+      var bottomY = this.series.priceToCoordinate(zone.bottomPrice);
+      if (topY == null || bottomY == null) return;
+      var startX = zone.startTime ? this.timeToX(zone.startTime) : null;
+      var endX = zone.endTime ? this.timeToX(zone.endTime) : null;
+      var boxLeft = startX != null ? Math.max(0, startX) : 10;
+      var boxRight = endX != null ? Math.min(width - 4, Math.max(endX + 60, (boxLeft + endX) / 2 + 100)) : width - 4;
+      var boxWidth = Math.max(30, boxRight - boxLeft);
+      var boxTop = Math.min(topY, bottomY);
+      var boxHeight = Math.max(2, Math.abs(bottomY - topY));
+      var isBull = zone.direction === 'bullish';
+      var color = isBull ? '#2dd4bf' : '#fb7185';
+      var fill = isBull ? 'rgba(45, 212, 191, 0.18)' : 'rgba(251, 113, 133, 0.18)';
+      var badgeBg = isBull ? 'rgba(6, 44, 40, 0.94)' : 'rgba(50, 10, 20, 0.94)';
+
+      // 1. Shaded Box
+      group.appendChild(this.svgElement('rect', {
+        x: boxLeft, y: boxTop, width: boxWidth, height: boxHeight, rx: 4,
+        fill: fill, stroke: color, 'stroke-width': 1.6
+      }));
+
+      // 2. Consequent Encroachment (50% CE)
+      if (Number.isFinite(zone.cePrice)) {
+        var ceY = this.series.priceToCoordinate(zone.cePrice);
+        if (ceY != null) {
+          group.appendChild(this.svgElement('line', {
+            x1: boxLeft, y1: ceY, x2: boxLeft + boxWidth, y2: ceY,
+            stroke: '#facc15', 'stroke-width': 1.3, 'stroke-dasharray': '5 3'
+          }));
+          this.appendLabel(group, boxLeft + boxWidth - 110, ceY, '50% CE ' + Number(zone.cePrice).toFixed(2), {
+            stroke: '#facc15', color: '#fef08a', background: 'rgba(15, 23, 42, 0.92)'
+          });
+        }
+      }
+
+      // 3. Main FVG Title Badge
+      var titleText = zone.title || (isBull ? 'FVG (Bullish) · BISI' : 'FVG (Bearish) · SIBI');
+      this.appendLabel(group, boxLeft + 8, Math.max(14, boxTop + 14), titleText, {
+        stroke: color, color: color, background: badgeBg
+      });
+
+      // 4. Bound prices on edges
+      if (boxHeight > 34) {
+        this.appendLabel(group, boxLeft + boxWidth - 75, boxTop + 12, Number(zone.topPrice).toFixed(2), { stroke: color, color: '#e2e8f0' });
+        this.appendLabel(group, boxLeft + boxWidth - 75, boxTop + boxHeight - 12, Number(zone.bottomPrice).toFixed(2), { stroke: color, color: '#e2e8f0' });
+      }
+    } else if (zone.type === 'sweep') {
+      var levelY = this.series.priceToCoordinate(zone.level);
+      if (levelY != null) {
+        var isHigh = zone.direction === 'high';
+        var sweepColor = isHigh ? '#38bdf8' : '#f59e0b';
+        var startSweepX = zone.startTime ? this.timeToX(zone.startTime) : 10;
+        var endSweepX = zone.endTime ? this.timeToX(zone.endTime) : width - 10;
+        var lineLeft = Math.max(0, (startSweepX || 10) - 20);
+        var lineRight = Math.min(width - 4, (endSweepX || width - 20) + 70);
+        
+        group.appendChild(this.svgElement('line', {
+          x1: lineLeft, y1: levelY, x2: lineRight, y2: levelY,
+          stroke: sweepColor, 'stroke-width': 1.8, 'stroke-dasharray': '6 4'
+        }));
+        
+        var poolTitle = isHigh ? '✕ ✕ ✕  BSL (Buy-Side Liquidity)  ✕ ✕ ✕' : '✕ ✕ ✕  SSL (Sell-Side Liquidity)  ✕ ✕ ✕';
+        this.appendLabel(group, lineLeft + 10, isHigh ? levelY - 14 : levelY + 14, poolTitle, {
+          stroke: sweepColor, color: sweepColor, background: 'rgba(8, 15, 25, 0.94)'
+        });
+        
+        if (endSweepX != null) {
+          this.appendLabel(group, endSweepX - 10, isHigh ? levelY - 26 : levelY + 26, '⚡ SWEEP & RECLAIM', {
+            stroke: '#ec4899', color: '#fbcfe8', background: 'rgba(76, 5, 25, 0.92)'
+          });
+        }
+      }
+    } else if (zone.type === 'break') {
+      var breakY = this.series.priceToCoordinate(zone.level);
+      if (breakY != null) {
+        var isUp = zone.direction === 'up';
+        var breakColor = isUp ? '#22c55e' : '#ef4444';
+        var startBreakX = zone.startTime ? this.timeToX(zone.startTime) : 10;
+        var endBreakX = zone.endTime ? this.timeToX(zone.endTime) : width - 10;
+        var bLeft = Math.max(0, (startBreakX || 10) - 10);
+        var bRight = Math.min(width - 4, (endBreakX || width - 20) + 60);
+        
+        group.appendChild(this.svgElement('line', {
+          x1: bLeft, y1: breakY, x2: bRight, y2: breakY,
+          stroke: breakColor, 'stroke-width': 1.8, 'stroke-dasharray': '5 4'
+        }));
+        
+        var breakLabel = isUp ? 'BOS (Break of Structure) ▲' : 'BOS (Break of Structure) ▼';
+        this.appendLabel(group, bRight - 150, breakY, breakLabel, {
+          stroke: breakColor, color: breakColor, background: 'rgba(15, 23, 42, 0.92)'
+        });
+      }
+    } else if (zone.type === 'range') {
+      var lowY = this.series.priceToCoordinate(zone.lowPrice);
+      var highY = this.series.priceToCoordinate(zone.highPrice);
+      var eqY = this.series.priceToCoordinate(zone.eqPrice);
+      if (lowY != null && highY != null && eqY != null) {
+        var rLeft = Math.max(0, (zone.startTime ? this.timeToX(zone.startTime) : 10) - 10);
+        var rRight = Math.min(width - 4, (zone.endTime ? this.timeToX(zone.endTime) : width - 20) + 60);
+        var rWidth = Math.max(30, rRight - rLeft);
+        
+        var premTop = Math.min(highY, eqY);
+        var premHeight = Math.abs(eqY - highY);
+        group.appendChild(this.svgElement('rect', {
+          x: rLeft, y: premTop, width: rWidth, height: premHeight,
+          fill: 'rgba(251, 113, 133, 0.10)', stroke: 'rgba(251, 113, 133, 0.4)', 'stroke-width': 1
+        }));
+        this.appendLabel(group, rLeft + 8, premTop + 14, 'PREMIUM ZONE (> 50%)', {
+          stroke: '#fb7185', color: '#fda4af', background: 'rgba(50, 10, 20, 0.88)'
+        });
+        
+        var discTop = Math.min(lowY, eqY);
+        var discHeight = Math.abs(lowY - eqY);
+        group.appendChild(this.svgElement('rect', {
+          x: rLeft, y: discTop, width: rWidth, height: discHeight,
+          fill: 'rgba(45, 212, 191, 0.10)', stroke: 'rgba(45, 212, 191, 0.4)', 'stroke-width': 1
+        }));
+        this.appendLabel(group, rLeft + 8, discTop + discHeight - 14, 'DISCOUNT ZONE (< 50%)', {
+          stroke: '#2dd4bf', color: '#5eead4', background: 'rgba(6, 44, 40, 0.88)'
+        });
+        
+        group.appendChild(this.svgElement('line', {
+          x1: rLeft, y1: eqY, x2: rLeft + rWidth, y2: eqY,
+          stroke: '#facc15', 'stroke-width': 1.4, 'stroke-dasharray': '5 3'
+        }));
+        this.appendLabel(group, rLeft + rWidth - 140, eqY, 'Equilibrium 50% · ' + Number(zone.eqPrice).toFixed(2), {
+          stroke: '#facc15', color: '#fef08a', background: 'rgba(15, 23, 42, 0.94)'
+        });
+      }
+    } else if (zone.type === 'risk') {
+      var entryY = this.series.priceToCoordinate(zone.entryPrice);
+      var stopY = this.series.priceToCoordinate(zone.stopPrice);
+      var targetY = this.series.priceToCoordinate(zone.targetPrice);
+      if (entryY != null && stopY != null && targetY != null) {
+        var startX = Math.max(0, (zone.startTime ? this.timeToX(zone.startTime) : width / 2) - 20);
+        var boxWidth = Math.min(width - startX - 4, 180);
+        
+        var targetTop = Math.min(entryY, targetY);
+        var targetH = Math.abs(entryY - targetY);
+        group.appendChild(this.svgElement('rect', {
+          x: startX, y: targetTop, width: boxWidth, height: targetH, rx: 4,
+          fill: 'rgba(34, 197, 94, 0.18)', stroke: '#22c55e', 'stroke-width': 1.4
+        }));
+        this.appendLabel(group, startX + 8, targetTop + 14, 'TARGET (TP) · +2.0R', {
+          stroke: '#22c55e', color: '#bbf7d0', background: 'rgba(5, 46, 22, 0.92)'
+        });
+        
+        var stopTop = Math.min(entryY, stopY);
+        var stopH = Math.abs(entryY - stopY);
+        group.appendChild(this.svgElement('rect', {
+          x: startX, y: stopTop, width: boxWidth, height: stopH, rx: 4,
+          fill: 'rgba(239, 68, 68, 0.18)', stroke: '#ef4444', 'stroke-width': 1.4
+        }));
+        this.appendLabel(group, startX + 8, stopTop + stopH - 14, 'STOP LOSS (SL) · -1.0R', {
+          stroke: '#ef4444', color: '#fecaca', background: 'rgba(69, 10, 10, 0.92)'
+        });
+        
+        group.appendChild(this.svgElement('line', {
+          x1: startX, y1: entryY, x2: startX + boxWidth, y2: entryY,
+          stroke: '#facc15', 'stroke-width': 1.6
+        }));
+        this.appendLabel(group, startX + boxWidth - 85, entryY, 'ENTRY · ' + Number(zone.entryPrice).toFixed(2), {
+          stroke: '#facc15', color: '#fef08a', background: 'rgba(15, 23, 42, 0.94)'
+        });
+      }
+    }
+
+    this.overlay.appendChild(group);
   };
 
   CandleChart.prototype.destroy = function () {

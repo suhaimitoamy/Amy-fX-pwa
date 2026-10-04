@@ -2,20 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#070B12">
-  <meta name="background-color" content="#070B12">
-  <meta name="description" content="Amy FX Pro PWA — Market Intelligence XAU/USD, Mapping ICT, Academy, Jurnal, dan Indikator.">
-  <meta name="robots" content="noindex,nofollow">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Amy FX Pro">
   <title>Amy FX Pro</title>
-  <base href="./assets/">
-  <link rel="manifest" href="../manifest.webmanifest">
-  <link rel="icon" href="../icons/amy-fx-192.png" type="image/png">
-  <link rel="apple-touch-icon" sizes="180x180" href="../icons/amy-fx-180.png">
   <script src="apps/shared/amyfx-theme-controller.js" data-amyfx-theme-controller="v1"></script>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="apps/shared/amyfx-blueprint-v1.css" data-amyfx-blueprint-css="v1">
@@ -41,47 +30,40 @@
       <!-- Pages will be rendered here -->
     </main>
 
-    <nav class="bottom-nav" aria-label="Navigasi utama">
+    <nav class="bottom-nav">
       <button class="nav-btn active" data-target="beranda">
         <span class="icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         </span>
         <span>Beranda</span>
       </button>
       <button class="nav-btn" data-target="proyek">
         <span class="icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1 2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
         </span>
         <span>Backtest</span>
       </button>
-      <button class="nav-btn" data-target="koleksi">
+      <button class="nav-btn" data-target="video">
         <span class="icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><polygon points="10 7 15 10 10 13 10 7"></polygon><line x1="2" y1="20" x2="22" y2="20"></line></svg>
         </span>
-        <span>Koleksi</span>
+        <span>Video</span>
       </button>
       <button class="nav-btn" data-target="profil">
         <span class="icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c.8-4 3.5-6 8-6s7.2 2 8 6"></path></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c.8-4 3.5-6 8-6s7.2 2 8 6"></path></svg>
         </span>
         <span>Profil</span>
       </button>
     </nav>
   </div>
 
-  <noscript>Amy FX memerlukan JavaScript agar dapat berjalan.</noscript>
-  <!-- PWA Platform & Auth Overlays -->
-  <script src="../platform-adapter.js"></script>
-  <script src="../member-auth.js"></script>
-  <script src="../pwa-bootstrap.js"></script>
-  <script src="../pwa-update-bridge.js"></script>
-
-  <!-- Pro 390 Core Stack -->
   <script src="apps/shared/amyfx-loading.js" data-amyfx-loading="v1"></script>
   <script src="apps/academy/trading-practice/vendor/lightweight-charts.standalone.production.js"></script>
   <script type="module" src="home-price-chart.js"></script>
   <script src="app-version.js"></script>
   <script src="app.js"></script>
+  <script src="update-checker.js"></script>
   <script src="profile-system-settings-v1.js"></script>
   <script src="apps/shared/amyfx-home-data-integration-v1.js"></script>
   <script src="apps/shared/amyfx-blueprint-v1.js" data-amyfx-blueprint-js="v1"></script>

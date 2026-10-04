@@ -33,6 +33,8 @@ export function createPriceChart(element,{touchAxes=false}={}) {
       if(plan)for(const [field,title,color] of markers){
         const value=field==='area.low'?plan.area.low:field==='area.high'?plan.area.high:field==='area.ce'?plan.area?.ce:plan[field];
         if(Number.isFinite(value)){
+          const lastPrice=result.candles?.at(-1)?.close;
+          if(lastPrice&&Math.abs(value-lastPrice)>lastPrice*0.2)continue;
           const lineStyle=field==='area.ce'?2:0;
           lines.push(series.createPriceLine({price:value,title,color,lineWidth:1,lineStyle,axisLabelVisible:true}));
         }
@@ -40,7 +42,7 @@ export function createPriceChart(element,{touchAxes=false}={}) {
     },
     reset(){key='';rightBars=null;},
     autoPrice(){chart.priceScale('right').applyOptions({autoScale:true});ict?.invalidate();},
-    resize(){chart.applyOptions({autoSize:true});ict?.invalidate();},
+    resize(){chart.applyOptions({autoSize:true});if(element?.clientWidth&&chart.resize)chart.resize(element.clientWidth,element.clientHeight||460);ict?.invalidate();},
     setFullscreen(enabled){chart.applyOptions({layout:{fontSize:enabled?16:12},rightPriceScale:{minimumWidth:enabled?90:65}});ict?.invalidate();},
     destroy(){window.removeEventListener('amyfx:theme-change',theme);ict?.destroy();chart.remove();}
   };

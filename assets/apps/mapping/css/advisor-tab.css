@@ -1,0 +1,434 @@
+/* Amy FX Pro — Advisor Tab (Laya System 1 & Fractal Memory) */
+
+.advisor-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px 0 24px 0;
+  color: #F8FAFC;
+}
+
+/* Header & Status */
+.advisor-top-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.advisor-title-box h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
+}
+.advisor-subtitle {
+  font-size: 11px;
+  color: var(--amy-accent, #F5C451);
+  font-weight: 600;
+  display: block;
+  margin-top: 2px;
+}
+.advisor-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(34, 197, 94, 0.12);
+  color: #22C55E;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.advisor-status-pill .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 8px #22C55E;
+}
+
+/* Controls */
+.advisor-control-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.advisor-control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.advisor-bias-group {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.advisor-btn-bias {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.advisor-btn-bias.active[data-bias="BUY"] {
+  background: #22C55E;
+  color: #070B14;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.35);
+}
+.advisor-btn-bias.active[data-bias="SELL"] {
+  background: #EF4444;
+  color: #FFFFFF;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+}
+.advisor-chips-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.advisor-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #CBD5E1;
+  cursor: pointer;
+}
+.advisor-chip.active {
+  background: rgba(245, 196, 81, 0.15);
+  border-color: rgba(245, 196, 81, 0.4);
+  color: var(--amy-accent, #F5C451);
+}
+.advisor-btn-audit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #F5C451, #D97706);
+  color: #070B14;
+  font-size: 12px;
+  font-weight: 800;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(245, 196, 81, 0.25);
+  transition: transform 0.15s;
+}
+.advisor-btn-audit:active {
+  transform: scale(0.97);
+}
+
+/* Verdict Hero */
+.advisor-verdict-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(11, 16, 32, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.advisor-verdict-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.advisor-verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+.advisor-verdict-badge.approved {
+  background: rgba(34, 197, 94, 0.18);
+  color: #22C55E;
+  border: 1px solid rgba(34, 197, 94, 0.45);
+}
+.advisor-verdict-badge.wait, .advisor-verdict-badge.conditional {
+  background: rgba(245, 196, 81, 0.18);
+  color: var(--amy-accent, #F5C451);
+  border: 1px solid rgba(245, 196, 81, 0.45);
+}
+.advisor-verdict-badge.rejected {
+  background: rgba(239, 68, 68, 0.18);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+}
+.advisor-action-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94A3B8;
+  margin-top: 4px;
+}
+.advisor-score-box {
+  text-align: right;
+}
+.advisor-score-val {
+  font-size: 26px;
+  font-weight: 900;
+  color: #FFFFFF;
+  line-height: 1;
+}
+.advisor-risk-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+.advisor-risk-pill.high { background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+.advisor-risk-pill.low { background: rgba(34, 197, 94, 0.2); color: #4ADE80; border: 1px solid rgba(34, 197, 94, 0.3); }
+.advisor-risk-pill.medium { background: rgba(245, 196, 81, 0.2); color: #F5C451; border: 1px solid rgba(245, 196, 81, 0.3); }
+
+.advisor-guidance-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--amy-accent, #F5C451);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #E2E8F0;
+  margin-bottom: 14px;
+}
+
+/* Regime Banner */
+.advisor-regime-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(245, 196, 81, 0.08);
+  border: 1px solid rgba(245, 196, 81, 0.3);
+  border-radius: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.advisor-regime-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--amy-accent, #F5C451);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.advisor-regime-tag {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(245, 196, 81, 0.2);
+  color: #FFFFFF;
+}
+
+/* Extreme Scalper Plan */
+.advisor-scalper-card {
+  background: linear-gradient(135deg, rgba(245, 196, 81, 0.12), rgba(22, 30, 46, 0.7));
+  border: 1px solid rgba(245, 196, 81, 0.4);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.advisor-scalper-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.advisor-scalper-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.advisor-scalper-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(34, 197, 94, 0.2);
+  color: #22C55E;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+.advisor-scalp-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.advisor-scalp-metric-item {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 6px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.advisor-scalp-metric-label {
+  font-size: 9px;
+  color: #94A3B8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.advisor-scalp-metric-val {
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 2px;
+  display: block;
+}
+.advisor-scalp-rule {
+  font-size: 11px;
+  color: #E2E8F0;
+  line-height: 1.45;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border-left: 2px solid var(--amy-accent, #F5C451);
+}
+
+/* Levels Grid */
+.advisor-levels-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.advisor-level-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+}
+.advisor-level-label {
+  font-size: 9px;
+  color: #94A3B8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.advisor-level-val {
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 3px;
+  color: #FFFFFF;
+}
+.advisor-level-val.sl { color: #F87171; }
+.advisor-level-val.tp { color: #4ADE80; }
+.advisor-level-val.be { color: var(--amy-accent, #F5C451); }
+
+/* Candlestick Chart */
+.advisor-chart-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 14px;
+  overflow: hidden;
+}
+.advisor-chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.advisor-chart-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Twin Matches Table */
+.advisor-matches-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 14px;
+  overflow-x: auto;
+}
+.advisor-stats-bar {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: #CBD5E1;
+  flex-wrap: wrap;
+}
+.advisor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.advisor-table th {
+  text-align: left;
+  padding: 8px 6px;
+  color: #94A3B8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.advisor-table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  white-space: nowrap;
+}
+.advisor-pill-result {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 800;
+}
+.advisor-pill-result.win { background: rgba(34, 197, 94, 0.2); color: #4ADE80; }
+.advisor-pill-result.loss { background: rgba(239, 68, 68, 0.2); color: #F87171; }
+.advisor-pill-result.be { background: rgba(245, 196, 81, 0.2); color: #F5C451; }
+
+@media (max-width: 600px) {
+  .advisor-levels-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .advisor-verdict-header {
+    flex-direction: column;
+  }
+  .advisor-score-box {
+    text-align: left;
+  }
+  #advisor-candlestick-chart {
+    height: 200px;
+  }
+}
