@@ -455,7 +455,7 @@ function bindEvents() {
   dom.setPinBtn?.addEventListener("click", setLocalPin);
   dom.clearPinBtn?.addEventListener("click", clearLocalPin);
   dom.newJournalBtn?.addEventListener("click", () => { resetJournalForm(); openJournalEditor("new"); });
-  dom.newNoteBtn?.addEventListener("click", openNoteForm);
+  dom.newNoteBtn?.addEventListener("click", () => openNoteForm(null));
   dom.cancelNoteBtn?.addEventListener("click", closeNoteForm);
   dom.noteForm?.addEventListener("submit", saveNote);
   dom.notesList?.addEventListener("click", handleNoteActions);
@@ -7830,7 +7830,18 @@ function sortNotes(notes) {
 function loadNotes() {
   try {
     const parsed = JSON.parse(localStorage.getItem(NOTES_STORAGE_KEY) || "[]");
-    return Array.isArray(parsed) ? sortNotes(parsed) : [];
+    if (!Array.isArray(parsed)) return [];
+    let mutated = false;
+    parsed.forEach((n, i) => {
+      if (!n.id) {
+        n.id = typeof createId === "function" ? createId() : `note-${Date.now()}-${i}`;
+        mutated = true;
+      }
+    });
+    if (mutated) {
+      saveNotes(parsed);
+    }
+    return sortNotes(parsed);
   } catch {
     return [];
   }
@@ -7841,33 +7852,46 @@ function saveNotes(notes = state.personalNotes) {
 }
 
 function openNoteForm(note = null) {
+  if (!dom.noteForm) return;
   dom.noteForm.hidden = false;
-  if (note && note.id) {
-    dom.noteId.value = note.id;
+  const isEditing = Boolean(note && !(note instanceof Event) && (note.id != null));
+  const submitBtn = dom.noteForm.querySelector('button[type="submit"]');
+
+  if (isEditing) {
+    dom.noteId.value = String(note.id);
     dom.noteDateInput.value = note.date || "";
     dom.noteTitleInput.value = note.title || "";
     dom.noteContentInput.value = note.content || "";
+    if (submitBtn) submitBtn.textContent = "Perbarui Catatan";
   } else {
     dom.noteForm.reset();
     dom.noteId.value = "";
     const now = new Date();
     dom.noteDateInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    if (submitBtn) submitBtn.textContent = "Simpan Catatan";
   }
+
+  dom.noteForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  setTimeout(() => dom.noteTitleInput?.focus(), 120);
 }
 
 function closeNoteForm() {
+  if (!dom.noteForm) return;
   dom.noteForm.hidden = true;
   dom.noteForm.reset();
+  dom.noteId.value = "";
+  const submitBtn = dom.noteForm.querySelector('button[type="submit"]');
+  if (submitBtn) submitBtn.textContent = "Simpan Catatan";
 }
 
 function saveNote(e) {
   e.preventDefault();
-  const id = dom.noteId.value || crypto.randomUUID();
+  const id = dom.noteId.value || (typeof createId === "function" ? createId() : `note-${Date.now()}`);
   const date = dom.noteDateInput.value;
   const title = dom.noteTitleInput.value.trim();
   const content = dom.noteContentInput.value.trim();
 
-  const existingIndex = state.personalNotes.findIndex(n => n.id === id);
+  const existingIndex = state.personalNotes.findIndex(n => String(n.id) === String(id));
   const existingNote = existingIndex >= 0 ? state.personalNotes[existingIndex] : null;
   const noteData = {
     id,
@@ -7888,30 +7912,36 @@ function saveNote(e) {
   saveNotes();
   closeNoteForm();
   renderNotes();
-  showToast("Catatan disimpan");
+  showToast(existingIndex >= 0 ? "Catatan diperbarui" : "Catatan disimpan");
 }
 
 function handleNoteActions(e) {
   const btn = e.target.closest("button");
   if (!btn) return;
-  const id = btn.dataset.id;
-  if (!id) return;
 
   if (btn.classList.contains("toggle-collapse-btn")) {
-    const content = btn.previousElementSibling;
-    if (content && content.classList.contains("note-content")) {
+    const card = btn.closest(".note-card");
+    const content = btn.previousElementSibling || card?.querySelector(".note-content");
+    if (content) {
       const isCollapsed = content.classList.toggle("is-collapsed");
       btn.textContent = isCollapsed ? "Baca Selengkapnya" : "Tutup";
     }
     return;
   }
 
+  const id = btn.dataset.id;
+  if (!id) return;
+
   if (btn.classList.contains("edit-note-btn")) {
-    const note = state.personalNotes.find(n => n.id === id);
-    if (note) openNoteForm(note);
+    const note = state.personalNotes.find(n => String(n.id) === String(id));
+    if (note) {
+      openNoteForm(note);
+    } else {
+      showToast("Catatan tidak ditemukan");
+    }
   } else if (btn.classList.contains("delete-note-btn")) {
     if (confirm("Hapus catatan ini?")) {
-      state.personalNotes = state.personalNotes.filter(n => n.id !== id);
+      state.personalNotes = state.personalNotes.filter(n => String(n.id) !== String(id));
       saveNotes();
       renderNotes();
       showToast("Catatan dihapus");
@@ -7922,7 +7952,7 @@ function handleNoteActions(e) {
 }
 
 function roastNote(id) {
-  const note = state.personalNotes.find(n => n.id === id);
+  const note = state.personalNotes.find(n => String(n.id) === String(id));
   if (!note) return;
   
   const prompt = `Ini adalah catatan pribadi saya:\nJudul: ${note.title}\nIsi: ${note.content}\n\nInstruksi: Anda adalah pelatih trading/mentor yang SANGAT GALAK, SARKASTIK, TEGAS, dan KEJAM. Evaluasi tulisan saya ini. Maki kesalahan saya agar mental saya kuat, dan berikan motivasi negatif agar saya disiplin. Jangan bersikap sopan, jadilah brutal tapi membangun (Tough Love).`;
@@ -7951,8 +7981,13 @@ function renderNotes() {
     return;
   }
 
+  let needsSave = false;
   const fragment = document.createDocumentFragment();
-  state.personalNotes.forEach(note => {
+  state.personalNotes.forEach((note, index) => {
+    if (!note.id) {
+      note.id = typeof createId === "function" ? createId() : `note-${Date.now()}-${index}`;
+      needsSave = true;
+    }
     const article = document.createElement("article");
     article.className = "note-card";
     article.innerHTML = `
@@ -7961,15 +7996,18 @@ function renderNotes() {
         <span>${escapeHtml(note.date)}</span>
       </div>
       <div class="note-content is-collapsed">${escapeHtml(note.content).replace(/\n/g, "<br>")}</div>
-      <button class="text-button toggle-collapse-btn" type="button">Baca Selengkapnya</button>
+      <button class="text-button toggle-collapse-btn" data-id="${escapeHtml(note.id)}" type="button">Baca Selengkapnya</button>
       <div class="note-actions">
-        <button class="icon-button edit-note-btn" data-id="${note.id}" type="button" aria-label="Edit">✎</button>
-        <button class="icon-button delete-note-btn" data-id="${note.id}" type="button" aria-label="Hapus">🗑</button>
-        <button class="roast-note-btn" data-id="${note.id}" type="button">🔥 Evaluasi Kasar AI</button>
+        <button class="icon-button edit-note-btn" data-id="${escapeHtml(note.id)}" type="button" aria-label="Edit">✎</button>
+        <button class="icon-button delete-note-btn" data-id="${escapeHtml(note.id)}" type="button" aria-label="Hapus">🗑</button>
+        <button class="roast-note-btn" data-id="${escapeHtml(note.id)}" type="button">🔥 Evaluasi Kasar AI</button>
       </div>
     `;
     fragment.append(article);
   });
+  if (needsSave) {
+    saveNotes();
+  }
   dom.notesList.append(fragment);
 }
 
