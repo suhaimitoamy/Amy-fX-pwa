@@ -5172,7 +5172,7 @@ async function exportBackup() {
   if (!window.JSZip) return window.showToast("JSZip belum termuat.");
   try {
     const zip = new window.JSZip();
-    zip.file("data.json", JSON.stringify({ version: BACKUP_VERSION, exportedAt: new Date().toISOString(), items: state.items, journals: state.journals, insightCache: state.insightCache }, null, 2));
+    zip.file("data.json", JSON.stringify({ version: BACKUP_VERSION, exportedAt: new Date().toISOString(), items: state.items, journals: state.journals, notes: state.personalNotes, insightCache: state.insightCache }, null, 2));
     const folder = zip.folder("files");
     for (const item of state.items) {
       if (!item.fileId) continue;
@@ -5467,12 +5467,25 @@ async function importBackup(event) {
     await saveItems(state.items, { throwOnError: true });
     await saveJournals(state.journals, { throwOnError: true });
     saveInsightCache();
+
+    let restoredNotesCount = 0;
+    if (Array.isArray(payload.notes || payload.personalNotes)) {
+      const incomingNotes = payload.notes || payload.personalNotes;
+      const existingNotesById = new Map((state.personalNotes || []).map((n) => [n.id, n]));
+      incomingNotes.forEach((n) => existingNotesById.set(n.id, n));
+      state.personalNotes = sortNotes([...existingNotesById.values()]);
+      saveNotes();
+      renderNotes();
+      restoredNotesCount = incomingNotes.length;
+    }
+
     render();
 
     if (failedFiles || missingFiles) {
       window.showToast(`Restore selesai: ${importedFiles} file pulih, ${failedFiles} gagal, ${missingFiles} tidak ditemukan.`);
     } else {
-      window.showToast(`Restore selesai. ${incomingItems.length} item dan ${incomingJournals.length} jurnal dipulihkan.`);
+      const notesMsg = restoredNotesCount > 0 ? `, dan ${restoredNotesCount} catatan` : '';
+      window.showToast(`Restore selesai. ${incomingItems.length} item, ${incomingJournals.length} jurnal${notesMsg} dipulihkan.`);
     }
   } catch (error) {
     console.error('Restore backup gagal.', error);
@@ -7797,10 +7810,27 @@ function blobToDataUrl(blob) {
 }
 
 // --- PERSONAL NOTES LOGIC ---
+function sortNotes(notes) {
+  if (!Array.isArray(notes)) return [];
+  return [...notes].sort((a, b) => {
+    const dateA = String(a?.date || "");
+    const dateB = String(b?.date || "");
+    if (dateA !== dateB) {
+      return dateB.localeCompare(dateA); // Tanggal terbaru di paling atas, catatan lama (masa lalu) di paling bawah
+    }
+    const createdA = String(a?.createdAt || "");
+    const createdB = String(b?.createdAt || "");
+    if (createdA !== createdB) {
+      return createdB.localeCompare(createdA);
+    }
+    return String(b?.id || "").localeCompare(String(a?.id || ""));
+  });
+}
+
 function loadNotes() {
   try {
     const parsed = JSON.parse(localStorage.getItem(NOTES_STORAGE_KEY) || "[]");
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? sortNotes(parsed) : [];
   } catch {
     return [];
   }
@@ -7838,14 +7868,23 @@ function saveNote(e) {
   const content = dom.noteContentInput.value.trim();
 
   const existingIndex = state.personalNotes.findIndex(n => n.id === id);
-  const noteData = { id, date, title, content };
+  const existingNote = existingIndex >= 0 ? state.personalNotes[existingIndex] : null;
+  const noteData = {
+    id,
+    date,
+    title,
+    content,
+    createdAt: existingNote?.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
 
   if (existingIndex >= 0) {
     state.personalNotes[existingIndex] = noteData;
   } else {
-    state.personalNotes.unshift(noteData);
+    state.personalNotes.push(noteData);
   }
 
+  state.personalNotes = sortNotes(state.personalNotes);
   saveNotes();
   closeNoteForm();
   renderNotes();
@@ -7900,6 +7939,7 @@ function roastNote(id) {
 function renderNotes() {
   if (!dom.notesList || state.view !== "notes") return;
   
+  state.personalNotes = sortNotes(state.personalNotes);
   dom.notesCount.textContent = `${state.personalNotes.length} catatan`;
   dom.notesList.replaceChildren();
 
