@@ -21,7 +21,7 @@
     "Notifikasi Trigger/TP/SL & Tab Arsip Win Rate: Notifikasi berdering di HP saat entry limit tersentuh, TP tercapai, atau SL kena. Tab Arsip dirombak memuat Card Win Rate di paling atas dan posisi running (tanpa spam pending limit).",
     "Notifikasi Sweep Likuiditas Presisi: Notifikasi sweep BSL, SSL, Asia High/Low, PDH/PDL kini wajib menyertakan nominal harga yang disapu dan ekor sapuan ekstrem secara presisi."
   ],
-  "sha256": "",
+  "sha256": "de9d06b9691215c693140f794c824609b900abd4a009a75761d5e7878cc4d161",
   "version": "2.0.0-pro.408",
   "versionCode": 950408
 }
