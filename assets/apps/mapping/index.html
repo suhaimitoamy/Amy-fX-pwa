@@ -36,7 +36,6 @@
   </div>
 </header>
 <main id="app">
-<section class="toolbar"><div><strong>XAU/USD</strong><p id="source">Menunggu candle tertutup.</p></div><label>Peta candle<select id="timeframe"><option value="M15">M15</option><option value="M5">M5</option><option value="M1">M1</option></select></label><button id="refresh">Perbarui</button></section>
 <nav aria-label="Panel Mapping"><button data-tab="Dashboard" aria-selected="true">Konteks</button><button data-tab="Analyze" aria-selected="false">Detail</button><button data-tab="Advisor" aria-selected="false">Advisor</button><button data-tab="History" aria-selected="false">Arsip</button></nav>
 <p id="error" role="alert" hidden></p>
 <section id="Dashboard" class="panel">
@@ -56,14 +55,118 @@
     <div class="assistant-footer">
       <span id="assistant-confluence-tag" class="assistant-tag">Confluence: —</span>
       <span id="assistant-clock" class="assistant-clock">Live Sync</span>
-      <button type="button" onclick="window.setTab('Advisor')" style="margin-left:auto; display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:var(--amy-accent,#F5C451); text-decoration:none; background:rgba(245,196,81,0.12); padding:4px 8px; border-radius:6px; border:1px solid rgba(245,196,81,0.3); cursor:pointer;"><span>⚡ Laya AI Advisor</span></button>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+        <button type="button" id="btn-custom-price-alert" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#fff; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); padding:4px 8px; border-radius:6px; cursor:pointer;" title="Pasang Alarm Target Harga"><span>🔔 Pasang Alarm</span></button>
+        <button type="button" onclick="window.setTab('Advisor')" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:var(--amy-accent,#F5C451); text-decoration:none; background:rgba(245,196,81,0.12); padding:4px 8px; border-radius:6px; border:1px solid rgba(245,196,81,0.3); cursor:pointer;"><span>⚡ Laya AI Advisor</span></button>
+      </div>
     </div>
   </article>
-  <article class="price-map"><section id="gold-chart-workspace" aria-label="Chart Gold"><div class="section-heading chart-heading"><h2>Chart Gold</h2><span id="chart-caption">Candle tertutup</span><button type="button" id="chart-auto-price" aria-label="Kembalikan skala harga otomatis">Auto harga</button><button type="button" id="chart-fullscreen" aria-label="Buka fullscreen Chart Gold" aria-pressed="false">⛶ Fullscreen</button></div><div id="chart" aria-label="Chart candlestick dan area konteks pasar"></div></section><details class="ict-settings"><summary>Atur tampilan chart</summary><div id="ict-controls"></div><p class="muted">Pengaturan hanya mengubah tampilan. Bias M15 dan trigger M5 tetap dari server.</p></details><details class="inline-detail"><summary>Sumber level &amp; keterangan</summary><p class="muted">Geser angka harga atas/bawah untuk skala vertikal. Geser sumbu waktu kiri/kanan untuk lebar candle. Auto harga mengembalikan skala otomatis.</p><p id="ict-coverage" class="muted" role="status"></p><p class="muted">ICT dasar: referensi visual. Area dan invalidasi bukan order otomatis.</p></details></article>
-  <article class="context-hero"><div class="section-heading"><h2 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--amy-accent,#F5C451);">Market Condition</h2><span id="context-state" role="status">Menghubungkan</span></div><strong id="market-state">MENUNGGU DATA</strong><details class="inline-detail"><summary>Ringkasan &amp; waktu data</summary><p id="market-story">Amy sedang memeriksa candle tertutup.</p><small id="context-source"></small></details></article>
-  <article class="execution"><div class="section-heading"><h2 id="execution-status">BELUM SIAP</h2><small style="color:var(--text-muted,#94A3B8);">Context Engine · A+ Filter</small></div><p id="execution-reason">Menunggu bukti candle.</p><p id="news-awareness" class="muted" role="status"></p><details class="inline-detail"><summary>Cek syarat Dashboard A+</summary><ul id="execution-checklist"></ul></details></article>
-  <article><div class="section-heading"><h2 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--amy-accent,#F5C451);">Setup Driver</h2><small>Eksekusi manual · simulasi model</small></div><p id="driver-summary">Menunggu evaluasi driver.</p><div id="driver-setups"></div></article>
-  <article><div class="section-heading"><h2 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--amy-accent,#F5C451);">Trading Plan</h2><span id="primary-status">MENUNGGU</span></div><div id="primary-scenario" class="scenario"></div></article>
+  <article class="price-map gold-price-panel"><section id="gold-chart-workspace" aria-label="Chart Gold XAU/USD">
+    <div class="section-heading chart-heading"><h2>Chart Gold · XAU/USD</h2><strong id="chart-price">—</strong></div>
+    <div class="gold-chart-controls"><label>Timeframe <select id="timeframe"><option value="M15">M15</option><option value="M5">M5</option></select></label><button type="button" id="refresh">Perbarui</button><button type="button" id="chart-fullscreen" aria-label="Buka fullscreen Chart Gold" aria-pressed="false">⛶ Fullscreen</button></div>
+    <p id="source" role="status">Memuat candle tertutup…</p><p id="chart-error" role="alert"></p>
+    <div id="chart" aria-label="Chart candlestick XAU/USD dengan level model ICT"></div>
+    <p id="chart-note"></p>
+  </section><details class="ict-settings" style="display:none;"><summary>Atur tampilan chart</summary><div id="ict-controls"></div></details></article>
+  <!-- KARTU 3: AMY BIAS DASHBOARD V2 (16-Row Pine Script Matrix Table) -->
+  <article id="amy-bias-dashboard-card" class="amy-bias-dashboard-card">
+    <div class="section-heading">
+      <h2 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--amy-accent,#F5C451); margin:0;">
+        AMY BIAS DASHBOARD V2
+      </h2>
+      <span id="bias-dashboard-status" style="font-size:11px; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.08); color:var(--muted); font-weight:700;">M15 MAPPING</span>
+    </div>
+    <div id="amy-bias-matrix" class="amy-bias-matrix">
+      <table class="bias-table">
+        <thead>
+          <tr>
+            <th colspan="2" id="bias-table-header" class="bias-th-main">AMY ICT — M15 CURRENT MAPPING</th>
+          </tr>
+        </thead>
+        <tbody id="bias-table-body">
+          <tr><td colspan="2" style="text-align:center; padding:16px; color:var(--muted);">Memuat matriks bias M15...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Hidden compatibility elements for legacy state/checklist selectors -->
+    <div style="display:none;" aria-hidden="true">
+      <span id="context-state"></span><strong id="market-state"></strong><p id="market-story"></p><small id="context-source"></small>
+      <h2 id="execution-status"></h2><p id="execution-reason"></p><p id="news-awareness"></p><ul id="execution-checklist"></ul>
+    </div>
+  </article>
+
+  <!-- KARTU 4: AMY ENTRY ASSISTANT V3 PLAN (Action Card) -->
+  <article id="amy-entry-assistant-v3" class="amy-assistant-plan-card">
+    <div class="assistant-plan-header">
+      <div class="assistant-plan-title">
+        <span class="plan-spark">⚡</span>
+        <h2 style="margin:0; font-size:15px; font-weight:800; letter-spacing:0.04em; text-transform:uppercase;">
+          AMY ENTRY ASSISTANT V3 PLAN
+        </h2>
+      </div>
+      <span id="plan-signal-badge" class="plan-badge badge-neutral">MENUNGGU KONFIRMASI</span>
+    </div>
+
+    <!-- Anti-Chase & Status Banner -->
+    <div class="plan-status-bar">
+      <span id="plan-anti-chase-pill" class="anti-chase-pill pill-neutral">STANDBY</span>
+      <span id="plan-math-zone" class="plan-math-zone">Math Zone: —</span>
+    </div>
+
+    <!-- Pullback Notice (Shown only if signal is Pullback) -->
+    <div id="plan-pullback-notice" class="plan-pullback-notice" style="display:none;">
+      <span>⚠️ <strong>Catatan Khusus:</strong> Sinyal ini adalah pullback korektif, bukan mengubah bias utama.</span>
+    </div>
+
+    <!-- 4-Column Grid: Entry, SL, TP1, TP2 -->
+    <div class="plan-levels-grid">
+      <div class="plan-level-box level-entry">
+        <small>ENTRY</small>
+        <strong id="plan-entry-val">—</strong>
+        <span class="level-sub" id="plan-entry-sub">Acuan Order</span>
+      </div>
+      <div class="plan-level-box level-sl">
+        <small>STOP LOSS</small>
+        <strong id="plan-sl-val">—</strong>
+        <span class="level-sub" id="plan-sl-sub">Risk: —</span>
+      </div>
+      <div class="plan-level-box level-tp1">
+        <small>TP 1</small>
+        <strong id="plan-tp1-val">—</strong>
+        <span class="level-sub" id="plan-tp1-sub">RR: —</span>
+      </div>
+      <div class="plan-level-box level-tp2">
+        <small>TP 2</small>
+        <strong id="plan-tp2-val">—</strong>
+        <span class="level-sub" id="plan-tp2-sub">Runner</span>
+      </div>
+    </div>
+
+    <!-- Execution Core Reasons -->
+    <div class="plan-reasons-box">
+      <h3 style="font-size:12px; margin:0 0 6px; text-transform:uppercase; color:var(--muted,#94A3B8); letter-spacing:0.06em;">
+        Alasan Inti Eksekusi
+      </h3>
+      <ul id="plan-reasons-list" class="plan-reasons-list">
+        <li>Menunggu konfirmasi candle tertutup M15 &amp; M5.</li>
+      </ul>
+    </div>
+
+    <!-- Action Button -->
+    <div class="plan-actions" style="display:flex; gap:8px;">
+      <button type="button" id="btn-show-plan-chart" class="btn-show-plan-chart" style="flex:1;">
+        📈 Tampilkan Level di Chart
+      </button>
+      <button type="button" id="btn-plan-price-alert" class="btn-show-plan-chart" style="background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.2); color:#fff; width:auto; padding:0 14px;" title="Pasang Alarm Target Entry/TP">
+        🔔 Alarm Level
+      </button>
+    </div>
+
+    <!-- Hidden compatibility elements for legacy trading plan selectors -->
+    <div style="display:none;" aria-hidden="true">
+      <span id="primary-status"></span><div id="primary-scenario"></div>
+    </div>
+  </article>
 </section>
 <section id="Analyze" class="panel" hidden>
   <p class="panel-hint">Buka bagian yang ingin diperiksa.</p>
@@ -73,7 +176,15 @@
   <details class="model-context"><summary>Level likuiditas</summary><div id="liquidity"></div></details>
   <details class="model-context"><summary>Sesi, volatilitas &amp; berita</summary><div id="gold-condition"></div><a href="../market-intel/index.html">Buka kalender ekonomi →</a></details>
   <details class="model-context"><summary>Rencana alternatif</summary><div id="alternative-scenario" class="scenario"></div></details>
-  <details class="model-context driver-tournament-card"><summary>Evaluasi driver <span class="detail-count">6 driver</span></summary><p id="tournament-leader-badge" class="muted">MENUNGGU KONTEKS</p><div id="driver-tournament-list" class="driver-tournament-list"></div><div id="driver-methods"></div><p class="muted">Skor kualitas bukan peluang menang atau syarat entry tambahan. Statistik model hari UTC memakai hasil selesai; R bruto belum termasuk biaya broker.</p></details>
+  <details class="model-context driver-tournament-card">
+    <summary>Arsip &amp; Riset: 6 Driver Tournament <span class="detail-count">6 driver</span></summary>
+    <p id="tournament-leader-badge" class="muted">MENUNGGU KONTEKS</p>
+    <div id="driver-tournament-list" class="driver-tournament-list"></div>
+    <div id="driver-methods"></div>
+    <p id="driver-summary" class="muted" style="margin-top:10px;"></p>
+    <div id="driver-setups" style="margin-top:8px;"></div>
+    <p class="muted" style="margin-top:10px; font-size:11px;">Skor kualitas bukan peluang menang atau syarat entry tambahan. Statistik model hari UTC memakai hasil selesai; R bruto belum termasuk biaya broker.</p>
+  </details>
 </section>
 <section id="Advisor" class="panel" hidden>
   <div class="advisor-container">
@@ -244,6 +355,8 @@
 <script src="../academy/trading-practice/vendor/lightweight-charts.standalone.production.js"></script>
 <script src="js/scanner-visibility-gate.js"></script>
 <script src="js/notification-route-sync.js"></script>
+<script type="module" src="js/ict-workspace/price-alert-manager.js"></script>
+<script type="module" src="js/ict-workspace/trade-lifecycle-tracker.js"></script>
 <script type="module" src="js/ict-workspace/app.js"></script>
 <script type="module" src="js/ict-workspace/context-panel.js"></script>
 <script src="js/ict-workspace/advisor-panel.js"></script>

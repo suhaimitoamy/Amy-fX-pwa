@@ -1,23 +1,27 @@
 {
-  "apk_url": "https://github.com/suhaimitoamy/Amy-fx-pro/releases/download/amyfx-pro-2.0.0-pro.395/AmyFX-Pro-latest.apk",
+  "apk_url": "https://github.com/suhaimitoamy/Amy-fx-pro/releases/download/amyfx-pro-2.0.0-pro.408/AmyFX-Pro-latest.apk",
   "changelog": [
-    "Menu Utama Video: Tab Media & Video mandiri di navigasi utama [Beranda | Backtest | Video | Profil] menggantikan Koleksi.",
-    "Video & Media Vault Terintegrasi: Galeri video replay setup XAU/USD, gambar chart, dan dokumen trading tersinkronisasi langsung dengan IndexedDB Jurnal Trading.",
-    "Navigasi Jurnal Trading Bersih: Tab ke-4 Jurnal Trading disesuaikan menjadi Catatan Pribadi [Library | Jurnal | Performa | Catatan]."
+    "M15 Otoritas Penuh: Konfirmasi candle M15 yang resmi close (Wick Rejection, Displacement Break BOS/MSS, atau 50% CE Bounce) langsung menjadi pemicu setup dan Peluru Utama A+ tanpa terblokir menunggu break M5.",
+    "Alarm Harga Kustom: Fitur pasang target harga manual di Amy Asisten dengan notifikasi instan di HP, in-app banner toast, getar haptik, dan nada audio chime 2-tone saat harga tersentuh.",
+    "Restrukturisasi Total Tab Advisor: Menghubungkan Tab Advisor 100% langsung ke live market context M15 & H1 (Dynamic Verdict APPROVED/REJECTED/CONDITIONAL, deteksi rezim pasar asli, sinkron level eksekusi, 100% offline di HP).",
+    "Notifikasi Trigger/TP/SL & Tab Arsip Win Rate: Notifikasi berdering di HP saat entry limit tersentuh, TP tercapai, atau SL kena. Tab Arsip dirombak memuat Card Win Rate di paling atas dan posisi running (tanpa spam pending limit).",
+    "Notifikasi Sweep Likuiditas Presisi: Notifikasi sweep BSL, SSL, Asia High/Low, PDH/PDL kini wajib menyertakan nominal harga yang disapu dan ekor sapuan ekstrem secara presisi."
   ],
-  "downloadUrl": "https://github.com/suhaimitoamy/Amy-fx-pro/releases/download/amyfx-pro-2.0.0-pro.395/AmyFX-Pro-latest.apk",
+  "downloadUrl": "https://github.com/suhaimitoamy/Amy-fx-pro/releases/download/amyfx-pro-2.0.0-pro.408/AmyFX-Pro-latest.apk",
   "enabled": true,
   "force_update": false,
-  "latest_version_code": 950395,
-  "latest_version_name": "2.0.0-pro.395",
+  "latest_version_code": 950408,
+  "latest_version_name": "2.0.0-pro.408",
   "mandatory": false,
-  "releaseDate": "2026-10-04",
+  "releaseDate": "2026-10-08",
   "release_notes": [
-    "Menu Utama Video: Tab Media & Video mandiri di navigasi utama [Beranda | Backtest | Video | Profil] menggantikan Koleksi.",
-    "Video & Media Vault Terintegrasi: Galeri video replay setup XAU/USD, gambar chart, dan dokumen trading tersinkronisasi langsung dengan IndexedDB Jurnal Trading.",
-    "Navigasi Jurnal Trading Bersih: Tab ke-4 Jurnal Trading disesuaikan menjadi Catatan Pribadi [Library | Jurnal | Performa | Catatan]."
+    "M15 Otoritas Penuh: Konfirmasi candle M15 yang resmi close (Wick Rejection, Displacement Break BOS/MSS, atau 50% CE Bounce) langsung menjadi pemicu setup dan Peluru Utama A+ tanpa terblokir menunggu break M5.",
+    "Alarm Harga Kustom: Fitur pasang target harga manual di Amy Asisten dengan notifikasi instan di HP, in-app banner toast, getar haptik, dan nada audio chime 2-tone saat harga tersentuh.",
+    "Restrukturisasi Total Tab Advisor: Menghubungkan Tab Advisor 100% langsung ke live market context M15 & H1 (Dynamic Verdict APPROVED/REJECTED/CONDITIONAL, deteksi rezim pasar asli, sinkron level eksekusi, 100% offline di HP).",
+    "Notifikasi Trigger/TP/SL & Tab Arsip Win Rate: Notifikasi berdering di HP saat entry limit tersentuh, TP tercapai, atau SL kena. Tab Arsip dirombak memuat Card Win Rate di paling atas dan posisi running (tanpa spam pending limit).",
+    "Notifikasi Sweep Likuiditas Presisi: Notifikasi sweep BSL, SSL, Asia High/Low, PDH/PDL kini wajib menyertakan nominal harga yang disapu dan ekor sapuan ekstrem secara presisi."
   ],
-  "sha256": "cf74ca5f5e0204a0f2b555929646a955e291b8a79e9daa9a23e6bd3480b8f6d3",
-  "version": "2.0.0-pro.395",
-  "versionCode": 950395
+  "sha256": "",
+  "version": "2.0.0-pro.408",
+  "versionCode": 950408
 }

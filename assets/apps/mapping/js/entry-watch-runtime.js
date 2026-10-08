@@ -211,7 +211,30 @@ function notificationData(watch) {
   };
 }
 
+function isGoldMarketOpenNow() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      hourCycle: 'h23',
+      hour: '2-digit',
+      minute: '2-digit',
+      weekday: 'short'
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map(x => [x.type, x.value]));
+    const weekday = values.weekday;
+    const hour = Number(values.hour) + Number(values.minute) / 60;
+    if (weekday === 'Sat') return false;
+    if (weekday === 'Sun') return hour >= 17;
+    if (weekday === 'Fri') return hour < 17;
+    if (hour >= 17 && hour < 18) return false;
+    return true;
+  } catch (_) {
+    return true;
+  }
+}
+
 function sendNotification(watch) {
+  if (!isGoldMarketOpenNow()) return;
   const allowed = new Set(['WATCHING_LEVEL', 'ENTRY_TRIGGERED', 'VALID_BREAK', 'FORECAST_PAUSED', 'ENTRY_SPENT', 'LEVEL_EXPIRED', 'LEVEL_RETIRED', 'FORECAST_CHANGED']);
   if (!allowed.has(watch?.lifecycleStage)) return;
   const store = readJson(NOTIFY_KEY, {});
@@ -232,6 +255,13 @@ function sendNotification(watch) {
 
 function syncScanner(watch) {
   if (!window.Android?.startBackgroundScanner) return;
+  if (!isGoldMarketOpenNow()) {
+    if (lastScannerKey !== 'NONE') {
+      lastScannerKey = 'NONE';
+      window.Android?.stopBackgroundScanner?.();
+    }
+    return;
+  }
   const shouldScan = Boolean(watch?.active && !watch.entryAllowed && ['WATCHING_LEVEL', 'LEVEL_TESTING'].includes(watch.lifecycleStage));
   if (!shouldScan) {
     if (lastScannerKey !== 'NONE') {

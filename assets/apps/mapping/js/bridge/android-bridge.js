@@ -54,6 +54,7 @@ function notificationTitle(execution) {
 }
 
 export function notifyImportant(result = state.result) {
+  if (result?.context?.session === 'PASAR TUTUP' || result?.marketState?.includes('PASAR TUTUP')) return;
   const contract = validatedContract(result);
   const execution = contract.setupExecution;
   if (!execution?.setupId) return;

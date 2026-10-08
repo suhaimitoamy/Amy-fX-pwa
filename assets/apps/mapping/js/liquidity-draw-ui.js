@@ -95,7 +95,6 @@ function cardHtml(contexts) {
     </div>
   </section>`;
 }
-}
 
 function findAnchor() {
   const app = document.getElementById('app');

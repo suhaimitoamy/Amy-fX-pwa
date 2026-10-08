@@ -14,7 +14,10 @@ export async function loadCandles(tf, signal, fetcher=fetch) {
   }
 
   const endpoints=[];
-  if(typeof location!=='undefined'&&location.origin&&!location.origin.startsWith('file:')){
+  // The same-origin proxy only exists in the local preview server (tools/serve-local.mjs).
+  // Inside the APK the origin is appassets.androidplatform.net, which has no /api route.
+  const host=typeof location!=='undefined'?String(location.hostname||''):'';
+  if(/^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host)){
     endpoints.push(`/api/twelvedata?${query}`);
   }
   endpoints.push(`${PROXY}?${query}`);
